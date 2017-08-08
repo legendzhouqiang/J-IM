@@ -48,34 +48,11 @@
 
 	</repositories>
 	<pluginRepositories>
-
-
-
 	</pluginRepositories>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.t-io</groupId>
-				<artifactId>tio-http-common</artifactId>
-				<version>${tio-http.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.t-io</groupId>
-				<artifactId>tio-http-server</artifactId>
-				<version>${tio-http.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-
 
 	<!-- 插件配置 -->
 	<build>
 		<plugins>
-			
-
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
