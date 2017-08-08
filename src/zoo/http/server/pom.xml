@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.t-io</groupId>
 		<artifactId>tio-http-parent</artifactId>
-		<version>${tio-http.version}</version>
+		<version>0.0.1-tio-http</version>
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 

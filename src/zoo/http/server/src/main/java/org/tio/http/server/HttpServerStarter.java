@@ -46,8 +46,8 @@ public class HttpServerStarter {
 	 */
 	public static void main(String[] args) throws IOException {
 	}
-
-	public HttpServerStarter(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+	
+	private void init(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		this.httpServerConfig = httpServerConfig;
 		this.httpRequestHandler = httpRequestHandler;
 		this.httpServerAioHandler = new HttpServerAioHandler(httpServerConfig, httpRequestHandler);
@@ -60,6 +60,10 @@ public class HttpServerStarter {
 
 		HttpUuid imTioUuid = new HttpUuid();
 		serverGroupContext.setTioUuid(imTioUuid);
+	}
+
+	public HttpServerStarter(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		init(httpServerConfig, httpRequestHandler, tioExecutor, groupExecutor);
 	}
 
 	public HttpServerStarter(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler) {
@@ -82,6 +86,8 @@ public class HttpServerStarter {
 		Routes routes = new Routes(scanPackages);
 		DefaultHttpRequestHandler httpRequestHandler = new DefaultHttpRequestHandler(httpServerConfig, routes);
 		httpRequestHandler.setHttpServerListener(httpServerListener);
+		
+		init(httpServerConfig, httpRequestHandler, tioExecutor, groupExecutor);
 	}
 	
 	public void start() throws IOException {
