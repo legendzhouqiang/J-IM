@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,27 +24,31 @@ import org.tio.json.Json;
 import com.xiaoleilu.hutool.date.DatePattern;
 import com.xiaoleilu.hutool.date.DateTime;
 
-public abstract class ChannelContext<SessionContext, P extends Packet, R> {
+public abstract class ChannelContext {
 	private static Logger log = LoggerFactory.getLogger(ChannelContext.class);
+
+	private static final String DEFAULT_ATTUBITE_KEY = "t-io-d-a-k";
 
 	private boolean isTraceClient = false;
 
 	private boolean isTraceSynPacket = false;
 
+	private MapWithLock<String, Object> props = null;//
+
 	public static final String UNKNOWN_ADDRESS_IP = "$UNKNOWN";
 
 	public static final AtomicInteger UNKNOWN_ADDRESS_PORT_SEQ = new AtomicInteger();
 
-	private GroupContext<SessionContext, P, R> groupContext = null;
+	private GroupContext groupContext = null;
 
-	private DecodeRunnable<SessionContext, P, R> decodeRunnable = null;
+	private DecodeRunnable decodeRunnable = null;
 
-	private HandlerRunnable<SessionContext, P, R> handlerRunnable = null;
+	private HandlerRunnable handlerRunnable = null;
 
-	private SendRunnable<SessionContext, P, R> sendRunnable = null;
+	private SendRunnable sendRunnable = null;
 	private ReentrantReadWriteLock closeLock = new ReentrantReadWriteLock();
-	private ReadCompletionHandler<SessionContext, P, R> readCompletionHandler = null;//new ReadCompletionHandler<>(this);
-	private WriteCompletionHandler<SessionContext, P, R> writeCompletionHandler = null;//new WriteCompletionHandler<>(this);
+	private ReadCompletionHandler readCompletionHandler = null;//new ReadCompletionHandler(this);
+	private WriteCompletionHandler writeCompletionHandler = null;//new WriteCompletionHandler(this);
 
 	private int reconnCount = 0;//连续重连次数，连接成功后，此值会被重置0
 
@@ -60,8 +65,6 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	/** The asynchronous socket channel. */
 	private AsynchronousSocketChannel asynchronousSocketChannel;
 
-	private SessionContext sessionContext;
-
 	private String id = null;
 
 	private Node clientNode;
@@ -76,14 +79,18 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	 * @param asynchronousSocketChannel
 	 * @author: tanyaowu
 	 */
-	public ChannelContext(GroupContext<SessionContext, P, R> groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
+	public ChannelContext(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
 		super();
+		init(groupContext, asynchronousSocketChannel);
+	}
+
+	public void init(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
 		id = groupContext.getTioUuid().uuid();
 		this.setGroupContext(groupContext);
 		groupContext.ids.bind(this);
 		this.setAsynchronousSocketChannel(asynchronousSocketChannel);
-		this.readCompletionHandler = new ReadCompletionHandler<>(this);
-		this.writeCompletionHandler = new WriteCompletionHandler<>(this);
+		this.readCompletionHandler = new ReadCompletionHandler(this);
+		this.writeCompletionHandler = new WriteCompletionHandler(this);
 	}
 
 	/**
@@ -95,6 +102,97 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	 */
 	public abstract Node createClientNode(AsynchronousSocketChannel asynchronousSocketChannel) throws IOException;
 
+	private void initProps() {
+		if (props == null) {
+			synchronized (this) {
+				if (props == null) {
+					props = new MapWithLock<String, Object>(new HashMap<String, Object>());
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param key
+	 * @param value
+	 * @author: tanyaowu
+	 */
+	public void setAttribute(String key, Object value) {
+		initProps();
+		Lock lock = props.getLock().writeLock();
+		Map<String, Object> m = props.getObj();
+		try {
+			lock.lock();
+			m.put(key, value);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			lock.unlock();
+		}
+	}
+	
+	/**
+	 * 设置默认属性
+	 * @param value
+	 * @author: tanyaowu
+	 */
+	public void setAttribute(Object value){
+		setAttribute(DEFAULT_ATTUBITE_KEY, value);
+	}
+
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public Object getAttribute(String key) {
+		initProps();
+		Map<String, Object> m = props.getObj();
+		Object ret = m.get(key);
+		return ret;
+		
+//		Lock lock = props.getLock().readLock();
+//		Map<String, Object> m = props.getObj();
+//		try {
+//			lock.lock();
+//			Object ret = m.get(key);
+//			return ret;
+//		} catch (Exception e) {
+//			throw e;
+//		} finally {
+//			lock.unlock();
+//		}
+	}
+
+	public Object getAttribute() {
+		return getAttribute(DEFAULT_ATTUBITE_KEY);
+	}
+
+	public MapWithLock<String, Object> getAttributes() {
+		initProps();
+		return props;
+	}
+
+	/**
+	 * 
+	 * @author: tanyaowu
+	 */
+	public void clearAttribute() {
+		initProps();
+		Lock lock = props.getLock().writeLock();
+		Map<String, Object> m = props.getObj();
+		try {
+			lock.lock();
+			m.clear();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			lock.unlock();
+		}
+	}
+
 	@Override
 	public String toString() {
 		return this.getClientNode().toString();
@@ -105,13 +203,6 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	 */
 	public AsynchronousSocketChannel getAsynchronousSocketChannel() {
 		return asynchronousSocketChannel;
-	}
-
-	/**
-	 * @return the ext
-	 */
-	public SessionContext getSessionContext() {
-		return sessionContext;
 	}
 
 	/**
@@ -153,13 +244,6 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	}
 
 	/**
-	 * @param ext the ext to set
-	 */
-	public void setSessionContext(SessionContext sessionContext) {
-		this.sessionContext = sessionContext;
-	}
-
-	/**
 	 * @param remoteNode the remoteNode to set
 	 */
 	private void setClientNode(Node clientNode) {
@@ -187,25 +271,25 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	/**
 	 * @return the groupContext
 	 */
-	public GroupContext<SessionContext, P, R> getGroupContext() {
+	public GroupContext getGroupContext() {
 		return groupContext;
 	}
 
 	/**
 	 * @param groupContext the groupContext to set
 	 */
-	public void setGroupContext(GroupContext<SessionContext, P, R> groupContext) {
+	public void setGroupContext(GroupContext groupContext) {
 		this.groupContext = groupContext;
 
 		if (groupContext != null) {
-			decodeRunnable = new DecodeRunnable<>(this);
-			//			closeRunnable = new CloseRunnable<>(this, null, null, groupContext.getCloseExecutor());
+			decodeRunnable = new DecodeRunnable(this);
+			//			closeRunnable = new CloseRunnable(this, null, null, groupContext.getCloseExecutor());
 
-			//			handlerRunnableHighPrior = new HandlerRunnable<>(this, groupContext.getHandlerExecutorHighPrior());
-			handlerRunnable = new HandlerRunnable<>(this, groupContext.getTioExecutor());
+			//			handlerRunnableHighPrior = new HandlerRunnable(this, groupContext.getHandlerExecutorHighPrior());
+			handlerRunnable = new HandlerRunnable(this, groupContext.getTioExecutor());
 
-			//			sendRunnableHighPrior = new SendRunnable<>(this, groupContext.getSendExecutorHighPrior());
-			sendRunnable = new SendRunnable<>(this, groupContext.getTioExecutor());
+			//			sendRunnableHighPrior = new SendRunnable(this, groupContext.getSendExecutorHighPrior());
+			sendRunnable = new SendRunnable(this, groupContext.getTioExecutor());
 
 			groupContext.connections.add(this);
 		}
@@ -214,28 +298,28 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	/**
 	 * @return the readCompletionHandler
 	 */
-	public ReadCompletionHandler<SessionContext, P, R> getReadCompletionHandler() {
+	public ReadCompletionHandler getReadCompletionHandler() {
 		return readCompletionHandler;
 	}
 
 	/**
 	 * @return the decodeRunnable
 	 */
-	public DecodeRunnable<SessionContext, P, R> getDecodeRunnable() {
+	public DecodeRunnable getDecodeRunnable() {
 		return decodeRunnable;
 	}
 
 	/**
 	 * @return the handlerRunnable
 	 */
-	public HandlerRunnable<SessionContext, P, R> getHandlerRunnable() {
+	public HandlerRunnable getHandlerRunnable() {
 		return handlerRunnable;
 	}
 
 	/**
 	 * @return the sendRunnable
 	 */
-	public SendRunnable<SessionContext, P, R> getSendRunnable() {
+	public SendRunnable getSendRunnable() {
 		return sendRunnable;
 	}
 
@@ -285,7 +369,7 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	/**
 	 * @return the writeCompletionHandler
 	 */
-	public WriteCompletionHandler<SessionContext, P, R> getWriteCompletionHandler() {
+	public WriteCompletionHandler getWriteCompletionHandler() {
 		return writeCompletionHandler;
 	}
 
@@ -380,8 +464,7 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		@SuppressWarnings("unchecked")
-		ChannelContext<SessionContext, P, R> other = (ChannelContext<SessionContext, P, R>) obj;
+		ChannelContext other = (ChannelContext) obj;
 		return Objects.equals(other.hashCode(), this.hashCode());
 	}
 
@@ -409,7 +492,7 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	 */
 	public void traceBlockPacket(SynPacketAction synPacketAction, Packet packet, CountDownLatch countDownLatch, Map<String, Object> extmsg) {
 		if (isTraceSynPacket) {
-			ChannelContext<SessionContext, P, R> channelContext = this;
+			ChannelContext channelContext = this;
 			Map<String, Object> map = new HashMap<>();
 			map.put("time", DateTime.now().toString(DatePattern.NORM_DATETIME_MS_FORMAT));
 			map.put("c_id", channelContext.getId());
@@ -472,15 +555,14 @@ public abstract class ChannelContext<SessionContext, P extends Packet, R> {
 	 * @param isSentSuccess
 	 * @author: tanyaowu
 	 */
-	@SuppressWarnings("unchecked")
 	public void processAfterSent(Object obj, Boolean isSentSuccess) {
-		P packet = null;
-		PacketWithMeta<P> packetWithMeta = null;
+		Packet packet = null;
+		PacketWithMeta packetWithMeta = null;
 		boolean isPacket = obj instanceof Packet;
 		if (isPacket) {
-			packet = (P) obj;
+			packet = (Packet) obj;
 		} else {
-			packetWithMeta = (PacketWithMeta<P>) obj;
+			packetWithMeta = (PacketWithMeta) obj;
 			packet = packetWithMeta.getPacket();
 			CountDownLatch countDownLatch = packetWithMeta.getCountDownLatch();
 			traceBlockPacket(SynPacketAction.BEFORE_DOWN, packet, countDownLatch, null);

@@ -9,7 +9,6 @@ import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.SetWithLock;
-import org.tio.core.intf.Packet;
 
 /**
  * 
@@ -21,7 +20,7 @@ public class IpBlacklist {
 	/** remoteAndChannelContext key: "ip:port" value: ChannelContext. */
 	private SetWithLock<String> setWithLock = new SetWithLock<String>(new HashSet<String>());
 
-	public <SessionContext, P extends Packet, R> void add(GroupContext<SessionContext, P, R> groupContext, String ip) {
+	public  void add(GroupContext groupContext, String ip) {
 		//先添加到黑名单列表
 		Lock lock = setWithLock.getLock().writeLock();
 		try {
@@ -35,12 +34,12 @@ public class IpBlacklist {
 		}
 
 		//再删除相关连接
-		SetWithLock<ChannelContext<SessionContext, P, R>> setWithLock = Aio.getAllChannelContexts(groupContext);
+		SetWithLock<ChannelContext> setWithLock = Aio.getAllChannelContexts(groupContext);
 		Lock lock2 = setWithLock.getLock().readLock();
 		try {
 			lock2.lock();
-			Set<ChannelContext<SessionContext, P, R>> set = setWithLock.getObj();
-			for (ChannelContext<SessionContext, P, R> channelContext : set) {
+			Set<ChannelContext> set = setWithLock.getObj();
+			for (ChannelContext channelContext : set) {
 				String clientIp = channelContext.getClientNode().getIp();
 				if (StringUtils.equals(clientIp, ip)) {
 					Aio.remove(channelContext, "ip[" + clientIp + "]被加入了黑名单");

@@ -2,6 +2,7 @@ package org.tio.examples.helloworld.client;
 
 import org.tio.client.intf.ClientAioHandler;
 import org.tio.core.ChannelContext;
+import org.tio.core.intf.Packet;
 import org.tio.examples.helloworld.common.HelloAbsAioHandler;
 import org.tio.examples.helloworld.common.HelloPacket;
 
@@ -10,22 +11,23 @@ import org.tio.examples.helloworld.common.HelloPacket;
  * @author tanyaowu 
  *
  */
-public class HelloClientAioHandler extends HelloAbsAioHandler implements ClientAioHandler<Object, HelloPacket, Object>
+public class HelloClientAioHandler extends HelloAbsAioHandler implements ClientAioHandler
 {
 	/** 
 	 * 处理消息
 	 */
 	@Override
-	public Object handler(HelloPacket packet, ChannelContext<Object, HelloPacket, Object> channelContext) throws Exception
+	public void handler(Packet packet, ChannelContext channelContext) throws Exception
 	{
-		byte[] body = packet.getBody();
+		HelloPacket helloPacket = (HelloPacket)packet;
+		byte[] body = helloPacket.getBody();
 		if (body != null)
 		{
 			String str = new String(body, HelloPacket.CHARSET);
 			System.out.println("收到消息：" + str);
 		}
 
-		return null;
+		return;
 	}
 
 	private static HelloPacket heartbeatPacket = new HelloPacket();

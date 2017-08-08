@@ -7,13 +7,13 @@ package org.tio.http.common;
  */
 public interface HttpConst {
 	String SERVER_INFO = "tio-httpserver/0.0.1";
-	
+
 	/**
 	 * 默认规定连接到本服务器的客户端统一用utf-8
 	 */
 	String CHARSET_NAME = "utf-8";
-	
-//	Content-Type: text/html;charset:utf-8;
+
+	//	Content-Type: text/html;charset:utf-8;
 
 	/**
 	 * 请求体的格式
@@ -22,8 +22,9 @@ public interface HttpConst {
 	 */
 	public enum RequestBodyFormat {
 		URLENCODED, MULTIPART, TEXT
-		
+
 	}
+
 	/**
 	 *         Accept-Language : zh-CN,zh;q=0.8
 	     Sec-WebSocket-Version : 13
@@ -57,7 +58,7 @@ public interface HttpConst {
 		String Sec_WebSocket_Extensions = "Sec-WebSocket-Extensions".toLowerCase(); //permessage-deflate; client_max_window_bits
 		String Content_Length = "Content-Length".toLowerCase(); //65
 		String Content_Type = "Content-Type".toLowerCase();// : 【application/x-www-form-urlencoded】【application/x-www-form-urlencoded; charset=UTF-8】【multipart/form-data; boundary=----WebKitFormBoundaryuwYcfA2AIgxqIxA0 】
-		String If_Modified_Since = "If-Modified-Since".toLowerCase();  //与Last-Modified配合
+		String If_Modified_Since = "If-Modified-Since".toLowerCase(); //与Last-Modified配合
 	}
 
 	/**
@@ -81,7 +82,7 @@ public interface HttpConst {
 			 */
 			String application_x_www_form_urlencoded = "application/x-www-form-urlencoded".toLowerCase();
 		}
-		
+
 		public interface Connection {
 			String keep_alive = "keep-alive".toLowerCase();
 			String Upgrade = "Upgrade".toLowerCase();
@@ -93,12 +94,12 @@ public interface HttpConst {
 		//Set-Cookie: UserID=JohnDoe; Max-Age=3600; Version=1
 		String Set_Cookie = "Set-Cookie".toLowerCase(); //Set-Cookie: UserID=JohnDoe; Max-Age=3600; Version=1
 		String Content_Length = "Content-Length".toLowerCase(); //65
-		
-		String Connection = "Connection".toLowerCase();  //Upgrade,  keep-alive
-		String Keep_Alive = "Keep-Alive".toLowerCase();  //Keep-Alive:timeout=20
+
+		String Connection = "Connection".toLowerCase(); //Upgrade,  keep-alive
+		String Keep_Alive = "Keep-Alive".toLowerCase(); //Keep-Alive:timeout=20
 		String Sec_WebSocket_Accept = "Sec-WebSocket-Accept".toLowerCase();
 		String Upgrade = "Upgrade".toLowerCase();
-		
+
 		/**
 		 * Content-Disposition: attachment;filename=FileName.txt
 		 * 文件下载
@@ -147,16 +148,16 @@ public interface HttpConst {
 		 * 服务器名字。Servlet一般不设置这个值，而是由Web服务器自己设置。
 		 */
 		String Server = "Server".toLowerCase();
-		
+
 		/**
 		 * 
 		 */
-		String Access_Control_Allow_Origin = "Access-Control-Allow-Origin".toLowerCase();  //value: *
-		
+		String Access_Control_Allow_Origin = "Access-Control-Allow-Origin".toLowerCase(); //value: *
+
 		/**
 		 * 
 		 */
-		String Access_Control_Allow_Headers = "Access-Control-Allow-Headers";  //value: x-requested-with,content-type
+		String Access_Control_Allow_Headers = "Access-Control-Allow-Headers"; //value: x-requested-with,content-type
 	}
 
 	/**

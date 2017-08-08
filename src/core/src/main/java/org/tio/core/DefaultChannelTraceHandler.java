@@ -17,7 +17,7 @@ import com.xiaoleilu.hutool.date.DateTime;
  * @author tanyaowu 
  * 2017年4月16日 下午6:45:21
  */
-public class DefaultChannelTraceHandler<SessionContext, P extends Packet, R> implements ChannelTraceHandler<SessionContext, P, R> {
+public class DefaultChannelTraceHandler implements ChannelTraceHandler {
 	//	private static Logger log = LoggerFactory.getLogger(DefaultClientTraceHandler.class);
 
 	private Logger clientTraceLog = LoggerFactory.getLogger("tio-client-trace-log");
@@ -37,7 +37,7 @@ public class DefaultChannelTraceHandler<SessionContext, P extends Packet, R> imp
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void traceChannel(ChannelContext<SessionContext, P, R> channelContext, ChannelAction channelAction, Packet packet, Map<String, Object> extmsg) {
+	public void traceChannel(ChannelContext channelContext, ChannelAction channelAction, Packet packet, Map<String, Object> extmsg) {
 		if (clientTraceLog.isInfoEnabled()) {
 			Map<String, Object> map = new HashMap<>();
 			map.put("time", DateTime.now().toString(DatePattern.NORM_DATETIME_MS_FORMAT));

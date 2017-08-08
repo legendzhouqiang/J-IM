@@ -7,14 +7,13 @@ import java.nio.channels.AsynchronousSocketChannel;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.Node;
-import org.tio.core.intf.Packet;
 
 /**
  * 
  * @author tanyaowu 
  * 2017年4月1日 上午9:31:16
  */
-public class ClientChannelContext<SessionContext, P extends Packet, R> extends ChannelContext<SessionContext, P, R> {
+public class ClientChannelContext extends ChannelContext {
 
 	private String bindIp;
 
@@ -27,7 +26,7 @@ public class ClientChannelContext<SessionContext, P extends Packet, R> extends C
 	 * @author: tanyaowu
 	 * 
 	 */
-	public ClientChannelContext(GroupContext<SessionContext, P, R> groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
+	public ClientChannelContext(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
 		super(groupContext, asynchronousSocketChannel);
 	}
 

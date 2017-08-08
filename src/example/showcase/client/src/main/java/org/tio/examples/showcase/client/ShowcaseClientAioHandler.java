@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.tio.client.intf.ClientAioHandler;
 import org.tio.core.ChannelContext;
+import org.tio.core.intf.Packet;
 import org.tio.examples.showcase.client.handler.GroupMsgRespHandler;
 import org.tio.examples.showcase.client.handler.JoinGroupRespHandler;
 import org.tio.examples.showcase.client.handler.LoginRespHandler;
 import org.tio.examples.showcase.client.handler.P2PRespHandler;
 import org.tio.examples.showcase.common.ShowcaseAbsAioHandler;
 import org.tio.examples.showcase.common.ShowcasePacket;
-import org.tio.examples.showcase.common.ShowcaseSessionContext;
 import org.tio.examples.showcase.common.Type;
 import org.tio.examples.showcase.common.intf.AbsShowcaseBsHandler;
 
@@ -20,7 +20,7 @@ import org.tio.examples.showcase.common.intf.AbsShowcaseBsHandler;
  * @author tanyaowu 
  * 2017年3月27日 上午12:18:11
  */
-public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements ClientAioHandler<ShowcaseSessionContext, ShowcasePacket, Object>
+public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements ClientAioHandler
 {
 
 	private static Map<Byte, AbsShowcaseBsHandler<?>> handlerMap = new HashMap<>();
@@ -36,12 +36,13 @@ public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements C
 	 * 处理消息
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext) throws Exception
+	public void handler(Packet packet, ChannelContext channelContext) throws Exception
 	{
-		Byte type = packet.getType();
+		ShowcasePacket showcasePacket = (ShowcasePacket)packet;
+		Byte type = showcasePacket.getType();
 		AbsShowcaseBsHandler<?> showcaseBsHandler = handlerMap.get(type);
-		showcaseBsHandler.handler(packet, channelContext);
-		return null;
+		showcaseBsHandler.handler(showcasePacket, channelContext);
+		return;
 	}
 
 	private static ShowcasePacket heartbeatPacket = new ShowcasePacket(Type.HEART_BEAT_REQ, null);

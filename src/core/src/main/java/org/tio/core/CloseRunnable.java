@@ -10,15 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.tio.client.ClientChannelContext;
 import org.tio.client.ReconnConf;
 import org.tio.core.intf.AioListener;
-import org.tio.core.intf.Packet;
 import org.tio.core.maintain.MaintainUtils;
 import org.tio.core.utils.SystemTimer;
 
-public class CloseRunnable<SessionContext, P extends Packet, R> implements Runnable {
+public class CloseRunnable implements Runnable {
 
 	private static Logger log = LoggerFactory.getLogger(CloseRunnable.class);
 
-	private ChannelContext<SessionContext, P, R> channelContext;
+	private ChannelContext channelContext;
 	private Throwable throwable;
 	private String remark;
 	private boolean isNeedRemove;
@@ -30,7 +29,7 @@ public class CloseRunnable<SessionContext, P extends Packet, R> implements Runna
 	 * 2017年3月1日 下午1:52:12
 	 * 
 	 */
-	public CloseRunnable(ChannelContext<SessionContext, P, R> channelContext, Throwable throwable, String remark, boolean isNeedRemove) {
+	public CloseRunnable(ChannelContext channelContext, Throwable throwable, String remark, boolean isNeedRemove) {
 		this.channelContext = channelContext;
 		this.throwable = throwable;
 		this.remark = remark;
@@ -47,8 +46,8 @@ public class CloseRunnable<SessionContext, P extends Packet, R> implements Runna
 	@Override
 	public void run() {
 		try {
-			GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
-			AioListener<SessionContext, P, R> aioListener = groupContext.getAioListener();
+			GroupContext groupContext = channelContext.getGroupContext();
+			AioListener aioListener = groupContext.getAioListener();
 
 			try {
 				AsynchronousSocketChannel asynchronousSocketChannel = channelContext.getAsynchronousSocketChannel();
@@ -64,11 +63,11 @@ public class CloseRunnable<SessionContext, P extends Packet, R> implements Runna
 			}
 
 			boolean isClientChannelContext = channelContext instanceof ClientChannelContext;
-			//			ReconnConf<SessionContext, P, R> reconnConf = channelContext.getGroupContext().getReconnConf();
+			//			ReconnConf reconnConf = channelContext.getGroupContext().getReconnConf();
 			boolean isRemove = this.isNeedRemove;
 			if (!isRemove) {
 				if (isClientChannelContext) {
-					ClientChannelContext<SessionContext, P, R> clientChannelContext = (ClientChannelContext<SessionContext, P, R>) channelContext;
+					ClientChannelContext clientChannelContext = (ClientChannelContext) channelContext;
 
 					if (!ReconnConf.isNeedReconn(clientChannelContext, false)) {
 						isRemove = true;
@@ -172,7 +171,7 @@ public class CloseRunnable<SessionContext, P extends Packet, R> implements Runna
 				} finally {
 					if (!isRemove && channelContext.isClosed() && (isClientChannelContext)) //不删除且没有连接上，则加到重连队列中
 					{
-						ClientChannelContext<SessionContext, P, R> clientChannelContext = (ClientChannelContext<SessionContext, P, R>) channelContext;
+						ClientChannelContext clientChannelContext = (ClientChannelContext) channelContext;
 						ReconnConf.put(clientChannelContext);
 					}
 				}

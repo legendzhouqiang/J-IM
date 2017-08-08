@@ -1,11 +1,9 @@
 package org.tio.http.server.listener;
 
 import org.tio.core.ChannelContext;
-import org.tio.http.common.HttpPacket;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.RequestLine;
-import org.tio.http.common.session.HttpSession;
 
 /**
  * @author tanyaowu 
@@ -23,8 +21,7 @@ public interface IHttpServerListener {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	public HttpResponse doBeforeHandler(HttpRequest packet, RequestLine requestLine, ChannelContext<HttpSession, HttpPacket, Object> channelContext)
-			throws Exception;
+	public HttpResponse doBeforeHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext) throws Exception;
 
 	/**
 	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)后会调用此方法，业务层可以统一在这里给HttpResponsePacket作一些修饰
@@ -36,7 +33,6 @@ public interface IHttpServerListener {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	public void doAfterHandler(HttpRequest packet, RequestLine requestLine, ChannelContext<HttpSession, HttpPacket, Object> channelContext,
-			HttpResponse httpResponse) throws Exception;
+	public void doAfterHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws Exception;
 
 }

@@ -3,9 +3,7 @@ package org.tio.websocket.server.handler;
 import org.tio.core.ChannelContext;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
-import org.tio.websocket.common.WsPacket;
 import org.tio.websocket.common.WsRequestPacket;
-import org.tio.websocket.common.WsSessionContext;
 
 /**
  * 
@@ -23,7 +21,7 @@ public interface IWsMsgHandler
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	public HttpResponse handshake(HttpRequest httpRequest, HttpResponse httpResponse, ChannelContext<WsSessionContext, WsPacket, Object> channelContext)  throws Exception;
+	public HttpResponse handshake(HttpRequest httpRequest, HttpResponse httpResponse, ChannelContext channelContext)  throws Exception;
 
 	/**
 	 * @param websocketPacket
@@ -33,7 +31,7 @@ public interface IWsMsgHandler
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	Object onText(WsRequestPacket websocketPacket, String text, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) throws Exception;
+	Object onText(WsRequestPacket websocketPacket, String text, ChannelContext channelContext) throws Exception;
 	
 	/**
 	 * 
@@ -44,7 +42,7 @@ public interface IWsMsgHandler
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	Object onClose(WsRequestPacket websocketPacket, byte[] bytes, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) throws Exception;
+	Object onClose(WsRequestPacket websocketPacket, byte[] bytes, ChannelContext channelContext) throws Exception;
 
 	/**
 	 * 
@@ -55,5 +53,5 @@ public interface IWsMsgHandler
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	Object onBytes(WsRequestPacket websocketPacket, byte[] bytes, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) throws Exception;
+	Object onBytes(WsRequestPacket websocketPacket, byte[] bytes, ChannelContext channelContext) throws Exception;
 }

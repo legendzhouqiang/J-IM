@@ -7,7 +7,7 @@ import org.tio.core.ChannelContext;
  * @author tanyaowu 
  * 2017年4月1日 上午9:34:08
  */
-public interface AioListener<SessionContext, P extends Packet, R> {
+public interface AioListener {
 	/**
 	 * 建链后触发本方法，注：建链不一定成功，需要关注参数isConnected
 	 * @param channelContext
@@ -17,7 +17,7 @@ public interface AioListener<SessionContext, P extends Packet, R> {
 	 * @author: tanyaowu
 	 *
 	 */
-	void onAfterConnected(ChannelContext<SessionContext, P, R> channelContext, boolean isConnected, boolean isReconnect) throws Exception;
+	void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) throws Exception;
 
 	/**
 	 * 消息包发送之后触发本方法
@@ -28,7 +28,7 @@ public interface AioListener<SessionContext, P extends Packet, R> {
 	 * @author: tanyaowu
 	 *
 	 */
-	void onAfterSent(ChannelContext<SessionContext, P, R> channelContext, P packet, boolean isSentSuccess) throws Exception;
+	void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) throws Exception;
 
 	/**
 	 * 解码成功后触发本方法
@@ -39,7 +39,7 @@ public interface AioListener<SessionContext, P extends Packet, R> {
 	 * @author: tanyaowu
 	 *
 	 */
-	void onAfterReceived(ChannelContext<SessionContext, P, R> channelContext, P packet, int packetSize) throws Exception;
+	void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) throws Exception;
 
 	/**
 	 * 连接关闭前触发本方法
@@ -50,7 +50,7 @@ public interface AioListener<SessionContext, P extends Packet, R> {
 	 * @param isRemove
 	 * @author: tanyaowu
 	 */
-	void onBeforeClose(ChannelContext<SessionContext, P, R> channelContext, Throwable throwable, String remark, boolean isRemove);
+	void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove);
 
 	/**
 	 * 连接关闭前后触发本方法
@@ -61,5 +61,5 @@ public interface AioListener<SessionContext, P extends Packet, R> {
 	 * @param isRemove 是否是删除
 	 * @author: tanyaowu
 	 */
-	void onAfterClose(ChannelContext<SessionContext, P, R> channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception;
+	void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception;
 }

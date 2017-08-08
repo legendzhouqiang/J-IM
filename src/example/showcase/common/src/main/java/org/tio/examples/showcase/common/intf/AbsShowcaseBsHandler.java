@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
 import org.tio.examples.showcase.common.Const;
 import org.tio.examples.showcase.common.ShowcasePacket;
-import org.tio.examples.showcase.common.ShowcaseSessionContext;
 import org.tio.examples.showcase.common.packets.BaseBody;
 import org.tio.json.Json;
 
@@ -27,10 +26,10 @@ public abstract class AbsShowcaseBsHandler<T extends BaseBody> implements Showca
 
 	public abstract Class<T> bodyClass();
 
-	public abstract Object handler(ShowcasePacket packet, T bsBody, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext) throws Exception;
+	public abstract Object handler(ShowcasePacket packet, T bsBody, ChannelContext channelContext) throws Exception;
 
 	@Override
-	public Object handler(ShowcasePacket packet, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext) throws Exception
+	public Object handler(ShowcasePacket packet, ChannelContext channelContext) throws Exception
 	{
 		String jsonStr = null;
 		T bsBody = null;

@@ -39,9 +39,9 @@ public class HttpRequestDecoder {
 
 	public static final int MAX_HEADER_LENGTH = 20480;
 
-	public static HttpRequest decode(ByteBuffer buffer, ChannelContext<?, ?, ?> channelContext) throws AioDecodeException {
+	public static HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
 		int initPosition = buffer.position();
-		int count = 0;
+//		int count = 0;
 		Step step = Step.firstline;
 //		StringBuilder currLine = new StringBuilder();
 		Map<String, String> headers = new HashMap<>();
@@ -182,7 +182,7 @@ public class HttpRequestDecoder {
 	 * @throws AioDecodeException
 	 * @author: tanyaowu
 	 */
-	private static void parseBody(HttpRequest httpRequest, RequestLine firstLine, byte[] bodyBytes, ChannelContext<?, ?, ?> channelContext) throws AioDecodeException {
+	private static void parseBody(HttpRequest httpRequest, RequestLine firstLine, byte[] bodyBytes, ChannelContext channelContext) throws AioDecodeException {
 		parseBodyFormat(httpRequest, httpRequest.getHeaders());
 		RequestBodyFormat bodyFormat = httpRequest.getBodyFormat();
 

@@ -6,13 +6,14 @@ import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.exception.AioDecodeException;
 import org.tio.core.intf.AioHandler;
+import org.tio.core.intf.Packet;
 
 /**
  * 
  * @author tanyaowu 
  * 2017年3月27日 上午12:14:12
  */
-public abstract class ShowcaseAbsAioHandler implements AioHandler<ShowcaseSessionContext, ShowcasePacket, Object>
+public abstract class ShowcaseAbsAioHandler implements AioHandler
 {
 	/**
 	 * 编码：把业务消息包编码为可以发送的ByteBuffer
@@ -20,9 +21,10 @@ public abstract class ShowcaseAbsAioHandler implements AioHandler<ShowcaseSessio
 	 * 消息体：byte[]
 	 */
 	@Override
-	public ByteBuffer encode(ShowcasePacket packet, GroupContext<ShowcaseSessionContext, ShowcasePacket, Object> groupContext, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext)
+	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext)
 	{
-		byte[] body = packet.getBody();
+		ShowcasePacket showcasePacket = (ShowcasePacket)packet;
+		byte[] body = showcasePacket.getBody();
 		int bodyLen = 0;
 		if (body != null)
 		{
@@ -36,7 +38,7 @@ public abstract class ShowcaseAbsAioHandler implements AioHandler<ShowcaseSessio
 		buffer.order(groupContext.getByteOrder());
 
 		//写入消息类型
-		buffer.put(packet.getType());
+		buffer.put(showcasePacket.getType());
 		//写入消息体长度
 		buffer.putInt(bodyLen);
 
@@ -54,7 +56,7 @@ public abstract class ShowcaseAbsAioHandler implements AioHandler<ShowcaseSessio
 	 * 消息体：byte[]
 	 */
 	@Override
-	public ShowcasePacket decode(ByteBuffer buffer, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext) throws AioDecodeException
+	public ShowcasePacket decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException
 	{
 		int readableLength = buffer.limit() - buffer.position();
 		if (readableLength < ShowcasePacket.HEADER_LENGHT)

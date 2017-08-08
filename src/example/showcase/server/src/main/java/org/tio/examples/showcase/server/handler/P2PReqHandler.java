@@ -55,11 +55,11 @@ public class P2PReqHandler extends AbsShowcaseBsHandler<P2PReqBody>
 	 * @author: tanyaowu
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, P2PReqBody bsBody, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext) throws Exception
+	public Object handler(ShowcasePacket packet, P2PReqBody bsBody, ChannelContext channelContext) throws Exception
 	{
 		log.info("收到点对点请求消息:{}", Json.toJson(bsBody));
 		
-		ShowcaseSessionContext showcaseSessionContext = channelContext.getSessionContext();
+		ShowcaseSessionContext showcaseSessionContext = (ShowcaseSessionContext)channelContext.getAttribute();
 		
 		P2PRespBody p2pRespBody = new P2PRespBody();
 		p2pRespBody.setFromUserid(showcaseSessionContext.getUserid());

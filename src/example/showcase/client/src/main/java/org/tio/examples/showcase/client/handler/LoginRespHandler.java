@@ -52,12 +52,12 @@ public class LoginRespHandler extends AbsShowcaseBsHandler<LoginRespBody>
 	 * @author: tanyaowu
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, LoginRespBody bsBody, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext) throws Exception
+	public Object handler(ShowcasePacket packet, LoginRespBody bsBody, ChannelContext channelContext) throws Exception
 	{
 		System.out.println("收到登录响应消息:" + Json.toJson(bsBody));
 		if (LoginRespBody.Code.SUCCESS.equals(bsBody.getCode()) )
 		{
-			ShowcaseSessionContext showcaseSessionContext = channelContext.getSessionContext();
+			ShowcaseSessionContext showcaseSessionContext = (ShowcaseSessionContext)channelContext.getAttribute();
 			showcaseSessionContext.setToken(bsBody.getToken());
 			System.out.println("登录成功，token是:" + bsBody.getToken());
 		}

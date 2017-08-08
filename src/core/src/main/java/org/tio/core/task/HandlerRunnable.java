@@ -8,8 +8,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tio.core.ChannelContext;
 import org.tio.core.ChannelAction;
+import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.intf.Packet;
 import org.tio.core.maintain.ChannelContextMapWithLock;
@@ -21,12 +21,12 @@ import org.tio.core.threadpool.AbstractQueueRunnable;
  * 2012-08-09
  * 
  */
-public class HandlerRunnable<SessionContext, P extends Packet, R> extends AbstractQueueRunnable<P> {
+public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 	private static final Logger log = LoggerFactory.getLogger(HandlerRunnable.class);
 
-	private ChannelContext<SessionContext, P, R> channelContext = null;
+	private ChannelContext channelContext = null;
 
-	public HandlerRunnable(ChannelContext<SessionContext, P, R> channelContext, Executor executor) {
+	public HandlerRunnable(ChannelContext channelContext, Executor executor) {
 		super(executor);
 		this.channelContext = channelContext;
 	}
@@ -40,16 +40,16 @@ public class HandlerRunnable<SessionContext, P extends Packet, R> extends Abstra
 	 *
 	 * @author: tanyaowu
 	 */
-	public void handler(P packet) {
+	public void handler(Packet packet) {
 		//		int ret = 0;
 
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+		GroupContext groupContext = channelContext.getGroupContext();
 		try {
 
 			Integer synSeq = packet.getSynSeq();
 			if (synSeq != null && synSeq > 0) {
-				ChannelContextMapWithLock<SessionContext, P, R> syns = channelContext.getGroupContext().getWaitingResps();
-				P initPacket = syns.remove(synSeq);
+				ChannelContextMapWithLock syns = channelContext.getGroupContext().getWaitingResps();
+				Packet initPacket = syns.remove(synSeq);
 				if (initPacket != null) {
 					synchronized (initPacket) {
 						syns.put(synSeq, packet);
@@ -93,7 +93,7 @@ public class HandlerRunnable<SessionContext, P extends Packet, R> extends Abstra
 	 */
 	@Override
 	public void runTask() {
-		P packet = null;
+		Packet packet = null;
 		while ((packet = msgQueue.poll()) != null) {
 			handler(packet);
 		}

@@ -15,14 +15,13 @@ import org.tio.core.ChannelContext;
 import org.tio.core.utils.GuavaUtils;
 import org.tio.http.common.Cookie;
 import org.tio.http.common.HttpConst;
-import org.tio.http.common.HttpPacket;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.RequestLine;
-import org.tio.http.common.session.HttpSession;
 import org.tio.http.server.HttpServerConfig;
 import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
+import org.tio.http.server.session.HttpSession;
 import org.tio.http.server.util.ClassUtils;
 import org.tio.http.server.util.Resps;
 
@@ -65,15 +64,14 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats);
 	}
 
-	private Cookie getSessionCookie(HttpRequest httpRequest, HttpServerConfig httpServerConfig, ChannelContext<HttpSession, HttpPacket, Object> channelContext)
-			throws ExecutionException {
+	private Cookie getSessionCookie(HttpRequest httpRequest, HttpServerConfig httpServerConfig, ChannelContext channelContext) throws ExecutionException {
 		Cookie sessionCookie = httpRequest.getCookie(httpServerConfig.getSessionCookieName());
 		return sessionCookie;
 	}
-	
-	private static String randomCookieValue() {
-		return RandomUtil.randomUUID();
-	}
+
+//	private static String randomCookieValue() {
+//		return RandomUtil.randomUUID();
+//	}
 
 	/**
 	 * 
@@ -86,56 +84,55 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		this.routes = routes;
 	}
 
-	private void processCookieBeforeHandler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext<HttpSession, HttpPacket, Object> channelContext)
-			throws ExecutionException {
+	private void processCookieBeforeHandler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext) throws ExecutionException {
 		Cookie sessionCookie = getSessionCookie(httpRequest, httpServerConfig, channelContext);
 		HttpSession httpSession = null;
 		if (sessionCookie == null) {
-			httpSession = new HttpSession(httpServerConfig.getHttpSessionFactory().create(channelContext.getGroupContext()));
+			String sessionId = RandomUtil.randomUUID();
+			httpSession = new HttpSession(httpServerConfig.getHttpSessionFactory().create(sessionId, httpServerConfig.getSessionTimeout(), channelContext.getGroupContext()), sessionId);
 		} else {
 			httpSession = loadingCache.getIfPresent(sessionCookie.getValue());
 			if (httpSession == null) {
 				log.info("{} session【{}】超时", channelContext, sessionCookie.getValue());
-				httpSession = new HttpSession(httpServerConfig.getHttpSessionFactory().create(channelContext.getGroupContext()));
+				String sessionId = RandomUtil.randomUUID();
+				httpSession = new HttpSession(httpServerConfig.getHttpSessionFactory().create(sessionId, httpServerConfig.getSessionTimeout(), channelContext.getGroupContext()), sessionId);
 			}
 		}
-		channelContext.setSessionContext(httpSession);
-		httpRequest.setHttpSession(httpSession);
+		channelContext.setAttribute(httpSession);
+//		httpRequest.setHttpSession(httpSession);
 	}
 
-	private void processCookieAfterHandler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext<HttpSession, HttpPacket, Object> channelContext,
-			HttpResponse httpResponse) throws ExecutionException {
-		HttpSession httpSession = httpRequest.getHttpSession();//not null
-		
+	private void processCookieAfterHandler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws ExecutionException {
+		HttpSession httpSession = (HttpSession)channelContext.getAttribute();//.getHttpSession();//not null
+
 		Cookie sessionCookie = getSessionCookie(httpRequest, httpServerConfig, channelContext);
-		String value = null;
+		String sessionCookieValue = null;
 		if (sessionCookie == null) {
-//			createSessionCookie(httpRequest, httpServerConfig, channelContext, httpResponse);
-			
+			//			createSessionCookie(httpRequest, httpServerConfig, channelContext, httpResponse);
+
 			String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
 			String name = httpServerConfig.getSessionCookieName();
-			
-			value = randomCookieValue();
+
+			sessionCookieValue = httpSession.getSessionId();//randomCookieValue();
 			long maxAge = httpServerConfig.getSessionTimeout();
-			sessionCookie = new Cookie(domain, name, value, maxAge);
+			sessionCookie = new Cookie(domain, name, sessionCookieValue, maxAge);
 			httpResponse.addCookie(sessionCookie);
-			loadingCache.put(value, httpSession);
+			loadingCache.put(sessionCookieValue, httpSession);
 			log.info("{} 创建会话Cookie, {}", channelContext, sessionCookie);
 		} else {
-			value = sessionCookie.getValue();
-			HttpSession httpSession1 = loadingCache.getIfPresent(value);
+			sessionCookieValue = sessionCookie.getValue();
+			HttpSession httpSession1 = loadingCache.getIfPresent(sessionCookieValue);
 			if (httpSession1 == null) {
-				loadingCache.put(value, httpSession);
+				loadingCache.put(sessionCookieValue, httpSession);
 			}
 		}
 	}
 
 	@Override
-	public HttpResponse handler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext<HttpSession, HttpPacket, Object> channelContext)
-			throws Exception {
+	public HttpResponse handler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext) throws Exception {
 		HttpResponse ret = null;
 		processCookieBeforeHandler(httpRequest, requestLine, channelContext);
-		HttpSession httpSession = httpRequest.getHttpSession();
+		HttpSession httpSession = (HttpSession)channelContext.getAttribute();
 		try {
 			if (httpServerListener != null) {
 				ret = httpServerListener.doBeforeHandler(httpRequest, requestLine, channelContext);
@@ -168,7 +165,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 								paramValues[i] = httpServerConfig;
 							} else if (paramType.isAssignableFrom(ChannelContext.class)) {
 								paramValues[i] = channelContext;
-							}  else if (paramType == HttpSession.class) {
+							} else if (paramType == HttpSession.class) {
 								paramValues[i] = httpSession;
 							} else {
 								if (params != null) {
@@ -274,7 +271,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	}
 
 	@Override
-	public HttpResponse resp404(HttpRequest httpRequest, RequestLine requestLine, ChannelContext<HttpSession, HttpPacket, Object> channelContext) {
+	public HttpResponse resp404(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext) {
 		String file404 = "/404.html";
 		String root = httpServerConfig.getRoot();
 		File file = new File(root, file404);
@@ -288,8 +285,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	}
 
 	@Override
-	public HttpResponse resp500(HttpRequest httpRequest, RequestLine requestLine, ChannelContext<HttpSession, HttpPacket, Object> channelContext,
-			Throwable throwable) {
+	public HttpResponse resp500(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext, Throwable throwable) {
 		String file500 = "/500.html";
 		String root = httpServerConfig.getRoot();
 		File file = new File(root, file500);

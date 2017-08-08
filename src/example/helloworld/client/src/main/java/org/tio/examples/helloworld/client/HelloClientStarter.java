@@ -22,19 +22,19 @@ public class HelloClientStarter
 	public static Node serverNode = new Node("127.0.0.1", Const.PORT);
 
 	//handler, 包括编码、解码、消息处理
-	public static ClientAioHandler<Object, HelloPacket, Object> aioClientHandler = new HelloClientAioHandler();
+	public static ClientAioHandler aioClientHandler = new HelloClientAioHandler();
 	
 	//事件监听器，可以为null，但建议自己实现该接口，可以参考showcase了解些接口
-	public static ClientAioListener<Object, HelloPacket, Object> aioListener = null;
+	public static ClientAioListener aioListener = null;
 	
 	//断链后自动连接的，不想自动连接请设为null
-	private static ReconnConf<Object, HelloPacket, Object> reconnConf = new ReconnConf<Object, HelloPacket, Object>(5000L);
+	private static ReconnConf reconnConf = new ReconnConf(5000L);
 
 	//一组连接共用的上下文对象
-	public static ClientGroupContext<Object, HelloPacket, Object> clientGroupContext = new ClientGroupContext<>(aioClientHandler, aioListener, reconnConf);
+	public static ClientGroupContext clientGroupContext = new ClientGroupContext(aioClientHandler, aioListener, reconnConf);
 
-	public static AioClient<Object, HelloPacket, Object> aioClient = null;
-	public static ClientChannelContext<Object, HelloPacket, Object> clientChannelContext = null;
+	public static AioClient aioClient = null;
+	public static ClientChannelContext clientChannelContext = null;
 
 	/**
 	 * 启动程序入口
@@ -42,7 +42,7 @@ public class HelloClientStarter
 	public static void main(String[] args) throws Exception
 	{
 		clientGroupContext.setHeartbeatTimeout(org.tio.examples.helloworld.common.Const.TIMEOUT);
-		aioClient = new AioClient<>(clientGroupContext);
+		aioClient = new AioClient(clientGroupContext);
 		clientChannelContext = aioClient.connect(serverNode);
 		//连上后，发条消息玩玩
 		send();

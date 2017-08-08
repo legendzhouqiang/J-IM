@@ -30,15 +30,15 @@ public class WsServerDecoder {
 
 	}
 
-	public static WsRequestPacket decode(ByteBuffer buf, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) throws AioDecodeException {
-		WsSessionContext imSessionContext = channelContext.getSessionContext();
+	public static WsRequestPacket decode(ByteBuffer buf, ChannelContext channelContext) throws AioDecodeException {
+		WsSessionContext imSessionContext = (WsSessionContext) channelContext.getAttribute();
 		List<byte[]> lastParts = imSessionContext.getLastParts();
 
 		//第一阶段解析
 		int initPosition = buf.position();
 		int readableLength = buf.limit() - initPosition;
 
-		int headLength = WsRequestPacket.MINIMUM_HEADER_LENGTH;
+		int headLength = WsPacket.MINIMUM_HEADER_LENGTH;
 
 		if (readableLength < headLength) {
 			return null;
@@ -52,8 +52,8 @@ public class WsServerDecoder {
 		byte opCodeByte = (byte) (first & 0x0F);//后四位为opCode 00001111
 		Opcode opcode = Opcode.valueOf(opCodeByte);
 		if (opcode == Opcode.CLOSE) {
-//			Aio.remove(channelContext, "收到opcode:" + opcode);
-//			return null;
+			//			Aio.remove(channelContext, "收到opcode:" + opcode);
+			//			return null;
 		}
 		if (!fin) {
 			log.error("{} 暂时不支持fin为false的请求", channelContext);
@@ -98,7 +98,7 @@ public class WsServerDecoder {
 			log.info("{} payloadLengthFlag: 127，payloadLength {}", channelContext, payloadLength);
 		}
 
-		if (payloadLength < 0 || payloadLength > WsRequestPacket.MAX_BODY_LENGTH) {
+		if (payloadLength < 0 || payloadLength > WsPacket.MAX_BODY_LENGTH) {
 			throw new AioDecodeException("body length(" + payloadLength + ") is not right");
 		}
 
@@ -122,7 +122,7 @@ public class WsServerDecoder {
 			return websocketPacket;
 		}
 
-		byte[] array = ByteBufferUtils.readBytes(buf, (int) payloadLength);
+		byte[] array = ByteBufferUtils.readBytes(buf, payloadLength);
 		if (hasMask) {
 			for (int i = 0; i < array.length; i++) {
 				array[i] = (byte) (array[i] ^ mask[i % 4]);
@@ -151,13 +151,13 @@ public class WsServerDecoder {
 			}
 
 			websocketPacket.setBody(array);
-			
+
 			if (opcode == Opcode.BINARY) {
 
 			} else {
 				try {
 					String text = null;
-					text = new String(array, WsRequestPacket.CHARSET_NAME);
+					text = new String(array, WsPacket.CHARSET_NAME);
 					websocketPacket.setWsBodyText(text);
 				} catch (UnsupportedEncodingException e) {
 					log.error(e.toString(), e);

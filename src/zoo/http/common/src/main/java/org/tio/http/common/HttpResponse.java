@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ZipUtil;
@@ -16,7 +14,7 @@ import com.xiaoleilu.hutool.util.ZipUtil;
  *
  */
 public class HttpResponse extends HttpPacket {
-	private static Logger log = LoggerFactory.getLogger(HttpResponse.class);
+//	private static Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
 	private HttpResponseStatus status = HttpResponseStatus.C200;
 	

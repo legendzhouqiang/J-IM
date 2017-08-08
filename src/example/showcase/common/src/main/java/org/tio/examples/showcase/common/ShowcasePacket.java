@@ -67,6 +67,7 @@ public class ShowcasePacket extends Packet
 		this.type = type;
 	}
 
+	@Override
 	public String logstr()
 	{
 		return "" + type;

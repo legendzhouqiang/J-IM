@@ -12,17 +12,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.Node;
-import org.tio.core.intf.Packet;
 
 /**
  * 
  * @author tanyaowu 
  *
  */
-public class AioServer<SessionContext, P extends Packet, R> {
+public class AioServer {
 	private static Logger log = LoggerFactory.getLogger(AioServer.class);
 
-	private ServerGroupContext<SessionContext, P, R> serverGroupContext;
+	private ServerGroupContext serverGroupContext;
 
 	private AsynchronousServerSocketChannel serverSocketChannel;
 
@@ -38,7 +37,7 @@ public class AioServer<SessionContext, P extends Packet, R> {
 	 * 2017年1月2日 下午5:53:06
 	 *
 	 */
-	public AioServer(ServerGroupContext<SessionContext, P, R> serverGroupContext) {
+	public AioServer(ServerGroupContext serverGroupContext) {
 		super();
 		this.serverGroupContext = serverGroupContext;
 	}
@@ -46,7 +45,7 @@ public class AioServer<SessionContext, P extends Packet, R> {
 	/**
 	 * @return the serverGroupContext
 	 */
-	public ServerGroupContext<SessionContext, P, R> getServerGroupContext() {
+	public ServerGroupContext getServerGroupContext() {
 		return serverGroupContext;
 	}
 
@@ -60,7 +59,7 @@ public class AioServer<SessionContext, P extends Packet, R> {
 	/**
 	 * @param serverGroupContext the serverGroupContext to set
 	 */
-	public void setServerGroupContext(ServerGroupContext<SessionContext, P, R> serverGroupContext) {
+	public void setServerGroupContext(ServerGroupContext serverGroupContext) {
 		this.serverGroupContext = serverGroupContext;
 	}
 
@@ -84,7 +83,7 @@ public class AioServer<SessionContext, P extends Packet, R> {
 
 		serverSocketChannel.bind(listenAddress, 0);
 
-		AcceptCompletionHandler<SessionContext, P, R> acceptCompletionHandler = serverGroupContext.getAcceptCompletionHandler();
+		AcceptCompletionHandler acceptCompletionHandler = serverGroupContext.getAcceptCompletionHandler();
 		serverSocketChannel.accept(this, acceptCompletionHandler);
 
 		log.warn("t-io server started, listen on {}", this.serverNode);

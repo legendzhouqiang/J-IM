@@ -13,7 +13,6 @@ import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.AioListener;
 import org.tio.core.intf.ChannelTraceHandler;
 import org.tio.core.intf.GroupListener;
-import org.tio.core.intf.Packet;
 import org.tio.core.intf.TioUuid;
 import org.tio.core.maintain.ChannelContextMapWithLock;
 import org.tio.core.maintain.ChannelContextSetWithLock;
@@ -26,7 +25,7 @@ import org.tio.core.stat.GroupStat;
 import org.tio.core.threadpool.DefaultThreadFactory;
 import org.tio.core.threadpool.SynThreadPoolExecutor;
 
-public abstract class GroupContext<SessionContext, P extends Packet, R> {
+public abstract class GroupContext {
 	static Logger log = LoggerFactory.getLogger(GroupContext.class);
 
 	private static int CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
@@ -65,11 +64,11 @@ public abstract class GroupContext<SessionContext, P extends Packet, R> {
 	 */
 	protected int readBufferSize = READ_BUFFER_SIZE;
 
-	protected ReconnConf<SessionContext, P, R> reconnConf;//重连配置
+	protected ReconnConf reconnConf;//重连配置
 
-	private ChannelTraceHandler<SessionContext, P, R> clientTraceHandler = new DefaultChannelTraceHandler<SessionContext, P, R>();
+	private ChannelTraceHandler clientTraceHandler = new DefaultChannelTraceHandler();
 
-	private GroupListener<SessionContext, P, R> groupListener = null;
+	private GroupListener groupListener = null;
 
 	private TioUuid tioUuid = new DefaultTioUuid();
 
@@ -78,20 +77,20 @@ public abstract class GroupContext<SessionContext, P extends Packet, R> {
 
 	protected ThreadPoolExecutor groupExecutor = null;
 
-	public final ClientNodes<SessionContext, P, R> clientNodes = new ClientNodes<>();
-	public final ChannelContextSetWithLock<SessionContext, P, R> connections = new ChannelContextSetWithLock<>();
-	public final ChannelContextSetWithLock<SessionContext, P, R> connecteds = new ChannelContextSetWithLock<>();
-	public final ChannelContextSetWithLock<SessionContext, P, R> closeds = new ChannelContextSetWithLock<>();
+	public final ClientNodes clientNodes = new ClientNodes();
+	public final ChannelContextSetWithLock connections = new ChannelContextSetWithLock();
+	public final ChannelContextSetWithLock connecteds = new ChannelContextSetWithLock();
+	public final ChannelContextSetWithLock closeds = new ChannelContextSetWithLock();
 
-	public final Groups<SessionContext, P, R> groups = new Groups<>();
-	public final Users<SessionContext, P, R> users = new Users<>();
-	public final Ids<SessionContext, P, R> ids = new Ids<>();
+	public final Groups groups = new Groups();
+	public final Users users = new Users();
+	public final Ids ids = new Ids();
 	/**
 	 * ip黑名单
 	 */
 	public final IpBlacklist ipBlacklist = new IpBlacklist();
 
-	public final ChannelContextMapWithLock<SessionContext, P, R> waitingResps = new ChannelContextMapWithLock<>();
+	public final ChannelContextMapWithLock waitingResps = new ChannelContextMapWithLock();
 
 	/**
 	 * packet编码成bytebuffer时，是否与ChannelContext相关，false: packet编码与ChannelContext无关
@@ -193,7 +192,7 @@ public abstract class GroupContext<SessionContext, P extends Packet, R> {
 	 * 2016年12月20日 上午11:32:02
 	 * 
 	 */
-	public abstract AioHandler<SessionContext, P, R> getAioHandler();
+	public abstract AioHandler getAioHandler();
 
 	/**
 	 * @return
@@ -211,19 +210,19 @@ public abstract class GroupContext<SessionContext, P extends Packet, R> {
 	 * 2016年12月20日 上午11:33:28
 	 * 
 	 */
-	public abstract AioListener<SessionContext, P, R> getAioListener();
+	public abstract AioListener getAioListener();
 
 	/**
 	 * @return the reconnConf
 	 */
-	public ReconnConf<SessionContext, P, R> getReconnConf() {
+	public ReconnConf getReconnConf() {
 		return reconnConf;
 	}
 
 	/**
 	 * @return the syns
 	 */
-	public ChannelContextMapWithLock<SessionContext, P, R> getWaitingResps() {
+	public ChannelContextMapWithLock getWaitingResps() {
 		return waitingResps;
 	}
 
@@ -286,28 +285,28 @@ public abstract class GroupContext<SessionContext, P extends Packet, R> {
 	/**
 	 * @return the clientTraceHandler
 	 */
-	public ChannelTraceHandler<SessionContext, P, R> getClientTraceHandler() {
+	public ChannelTraceHandler getClientTraceHandler() {
 		return clientTraceHandler;
 	}
 
 	/**
 	 * @param clientTraceHandler the clientTraceHandler to set
 	 */
-	public void setClientTraceHandler(ChannelTraceHandler<SessionContext, P, R> clientTraceHandler) {
+	public void setClientTraceHandler(ChannelTraceHandler clientTraceHandler) {
 		this.clientTraceHandler = clientTraceHandler;
 	}
 
 	/**
 	 * @return the groupListener
 	 */
-	public GroupListener<SessionContext, P, R> getGroupListener() {
+	public GroupListener getGroupListener() {
 		return groupListener;
 	}
 
 	/**
 	 * @param groupListener the groupListener to set
 	 */
-	public void setGroupListener(GroupListener<SessionContext, P, R> groupListener) {
+	public void setGroupListener(GroupListener groupListener) {
 		this.groupListener = groupListener;
 	}
 

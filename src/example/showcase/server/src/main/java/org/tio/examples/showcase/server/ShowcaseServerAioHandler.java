@@ -6,9 +6,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
+import org.tio.core.intf.Packet;
 import org.tio.examples.showcase.common.ShowcaseAbsAioHandler;
 import org.tio.examples.showcase.common.ShowcasePacket;
-import org.tio.examples.showcase.common.ShowcaseSessionContext;
 import org.tio.examples.showcase.common.Type;
 import org.tio.examples.showcase.common.intf.AbsShowcaseBsHandler;
 import org.tio.examples.showcase.server.handler.GroupMsgReqHandler;
@@ -23,7 +23,7 @@ import org.tio.server.intf.ServerAioHandler;
  * @author tanyaowu 
  *
  */
-public class ShowcaseServerAioHandler extends ShowcaseAbsAioHandler implements ServerAioHandler<ShowcaseSessionContext, ShowcasePacket, Object>
+public class ShowcaseServerAioHandler extends ShowcaseAbsAioHandler implements ServerAioHandler
 {
 	private static Logger log = LoggerFactory.getLogger(ShowcaseServerAioHandler.class);
 
@@ -42,16 +42,17 @@ public class ShowcaseServerAioHandler extends ShowcaseAbsAioHandler implements S
 	 * 处理消息
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext) throws Exception
+	public void handler(Packet packet, ChannelContext channelContext) throws Exception
 	{
-		Byte type = packet.getType();
+		ShowcasePacket showcasePacket = (ShowcasePacket)packet;
+		Byte type = showcasePacket.getType();
 		AbsShowcaseBsHandler<?> showcaseBsHandler = handlerMap.get(type);
 		if (showcaseBsHandler == null)
 		{
 			log.error("{}, 找不到处理类，type:{}", channelContext, type);
-			return null;
+			return;
 		}
-		showcaseBsHandler.handler(packet, channelContext);
-		return null;
+		showcaseBsHandler.handler(showcasePacket, channelContext);
+		return;
 	}
 }

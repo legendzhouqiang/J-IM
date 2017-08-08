@@ -1,7 +1,5 @@
 package org.tio.core.udp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tio.core.Node;
 
 /**
@@ -9,7 +7,7 @@ import org.tio.core.Node;
  * 2017年7月5日 下午2:53:38
  */
 public class UdpConf {
-	private static Logger log = LoggerFactory.getLogger(UdpConf.class);
+//	private static Logger log = LoggerFactory.getLogger(UdpConf.class);
 	
 	private int timeout = 5000;
 	

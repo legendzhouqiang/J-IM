@@ -1,6 +1,5 @@
 package org.tio.server;
 
-import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelAction;
 import org.tio.core.ReadCompletionHandler;
-import org.tio.core.intf.Packet;
 import org.tio.core.utils.SystemTimer;
 import org.tio.server.intf.ServerAioListener;
 
@@ -20,7 +18,7 @@ import org.tio.server.intf.ServerAioListener;
  * @author tanyaowu 
  * 2017年4月4日 上午9:27:45
  */
-public class AcceptCompletionHandler<SessionContext, P extends Packet, R> implements CompletionHandler<AsynchronousSocketChannel, AioServer<SessionContext, P, R>> {
+public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, AioServer> {
 
 	private static Logger log = LoggerFactory.getLogger(AioServer.class);
 
@@ -34,13 +32,10 @@ public class AcceptCompletionHandler<SessionContext, P extends Packet, R> implem
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void completed(AsynchronousSocketChannel asynchronousSocketChannel, AioServer<SessionContext, P, R> aioServer) {
+	public void completed(AsynchronousSocketChannel asynchronousSocketChannel, AioServer aioServer) {
 		try {
+			ServerGroupContext serverGroupContext = aioServer.getServerGroupContext();
 
-			ServerGroupContext<SessionContext, P, R> serverGroupContext = aioServer.getServerGroupContext();
-			InetSocketAddress inetSocketAddress = (InetSocketAddress) asynchronousSocketChannel.getRemoteAddress();
-			String clientIp = inetSocketAddress.getHostString();
-			
 			ServerGroupStat serverGroupStat = serverGroupContext.getServerGroupStat();
 			serverGroupStat.getAccepted().incrementAndGet();
 
@@ -49,10 +44,10 @@ public class AcceptCompletionHandler<SessionContext, P extends Packet, R> implem
 			asynchronousSocketChannel.setOption(StandardSocketOptions.SO_SNDBUF, 32 * 1024);
 			asynchronousSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 
-			ServerChannelContext<SessionContext, P, R> channelContext = new ServerChannelContext<>(serverGroupContext, asynchronousSocketChannel);
+			ServerChannelContext channelContext = new ServerChannelContext(serverGroupContext, asynchronousSocketChannel);
 			channelContext.setClosed(false);
 			channelContext.setServerNode(aioServer.getServerNode());
-			ServerAioListener<SessionContext, P, R> serverAioListener = serverGroupContext.getServerAioListener();
+			ServerAioListener serverAioListener = serverGroupContext.getServerAioListener();
 			channelContext.getStat().setTimeFirstConnected(SystemTimer.currentTimeMillis());
 			channelContext.traceClient(ChannelAction.CONNECT, null, null);
 			try {
@@ -62,7 +57,7 @@ public class AcceptCompletionHandler<SessionContext, P extends Packet, R> implem
 			}
 
 			if (!aioServer.isWaitingStop()) {
-				ReadCompletionHandler<SessionContext, P, R> readCompletionHandler = channelContext.getReadCompletionHandler();
+				ReadCompletionHandler readCompletionHandler = channelContext.getReadCompletionHandler();
 				ByteBuffer readByteBuffer = readCompletionHandler.getReadByteBuffer();//ByteBuffer.allocateDirect(channelContext.getGroupContext().getReadBufferSize());
 				readByteBuffer.position(0);
 				readByteBuffer.limit(readByteBuffer.capacity());
@@ -87,7 +82,7 @@ public class AcceptCompletionHandler<SessionContext, P extends Packet, R> implem
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void failed(Throwable exc, AioServer<SessionContext, P, R> aioServer) {
+	public void failed(Throwable exc, AioServer aioServer) {
 		AsynchronousServerSocketChannel serverSocketChannel = aioServer.getServerSocketChannel();
 		serverSocketChannel.accept(aioServer, this);
 

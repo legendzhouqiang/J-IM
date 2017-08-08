@@ -7,10 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.utils.SystemTimer;
 import org.tio.http.server.HttpServerConfig;
 import org.tio.http.server.HttpServerStarter;
-import org.tio.http.server.demo1.AppStarter;
-import org.tio.http.server.handler.DefaultHttpRequestHandler;
+import org.tio.http.server.demo1.HttpServerDemoStarter;
 import org.tio.http.server.handler.IHttpRequestHandler;
-import org.tio.http.server.mvc.Routes;
 
 import com.jfinal.kit.PropKit;
 
@@ -41,9 +39,9 @@ public class HttpServerInit {
 		
 		int port = PropKit.getInt("http.port");//启动端口
 		String pageRoot = PropKit.get("page.root");//html/css/js等的根目录，支持classpath:，也支持绝对路径
-		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };//tio mvc需要扫描的根目录包
-		httpServerStarter = new HttpServerStarter();
-		httpServerStarter.start(pageRoot, port, scanPackages, null);
+		String[] scanPackages = new String[] { HttpServerDemoStarter.class.getPackage().getName() };//tio mvc需要扫描的根目录包
+		httpServerStarter = new HttpServerStarter(pageRoot, port, scanPackages, null);
+		httpServerStarter.start();
 
 		long end = SystemTimer.currentTimeMillis();
 		long iv = end - start;

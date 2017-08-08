@@ -7,28 +7,27 @@ import org.apache.commons.lang3.StringUtils;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.ObjWithLock;
-import org.tio.core.intf.Packet;
 
 /**
  * The Class Users.
  *
  * @param <Ext> the generic type
- * @param <P> the generic type
+ * @param  the generic type
  * @param <R> the generic type
  */
-public class Users<SessionContext, P extends Packet, R> {
+public class Users {
 
 	/**
 	 * key: userid
 	 * value: ChannelContext
 	 */
-	private ObjWithLock<DualHashBidiMap<String, ChannelContext<SessionContext, P, R>>> map = new ObjWithLock<DualHashBidiMap<String, ChannelContext<SessionContext, P, R>>>(
-			new DualHashBidiMap<String, ChannelContext<SessionContext, P, R>>());
+	private ObjWithLock<DualHashBidiMap<String, ChannelContext>> map = new ObjWithLock<DualHashBidiMap<String, ChannelContext>>(
+			new DualHashBidiMap<String, ChannelContext>());
 
 	/**
 	 * @return the map
 	 */
-	public ObjWithLock<DualHashBidiMap<String, ChannelContext<SessionContext, P, R>>> getMap() {
+	public ObjWithLock<DualHashBidiMap<String, ChannelContext>> getMap() {
 		return map;
 	}
 
@@ -37,14 +36,14 @@ public class Users<SessionContext, P extends Packet, R> {
 	 *
 	 * @param channelContext the channel context
 	 */
-	public void unbind(ChannelContext<SessionContext, P, R> channelContext) {
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+	public void unbind(ChannelContext channelContext) {
+		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
 		}
 		
 		Lock lock = map.getLock().writeLock();
-		DualHashBidiMap<String, ChannelContext<SessionContext, P, R>> m = map.getObj();
+		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 		try {
 			lock.lock();
 			m.removeValue(channelContext);
@@ -61,7 +60,7 @@ public class Users<SessionContext, P extends Packet, R> {
 	 * @param userid the userid
 	 * @author: tanyaowu
 	 */
-	public void unbind(GroupContext<SessionContext, P, R> groupContext, String userid) {
+	public void unbind(GroupContext groupContext, String userid) {
 		if (groupContext.isShortConnection()) {
 			return;
 		}
@@ -71,7 +70,7 @@ public class Users<SessionContext, P extends Packet, R> {
 		}
 
 		Lock lock = map.getLock().writeLock();
-		DualHashBidiMap<String, ChannelContext<SessionContext, P, R>> m = map.getObj();
+		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 		try {
 			lock.lock();
 			m.remove(userid);
@@ -89,8 +88,8 @@ public class Users<SessionContext, P extends Packet, R> {
 	 * @param channelContext the channel context
 	 * @author: tanyaowu
 	 */
-	public void bind(String userid, ChannelContext<SessionContext, P, R> channelContext) {
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+	public void bind(String userid, ChannelContext channelContext) {
+		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
 		}
@@ -100,7 +99,7 @@ public class Users<SessionContext, P extends Packet, R> {
 		}
 		String key = userid;
 		Lock lock = map.getLock().writeLock();
-		DualHashBidiMap<String, ChannelContext<SessionContext, P, R>> m = map.getObj();
+		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 
 		try {
 			lock.lock();
@@ -119,7 +118,7 @@ public class Users<SessionContext, P extends Packet, R> {
 	 * @param userid the userid
 	 * @return the channel context
 	 */
-	public ChannelContext<SessionContext, P, R> find(GroupContext<SessionContext, P, R> groupContext, String userid) {
+	public ChannelContext find(GroupContext groupContext, String userid) {
 		if (groupContext.isShortConnection()) {
 			return null;
 		}
@@ -129,7 +128,7 @@ public class Users<SessionContext, P extends Packet, R> {
 		}
 		String key = userid;
 		Lock lock = map.getLock().readLock();
-		DualHashBidiMap<String, ChannelContext<SessionContext, P, R>> m = map.getObj();
+		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 
 		try {
 			lock.lock();

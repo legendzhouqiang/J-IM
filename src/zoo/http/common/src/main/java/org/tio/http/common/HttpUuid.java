@@ -1,9 +1,5 @@
 package org.tio.http.common;
 
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tio.core.intf.TioUuid;
 
 /**
@@ -11,9 +7,9 @@ import org.tio.core.intf.TioUuid;
  * 2017年6月5日 上午10:44:26
  */
 public class HttpUuid implements TioUuid{
-	private static Logger log = LoggerFactory.getLogger(HttpUuid.class);
+//	private static Logger log = LoggerFactory.getLogger(HttpUuid.class);
 	
-	private static java.util.concurrent.atomic.AtomicLong seq = new AtomicLong();
+//	private static java.util.concurrent.atomic.AtomicLong seq = new AtomicLong();
 
 	/**
 	 * 

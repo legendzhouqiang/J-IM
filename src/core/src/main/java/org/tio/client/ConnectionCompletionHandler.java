@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioListener;
 import org.tio.core.Node;
 import org.tio.core.ReadCompletionHandler;
-import org.tio.core.intf.Packet;
 import org.tio.core.utils.SystemTimer;
 
 /**
@@ -17,7 +16,7 @@ import org.tio.core.utils.SystemTimer;
  * @author tanyaowu 
  * 2017年4月1日 上午9:32:10
  */
-public class ConnectionCompletionHandler<SessionContext, P extends Packet, R> implements CompletionHandler<Void, ConnectionCompletionVo<SessionContext, P, R>> {
+public class ConnectionCompletionHandler implements CompletionHandler<Void, ConnectionCompletionVo> {
 	private static Logger log = LoggerFactory.getLogger(ConnectionCompletionHandler.class);
 
 	/**
@@ -27,7 +26,7 @@ public class ConnectionCompletionHandler<SessionContext, P extends Packet, R> im
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void completed(Void result, ConnectionCompletionVo<SessionContext, P, R> attachment) {
+	public void completed(Void result, ConnectionCompletionVo attachment) {
 		handler(result, attachment, null);
 	}
 
@@ -38,7 +37,7 @@ public class ConnectionCompletionHandler<SessionContext, P extends Packet, R> im
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void failed(Throwable throwable, ConnectionCompletionVo<SessionContext, P, R> attachment) {
+	public void failed(Throwable throwable, ConnectionCompletionVo attachment) {
 		handler(null, attachment, throwable);
 	}
 
@@ -49,15 +48,15 @@ public class ConnectionCompletionHandler<SessionContext, P extends Packet, R> im
 	 * @param throwable
 	 * @author: tanyaowu
 	 */
-	private void handler(Void result, ConnectionCompletionVo<SessionContext, P, R> attachment, Throwable throwable) {
-		ClientChannelContext<SessionContext, P, R> channelContext = attachment.getChannelContext();
+	private void handler(Void result, ConnectionCompletionVo attachment, Throwable throwable) {
+		ClientChannelContext channelContext = attachment.getChannelContext();
 		AsynchronousSocketChannel asynchronousSocketChannel = attachment.getAsynchronousSocketChannel();
-		AioClient<SessionContext, P, R> aioClient = attachment.getAioClient();
-		ClientGroupContext<SessionContext, P, R> clientGroupContext = aioClient.getClientGroupContext();
+		AioClient aioClient = attachment.getAioClient();
+		ClientGroupContext clientGroupContext = aioClient.getClientGroupContext();
 		Node serverNode = attachment.getServerNode();
 		String bindIp = attachment.getBindIp();
 		Integer bindPort = attachment.getBindPort();
-		ClientAioListener<SessionContext, P, R> clientAioListener = clientGroupContext.getClientAioListener();
+		ClientAioListener clientAioListener = clientGroupContext.getClientAioListener();
 		boolean isReconnect = attachment.isReconnect();
 		boolean isConnected = false;
 
@@ -73,7 +72,7 @@ public class ConnectionCompletionHandler<SessionContext, P extends Packet, R> im
 
 					clientGroupContext.closeds.remove(channelContext);
 				} else {
-					channelContext = new ClientChannelContext<>(clientGroupContext, asynchronousSocketChannel);
+					channelContext = new ClientChannelContext(clientGroupContext, asynchronousSocketChannel);
 					channelContext.setServerNode(serverNode);
 					channelContext.getStat().setTimeClosed(SystemTimer.currentTimeMillis());
 				}
@@ -89,7 +88,7 @@ public class ConnectionCompletionHandler<SessionContext, P extends Packet, R> im
 
 				clientGroupContext.connecteds.add(channelContext);
 
-				ReadCompletionHandler<SessionContext, P, R> readCompletionHandler = channelContext.getReadCompletionHandler();
+				ReadCompletionHandler readCompletionHandler = channelContext.getReadCompletionHandler();
 				ByteBuffer readByteBuffer = readCompletionHandler.getReadByteBuffer();//ByteBuffer.allocateDirect(channelContext.getGroupContext().getReadBufferSize());
 				readByteBuffer.position(0);
 				readByteBuffer.limit(readByteBuffer.capacity());
@@ -102,7 +101,7 @@ public class ConnectionCompletionHandler<SessionContext, P extends Packet, R> im
 			} else {
 				log.error(throwable.toString(), throwable);
 				if (channelContext == null) {
-					channelContext = new ClientChannelContext<>(clientGroupContext, asynchronousSocketChannel);
+					channelContext = new ClientChannelContext(clientGroupContext, asynchronousSocketChannel);
 					channelContext.setServerNode(serverNode);
 					channelContext.getStat().setTimeClosed(SystemTimer.currentTimeMillis());
 				}

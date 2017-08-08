@@ -15,6 +15,6 @@ public interface PacketListener {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	void onAfterSent(ChannelContext<?, ?, ?> channelContext, Packet packet, boolean isSentSuccess) throws Exception;
+	void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) throws Exception;
 
 }

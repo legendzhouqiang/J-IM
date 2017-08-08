@@ -1,8 +1,6 @@
 package org.tio.core;
 
-import org.tio.core.intf.Packet;
-
-public interface ChannelContextFilter<SessionContext, P extends Packet, R> {
+public interface ChannelContextFilter {
 
 	/**
 	 * 
@@ -13,6 +11,6 @@ public interface ChannelContextFilter<SessionContext, P extends Packet, R> {
 	 * 2017年1月13日 下午3:28:54
 	 *
 	 */
-	public boolean filter(ChannelContext<SessionContext, P, R> channelContext);
+	public boolean filter(ChannelContext channelContext);
 
 }

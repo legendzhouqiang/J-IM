@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
-import org.tio.core.intf.Packet;
 
 public class MaintainUtils {
 	private static Logger log = LoggerFactory.getLogger(MaintainUtils.class);
@@ -18,8 +17,8 @@ public class MaintainUtils {
 	 * @author: tanyaowu
 	 *
 	 */
-	public static <SessionContext, P extends Packet, R> void removeFromMaintain(ChannelContext<SessionContext, P, R> channelContext) {
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+	public static  void removeFromMaintain(ChannelContext channelContext) {
+		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
 		}

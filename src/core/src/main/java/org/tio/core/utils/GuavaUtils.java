@@ -56,7 +56,7 @@ public class GuavaUtils
 			};
 		}
 
-		CacheBuilder<K, V> cacheBuilder = (CacheBuilder<K, V>) CacheBuilder.newBuilder().removalListener(
+		CacheBuilder<K, V> cacheBuilder = CacheBuilder.newBuilder().removalListener(
 				removalListener);
 
 		//设置并发级别为8，并发级别是指可以同时写缓存的线程数

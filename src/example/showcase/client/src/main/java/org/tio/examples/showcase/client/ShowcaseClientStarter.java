@@ -11,7 +11,6 @@ import org.tio.core.Aio;
 import org.tio.core.Node;
 import org.tio.examples.showcase.common.Const;
 import org.tio.examples.showcase.common.ShowcasePacket;
-import org.tio.examples.showcase.common.ShowcaseSessionContext;
 import org.tio.examples.showcase.common.Type;
 import org.tio.examples.showcase.common.packets.GroupMsgReqBody;
 import org.tio.examples.showcase.common.packets.JoinGroupReqBody;
@@ -31,19 +30,19 @@ public class ShowcaseClientStarter
 	private static Node serverNode = new Node(serverIp, serverPort);
 
 	//用来自动连接的，不想自动连接请设为null
-	private static ReconnConf<ShowcaseSessionContext, ShowcasePacket, Object> reconnConf = new ReconnConf<ShowcaseSessionContext, ShowcasePacket, Object>(5000L);
+	private static ReconnConf reconnConf = new ReconnConf(5000L);
 
-	private static ClientAioHandler<ShowcaseSessionContext, ShowcasePacket, Object> aioClientHandler = new ShowcaseClientAioHandler();
-	private static ClientAioListener<ShowcaseSessionContext, ShowcasePacket, Object> aioListener = new ShowcaseClientAioListener();
-	private static ClientGroupContext<ShowcaseSessionContext, ShowcasePacket, Object> clientGroupContext = new ClientGroupContext<>(aioClientHandler, aioListener, reconnConf);
+	private static ClientAioHandler aioClientHandler = new ShowcaseClientAioHandler();
+	private static ClientAioListener aioListener = new ShowcaseClientAioListener();
+	private static ClientGroupContext clientGroupContext = new ClientGroupContext(aioClientHandler, aioListener, reconnConf);
 
-	private static AioClient<ShowcaseSessionContext, ShowcasePacket, Object> aioClient = null;
+	private static AioClient aioClient = null;
 
-	static ClientChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> clientChannelContext;
+	static ClientChannelContext clientChannelContext;
 
 	public static void main(String[] args) throws Exception
 	{
-		aioClient = new AioClient<>(clientGroupContext);
+		aioClient = new AioClient(clientGroupContext);
 		clientChannelContext = aioClient.connect(serverNode);
 		command();
 	}

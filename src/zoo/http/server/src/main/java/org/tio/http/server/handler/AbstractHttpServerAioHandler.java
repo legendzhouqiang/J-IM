@@ -8,12 +8,11 @@ import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.exception.AioDecodeException;
-import org.tio.http.common.HttpPacket;
+import org.tio.core.intf.Packet;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpRequestDecoder;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseEncoder;
-import org.tio.http.common.session.HttpSession;
 import org.tio.http.server.HttpServerConfig;
 import org.tio.http.server.mvc.Routes;
 import org.tio.server.intf.ServerAioHandler;
@@ -23,15 +22,17 @@ import org.tio.server.intf.ServerAioHandler;
  * @author tanyaowu 
  *
  */
-public abstract class AbstractHttpServerAioHandler implements ServerAioHandler<HttpSession, HttpPacket, Object>,IHttpRequestHandler {
+public abstract class AbstractHttpServerAioHandler implements ServerAioHandler, IHttpRequestHandler {
 	private static Logger log = LoggerFactory.getLogger(AbstractHttpServerAioHandler.class);
 
 	protected HttpServerConfig httpServerConfig;
-	
-	protected  Routes routes = null;
-	public AbstractHttpServerAioHandler(){
+
+	protected Routes routes = null;
+
+	public AbstractHttpServerAioHandler() {
 		//默认构造器;
 	}
+
 	/**
 	 * 
 	 *
@@ -42,11 +43,12 @@ public abstract class AbstractHttpServerAioHandler implements ServerAioHandler<H
 	public AbstractHttpServerAioHandler(HttpServerConfig httpServerConfig) {
 		this.httpServerConfig = httpServerConfig;
 	}
-	
-	public AbstractHttpServerAioHandler(HttpServerConfig httpServerConfig , Routes routes) {
+
+	public AbstractHttpServerAioHandler(HttpServerConfig httpServerConfig, Routes routes) {
 		this(httpServerConfig);
 		this.routes = routes;
 	}
+
 	/**
 	 * @param args
 	 *
@@ -68,12 +70,10 @@ public abstract class AbstractHttpServerAioHandler implements ServerAioHandler<H
 	 * 
 	 */
 	@Override
-	public Object handler(HttpPacket packet, ChannelContext<HttpSession, HttpPacket, Object> channelContext) throws Exception {
+	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
 		HttpRequest httpRequest = (HttpRequest) packet;
-		HttpResponse httpResponse  = this.handler(httpRequest,  httpRequest.getRequestLine(), channelContext);
+		HttpResponse httpResponse = this.handler(httpRequest, httpRequest.getRequestLine(), channelContext);
 		Aio.send(channelContext, httpResponse);
-		return null;
-
 	}
 
 	/** 
@@ -86,8 +86,7 @@ public abstract class AbstractHttpServerAioHandler implements ServerAioHandler<H
 	 * 
 	 */
 	@Override
-	public ByteBuffer encode(HttpPacket packet, GroupContext<HttpSession, HttpPacket, Object> groupContext,
-			ChannelContext<HttpSession, HttpPacket, Object> channelContext) {
+	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
 		HttpResponse httpResponse = (HttpResponse) packet;
 		ByteBuffer byteBuffer = HttpResponseEncoder.encode(httpResponse, groupContext, channelContext);
 		return byteBuffer;
@@ -104,7 +103,7 @@ public abstract class AbstractHttpServerAioHandler implements ServerAioHandler<H
 	 * 
 	 */
 	@Override
-	public HttpRequest decode(ByteBuffer buffer, ChannelContext<HttpSession, HttpPacket, Object> channelContext) throws AioDecodeException {
+	public HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
 		HttpRequest httpRequest = HttpRequestDecoder.decode(buffer, channelContext);
 		return httpRequest;
 	}

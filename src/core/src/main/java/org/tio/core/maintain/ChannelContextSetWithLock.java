@@ -7,30 +7,28 @@ import java.util.concurrent.locks.Lock;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.SetWithLock;
-import org.tio.core.intf.Packet;
 
 /**
  * 
  * @author tanyaowu 
  * 2017年4月1日 上午9:35:09
  */
-public class ChannelContextSetWithLock<SessionContext, P extends Packet, R> {
+public class ChannelContextSetWithLock {
 
 	/** remoteAndChannelContext key: "ip:port" value: ChannelContext. */
-	private SetWithLock<ChannelContext<SessionContext, P, R>> setWithLock = new SetWithLock<ChannelContext<SessionContext, P, R>>(
-			new HashSet<ChannelContext<SessionContext, P, R>>());
+	private SetWithLock<ChannelContext> setWithLock = new SetWithLock<ChannelContext>(new HashSet<ChannelContext>());
 
-	public void add(ChannelContext<SessionContext, P, R> channelContext) {
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+	public void add(ChannelContext channelContext) {
+		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		Lock lock = setWithLock.getLock().writeLock();
 
 		try {
 			lock.lock();
-			Set<ChannelContext<SessionContext, P, R>> m = setWithLock.getObj();
+			Set<ChannelContext> m = setWithLock.getObj();
 			m.add(channelContext);
 		} catch (Exception e) {
 			throw e;
@@ -39,18 +37,18 @@ public class ChannelContextSetWithLock<SessionContext, P extends Packet, R> {
 		}
 	}
 
-	public boolean remove(ChannelContext<SessionContext, P, R> channelContext) {
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+	public boolean remove(ChannelContext channelContext) {
+		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return true;
 		}
-		
+
 		Lock lock = setWithLock.getLock().writeLock();
 
 		try {
 			lock.lock();
-			Set<ChannelContext<SessionContext, P, R>> m = setWithLock.getObj();
-			boolean ret =  m.remove(channelContext);
+			Set<ChannelContext> m = setWithLock.getObj();
+			boolean ret = m.remove(channelContext);
 			return ret;
 		} catch (Exception e) {
 			throw e;
@@ -64,7 +62,7 @@ public class ChannelContextSetWithLock<SessionContext, P extends Packet, R> {
 
 		try {
 			lock.lock();
-			Set<ChannelContext<SessionContext, P, R>> m = setWithLock.getObj();
+			Set<ChannelContext> m = setWithLock.getObj();
 			return m.size();
 		} catch (Exception e) {
 			throw e;
@@ -73,7 +71,7 @@ public class ChannelContextSetWithLock<SessionContext, P extends Packet, R> {
 		}
 	}
 
-	public SetWithLock<ChannelContext<SessionContext, P, R>> getSetWithLock() {
+	public SetWithLock<ChannelContext> getSetWithLock() {
 		return setWithLock;
 	}
 

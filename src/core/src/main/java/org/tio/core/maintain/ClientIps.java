@@ -1,15 +1,12 @@
 package org.tio.core.maintain;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 客户端ip集合
  * @author tanyaowu 
  * 2017年5月23日 下午2:40:20
  */
 public class ClientIps<T> {
-	private static Logger log = LoggerFactory.getLogger(ClientIps.class);
+//	private static Logger log = LoggerFactory.getLogger(ClientIps.class);
 
 	private T context;
 

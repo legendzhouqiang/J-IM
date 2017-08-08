@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
-import org.tio.core.intf.Packet;
 import org.tio.core.threadpool.DefaultThreadFactory;
 import org.tio.core.utils.SystemTimer;
 
@@ -16,7 +15,7 @@ import org.tio.core.utils.SystemTimer;
  * @author tanyaowu 
  * 2017年4月1日 上午9:33:00
  */
-public class ReconnConf<SessionContext, P extends Packet, R> {
+public class ReconnConf {
 	private static Logger log = LoggerFactory.getLogger(ChannelContext.class);
 
 	/**
@@ -29,7 +28,7 @@ public class ReconnConf<SessionContext, P extends Packet, R> {
 	 */
 	private int retryCount = 0;
 
-	LinkedBlockingQueue<ChannelContext<SessionContext, P, R>> queue = new LinkedBlockingQueue<ChannelContext<SessionContext, P, R>>();
+	LinkedBlockingQueue<ChannelContext> queue = new LinkedBlockingQueue<ChannelContext>();
 
 	//用来重连的线程池
 	private ThreadPoolExecutor threadPoolExecutor = null;
@@ -77,13 +76,13 @@ public class ReconnConf<SessionContext, P extends Packet, R> {
 		this.retryCount = retryCount;
 	}
 
-	public static <SessionContext, P extends Packet, R> void put(ClientChannelContext<SessionContext, P, R> clientChannelContext) {
+	public static  void put(ClientChannelContext clientChannelContext) {
 		isNeedReconn(clientChannelContext, true);
 	}
 
-	public static <SessionContext, P extends Packet, R> boolean isNeedReconn(ClientChannelContext<SessionContext, P, R> clientChannelContext, boolean putIfTrue) {
-		ClientGroupContext<SessionContext, P, R> clientGroupContext = (ClientGroupContext<SessionContext, P, R>) clientChannelContext.getGroupContext();
-		ReconnConf<SessionContext, P, R> reconnConf = clientGroupContext.getReconnConf();
+	public static  boolean isNeedReconn(ClientChannelContext clientChannelContext, boolean putIfTrue) {
+		ClientGroupContext clientGroupContext = (ClientGroupContext) clientChannelContext.getGroupContext();
+		ReconnConf reconnConf = clientGroupContext.getReconnConf();
 		if (reconnConf != null && reconnConf.getInterval() > 0) {
 			if (reconnConf.getRetryCount() <= 0 || reconnConf.getRetryCount() >= clientChannelContext.getReconnCount()) {
 				if (putIfTrue) {
@@ -117,7 +116,7 @@ public class ReconnConf<SessionContext, P extends Packet, R> {
 	/**
 	 * @return the queue
 	 */
-	public LinkedBlockingQueue<ChannelContext<SessionContext, P, R>> getQueue() {
+	public LinkedBlockingQueue<ChannelContext> getQueue() {
 		return queue;
 	}
 

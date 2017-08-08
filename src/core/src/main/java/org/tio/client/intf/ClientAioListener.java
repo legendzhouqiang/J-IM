@@ -1,14 +1,13 @@
 package org.tio.client.intf;
 
 import org.tio.core.intf.AioListener;
-import org.tio.core.intf.Packet;
 
 /**
  * 
  * @author tanyaowu 
  * 2017年4月1日 上午9:15:04
  */
-public interface ClientAioListener<SessionContext, P extends Packet, R> extends AioListener<SessionContext, P, R> {
+public interface ClientAioListener extends AioListener {
 
 	/**
 	 * 重连后触发本方法
@@ -19,7 +18,7 @@ public interface ClientAioListener<SessionContext, P extends Packet, R> extends 
 	 * @author: tanyaowu
 	 *
 	 */
-	//	void onAfterReconnected(ChannelContext<SessionContext, P, R> channelContext, boolean isConnected) throws Exception;
+	//	void onAfterReconnected(ChannelContext channelContext, boolean isConnected) throws Exception;
 
 	//	/**
 	//	 * 连接失败后触发的方法
@@ -30,5 +29,5 @@ public interface ClientAioListener<SessionContext, P extends Packet, R> extends 
 
 	//	 *
 	//	 */
-	//	void onFailConnected(ChannelContext<SessionContext, P, R> channelContext, boolean isReconnect, java.lang.Throwable throwable);
+	//	void onFailConnected(ChannelContext channelContext, boolean isReconnect, java.lang.Throwable throwable);
 }

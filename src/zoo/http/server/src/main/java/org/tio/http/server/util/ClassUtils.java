@@ -19,12 +19,10 @@ public class ClassUtils {
 	 */
 	public ClassUtils() {
 	}
-	
-	public static boolean isSimpleTypeOrArray(Class<?> clazz){
+
+	public static boolean isSimpleTypeOrArray(Class<?> clazz) {
 		return ClassUtil.isSimpleTypeOrArray(clazz) || clazz.isAssignableFrom(UploadFile.class);
 	}
-	
-	
 
 	/**
 	 * @param args

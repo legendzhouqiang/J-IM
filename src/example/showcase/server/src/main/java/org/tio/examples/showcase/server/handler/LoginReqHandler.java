@@ -66,7 +66,7 @@ public class LoginReqHandler extends AbsShowcaseBsHandler<LoginReqBody>
 	 * @author: tanyaowu
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, LoginReqBody bsBody, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext) throws Exception
+	public Object handler(ShowcasePacket packet, LoginReqBody bsBody, ChannelContext channelContext) throws Exception
 	{
 		log.info("收到登录请求消息:{}", Json.toJson(bsBody));
 		LoginRespBody loginRespBody = new LoginRespBody();
@@ -76,7 +76,7 @@ public class LoginReqHandler extends AbsShowcaseBsHandler<LoginReqBody>
 		String userid = bsBody.getLoginname();
 		Aio.bindUser(channelContext, userid);
 		
-		ShowcaseSessionContext showcaseSessionContext = channelContext.getSessionContext();
+		ShowcaseSessionContext showcaseSessionContext = (ShowcaseSessionContext)channelContext.getAttribute();
 		showcaseSessionContext.setUserid(userid);
 
 		ShowcasePacket respPacket = new ShowcasePacket();

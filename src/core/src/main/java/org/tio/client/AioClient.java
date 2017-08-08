@@ -32,12 +32,12 @@ import org.tio.core.utils.SystemTimer;
  * @author tanyaowu 
  * 2017年4月1日 上午9:29:58
  */
-public class AioClient<SessionContext, P extends Packet, R> {
+public class AioClient {
 	private static Logger log = LoggerFactory.getLogger(AioClient.class);
 
 	private AsynchronousChannelGroup channelGroup;
 
-	private ClientGroupContext<SessionContext, P, R> clientGroupContext;
+	private ClientGroupContext clientGroupContext;
 
 	/**
 	 * @param serverIp 可以为空
@@ -50,7 +50,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	 * @throws IOException 
 	 * 
 	 */
-	public AioClient(final ClientGroupContext<SessionContext, P, R> clientGroupContext) throws IOException {
+	public AioClient(final ClientGroupContext clientGroupContext) throws IOException {
 		super();
 		this.clientGroupContext = clientGroupContext;
 		//		ExecutorService groupExecutor = clientGroupContext.getGroupExecutor();
@@ -69,7 +69,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	 * @author: tanyaowu
 	 *
 	 */
-	public ClientChannelContext<SessionContext, P, R> connect(Node serverNode) throws Exception {
+	public ClientChannelContext connect(Node serverNode) throws Exception {
 		return connect(serverNode, null);
 	}
 
@@ -81,7 +81,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	public ClientChannelContext<SessionContext, P, R> connect(Node serverNode, Integer timeout) throws Exception {
+	public ClientChannelContext connect(Node serverNode, Integer timeout) throws Exception {
 		return connect(serverNode, null, 0, timeout);
 	}
 
@@ -97,7 +97,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	 * @author: tanyaowu
 	 *
 	 */
-	public ClientChannelContext<SessionContext, P, R> connect(Node serverNode, String bindIp, Integer bindPort, Integer timeout) throws Exception {
+	public ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort, Integer timeout) throws Exception {
 		return connect(serverNode, bindIp, bindPort, null, timeout);
 	}
 
@@ -178,7 +178,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	public ClientChannelContext<SessionContext, P, R> connect(Node serverNode, String bindIp, Integer bindPort, ClientChannelContext<SessionContext, P, R> initClientChannelContext,
+	public ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort, ClientChannelContext initClientChannelContext,
 			Integer timeout) throws Exception {
 		return connect(serverNode, bindIp, bindPort, initClientChannelContext, timeout, true);
 	}
@@ -195,13 +195,13 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	private ClientChannelContext<SessionContext, P, R> connect(Node serverNode, String bindIp, Integer bindPort,
-			ClientChannelContext<SessionContext, P, R> initClientChannelContext, Integer timeout, boolean isSyn) throws Exception {
+	private ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort,
+			ClientChannelContext initClientChannelContext, Integer timeout, boolean isSyn) throws Exception {
 
 		AsynchronousSocketChannel asynchronousSocketChannel = null;
-		ClientChannelContext<SessionContext, P, R> channelContext = null;
+		ClientChannelContext channelContext = null;
 		boolean isReconnect = initClientChannelContext != null;
-		//		ClientAioListener<SessionContext, P, R> clientAioListener = clientGroupContext.getClientAioListener();
+		//		ClientAioListener clientAioListener = clientGroupContext.getClientAioListener();
 
 		long start = SystemTimer.currentTimeMillis();
 		asynchronousSocketChannel = AsynchronousSocketChannel.open(channelGroup);
@@ -234,7 +234,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 
 		InetSocketAddress inetSocketAddress = new InetSocketAddress(serverNode.getIp(), serverNode.getPort());
 
-		ConnectionCompletionVo<SessionContext, P, R> attachment = new ConnectionCompletionVo<>(channelContext, this, isReconnect, asynchronousSocketChannel, serverNode, bindIp,
+		ConnectionCompletionVo attachment = new ConnectionCompletionVo(channelContext, this, isReconnect, asynchronousSocketChannel, serverNode, bindIp,
 				bindPort);
 
 		if (isSyn) {
@@ -264,7 +264,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	/**
 	 * @return the clientGroupContext
 	 */
-	public ClientGroupContext<SessionContext, P, R> getClientGroupContext() {
+	public ClientGroupContext getClientGroupContext() {
 		return clientGroupContext;
 	}
 
@@ -278,14 +278,14 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	 * @author: tanyaowu
 	 *
 	 */
-	public void reconnect(ClientChannelContext<SessionContext, P, R> channelContext, Integer timeout) throws Exception {
+	public void reconnect(ClientChannelContext channelContext, Integer timeout) throws Exception {
 		connect(channelContext.getServerNode(), channelContext.getBindIp(), channelContext.getBindPort(), channelContext, timeout);
 	}
 
 	/**
 	 * @param clientGroupContext the clientGroupContext to set
 	 */
-	public void setClientGroupContext(ClientGroupContext<SessionContext, P, R> clientGroupContext) {
+	public void setClientGroupContext(ClientGroupContext clientGroupContext) {
 		this.clientGroupContext = clientGroupContext;
 	}
 
@@ -296,7 +296,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	 */
 	private void startHeartbeatTask() {
 		final ClientGroupStat clientGroupStat = clientGroupContext.getClientGroupStat();
-		final ClientAioHandler<SessionContext, P, R> aioHandler = clientGroupContext.getClientAioHandler();
+		final ClientAioHandler aioHandler = clientGroupContext.getClientAioHandler();
 
 		final String id = clientGroupContext.getId();
 		new Thread(new Runnable() {
@@ -310,13 +310,13 @@ public class AioClient<SessionContext, P extends Packet, R> {
 					}
 					ReadLock readLock = null;
 					try {
-						SetWithLock<ChannelContext<SessionContext, P, R>> setWithLock = clientGroupContext.connecteds.getSetWithLock();
+						SetWithLock<ChannelContext> setWithLock = clientGroupContext.connecteds.getSetWithLock();
 						readLock = setWithLock.getLock().readLock();
 						readLock.lock();
-						Set<ChannelContext<SessionContext, P, R>> set = setWithLock.getObj();
+						Set<ChannelContext> set = setWithLock.getObj();
 						long currtime = SystemTimer.currentTimeMillis();
-						for (ChannelContext<SessionContext, P, R> entry : set) {
-							ClientChannelContext<SessionContext, P, R> channelContext = (ClientChannelContext<SessionContext, P, R>) entry;
+						for (ChannelContext entry : set) {
+							ClientChannelContext channelContext = (ClientChannelContext) entry;
 							if (channelContext.isClosed() || channelContext.isRemoved()) {
 								continue;
 							}
@@ -327,7 +327,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 							long compareTime = Math.max(timeLatestReceivedMsg, timeLatestSentMsg);
 							long interval = (currtime - compareTime);
 							if (interval >= heartbeatTimeout / 2) {
-								P packet = aioHandler.heartbeatPacket();
+								Packet packet = aioHandler.heartbeatPacket();
 								if (packet != null) {
 									log.info("{}发送心跳包", channelContext.toString());
 									Aio.send(channelContext, packet);
@@ -359,13 +359,13 @@ public class AioClient<SessionContext, P extends Packet, R> {
 		}, "tio-timer-heartbeat" + id).start();
 	}
 
-	private static class ReconnRunnable<SessionContext, P extends Packet, R> implements Runnable {
-		ClientChannelContext<SessionContext, P, R> channelContext = null;
-		AioClient<SessionContext, P, R> aioClient = null;
+	private static class ReconnRunnable implements Runnable {
+		ClientChannelContext channelContext = null;
+		AioClient aioClient = null;
 
 		//		private static Map<Node, Long> map = new HashMap<>(); 
 
-		public ReconnRunnable(ClientChannelContext<SessionContext, P, R> channelContext, AioClient<SessionContext, P, R> aioClient) {
+		public ReconnRunnable(ClientChannelContext channelContext, AioClient aioClient) {
 			this.channelContext = channelContext;
 			this.aioClient = aioClient;
 		}
@@ -420,7 +420,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 	 *
 	 */
 	private void startReconnTask() {
-		final ReconnConf<SessionContext, P, R> reconnConf = clientGroupContext.getReconnConf();
+		final ReconnConf reconnConf = clientGroupContext.getReconnConf();
 		if (reconnConf == null || reconnConf.getInterval() <= 0) {
 			return;
 		}
@@ -431,10 +431,10 @@ public class AioClient<SessionContext, P extends Packet, R> {
 			public void run() {
 				while (!clientGroupContext.isStopped()) {
 					//log.info("准备重连");
-					LinkedBlockingQueue<ChannelContext<SessionContext, P, R>> queue = reconnConf.getQueue();
-					ClientChannelContext<SessionContext, P, R> channelContext = null;
+					LinkedBlockingQueue<ChannelContext> queue = reconnConf.getQueue();
+					ClientChannelContext channelContext = null;
 					try {
-						channelContext = (ClientChannelContext<SessionContext, P, R>) queue.take();
+						channelContext = (ClientChannelContext) queue.take();
 					} catch (InterruptedException e1) {
 						log.error(e1.toString(), e1);
 					}
@@ -464,7 +464,7 @@ public class AioClient<SessionContext, P extends Packet, R> {
 					{
 						continue;
 					}
-					ReconnRunnable<SessionContext, P, R> runnable = new ReconnRunnable<SessionContext, P, R>(channelContext, AioClient.this);
+					ReconnRunnable runnable = new ReconnRunnable(channelContext, AioClient.this);
 					reconnConf.getThreadPoolExecutor().execute(runnable);
 				}
 			}

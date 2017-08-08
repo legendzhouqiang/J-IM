@@ -11,6 +11,7 @@ import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.exception.AioDecodeException;
+import org.tio.core.intf.Packet;
 import org.tio.http.common.HttpConst;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpRequestDecoder;
@@ -19,7 +20,6 @@ import org.tio.http.common.HttpResponseEncoder;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.server.intf.ServerAioHandler;
 import org.tio.websocket.common.Opcode;
-import org.tio.websocket.common.WsPacket;
 import org.tio.websocket.common.WsRequestPacket;
 import org.tio.websocket.common.WsResponsePacket;
 import org.tio.websocket.common.WsServerDecoder;
@@ -34,7 +34,7 @@ import org.tio.websocket.server.handler.IWsMsgHandler;
  * @author tanyaowu 
  *
  */
-public class WsServerAioHandler implements ServerAioHandler<WsSessionContext, WsPacket, Object> {
+public class WsServerAioHandler implements ServerAioHandler {
 	private static Logger log = LoggerFactory.getLogger(WsServerAioHandler.class);
 
 	//	private static Map<Command, ImBsHandlerIntf> handlerMap = new HashMap<>();
@@ -88,24 +88,24 @@ public class WsServerAioHandler implements ServerAioHandler<WsSessionContext, Ws
 	 * 
 	 */
 	@Override
-	public Object handler(WsPacket packet, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) throws Exception {
+	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
 		WsRequestPacket wsRequestPacket = (WsRequestPacket) packet;
 
 		if (wsRequestPacket.isHandShake()) {
-			WsSessionContext wsSessionContext = channelContext.getSessionContext();
+			WsSessionContext wsSessionContext = (WsSessionContext)channelContext.getAttribute();
 			HttpRequest httpRequest = wsSessionContext.getHandshakeRequestPacket();
 			HttpResponse httpResponse = wsSessionContext.getHandshakeResponsePacket();
 			HttpResponse r = wsMsgHandler.handshake(httpRequest, httpResponse, channelContext);
 			if (r == null) {
 				Aio.remove(channelContext, "业务层不同意握手");
-				return null;
+				return;
 			}
 
 			WsResponsePacket wsResponsePacket = new WsResponsePacket();
 			wsResponsePacket.setHandShake(true);
 			Aio.send(channelContext, wsResponsePacket);
 			wsSessionContext.setHandshaked(true);
-			return null;
+			return;
 		}
 
 		WsResponsePacket wsResponsePacket = h(wsRequestPacket, wsRequestPacket.getBody(), wsRequestPacket.getWsOpcode(), channelContext);
@@ -114,10 +114,10 @@ public class WsServerAioHandler implements ServerAioHandler<WsSessionContext, Ws
 			Aio.send(channelContext, wsResponsePacket);
 		}
 
-		return null;
+		return;
 	}
 
-	private WsResponsePacket h(WsRequestPacket websocketPacket, byte[] bytes, Opcode opcode, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) throws Exception {
+	private WsResponsePacket h(WsRequestPacket websocketPacket, byte[] bytes, Opcode opcode, ChannelContext channelContext) throws Exception {
 		WsResponsePacket wsResponsePacket = null;
 		if (opcode == Opcode.TEXT) {
 			if (bytes == null || bytes.length == 0) {
@@ -152,7 +152,7 @@ public class WsServerAioHandler implements ServerAioHandler<WsSessionContext, Ws
 		}
 	}
 
-	private WsResponsePacket processRetObj(Object obj, String methodName, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) throws Exception {
+	private WsResponsePacket processRetObj(Object obj, String methodName, ChannelContext channelContext) throws Exception {
 		WsResponsePacket wsResponsePacket = null;
 		if (obj == null) {
 			return null;
@@ -194,12 +194,12 @@ public class WsServerAioHandler implements ServerAioHandler<WsSessionContext, Ws
 	 * 
 	 */
 	@Override
-	public ByteBuffer encode(WsPacket packet, GroupContext<WsSessionContext, WsPacket, Object> groupContext, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) {
+	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
 		WsResponsePacket wsResponsePacket = (WsResponsePacket) packet;
 
 		//握手包
 		if (wsResponsePacket.isHandShake()) {
-			WsSessionContext imSessionContext = channelContext.getSessionContext();
+			WsSessionContext imSessionContext = (WsSessionContext)channelContext.getAttribute();
 			HttpResponse handshakeResponsePacket = imSessionContext.getHandshakeResponsePacket();
 			return HttpResponseEncoder.encode(handshakeResponsePacket, groupContext, channelContext);
 		}
@@ -219,8 +219,8 @@ public class WsServerAioHandler implements ServerAioHandler<WsSessionContext, Ws
 	 * 
 	 */
 	@Override
-	public WsRequestPacket decode(ByteBuffer buffer, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) throws AioDecodeException {
-		WsSessionContext imSessionContext = channelContext.getSessionContext();
+	public WsRequestPacket decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
+		WsSessionContext imSessionContext = (WsSessionContext)channelContext.getAttribute();
 		//		int initPosition = buffer.position();
 
 		if (!imSessionContext.isHandshaked()) {
@@ -293,7 +293,7 @@ public class WsServerAioHandler implements ServerAioHandler<WsSessionContext, Ws
 	 * 2017年2月23日 下午4:11:41
 	 *
 	 */
-	public HttpResponse updateWebSocketProtocol(HttpRequest httpRequest, ChannelContext<WsSessionContext, WsPacket, Object> channelContext) {
+	public HttpResponse updateWebSocketProtocol(HttpRequest httpRequest, ChannelContext channelContext) {
 		Map<String, String> headers = httpRequest.getHeaders();
 
 		String Sec_WebSocket_Key = headers.get(HttpConst.RequestHeaderKey.Sec_WebSocket_Key);

@@ -8,26 +8,25 @@ import org.apache.commons.lang3.StringUtils;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.MapWithLock;
-import org.tio.core.intf.Packet;
 
 /**
  * 
  * @author tanyaowu 
  * 2017年4月15日 下午12:13:19
  */
-public class Ids<SessionContext, P extends Packet, R> {
+public class Ids {
 
 	/**
 	 * key: id
 	 * value: ChannelContext
 	 */
-	private MapWithLock<String, ChannelContext<SessionContext, P, R>> map = new MapWithLock<String, ChannelContext<SessionContext, P, R>>(
-			new HashMap<String, ChannelContext<SessionContext, P, R>>());
+	private MapWithLock<String, ChannelContext> map = new MapWithLock<String, ChannelContext>(
+			new HashMap<String, ChannelContext>());
 
 	/**
 	 * @return the map
 	 */
-	public MapWithLock<String, ChannelContext<SessionContext, P, R>> getMap() {
+	public MapWithLock<String, ChannelContext> getMap() {
 		return map;
 	}
 
@@ -36,8 +35,8 @@ public class Ids<SessionContext, P extends Packet, R> {
 	 * @param channelContext
 	 * @author: tanyaowu
 	 */
-	public void unbind(ChannelContext<SessionContext, P, R> channelContext) {
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+	public void unbind(ChannelContext channelContext) {
+		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
 		}
@@ -47,7 +46,7 @@ public class Ids<SessionContext, P extends Packet, R> {
 			return;
 		}
 		Lock lock = map.getLock().writeLock();
-		Map<String, ChannelContext<SessionContext, P, R>> m = map.getObj();
+		Map<String, ChannelContext> m = map.getObj();
 		try {
 			lock.lock();
 			m.remove(key);
@@ -63,8 +62,8 @@ public class Ids<SessionContext, P extends Packet, R> {
 	 * @param channelContext
 	 * @author: tanyaowu
 	 */
-	public void bind(ChannelContext<SessionContext, P, R> channelContext) {
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+	public void bind(ChannelContext channelContext) {
+		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
 		}
@@ -74,7 +73,7 @@ public class Ids<SessionContext, P extends Packet, R> {
 			return;
 		}
 		Lock lock = map.getLock().writeLock();
-		Map<String, ChannelContext<SessionContext, P, R>> m = map.getObj();
+		Map<String, ChannelContext> m = map.getObj();
 
 		try {
 			lock.lock();
@@ -93,7 +92,7 @@ public class Ids<SessionContext, P extends Packet, R> {
 	 * @param id the id
 	 * @return the channel context
 	 */
-	public ChannelContext<SessionContext, P, R> find(GroupContext<SessionContext, P, R> groupContext, String id) {
+	public ChannelContext find(GroupContext groupContext, String id) {
 		if (groupContext.isShortConnection()) {
 			return null;
 		}
@@ -103,7 +102,7 @@ public class Ids<SessionContext, P extends Packet, R> {
 		}
 		String key = id;
 		Lock lock = map.getLock().readLock();
-		Map<String, ChannelContext<SessionContext, P, R>> m = map.getObj();
+		Map<String, ChannelContext> m = map.getObj();
 
 		try {
 			lock.lock();

@@ -18,15 +18,15 @@ import org.tio.core.stat.GroupStat;
  * @author tanyaowu 
  *
  */
-public class WriteCompletionHandler<SessionContext, P extends Packet, R> implements CompletionHandler<Integer, WriteCompletionVo> {
+public class WriteCompletionHandler implements CompletionHandler<Integer, WriteCompletionVo> {
 
 	private static Logger log = LoggerFactory.getLogger(WriteCompletionHandler.class);
 
-	private ChannelContext<SessionContext, P, R> channelContext = null;
+	private ChannelContext channelContext = null;
 
 	private java.util.concurrent.Semaphore writeSemaphore = new Semaphore(1);
 
-	public WriteCompletionHandler(ChannelContext<SessionContext, P, R> channelContext) {
+	public WriteCompletionHandler(ChannelContext channelContext) {
 		this.channelContext = channelContext;
 	}
 
@@ -62,10 +62,10 @@ public class WriteCompletionHandler<SessionContext, P extends Packet, R> impleme
 		this.writeSemaphore.release();
 		Object attachment = writeCompletionVo.getObj();
 		
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+		GroupContext groupContext = channelContext.getGroupContext();
 		GroupStat groupStat = groupContext.getGroupStat();
 		ChannelStat channelStat = channelContext.getStat();
-		//		AioListener<SessionContext, P, R> aioListener = groupContext.getAioListener();
+		//		AioListener aioListener = groupContext.getAioListener();
 		boolean isSentSuccess = result > 0;
 
 		if (isSentSuccess) {
@@ -115,16 +115,15 @@ public class WriteCompletionHandler<SessionContext, P extends Packet, R> impleme
 	 * @param isSentSuccess
 	 * @author: tanyaowu
 	 */
-	@SuppressWarnings("unchecked")
 	public void handleOne(Integer result, Throwable throwable, Object obj, Boolean isSentSuccess) {
-		P packet = null;
-		PacketWithMeta<P> packetWithMeta = null;
+		Packet packet = null;
+		PacketWithMeta packetWithMeta = null;
 
 		boolean isPacket = obj instanceof Packet;
 		if (isPacket) {
-			packet = (P) obj;
+			packet =  (Packet)obj;
 		} else {
-			packetWithMeta = (PacketWithMeta<P>) obj;
+			packetWithMeta = (PacketWithMeta) obj;
 			packetWithMeta.setIsSentSuccess(isSentSuccess);
 			packet = packetWithMeta.getPacket();
 		}

@@ -8,10 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
+import org.tio.core.intf.Packet;
 import org.tio.http.common.HttpConst;
-import org.tio.http.common.HttpPacket;
 import org.tio.http.common.HttpResponse;
-import org.tio.http.common.session.HttpSession;
 import org.tio.server.intf.ServerAioListener;
 
 /**
@@ -19,9 +18,9 @@ import org.tio.server.intf.ServerAioListener;
  * @author tanyaowu 
  *
  */
-public class HttpServerAioListener implements ServerAioListener<HttpSession, HttpPacket, Object> {
+public class HttpServerAioListener implements ServerAioListener {
 
-	private static Logger log = LoggerFactory.getLogger(HttpServerAioListener.class);
+//	private static Logger log = LoggerFactory.getLogger(HttpServerAioListener.class);
 	private static Logger iplog = LoggerFactory.getLogger("tio-ip-trace-log");
 
 	static Map<String, AtomicLong> ipmap = new java.util.concurrent.ConcurrentHashMap<>();
@@ -64,9 +63,9 @@ public class HttpServerAioListener implements ServerAioListener<HttpSession, Htt
 	//	}
 
 	@Override
-	public void onAfterConnected(ChannelContext<HttpSession, HttpPacket, Object> channelContext, boolean isConnected, boolean isReconnect) {
+	public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) {
 //		HttpSessionContext httpSession = new HttpSessionContext();
-//		channelContext.setSessionContext(httpSession);
+//		channelContext.setAttribute(httpSession);
 
 //		GroupContext<HttpSessionContext, HttpPacket, Object> groupContext = channelContext.getGroupContext();
 //		log.info(groupContext.toString());
@@ -109,7 +108,7 @@ public class HttpServerAioListener implements ServerAioListener<HttpSession, Htt
 	 * 
 	 */
 	@Override
-	public void onAfterSent(ChannelContext<HttpSession, HttpPacket, Object> channelContext, HttpPacket packet, boolean isSentSuccess) {
+	public void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) {
 		//		if (isSentSuccess) {
 		//			CommandStat.getCount(packet.getCommand()).sent.incrementAndGet();
 		//		}
@@ -136,7 +135,7 @@ public class HttpServerAioListener implements ServerAioListener<HttpSession, Htt
 	 * 
 	 */
 	@Override
-	public void onAfterReceived(ChannelContext<HttpSession, HttpPacket, Object> channelContext, HttpPacket packet, int packetSize) {
+	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) {
 		//		CommandStat.getCount(packet.getCommand()).received.incrementAndGet();
 	}
 
@@ -151,11 +150,11 @@ public class HttpServerAioListener implements ServerAioListener<HttpSession, Htt
 	 * 
 	 */
 	@Override
-	public void onAfterClose(ChannelContext<HttpSession, HttpPacket, Object> channelContext, Throwable throwable, String remark, boolean isRemove) {
+	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
 	}
 
 	@Override
-	public void onBeforeClose(ChannelContext<HttpSession, HttpPacket, Object> channelContext, Throwable throwable, String remark, boolean isRemove) {
+	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
 	}
 
 }

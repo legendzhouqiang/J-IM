@@ -8,7 +8,7 @@ import org.tio.server.intf.ServerAioListener;
  * 
  * @author tanyaowu 
  */
-public class DefaultAioListener<SessionContext, P extends Packet, R> implements ClientAioListener<SessionContext, P, R>, ServerAioListener<SessionContext, P, R> {
+public class DefaultAioListener implements ClientAioListener, ServerAioListener {
 	/**
 	 * 
 	 * @param channelContext
@@ -17,7 +17,7 @@ public class DefaultAioListener<SessionContext, P extends Packet, R> implements 
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void onAfterConnected(ChannelContext<SessionContext, P, R> channelContext, boolean isConnected, boolean isReconnect) {
+	public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) {
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class DefaultAioListener<SessionContext, P extends Packet, R> implements 
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void onAfterReceived(ChannelContext<SessionContext, P, R> channelContext, P packet, int packetSize) {
+	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) {
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class DefaultAioListener<SessionContext, P extends Packet, R> implements 
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void onAfterClose(ChannelContext<SessionContext, P, R> channelContext, Throwable throwable, String remark, boolean isRemove) {
+	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
 	}
 
 	/**
@@ -52,10 +52,10 @@ public class DefaultAioListener<SessionContext, P extends Packet, R> implements 
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void onAfterSent(ChannelContext<SessionContext, P, R> channelContext, P packet, boolean isSentSuccess) throws Exception {
+	public void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) throws Exception {
 	}
 
 	@Override
-	public void onBeforeClose(ChannelContext<SessionContext, P, R> channelContext, Throwable throwable, String remark, boolean isRemove) {
+	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
 	}
 }

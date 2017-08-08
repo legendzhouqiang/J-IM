@@ -1,0 +1,47 @@
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+:root {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+:root body {
+    position: absolute;
+}
+
+body {
+    width: 100vw;
+    overflow: hidden;
+}
+
+#app {
+    height: 100%;
+}
+
+.content{
+    box-shadow: 1px 1px 50px #000;
+    border: 1px solid red;
+    border-radius: 10px;
+
+    position:relation;
+    border-radius:10px;
+    text-align:center;
+    padding:10px;
+    background-color:##e4eaf4;
+    color:#2d8cf0;
+    border:0px solid #2d8cf0; 
+    margin:auto;
+    box-shadow: 1px 1px 50px #000;
+    display: inline-block;
+
+}

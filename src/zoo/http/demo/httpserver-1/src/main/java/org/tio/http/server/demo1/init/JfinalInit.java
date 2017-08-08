@@ -40,12 +40,12 @@ public class JfinalInit {
 		try {
 			final String URL = PropKit.get("db01.jdbc.url");
 			final String USERNAME = PropKit.get("db01.jdbc.username");
-			String PASSWORD = "123456";
-//		try {
-//			PASSWORD = ConfigTools.decrypt(PropKit.get("db01.jdbc.password"));
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
+			String PASSWORD = null;
+			try {
+				PASSWORD = ConfigTools.decrypt(PropKit.get("db01.jdbc.password"));
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			final Integer INITIALSIZE = PropKit.getInt("db.jdbc.pool.initialSize");
 			final Integer MIDIDLE = PropKit.getInt("db.jdbc.pool.minIdle");
 			final Integer MAXACTIVEE = PropKit.getInt("db.jdbc.pool.maxActive");

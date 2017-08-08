@@ -7,8 +7,8 @@ import java.util.concurrent.CountDownLatch;
  * @author tanyaowu 
  * 2017年4月1日 上午9:34:59
  */
-public class PacketWithMeta<P extends Packet> {
-	private P packet = null;
+public class PacketWithMeta {
+	private Packet packet = null;
 	private Boolean isSentSuccess = null;
 	private CountDownLatch countDownLatch = null;
 
@@ -18,7 +18,7 @@ public class PacketWithMeta<P extends Packet> {
 	 * @param countDownLatch
 	 * @author: tanyaowu
 	 */
-	public PacketWithMeta(P packet, CountDownLatch countDownLatch) {
+	public PacketWithMeta(Packet packet, CountDownLatch countDownLatch) {
 		super();
 		this.packet = packet;
 		this.countDownLatch = countDownLatch;
@@ -30,7 +30,7 @@ public class PacketWithMeta<P extends Packet> {
 	/**
 	 * @return the packet
 	 */
-	public P getPacket() {
+	public Packet getPacket() {
 		return packet;
 	}
 

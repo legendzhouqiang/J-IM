@@ -7,10 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tio.http.common.HttpConst.RequestBodyFormat;
-import org.tio.http.common.session.HttpSession;
 
 /**
  * 
@@ -19,7 +16,7 @@ import org.tio.http.common.session.HttpSession;
  */
 public class HttpRequest extends HttpPacket {
 	
-	private static Logger log = LoggerFactory.getLogger(HttpRequest.class);
+//	private static Logger log = LoggerFactory.getLogger(HttpRequest.class);
 
 	
 	private RequestLine requestLine = null;
@@ -36,7 +33,7 @@ public class HttpRequest extends HttpPacket {
 	private RequestBodyFormat bodyFormat;
 	private String charset = HttpConst.CHARSET_NAME;
 	
-	private HttpSession httpSession = null;
+//	private HttpSession httpSession = null;
 
 
 	/**
@@ -85,6 +82,7 @@ public class HttpRequest extends HttpPacket {
 	 * @param headers the headers to set
 	 * @param channelContext 
 	 */
+	@Override
 	public void setHeaders(Map<String, String> headers) {
 		this.headers = headers;
 		if (headers != null) {
@@ -93,7 +91,7 @@ public class HttpRequest extends HttpPacket {
 		
 //		String Sec_WebSocket_Key = headers.get(HttpConst.RequestHeaderKey.Sec_WebSocket_Key);
 //		if (StringUtils.isNoneBlank(Sec_WebSocket_Key)) {
-//			ImSessionContext httpSession = channelContext.getSessionContext();
+//			ImSessionContext httpSession = channelContext.getAttribute();
 //			httpSession.setWebsocket(true);
 //		}
 	}
@@ -278,18 +276,18 @@ public class HttpRequest extends HttpPacket {
 		return str;
 	}
 
-	/**
-	 * @return the httpSession
-	 */
-	public HttpSession getHttpSession() {
-		return httpSession;
-	}
-
-	/**
-	 * @param httpSession the httpSession to set
-	 */
-	public void setHttpSession(HttpSession httpSession) {
-		this.httpSession = httpSession;
-	}
+//	/**
+//	 * @return the httpSession
+//	 */
+//	public HttpSession getHttpSession() {
+//		return httpSession;
+//	}
+//
+//	/**
+//	 * @param httpSession the httpSession to set
+//	 */
+//	public void setHttpSession(HttpSession httpSession) {
+//		this.httpSession = httpSession;
+//	}
 
 }

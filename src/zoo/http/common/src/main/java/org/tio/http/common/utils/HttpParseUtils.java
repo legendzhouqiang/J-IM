@@ -7,9 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 本类部分代码参考了voovan项目，不过为了适应需要，作了部分改动，感谢作者的贡献
  * 项目地址： http://www.voovan.org/
@@ -17,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * 2017年7月27日 上午10:09:19
  */
 public class HttpParseUtils {
-	private static Logger log = LoggerFactory.getLogger(HttpParseUtils.class);
+//	private static Logger log = LoggerFactory.getLogger(HttpParseUtils.class);
 
 	/**
 	 * 

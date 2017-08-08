@@ -2,8 +2,8 @@ package org.tio.http.server;
 
 import org.tio.http.common.Const;
 import org.tio.http.common.HttpConst;
-import org.tio.http.common.session.HashMapHttpSessionFactory;
-import org.tio.http.common.session.IHttpSessionFactory;
+import org.tio.http.server.session.IHttpSessionFactory;
+import org.tio.http.server.session.impl.HashMapHttpSessionFactory;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 

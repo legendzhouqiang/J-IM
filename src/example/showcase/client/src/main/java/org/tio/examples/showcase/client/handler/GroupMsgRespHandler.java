@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
 import org.tio.examples.showcase.common.ShowcasePacket;
-import org.tio.examples.showcase.common.ShowcaseSessionContext;
 import org.tio.examples.showcase.common.intf.AbsShowcaseBsHandler;
 import org.tio.examples.showcase.common.packets.GroupMsgRespBody;
 import org.tio.json.Json;
@@ -52,7 +51,7 @@ public class GroupMsgRespHandler extends AbsShowcaseBsHandler<GroupMsgRespBody>
 	 * @author: tanyaowu
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, GroupMsgRespBody bsBody, ChannelContext<ShowcaseSessionContext, ShowcasePacket, Object> channelContext) throws Exception
+	public Object handler(ShowcasePacket packet, GroupMsgRespBody bsBody, ChannelContext channelContext) throws Exception
 	{
 		System.out.println("收到群组消息:" + Json.toJson(bsBody));
 		return null;

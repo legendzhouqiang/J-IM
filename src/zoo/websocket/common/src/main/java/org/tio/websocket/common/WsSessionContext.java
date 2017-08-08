@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
-import org.tio.http.common.session.HttpSession;
 import org.tio.monitor.RateLimiterWrap;
 
 /**
@@ -12,7 +11,7 @@ import org.tio.monitor.RateLimiterWrap;
  * @author tanyaowu 
  *
  */
-public class WsSessionContext extends HttpSession
+public class WsSessionContext
 {
 	/**
 	 * 消息请求频率控制器

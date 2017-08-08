@@ -13,7 +13,6 @@ import org.tio.core.GroupContext;
 import org.tio.core.ObjWithLock;
 import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.AioListener;
-import org.tio.core.intf.Packet;
 import org.tio.core.stat.GroupStat;
 import org.tio.core.threadpool.SynThreadPoolExecutor;
 import org.tio.core.utils.SystemTimer;
@@ -25,14 +24,14 @@ import org.tio.server.intf.ServerAioListener;
  *
  * @author tanyaowu
  */
-public class ServerGroupContext<SessionContext, P extends Packet, R> extends GroupContext<SessionContext, P, R> {
+public class ServerGroupContext extends GroupContext {
 	static Logger log = LoggerFactory.getLogger(ServerGroupContext.class);
 
-	private AcceptCompletionHandler<SessionContext, P, R> acceptCompletionHandler = null;
+	private AcceptCompletionHandler acceptCompletionHandler = null;
 
-	private ServerAioHandler<SessionContext, P, R> serverAioHandler = null;
+	private ServerAioHandler serverAioHandler = null;
 
-	private ServerAioListener<SessionContext, P, R> serverAioListener = null;
+	private ServerAioListener serverAioListener = null;
 
 	protected ServerGroupStat serverGroupStat = new ServerGroupStat();
 
@@ -41,11 +40,11 @@ public class ServerGroupContext<SessionContext, P extends Packet, R> extends Gro
 
 	private Thread checkHeartbeatThread = null;
 
-	public ServerGroupContext(ServerAioHandler<SessionContext, P, R> serverAioHandler, ServerAioListener<SessionContext, P, R> serverAioListener, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		super(tioExecutor, groupExecutor);
-		this.acceptCompletionHandler = new AcceptCompletionHandler<>();
+		this.acceptCompletionHandler = new AcceptCompletionHandler();
 		this.serverAioHandler = serverAioHandler;
-		this.serverAioListener = serverAioListener == null ? new DefaultServerAioListener<SessionContext, P, R>() : serverAioListener;
+		this.serverAioListener = serverAioListener == null ? new DefaultServerAioListener() : serverAioListener;
 
 		checkHeartbeatThread = new Thread(new Runnable() {
 			@SuppressWarnings("unused")
@@ -58,8 +57,8 @@ public class ServerGroupContext<SessionContext, P extends Packet, R> extends Gro
 						break;
 					}
 					long start = SystemTimer.currentTimeMillis();
-					ObjWithLock<Set<ChannelContext<SessionContext, P, R>>> objWithLock = ServerGroupContext.this.connections.getSetWithLock();
-					Set<ChannelContext<SessionContext, P, R>> set = null;
+					ObjWithLock<Set<ChannelContext>> objWithLock = ServerGroupContext.this.connections.getSetWithLock();
+					Set<ChannelContext> set = null;
 					ReadLock readLock = objWithLock.getLock().readLock();
 					long start1 = 0;
 					int count = 0;
@@ -68,9 +67,9 @@ public class ServerGroupContext<SessionContext, P extends Packet, R> extends Gro
 						start1 = SystemTimer.currentTimeMillis();
 						set = objWithLock.getObj();
 
-						for (ChannelContext<SessionContext, P, R> entry : set) {
+						for (ChannelContext entry : set) {
 							count++;
-							ChannelContext<SessionContext, P, R> channelContext = entry;
+							ChannelContext channelContext = entry;
 							ChannelStat stat = channelContext.getStat();
 							long timeLatestReceivedMsg = stat.getLatestTimeOfReceivedPacket();
 							long timeLatestSentMsg = stat.getLatestTimeOfSentPacket();
@@ -91,7 +90,7 @@ public class ServerGroupContext<SessionContext, P extends Packet, R> extends Gro
 							//							if (log.isWarnEnabled())
 							//							{
 							//								int groups = 0;
-							//								ObjWithLock<Set<ChannelContext<SessionContext, P, R>>> objwithlock = ServerGroupContext.this.getGroups().clients("g");
+							//								ObjWithLock<Set<ChannelContext>> objwithlock = ServerGroupContext.this.getGroups().clients("g");
 							//								if (objwithlock != null)
 							//								{
 							//									groups = objwithlock.getObj().size();
@@ -135,8 +134,9 @@ public class ServerGroupContext<SessionContext, P extends Packet, R> extends Gro
 		checkHeartbeatThread.setDaemon(true);
 		checkHeartbeatThread.setPriority(Thread.MIN_PRIORITY);
 		checkHeartbeatThread.start();
-	
+
 	}
+
 	/**
 	 * 
 	 * @param serverAioHandler
@@ -147,7 +147,7 @@ public class ServerGroupContext<SessionContext, P extends Packet, R> extends Gro
 	 * 2017年2月2日 下午1:40:11
 	 *
 	 */
-	public ServerGroupContext(ServerAioHandler<SessionContext, P, R> serverAioHandler, ServerAioListener<SessionContext, P, R> serverAioListener) {
+	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener) {
 		this(serverAioHandler, serverAioListener, null, null);
 	}
 
@@ -158,21 +158,21 @@ public class ServerGroupContext<SessionContext, P extends Packet, R> extends Gro
 	/**
 	 * @return the acceptCompletionHandler
 	 */
-	public AcceptCompletionHandler<SessionContext, P, R> getAcceptCompletionHandler() {
+	public AcceptCompletionHandler getAcceptCompletionHandler() {
 		return acceptCompletionHandler;
 	}
 
 	/**
 	 * @return the serverAioHandler
 	 */
-	public ServerAioHandler<SessionContext, P, R> getServerAioHandler() {
+	public ServerAioHandler getServerAioHandler() {
 		return serverAioHandler;
 	}
 
 	/**
 	 * @return the serverAioListener
 	 */
-	public ServerAioListener<SessionContext, P, R> getServerAioListener() {
+	public ServerAioListener getServerAioListener() {
 		return serverAioListener;
 	}
 
@@ -185,7 +185,7 @@ public class ServerGroupContext<SessionContext, P extends Packet, R> extends Gro
 	 * 
 	 */
 	@Override
-	public AioHandler<SessionContext, P, R> getAioHandler() {
+	public AioHandler getAioHandler() {
 		return this.getServerAioHandler();
 	}
 
@@ -211,7 +211,7 @@ public class ServerGroupContext<SessionContext, P extends Packet, R> extends Gro
 	 * 
 	 */
 	@Override
-	public AioListener<SessionContext, P, R> getAioListener() {
+	public AioListener getAioListener() {
 		return getServerAioListener();
 	}
 }

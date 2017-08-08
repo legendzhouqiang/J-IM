@@ -3,8 +3,6 @@ package org.tio.http.common;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tio.core.intf.Packet;
 
 /**
@@ -14,7 +12,7 @@ import org.tio.core.intf.Packet;
  */
 public class HttpPacket extends Packet {
 
-	private static Logger log = LoggerFactory.getLogger(HttpPacket.class);
+//	private static Logger log = LoggerFactory.getLogger(HttpPacket.class);
 
 	public static final int MAX_LENGTH_OF_BODY = (int) (1024 * 1024 * 5.1); //只支持多少M数据
 

@@ -5,8 +5,8 @@ import java.nio.ByteBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
-import org.tio.core.ChannelContext;
 import org.tio.core.ChannelAction;
+import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.PacketHandlerMode;
 import org.tio.core.exception.AioDecodeException;
@@ -22,10 +22,10 @@ import org.tio.core.utils.SystemTimer;
  * 2012-08-09
  * 
  */
-public class DecodeRunnable<SessionContext, P extends Packet, R> implements Runnable {
+public class DecodeRunnable implements Runnable {
 	private static final Logger log = LoggerFactory.getLogger(DecodeRunnable.class);
 
-	private ChannelContext<SessionContext, P, R> channelContext = null;
+	private ChannelContext channelContext = null;
 
 	/**
 	 * 上一次解码剩下的数据
@@ -40,7 +40,7 @@ public class DecodeRunnable<SessionContext, P extends Packet, R> implements Runn
 	/**
 	 * 
 	 */
-	public DecodeRunnable(ChannelContext<SessionContext, P, R> channelContext) {
+	public DecodeRunnable(ChannelContext channelContext) {
 		this.channelContext = channelContext;
 	}
 
@@ -60,12 +60,12 @@ public class DecodeRunnable<SessionContext, P extends Packet, R> implements Runn
 	 * @param byteCount
 	 * @author: tanyaowu
 	 */
-	public static <SessionContext, P extends Packet, R> void handler(ChannelContext<SessionContext, P, R> channelContext, P packet, int byteCount) {
+	public static  void handler(ChannelContext channelContext, Packet packet, int byteCount) {
 
-		GroupContext<SessionContext, P, R> groupContext = channelContext.getGroupContext();
+		GroupContext groupContext = channelContext.getGroupContext();
 		PacketHandlerMode packetHandlerMode = groupContext.getPacketHandlerMode();
 
-		HandlerRunnable<SessionContext, P, R> handlerRunnable = channelContext.getHandlerRunnable();
+		HandlerRunnable handlerRunnable = channelContext.getHandlerRunnable();
 		if (packetHandlerMode == PacketHandlerMode.QUEUE) {
 
 			handlerRunnable.addMsg(packet);
@@ -102,7 +102,7 @@ public class DecodeRunnable<SessionContext, P extends Packet, R> implements Runn
 		try {
 			label_2: while (true) {
 				int initPosition = byteBuffer.position();
-				P packet = channelContext.getGroupContext().getAioHandler().decode(byteBuffer, channelContext);
+				Packet packet = channelContext.getGroupContext().getAioHandler().decode(byteBuffer, channelContext);
 
 				if (packet == null)// 数据不够，组不了包
 				{
@@ -135,7 +135,7 @@ public class DecodeRunnable<SessionContext, P extends Packet, R> implements Runn
 
 					packet.setByteCount(len);
 					
-					AioListener<SessionContext, P, R> aioListener = channelContext.getGroupContext().getAioListener();
+					AioListener aioListener = channelContext.getGroupContext().getAioListener();
 					try {
 						if (log.isInfoEnabled()) {
 							log.info("{} 收到消息 {}", channelContext, packet.logstr());

@@ -10,21 +10,21 @@ import org.tio.core.intf.Packet;
 /**
  * @author tanyaowu
  */
-public class ChannelContextMapWithLock<SessionContext, P extends Packet, R> {
+public class ChannelContextMapWithLock {
 
 	/** remoteAndChannelContext key: "ip:port" value: ChannelContext. */
-	private MapWithLock<Integer, P> map = new MapWithLock<Integer, P>(new HashMap<Integer, P>());
+	private MapWithLock<Integer, Packet> map = new MapWithLock<Integer, Packet>(new HashMap<Integer, Packet>());
 
 	/**
 	 * Adds the.
 	 *
 	 * @param channelContext the channel context
 	 */
-	public void put(Integer synSeq, P packet) {
+	public void put(Integer synSeq, Packet packet) {
 		Lock lock = map.getLock().writeLock();
 		try {
 			lock.lock();
-			Map<Integer, P> m = map.getObj();
+			Map<Integer, Packet> m = map.getObj();
 			m.put(synSeq, packet);
 		} catch (Exception e) {
 			throw e;
@@ -33,12 +33,12 @@ public class ChannelContextMapWithLock<SessionContext, P extends Packet, R> {
 		}
 	}
 
-	public P remove(Integer synSeq) {
+	public Packet remove(Integer synSeq) {
 		Lock lock = map.getLock().writeLock();
 		try {
 			lock.lock();
-			Map<Integer, P> m = map.getObj();
-			P packet = m.remove(synSeq);
+			Map<Integer, Packet> m = map.getObj();
+			Packet packet = m.remove(synSeq);
 			return packet;
 		} catch (Exception e) {
 			throw e;
@@ -52,7 +52,7 @@ public class ChannelContextMapWithLock<SessionContext, P extends Packet, R> {
 	 *
 	 * @return the map
 	 */
-	public MapWithLock<Integer, P> getMap() {
+	public MapWithLock<Integer, Packet> getMap() {
 		return map;
 	}
 

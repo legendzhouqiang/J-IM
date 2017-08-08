@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.threadpool.SynThreadPoolExecutor;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
-import org.tio.websocket.common.WsPacket;
-import org.tio.websocket.common.WsSessionContext;
 import org.tio.websocket.common.WsTioUuid;
 import org.tio.websocket.server.handler.IWsMsgHandler;
 
@@ -39,19 +37,19 @@ public class WsServerStarter {
 
 	private WsServerAioListener wsServerAioListener = null;
 
-	private ServerGroupContext<WsSessionContext, WsPacket, Object> serverGroupContext = null;
+	private ServerGroupContext serverGroupContext = null;
 
-	private AioServer<WsSessionContext, WsPacket, Object> aioServer = null;
+	private AioServer aioServer = null;
 
 	public void start(WsServerConfig wsServerConfig, IWsMsgHandler wsMsgHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
 		this.wsServerConfig = wsServerConfig;
 		this.wsMsgHandler = wsMsgHandler;
 		wsServerAioHandler = new WsServerAioHandler(wsServerConfig, wsMsgHandler);
 		wsServerAioListener = new WsServerAioListener();
-		serverGroupContext = new ServerGroupContext<>(wsServerAioHandler, wsServerAioListener, tioExecutor, groupExecutor);
+		serverGroupContext = new ServerGroupContext(wsServerAioHandler, wsServerAioListener, tioExecutor, groupExecutor);
 		serverGroupContext.setHeartbeatTimeout(0);
 
-		aioServer = new AioServer<>(serverGroupContext);
+		aioServer = new AioServer(serverGroupContext);
 
 		WsTioUuid wsTioUuid = new WsTioUuid();
 		serverGroupContext.setTioUuid(wsTioUuid);
@@ -89,7 +87,7 @@ public class WsServerStarter {
 	/**
 	 * @return the serverGroupContext
 	 */
-	public ServerGroupContext<WsSessionContext, WsPacket, Object> getServerGroupContext() {
+	public ServerGroupContext getServerGroupContext() {
 		return serverGroupContext;
 	}
 

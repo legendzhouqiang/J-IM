@@ -7,14 +7,13 @@ import java.nio.channels.AsynchronousSocketChannel;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.Node;
-import org.tio.core.intf.Packet;
 
 /**
  * 
  * @author tanyaowu 
  *
  */
-public class ServerChannelContext<SessionContext, P extends Packet, R> extends ChannelContext<SessionContext, P, R> {
+public class ServerChannelContext extends ChannelContext {
 
 	/**
 	 * @param groupContext
@@ -24,7 +23,7 @@ public class ServerChannelContext<SessionContext, P extends Packet, R> extends C
 	 * 2016年12月6日 下午12:17:59
 	 * 
 	 */
-	public ServerChannelContext(GroupContext<SessionContext, P, R> groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
+	public ServerChannelContext(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
 		super(groupContext, asynchronousSocketChannel);
 	}
 

@@ -10,10 +10,10 @@ import org.tio.core.exception.AioDecodeException;
  * The Interface AioHandler.
  *
  * @param <Ext> the generic type
- * @param <P> the generic type
+ * @param  the generic type
  * @param <R> the generic type
  */
-public interface AioHandler<SessionContext, P extends Packet, R> {
+public interface AioHandler {
 
 	/**
 	 * 处理消息包
@@ -22,7 +22,7 @@ public interface AioHandler<SessionContext, P extends Packet, R> {
 	 * @return the r
 	 * @author: tanyaowu
 	 */
-	R handler(P packet, ChannelContext<SessionContext, P, R> channelContext) throws Exception;
+	void handler(Packet packet, ChannelContext channelContext) throws Exception;
 
 	/**
 	 * 编码
@@ -31,7 +31,7 @@ public interface AioHandler<SessionContext, P extends Packet, R> {
 	 * @return the byte buffer
 	 * @author: tanyaowu
 	 */
-	ByteBuffer encode(P packet, GroupContext<SessionContext, P, R> groupContext, ChannelContext<SessionContext, P, R> channelContext);
+	ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext);
 
 	/**
 	 * 根据ByteBuffer解码成业务需要的Packet对象.
@@ -40,6 +40,6 @@ public interface AioHandler<SessionContext, P extends Packet, R> {
 	 * @return the t
 	 * @throws AioDecodeException the aio decode exception
 	 */
-	P decode(ByteBuffer buffer, ChannelContext<SessionContext, P, R> channelContext) throws AioDecodeException;
+	Packet decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException;
 
 }

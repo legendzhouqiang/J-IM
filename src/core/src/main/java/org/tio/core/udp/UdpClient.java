@@ -18,7 +18,7 @@ import org.tio.core.udp.task.UdpSendRunnable;
 public class UdpClient {
 	private static Logger log = LoggerFactory.getLogger(UdpClient.class);
 
-	private static final int TIMEOUT = 5000; //设置接收数据的超时时间
+//	private static final int TIMEOUT = 5000; //设置接收数据的超时时间
 
 	private LinkedBlockingQueue<DatagramPacket> queue = new LinkedBlockingQueue<>();
 

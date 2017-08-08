@@ -1,7 +1,5 @@
 package org.tio.websocket.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tio.core.intf.Packet;
 
 /**
@@ -11,7 +9,7 @@ import org.tio.core.intf.Packet;
  */
 public class WsPacket extends Packet {
 
-	private static Logger log = LoggerFactory.getLogger(WsPacket.class);
+//	private static Logger log = LoggerFactory.getLogger(WsPacket.class);
 //
 //	//不包含cookie的头部
 //	protected Map<String, String> headers = null;

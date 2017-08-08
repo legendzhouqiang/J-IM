@@ -6,7 +6,7 @@ import org.tio.core.ChannelContext;
  * @author tanyaowu 
  * 2017年5月13日 下午10:35:05
  */
-public interface GroupListener<SessionContext, P extends Packet, R> {
+public interface GroupListener {
 	/**
 	 * 
 	 * @param channelContext
@@ -14,7 +14,7 @@ public interface GroupListener<SessionContext, P extends Packet, R> {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	void onAfterBind(ChannelContext<SessionContext, P, R> channelContext, String group) throws Exception;
+	void onAfterBind(ChannelContext channelContext, String group) throws Exception;
 
 	/**
 	 * 
@@ -23,5 +23,5 @@ public interface GroupListener<SessionContext, P extends Packet, R> {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	void onAfterUnbind(ChannelContext<SessionContext, P, R> channelContext, String group) throws Exception;
+	void onAfterUnbind(ChannelContext channelContext, String group) throws Exception;
 }

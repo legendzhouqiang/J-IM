@@ -6,13 +6,14 @@ import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.exception.AioDecodeException;
 import org.tio.core.intf.AioHandler;
+import org.tio.core.intf.Packet;
 
 /**
  * hello world版中服务器端和客户端的编码解码算法是一样的，所以抽象一个公共的父类出来
  * @author tanyaowu 
  *
  */
-public abstract class HelloAbsAioHandler implements AioHandler<Object, HelloPacket, Object>
+public abstract class HelloAbsAioHandler implements AioHandler
 {
 	/**
 	 * 编码：把业务消息包编码为可以发送的ByteBuffer
@@ -21,9 +22,10 @@ public abstract class HelloAbsAioHandler implements AioHandler<Object, HelloPack
 	 * 消息体结构：   对象的json串的byte[]
 	 */
 	@Override
-	public ByteBuffer encode(HelloPacket packet, GroupContext<Object, HelloPacket, Object> groupContext, ChannelContext<Object, HelloPacket, Object> channelContext)
+	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext)
 	{
-		byte[] body = packet.getBody();
+		HelloPacket helloPacket = (HelloPacket)packet;
+		byte[] body = helloPacket.getBody();
 		int bodyLen = 0;
 		if (body != null)
 		{
@@ -55,7 +57,7 @@ public abstract class HelloAbsAioHandler implements AioHandler<Object, HelloPack
 	 * 消息体结构：   对象的json串的byte[]
 	 */
 	@Override
-	public HelloPacket decode(ByteBuffer buffer, ChannelContext<Object, HelloPacket, Object> channelContext) throws AioDecodeException
+	public HelloPacket decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException
 	{
 		int readableLength = buffer.limit() - buffer.position();
 		//收到的数据组不了业务包，则返回null以告诉框架数据不够

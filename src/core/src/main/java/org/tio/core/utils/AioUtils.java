@@ -6,12 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
-import org.tio.core.intf.Packet;
 
 public class AioUtils {
 	private static Logger log = LoggerFactory.getLogger(AioUtils.class);
 
-	public static <SessionContext, P extends Packet, R> boolean checkBeforeIO(ChannelContext<SessionContext, P, R> channelContext) {
+	public static  boolean checkBeforeIO(ChannelContext channelContext) {
 		boolean isClosed = channelContext.isClosed();
 		boolean isRemoved = channelContext.isRemoved();
 		boolean isWaitingClose = channelContext.isWaitingClose();

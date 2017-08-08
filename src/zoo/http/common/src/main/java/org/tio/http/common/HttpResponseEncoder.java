@@ -40,7 +40,7 @@ public class HttpResponseEncoder
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static ByteBuffer encode(HttpResponse httpResponse, GroupContext<?, ?, ?> groupContext, ChannelContext<?, ?, ?> channelContext)
+	public static ByteBuffer encode(HttpResponse httpResponse, GroupContext groupContext, ChannelContext channelContext)
 	{
 		int bodyLength = 0;
 		byte[] body = httpResponse.getBody();

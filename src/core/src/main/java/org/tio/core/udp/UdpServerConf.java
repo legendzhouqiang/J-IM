@@ -1,7 +1,5 @@
 package org.tio.core.udp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tio.core.Node;
 import org.tio.core.udp.intf.UdpHandler;
 
@@ -10,7 +8,7 @@ import org.tio.core.udp.intf.UdpHandler;
  * 2017年7月5日 下午3:53:04
  */
 public class UdpServerConf extends UdpConf {
-	private static Logger log = LoggerFactory.getLogger(UdpServerConf.class);
+//	private static Logger log = LoggerFactory.getLogger(UdpServerConf.class);
 	
 	private UdpHandler udpHandler;
 	
