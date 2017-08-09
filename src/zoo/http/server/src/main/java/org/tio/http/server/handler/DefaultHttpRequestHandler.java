@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
-import org.tio.core.utils.GuavaUtils;
 import org.tio.http.common.Cookie;
 import org.tio.http.common.HttpConst;
 import org.tio.http.common.HttpRequest;
@@ -25,7 +24,6 @@ import org.tio.http.server.session.HttpSession;
 import org.tio.http.server.util.ClassUtils;
 import org.tio.http.server.util.Resps;
 
-import com.google.common.cache.LoadingCache;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
@@ -38,6 +36,8 @@ import com.xiaoleilu.hutool.util.RandomUtil;
  */
 public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	private static Logger log = LoggerFactory.getLogger(DefaultHttpRequestHandler.class);
+	
+	private static final String SESSIONID_KEY = "tio-sessionid-key";
 
 	protected HttpServerConfig httpServerConfig;
 
@@ -45,7 +45,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 	private IHttpServerListener httpServerListener;
 
-	private LoadingCache<String, HttpSession> loadingCache = null;
+//	private LoadingCache<String, HttpSession> loadingCache = null;
 
 	/**
 	 * 
@@ -55,16 +55,16 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	public DefaultHttpRequestHandler(HttpServerConfig httpServerConfig) {
 		this.httpServerConfig = httpServerConfig;
 
-		Integer concurrencyLevel = 8;
-		Long expireAfterWrite = null;
-		Long expireAfterAccess = httpServerConfig.getSessionTimeout();
-		Integer initialCapacity = 10;
-		Integer maximumSize = 100000000;
-		boolean recordStats = false;
-		loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats);
+//		Integer concurrencyLevel = 8;
+//		Long expireAfterWrite = null;
+//		Long expireAfterAccess = httpServerConfig.getSessionTimeout();
+//		Integer initialCapacity = 10;
+//		Integer maximumSize = 100000000;
+//		boolean recordStats = false;
+//		loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats);
 	}
 
-	private Cookie getSessionCookie(HttpRequest httpRequest, HttpServerConfig httpServerConfig, ChannelContext channelContext) throws ExecutionException {
+	private Cookie getSessionCookie(HttpRequest httpRequest, HttpServerConfig httpServerConfig) throws ExecutionException {
 		Cookie sessionCookie = httpRequest.getCookie(httpServerConfig.getSessionCookieName());
 		return sessionCookie;
 	}
@@ -84,46 +84,55 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		this.routes = routes;
 	}
 
-	private void processCookieBeforeHandler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext) throws ExecutionException {
-		Cookie sessionCookie = getSessionCookie(httpRequest, httpServerConfig, channelContext);
+	private void processCookieBeforeHandler(HttpRequest request, RequestLine requestLine, ChannelContext channelContext) throws ExecutionException {
+		Cookie cookie = getSessionCookie(request, httpServerConfig);
 		HttpSession httpSession = null;
-		if (sessionCookie == null) {
+		if (cookie == null) {
 			String sessionId = RandomUtil.randomUUID();
-			httpSession = new HttpSession(httpServerConfig.getHttpSessionFactory().create(sessionId, httpServerConfig.getSessionTimeout(), channelContext.getGroupContext()), sessionId);
+			httpSession = new HttpSession(sessionId);
 		} else {
-			httpSession = loadingCache.getIfPresent(sessionCookie.getValue());
+//			httpSession = (HttpSession)httpSession.getAtrribute(SESSIONID_KEY);//loadingCache.getIfPresent(sessionCookie.getValue());
+			String sessionId = cookie.getValue();
+			httpSession = httpServerConfig.getHttpSessionStore().get(sessionId);
 			if (httpSession == null) {
-				log.info("{} session【{}】超时", channelContext, sessionCookie.getValue());
-				String sessionId = RandomUtil.randomUUID();
-				httpSession = new HttpSession(httpServerConfig.getHttpSessionFactory().create(sessionId, httpServerConfig.getSessionTimeout(), channelContext.getGroupContext()), sessionId);
+				log.info("{} session【{}】超时", channelContext, sessionId);
+				sessionId = RandomUtil.randomUUID();
+				httpSession = new HttpSession(sessionId);
 			}
 		}
 		channelContext.setAttribute(httpSession);
-//		httpRequest.setHttpSession(httpSession);
 	}
 
 	private void processCookieAfterHandler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws ExecutionException {
 		HttpSession httpSession = (HttpSession)channelContext.getAttribute();//.getHttpSession();//not null
-
-		Cookie sessionCookie = getSessionCookie(httpRequest, httpServerConfig, channelContext);
-		String sessionCookieValue = null;
-		if (sessionCookie == null) {
-			//			createSessionCookie(httpRequest, httpServerConfig, channelContext, httpResponse);
-
+		Cookie cookie = getSessionCookie(httpRequest, httpServerConfig);
+		String sessionId = null;
+		
+		if (cookie == null) {
 			String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
 			String name = httpServerConfig.getSessionCookieName();
-
-			sessionCookieValue = httpSession.getSessionId();//randomCookieValue();
 			long maxAge = httpServerConfig.getSessionTimeout();
-			sessionCookie = new Cookie(domain, name, sessionCookieValue, maxAge);
-			httpResponse.addCookie(sessionCookie);
-			loadingCache.put(sessionCookieValue, httpSession);
-			log.info("{} 创建会话Cookie, {}", channelContext, sessionCookie);
+
+			sessionId = httpSession.getSessionId();//randomCookieValue();
+			
+			cookie = new Cookie(domain, name, sessionId, maxAge);
+			httpResponse.addCookie(cookie);
+			httpServerConfig.getHttpSessionStore().save(sessionId, httpSession);
+			log.info("{} 创建会话Cookie, {}", channelContext, cookie);
 		} else {
-			sessionCookieValue = sessionCookie.getValue();
-			HttpSession httpSession1 = loadingCache.getIfPresent(sessionCookieValue);
-			if (httpSession1 == null) {
-				loadingCache.put(sessionCookieValue, httpSession);
+			sessionId = cookie.getValue();
+			HttpSession httpSession1 = httpServerConfig.getHttpSessionStore().get(sessionId);
+			
+			if (httpSession1 == null) {//有cookie但是超时了
+				sessionId = httpSession.getSessionId();
+				String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
+				String name = httpServerConfig.getSessionCookieName();
+				long maxAge = httpServerConfig.getSessionTimeout();
+				
+				cookie = new Cookie(domain, name, sessionId, maxAge);
+				httpResponse.addCookie(cookie);
+				
+				httpServerConfig.getHttpSessionStore().save(sessionId, httpSession);
 			}
 		}
 	}

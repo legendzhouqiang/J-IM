@@ -2,8 +2,7 @@ package org.tio.http.server;
 
 import org.tio.http.common.Const;
 import org.tio.http.common.HttpConst;
-import org.tio.http.server.session.IHttpSessionFactory;
-import org.tio.http.server.session.impl.HashMapHttpSessionFactory;
+import org.tio.http.server.session.IHttpSessionStore;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 
@@ -14,17 +13,22 @@ import com.xiaoleilu.hutool.io.FileUtil;
 public class HttpServerConfig {
 
 	private String bindIp = null;//"127.0.0.1";
+	
+	/**
+	 * 默认的超时时间，单位：秒
+	 */
+	public static final long DEFAULT_SESSION_TIMEOUT = 30 * 60;
 
 	private Integer bindPort = 2046;
 
 	private String charset = HttpConst.CHARSET_NAME;
 
-	private IHttpSessionFactory<?> httpSessionFactory = HashMapHttpSessionFactory.self;
+	private IHttpSessionStore httpSessionStore = null;
 
 	/**
 	 * session超时时间，单位：秒
 	 */
-	private long sessionTimeout = 30 * 60;
+	private long sessionTimeout = DEFAULT_SESSION_TIMEOUT;
 
 	private String sessionCookieName = Const.SESSION_COOKIE_NAME;
 
@@ -41,8 +45,11 @@ public class HttpServerConfig {
 	 * 
 	 * @author: tanyaowu
 	 */
-	public HttpServerConfig(Integer bindPort) {
+	public HttpServerConfig(Integer bindPort, Long sessionTimeout) {
 		this.bindPort = bindPort;
+		if (sessionTimeout != null) {
+			this.sessionTimeout = sessionTimeout;
+		}
 	}
 
 	/**
@@ -106,9 +113,9 @@ public class HttpServerConfig {
 		return sessionTimeout;
 	}
 
-	public void setSessionTimeout(long sessionTimeout) {
-		this.sessionTimeout = sessionTimeout;
-	}
+	//	public void setSessionTimeout(long sessionTimeout) {
+	//		this.sessionTimeout = sessionTimeout;
+	//	}
 
 	public String getSessionCookieName() {
 		return sessionCookieName;
@@ -118,18 +125,12 @@ public class HttpServerConfig {
 		this.sessionCookieName = sessionCookieName;
 	}
 
-	/**
-	 * @return the httpSessionFactory
-	 */
-	public IHttpSessionFactory<?> getHttpSessionFactory() {
-		return httpSessionFactory;
+	public IHttpSessionStore getHttpSessionStore() {
+		return httpSessionStore;
 	}
 
-	/**
-	 * @param httpSessionFactory the httpSessionFactory to set
-	 */
-	public void setHttpSessionFactory(IHttpSessionFactory<?> httpSessionFactory) {
-		this.httpSessionFactory = httpSessionFactory;
+	public void setHttpSessionStore(IHttpSessionStore httpSessionStore) {
+		this.httpSessionStore = httpSessionStore;
 	}
 
 }

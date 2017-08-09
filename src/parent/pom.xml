@@ -121,6 +121,17 @@
 				<artifactId>tio-http-server</artifactId>
 				<version>${tio-http.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>org.t-io</groupId>
+				<artifactId>tio-im-common</artifactId>
+				<version>${tio-im.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.t-io</groupId>
+				<artifactId>tio-im-server</artifactId>
+				<version>${tio-im.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.jfinal</groupId>

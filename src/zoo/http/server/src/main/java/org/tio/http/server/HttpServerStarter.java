@@ -11,6 +11,8 @@ import org.tio.http.server.handler.DefaultHttpRequestHandler;
 import org.tio.http.server.handler.IHttpRequestHandler;
 import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
+import org.tio.http.server.session.IHttpSessionStore;
+import org.tio.http.server.session.impl.GuavaHttpSessionStore;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
 
@@ -71,17 +73,27 @@ public class HttpServerStarter {
 	}
 
 	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener) {
-		this(pageRootDir, serverPort, scanPackages, httpServerListener, null, null);
+		this(pageRootDir, serverPort, scanPackages, httpServerListener, null, null, null);
 	}
 	
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, SynThreadPoolExecutor tioExecutor,
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, IHttpSessionStore httpSessionStore) {
+		this(pageRootDir, serverPort, scanPackages, httpServerListener, httpSessionStore, null, null);
+	}
+	
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, IHttpSessionStore httpSessionStore, SynThreadPoolExecutor tioExecutor,
 			ThreadPoolExecutor groupExecutor) {
 		int port = serverPort;
 		String pageRoot = pageRootDir;
 
-		httpServerConfig = new HttpServerConfig(port);
+		httpServerConfig = new HttpServerConfig(port, null);
 		httpServerConfig.setRoot(pageRoot);
-
+		if (httpSessionStore != null) {
+			httpServerConfig.setHttpSessionStore(httpSessionStore);
+		}
+//		} else {
+//			httpServerConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpServerConfig.getSessionTimeout()));
+//		}
+		
 		//		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
 		DefaultHttpRequestHandler httpRequestHandler = new DefaultHttpRequestHandler(httpServerConfig, routes);

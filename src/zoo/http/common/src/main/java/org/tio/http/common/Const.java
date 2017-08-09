@@ -10,5 +10,5 @@ public interface Const
 	/**
 	 * 
 	 */
-	String SESSION_COOKIE_NAME = "tio-session";
+	String SESSION_COOKIE_NAME = "TdfsIkg5mOerT";
 }

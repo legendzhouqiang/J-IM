@@ -1,21 +1,29 @@
 package org.tio.http.server.session;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 
  * @author tanyaowu 
  * 2017年8月5日 上午10:16:26
  */
-public class HttpSession {
-	private IHttpSession proxy = null;
+public class HttpSession implements java.io.Serializable {
+	
+	private static final long serialVersionUID = 6077020620501316538L;
+
+	private Map<String, Object> map = new ConcurrentHashMap<>();
 	
 	private String sessionId = null;
 	
 	/**
 	 * @author: tanyaowu
 	 */
-	public HttpSession(IHttpSession proxy, String sessionId) {
-		this.proxy = proxy;
+	public HttpSession(String sessionId) {
 		this.sessionId = sessionId;
+	}
+	
+	public HttpSession() {
 	}
 	
 
@@ -26,7 +34,7 @@ public class HttpSession {
 	 * @author: tanyaowu
 	 */
 	public void setAtrribute(String key, Object value) {
-		proxy.setAtrribute(key, value);
+		map.put(key, value);
 	}
 
 	/**
@@ -36,7 +44,7 @@ public class HttpSession {
 	 * @author: tanyaowu
 	 */
 	public Object getAtrribute(String key) {
-		return proxy.getAtrribute(key);
+		return map.get(key);
 	}
 	
 	/**
@@ -45,7 +53,7 @@ public class HttpSession {
 	 * @author: tanyaowu
 	 */
 	public void clear(){
-		proxy.clear();
+		map.clear();
 	}
 
 	public String getSessionId() {
