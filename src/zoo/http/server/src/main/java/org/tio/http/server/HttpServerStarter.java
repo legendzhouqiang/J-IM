@@ -103,6 +103,10 @@ public class HttpServerStarter {
 	}
 	
 	public void start() throws IOException {
+		if (httpServerConfig.getHttpSessionStore() == null) {
+			httpServerConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpServerConfig.getSessionTimeout()));
+		}
+		
 		aioServer.start(this.httpServerConfig.getBindIp(), this.httpServerConfig.getBindPort());
 	}
 
