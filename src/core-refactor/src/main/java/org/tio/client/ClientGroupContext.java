@@ -10,6 +10,9 @@ import org.tio.common.PacketHandlerMode;
  * Desc:
  */
 public class ClientGroupContext extends GroupContext {
+
     /** 消息处理模式 */
     private PacketHandlerMode packetHandlerMode = PacketHandlerMode.SINGLE_THREAD;
+    /** 重连配置 */
+    protected ReconnectConfig reconnConf;
 }

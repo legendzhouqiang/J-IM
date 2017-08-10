@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
  * Copyright (c) for 谭耀武
  * Date:2017/8/10
  * Author: <a href="tywo45@163.com">谭耀武</a>
- * Desc: 分组上下文
+ * Desc: 分组上下文超类
  */
 @Data
 @Slf4j
