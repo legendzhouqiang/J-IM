@@ -1,6 +1,7 @@
 package org.tio.server;
 
 import org.tio.common.GroupContext;
+import org.tio.common.PacketHandlerMode;
 
 /**
  * Copyright (c) for 谭耀武
@@ -8,5 +9,7 @@ import org.tio.common.GroupContext;
  * Author: <a href="tywo45@163.com">谭耀武</a>
  * Desc:
  */
-public class ServerGroupContext extends GroupContext{
+public class ServerGroupContext extends GroupContext {
+    /** 消息处理模式 */
+    private PacketHandlerMode packetHandlerMode = PacketHandlerMode.QUEUE;
 }

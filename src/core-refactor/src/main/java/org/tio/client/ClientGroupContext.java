@@ -1,6 +1,7 @@
 package org.tio.client;
 
 import org.tio.common.GroupContext;
+import org.tio.common.PacketHandlerMode;
 
 /**
  * Copyright (c) for 谭耀武
@@ -9,4 +10,6 @@ import org.tio.common.GroupContext;
  * Desc:
  */
 public class ClientGroupContext extends GroupContext {
+    /** 消息处理模式 */
+    private PacketHandlerMode packetHandlerMode = PacketHandlerMode.SINGLE_THREAD;
 }

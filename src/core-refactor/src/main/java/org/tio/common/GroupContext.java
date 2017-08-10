@@ -31,4 +31,6 @@ public abstract class GroupContext {
 
     protected boolean isShortConnection = false;
 
+
+
 }
