@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
  * Copyright (c) for 谭耀武
  * Date:2017/8/10
  * Author: <a href="tywo45@163.com">谭耀武</a>
- * Desc:
+ * Desc: 分组上下文
  */
 @Data
 @Slf4j
@@ -26,7 +26,9 @@ public abstract class GroupContext {
 
     /** GroupContext 唯一标识 */
     protected String id;
-
+    /** statistics */
     protected GroupStat statistics;
+
+    protected boolean isShortConnection = false;
 
 }
