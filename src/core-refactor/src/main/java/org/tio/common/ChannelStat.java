@@ -23,7 +23,7 @@ public class ChannelStat {
 	private long timeClosed = SystemTimer.currentTimeMillis();
 
 	/** 进入重连队列时间 */
-	private long timeInReconnQueue = SystemTimer.currentTimeMillis();
+	private long timeInReconnect = SystemTimer.currentTimeMillis();
 
 	/** 本连接已发送的字节数 */
 	private AtomicLong sentBytes = new AtomicLong();

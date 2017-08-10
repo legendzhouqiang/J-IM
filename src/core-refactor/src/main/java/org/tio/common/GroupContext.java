@@ -27,6 +27,6 @@ public abstract class GroupContext {
     /** GroupContext 唯一标识 */
     protected String id;
 
-    protected GroupStat statis;
+    protected GroupStat statistics;
 
 }
