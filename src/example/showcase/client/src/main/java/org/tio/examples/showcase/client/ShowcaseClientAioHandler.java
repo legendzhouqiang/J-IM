@@ -20,12 +20,10 @@ import org.tio.examples.showcase.common.intf.AbsShowcaseBsHandler;
  * @author tanyaowu 
  * 2017年3月27日 上午12:18:11
  */
-public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements ClientAioHandler
-{
+public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements ClientAioHandler {
 
 	private static Map<Byte, AbsShowcaseBsHandler<?>> handlerMap = new HashMap<>();
-	static
-	{
+	static {
 		handlerMap.put(Type.GROUP_MSG_RESP, new GroupMsgRespHandler());
 		handlerMap.put(Type.JOIN_GROUP_RESP, new JoinGroupRespHandler());
 		handlerMap.put(Type.LOGIN_RESP, new LoginRespHandler());
@@ -36,9 +34,8 @@ public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements C
 	 * 处理消息
 	 */
 	@Override
-	public void handler(Packet packet, ChannelContext channelContext) throws Exception
-	{
-		ShowcasePacket showcasePacket = (ShowcasePacket)packet;
+	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
+		ShowcasePacket showcasePacket = (ShowcasePacket) packet;
 		Byte type = showcasePacket.getType();
 		AbsShowcaseBsHandler<?> showcaseBsHandler = handlerMap.get(type);
 		showcaseBsHandler.handler(showcasePacket, channelContext);
@@ -51,8 +48,7 @@ public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements C
 	 * 此方法如果返回null，框架层面则不会发心跳；如果返回非null，框架层面会定时发本方法返回的消息包
 	 */
 	@Override
-	public ShowcasePacket heartbeatPacket()
-	{
+	public ShowcasePacket heartbeatPacket() {
 		return heartbeatPacket;
 	}
 }

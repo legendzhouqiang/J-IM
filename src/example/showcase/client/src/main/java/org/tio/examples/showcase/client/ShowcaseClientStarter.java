@@ -22,8 +22,7 @@ import org.tio.json.Json;
  * 
  * @author tanyaowu 
  */
-public class ShowcaseClientStarter
-{
+public class ShowcaseClientStarter {
 	static String serverIp = "127.0.0.1";
 	static int serverPort = Const.PORT;
 
@@ -40,15 +39,13 @@ public class ShowcaseClientStarter
 
 	static ClientChannelContext clientChannelContext;
 
-	public static void main(String[] args) throws Exception
-	{
+	public static void main(String[] args) throws Exception {
 		aioClient = new AioClient(clientGroupContext);
 		clientChannelContext = aioClient.connect(serverNode);
 		command();
 	}
 
-	public static void command() throws Exception
-	{
+	public static void command() throws Exception {
 		@SuppressWarnings("resource")
 		java.util.Scanner sc = new java.util.Scanner(System.in);
 		int i = 1;
@@ -65,14 +62,11 @@ public class ShowcaseClientStarter
 		System.out.println(sb);
 
 		String line = sc.nextLine(); // 这个就是用户输入的数据
-		while (true)
-		{
-			if ("exit".equalsIgnoreCase(line))
-			{
+		while (true) {
+			if ("exit".equalsIgnoreCase(line)) {
 				System.out.println("Thanks for using! bye bye.");
 				break;
-			} else if ("?".equals(line))
-			{
+			} else if ("?".equals(line)) {
 				System.out.println(sb);
 			}
 
@@ -80,23 +74,20 @@ public class ShowcaseClientStarter
 
 			line = sc.nextLine(); // 这个就是用户输入的数据
 		}
-		
+
 		aioClient.stop();
 		System.exit(0);
 	}
 
-	public static void processCommand(String line) throws Exception
-	{
-		if (StringUtils.isBlank(line))
-		{
+	public static void processCommand(String line) throws Exception {
+		if (StringUtils.isBlank(line)) {
 			return;
 		}
-		
+
 		String[] args = StringUtils.split(line, " ");
 		String command = args[0];
 
-		if ("login".equalsIgnoreCase(command))
-		{
+		if ("login".equalsIgnoreCase(command)) {
 			String loginname = args[1];
 			String password = args[2];
 
@@ -110,8 +101,7 @@ public class ShowcaseClientStarter
 
 			Aio.send(clientChannelContext, reqPacket);
 
-		} else if ("join".equals(command))
-		{
+		} else if ("join".equals(command)) {
 			String group = args[1];
 
 			JoinGroupReqBody joinGroupReqBody = new JoinGroupReqBody();
@@ -122,8 +112,7 @@ public class ShowcaseClientStarter
 			reqPacket.setBody(Json.toJson(joinGroupReqBody).getBytes(ShowcasePacket.CHARSET));
 
 			Aio.send(clientChannelContext, reqPacket);
-		} else if ("groupMsg".equals(command))
-		{
+		} else if ("groupMsg".equals(command)) {
 			String group = args[1];
 			String text = args[2];
 
@@ -136,8 +125,7 @@ public class ShowcaseClientStarter
 			reqPacket.setBody(Json.toJson(groupMsgReqBody).getBytes(ShowcasePacket.CHARSET));
 
 			Aio.send(clientChannelContext, reqPacket);
-		} else if ("p2pMsg".equals(command))
-		{
+		} else if ("p2pMsg".equals(command)) {
 			String toUserid = args[1];
 			String text = args[2];
 

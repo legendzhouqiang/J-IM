@@ -13,27 +13,24 @@ import org.tio.core.intf.Packet;
  * @author tanyaowu 
  * 2017年3月27日 上午12:14:12
  */
-public abstract class ShowcaseAbsAioHandler implements AioHandler
-{
+public abstract class ShowcaseAbsAioHandler implements AioHandler {
 	/**
 	 * 编码：把业务消息包编码为可以发送的ByteBuffer
 	 * 消息头：type + bodyLength
 	 * 消息体：byte[]
 	 */
 	@Override
-	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext)
-	{
-		ShowcasePacket showcasePacket = (ShowcasePacket)packet;
+	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
+		ShowcasePacket showcasePacket = (ShowcasePacket) packet;
 		byte[] body = showcasePacket.getBody();
 		int bodyLen = 0;
-		if (body != null)
-		{
+		if (body != null) {
 			bodyLen = body.length;
 		}
 
 		//总长度是消息头的长度+消息体的长度
 		int allLen = ShowcasePacket.HEADER_LENGHT + bodyLen;
-		
+
 		ByteBuffer buffer = ByteBuffer.allocate(allLen);
 		buffer.order(groupContext.getByteOrder());
 
@@ -43,8 +40,7 @@ public abstract class ShowcaseAbsAioHandler implements AioHandler
 		buffer.putInt(bodyLen);
 
 		//写入消息体
-		if (body != null)
-		{
+		if (body != null) {
 			buffer.put(body);
 		}
 		return buffer;
@@ -56,21 +52,18 @@ public abstract class ShowcaseAbsAioHandler implements AioHandler
 	 * 消息体：byte[]
 	 */
 	@Override
-	public ShowcasePacket decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException
-	{
+	public ShowcasePacket decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
 		int readableLength = buffer.limit() - buffer.position();
-		if (readableLength < ShowcasePacket.HEADER_LENGHT)
-		{
+		if (readableLength < ShowcasePacket.HEADER_LENGHT) {
 			return null;
 		}
-		
+
 		//消息类型
 		byte type = buffer.get();
-		
+
 		int bodyLength = buffer.getInt();
 
-		if (bodyLength < 0)
-		{
+		if (bodyLength < 0) {
 			throw new AioDecodeException("bodyLength [" + bodyLength + "] is not right, remote:" + channelContext.getClientNode());
 		}
 
@@ -79,12 +72,10 @@ public abstract class ShowcaseAbsAioHandler implements AioHandler
 		if (test < 0) // 不够消息体长度(剩下的buffe组不了消息体)
 		{
 			return null;
-		} else
-		{
+		} else {
 			ShowcasePacket imPacket = new ShowcasePacket();
 			imPacket.setType(type);
-			if (bodyLength > 0)
-			{
+			if (bodyLength > 0) {
 				byte[] dst = new byte[bodyLength];
 				buffer.get(dst);
 				imPacket.setBody(dst);

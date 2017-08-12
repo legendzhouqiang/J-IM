@@ -15,33 +15,30 @@ import org.tio.json.Json;
  * @author tanyaowu 
  * 2017年3月27日 下午9:51:28
  */
-public class GroupMsgReqHandler extends AbsShowcaseBsHandler<GroupMsgReqBody>
-{
+public class GroupMsgReqHandler extends AbsShowcaseBsHandler<GroupMsgReqBody> {
 	private static Logger log = LoggerFactory.getLogger(GroupMsgReqHandler.class);
 
 	/**
 	 * 
 	 * @author: tanyaowu
 	 */
-	public GroupMsgReqHandler()
-	{
+	public GroupMsgReqHandler() {
 	}
 
 	/**
 	 * @param args
 	 * @author: tanyaowu
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 
 	}
+
 	/** 
 	 * @return
 	 * @author: tanyaowu
 	 */
 	@Override
-	public Class<GroupMsgReqBody> bodyClass()
-	{
+	public Class<GroupMsgReqBody> bodyClass() {
 		return GroupMsgReqBody.class;
 	}
 
@@ -54,18 +51,17 @@ public class GroupMsgReqHandler extends AbsShowcaseBsHandler<GroupMsgReqBody>
 	 * @author: tanyaowu
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, GroupMsgReqBody bsBody, ChannelContext channelContext) throws Exception
-	{
+	public Object handler(ShowcasePacket packet, GroupMsgReqBody bsBody, ChannelContext channelContext) throws Exception {
 		log.info("收到群聊请求消息:{}", Json.toJson(bsBody));
 		GroupMsgRespBody groupMsgRespBody = new GroupMsgRespBody();
 		groupMsgRespBody.setText(bsBody.getText());
 		groupMsgRespBody.setToGroup(bsBody.getToGroup());
-		
+
 		ShowcasePacket respPacket = new ShowcasePacket();
 		respPacket.setType(Type.GROUP_MSG_RESP);
 		respPacket.setBody(Json.toJson(groupMsgRespBody).getBytes(ShowcasePacket.CHARSET));
 		Aio.sendToGroup(channelContext.getGroupContext(), bsBody.getToGroup(), respPacket);
-		
+
 		return null;
 	}
 }

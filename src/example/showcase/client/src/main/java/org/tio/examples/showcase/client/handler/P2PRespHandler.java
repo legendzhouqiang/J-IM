@@ -12,33 +12,30 @@ import org.tio.json.Json;
  * @author tanyaowu 
  * 2017年3月27日 下午9:51:28
  */
-public class P2PRespHandler extends AbsShowcaseBsHandler<P2PRespBody>
-{
+public class P2PRespHandler extends AbsShowcaseBsHandler<P2PRespBody> {
 	private static Logger log = LoggerFactory.getLogger(P2PRespHandler.class);
 
 	/**
 	 * 
 	 * @author: tanyaowu
 	 */
-	public P2PRespHandler()
-	{
+	public P2PRespHandler() {
 	}
 
 	/**
 	 * @param args
 	 * @author: tanyaowu
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 
 	}
+
 	/** 
 	 * @return
 	 * @author: tanyaowu
 	 */
 	@Override
-	public Class<P2PRespBody> bodyClass()
-	{
+	public Class<P2PRespBody> bodyClass() {
 		return P2PRespBody.class;
 	}
 
@@ -51,8 +48,7 @@ public class P2PRespHandler extends AbsShowcaseBsHandler<P2PRespBody>
 	 * @author: tanyaowu
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, P2PRespBody bsBody, ChannelContext channelContext) throws Exception
-	{
+	public Object handler(ShowcasePacket packet, P2PRespBody bsBody, ChannelContext channelContext) throws Exception {
 		System.out.println("收到P2P响应消息:" + Json.toJson(bsBody));
 		return null;
 	}
