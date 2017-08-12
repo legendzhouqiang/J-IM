@@ -1,4 +1,6 @@
-package org.tio.common;
+package org.tio.server;
+
+import org.tio.common.ChannelContext;
 
 /**
  * Copyright (c) for 谭耀武

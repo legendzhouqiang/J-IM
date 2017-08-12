@@ -3,6 +3,9 @@ package org.tio.common;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  * Copyright (c) for 谭耀武
@@ -24,13 +27,17 @@ public abstract class GroupContext {
     /** 默认的接收数据的buffer size */
     public static final int READ_BUFFER_SIZE = Integer.getInteger("tio.default.read.buffer.size", 2048);
 
+    /** 原子ID生成器 */
+    private final static AtomicInteger ID_ATOMIC = new AtomicInteger();
     /** GroupContext 唯一标识 */
     protected String id;
+
     /** statistics */
     protected GroupStat statistics;
 
-    protected boolean isShortConnection = false;
+    /** The group executor. */
+    protected ThreadPoolExecutor tioExecutor = null;
 
-
+    protected ThreadPoolExecutor groupExecutor = null;
 
 }

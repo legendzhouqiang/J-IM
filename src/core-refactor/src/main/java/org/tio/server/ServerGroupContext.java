@@ -10,6 +10,9 @@ import org.tio.common.PacketHandlerMode;
  * Desc:
  */
 public class ServerGroupContext extends GroupContext {
+
     /** 消息处理模式 */
     private PacketHandlerMode packetHandlerMode = PacketHandlerMode.QUEUE;
+
+    private GroupListener groupListener = null;
 }

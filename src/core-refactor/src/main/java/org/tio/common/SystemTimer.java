@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
  * Copyright (c) for 谭耀武
  * Date:2017/8/10
  * Author: <a href="tywo45@163.com">谭耀武</a>
- * Desc:
+ * Desc: t-io内置时间类
  */
 public class SystemTimer {
 
