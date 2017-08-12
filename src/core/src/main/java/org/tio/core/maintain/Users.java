@@ -21,8 +21,7 @@ public class Users {
 	 * key: userid
 	 * value: ChannelContext
 	 */
-	private ObjWithLock<DualHashBidiMap<String, ChannelContext>> map = new ObjWithLock<DualHashBidiMap<String, ChannelContext>>(
-			new DualHashBidiMap<String, ChannelContext>());
+	private ObjWithLock<DualHashBidiMap<String, ChannelContext>> map = new ObjWithLock<DualHashBidiMap<String, ChannelContext>>(new DualHashBidiMap<String, ChannelContext>());
 
 	/**
 	 * @return the map
@@ -41,7 +40,7 @@ public class Users {
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		Lock lock = map.getLock().writeLock();
 		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 		try {
@@ -64,7 +63,7 @@ public class Users {
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		if (StringUtils.isBlank(userid)) {
 			return;
 		}
@@ -93,7 +92,7 @@ public class Users {
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		if (StringUtils.isBlank(userid)) {
 			return;
 		}
@@ -122,7 +121,7 @@ public class Users {
 		if (groupContext.isShortConnection()) {
 			return null;
 		}
-		
+
 		if (StringUtils.isBlank(userid)) {
 			return null;
 		}

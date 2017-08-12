@@ -25,9 +25,8 @@ public class UdpServer {
 	private static Logger log = LoggerFactory.getLogger(UdpServer.class);
 
 	private LinkedBlockingQueue<UdpPacket> handlerQueue = new LinkedBlockingQueue<>();
-	
-	private LinkedBlockingQueue<DatagramPacket> sendQueue = new LinkedBlockingQueue<>();
 
+	private LinkedBlockingQueue<DatagramPacket> sendQueue = new LinkedBlockingQueue<>();
 
 	private DatagramSocket datagramSocket = null;
 
@@ -36,7 +35,7 @@ public class UdpServer {
 	private boolean isStopped = false;
 
 	private UdpHandlerRunnable udpHandlerRunnable;
-	
+
 	private UdpSendRunnable udpSendRunnable = null;
 
 	/**
@@ -49,7 +48,7 @@ public class UdpServer {
 		datagramSocket = new DatagramSocket(this.udpServerConf.getServerNode().getPort());
 		readBuf = new byte[this.udpServerConf.getReadBufferSize()];
 		udpHandlerRunnable = new UdpHandlerRunnable(udpServerConf.getUdpHandler(), handlerQueue, datagramSocket);
-		
+
 		udpSendRunnable = new UdpSendRunnable(sendQueue, udpServerConf, datagramSocket);
 	}
 
@@ -60,8 +59,7 @@ public class UdpServer {
 		startHandler();
 		startSend();
 	}
-	
-	
+
 	public void send(byte[] data, Node remoteNode) {
 		InetSocketAddress inetSocketAddress = new InetSocketAddress(remoteNode.getIp(), remoteNode.getPort());
 		DatagramPacket datagramPacket = new DatagramPacket(data, data.length, inetSocketAddress);
@@ -82,11 +80,11 @@ public class UdpServer {
 			log.error(e.toString(), e);
 		}
 	}
-	
+
 	public void send(String str, Node remoteNode) {
-		send(str, null, remoteNode); 
+		send(str, null, remoteNode);
 	}
-	
+
 	private void startSend() {
 		Thread thread = new Thread(udpSendRunnable, "tio-udp-client-send");
 		thread.setDaemon(false);
@@ -103,8 +101,7 @@ public class UdpServer {
 				} else {
 					System.out.println(startLog);
 				}
-				
-				
+
 				while (!isStopped) {
 					try {
 						DatagramPacket datagramPacket = new DatagramPacket(readBuf, readBuf.length);
@@ -149,7 +146,7 @@ public class UdpServer {
 	 */
 	public static void main(String[] args) throws IOException {
 		final AtomicLong count = new AtomicLong();
-		UdpServer udpServer  = null;
+		UdpServer udpServer = null;
 		UdpHandler udpHandler = new UdpHandler() {
 			@Override
 			public void handler(UdpPacket udpPacket, DatagramSocket datagramSocket) {
@@ -160,7 +157,7 @@ public class UdpServer {
 					String str = "【" + new String(data) + "】 from " + remote;
 					log.error(str);
 				}
-				
+
 				log.error(udpPacket.getRemote() + "");
 				DatagramPacket datagramPacket = new DatagramPacket(data, data.length, new InetSocketAddress(udpPacket.getRemote().getIp(), udpPacket.getRemote().getPort()));
 				try {
@@ -168,12 +165,13 @@ public class UdpServer {
 				} catch (Exception e) {
 					log.error(e.toString(), e);
 				}
-				
-			}};
+
+			}
+		};
 		UdpServerConf udpServerConf = new UdpServerConf(3000, udpHandler, 5000);
-		
+
 		udpServer = new UdpServer(udpServerConf);
-		
+
 		udpServer.start();
 	}
 }

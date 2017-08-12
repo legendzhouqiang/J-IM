@@ -32,22 +32,22 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 
 	@Override
 	public void completed(Integer result, WriteCompletionVo writeCompletionVo) {
-//		Object attachment = writeCompletionVo.getObj();
+		//		Object attachment = writeCompletionVo.getObj();
 		ByteBuffer byteBuffer = writeCompletionVo.getByteBuffer();
 		if (byteBuffer.hasRemaining()) {
-//			int iv = byteBuffer.capacity() - byteBuffer.position();
+			//			int iv = byteBuffer.capacity() - byteBuffer.position();
 			log.info("{} {}/{} has sent", channelContext, byteBuffer.position(), byteBuffer.capacity());
 			AsynchronousSocketChannel asynchronousSocketChannel = channelContext.getAsynchronousSocketChannel();
 			asynchronousSocketChannel.write(byteBuffer, writeCompletionVo, this);
 		} else {
 			handle(result, null, writeCompletionVo);
 		}
-		
+
 	}
 
 	@Override
 	public void failed(Throwable throwable, WriteCompletionVo writeCompletionVo) {
-//		Object attachment = writeCompletionVo.getObj();
+		//		Object attachment = writeCompletionVo.getObj();
 		handle(0, throwable, writeCompletionVo);
 	}
 
@@ -61,7 +61,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 	public void handle(Integer result, Throwable throwable, WriteCompletionVo writeCompletionVo) {
 		this.writeSemaphore.release();
 		Object attachment = writeCompletionVo.getObj();
-		
+
 		GroupContext groupContext = channelContext.getGroupContext();
 		GroupStat groupStat = groupContext.getGroupStat();
 		ChannelStat channelStat = channelContext.getStat();
@@ -121,7 +121,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 
 		boolean isPacket = obj instanceof Packet;
 		if (isPacket) {
-			packet =  (Packet)obj;
+			packet = (Packet) obj;
 		} else {
 			packetWithMeta = (PacketWithMeta) obj;
 			packetWithMeta.setIsSentSuccess(isSentSuccess);
@@ -143,7 +143,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 	public java.util.concurrent.Semaphore getWriteSemaphore() {
 		return writeSemaphore;
 	}
-	
+
 	public static class WriteCompletionVo {
 		/**
 		 * @param byteBuffer
@@ -155,26 +155,31 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 			this.byteBuffer = byteBuffer;
 			this.obj = obj;
 		}
+
 		private ByteBuffer byteBuffer = null;
 		private Object obj = null;
+
 		/**
 		 * @return the byteBuffer
 		 */
 		public ByteBuffer getByteBuffer() {
 			return byteBuffer;
 		}
+
 		/**
 		 * @param byteBuffer the byteBuffer to set
 		 */
 		public void setByteBuffer(ByteBuffer byteBuffer) {
 			this.byteBuffer = byteBuffer;
 		}
+
 		/**
 		 * @return the obj
 		 */
 		public Object getObj() {
 			return obj;
 		}
+
 		/**
 		 * @param obj the obj to set
 		 */

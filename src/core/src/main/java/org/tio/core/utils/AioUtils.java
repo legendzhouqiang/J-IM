@@ -10,11 +10,11 @@ import org.tio.core.ChannelContext;
 public class AioUtils {
 	private static Logger log = LoggerFactory.getLogger(AioUtils.class);
 
-	public static  boolean checkBeforeIO(ChannelContext channelContext) {
+	public static boolean checkBeforeIO(ChannelContext channelContext) {
 		boolean isClosed = channelContext.isClosed();
 		boolean isRemoved = channelContext.isRemoved();
 		boolean isWaitingClose = channelContext.isWaitingClose();
-		
+
 		if (isWaitingClose) {
 			return false;
 		}

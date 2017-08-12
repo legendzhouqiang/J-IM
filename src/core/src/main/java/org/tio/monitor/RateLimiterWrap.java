@@ -11,7 +11,7 @@ import com.google.common.util.concurrent.RateLimiter;
  * 2017年5月23日 下午1:09:55
  */
 public class RateLimiterWrap {
-//	private static Logger log = LoggerFactory.getLogger(RateLimiterWrap.class);
+	//	private static Logger log = LoggerFactory.getLogger(RateLimiterWrap.class);
 
 	/**
 	 * 频率控制

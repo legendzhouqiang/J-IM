@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.tio.core.Node;
 import org.tio.http.common.HttpConst.RequestBodyFormat;
 
 /**
@@ -33,6 +34,7 @@ public class HttpRequest extends HttpPacket {
 	private RequestBodyFormat bodyFormat;
 	private String charset = HttpConst.CHARSET_NAME;
 	
+	private Node remote = null;
 //	private HttpSession httpSession = null;
 
 
@@ -43,7 +45,8 @@ public class HttpRequest extends HttpPacket {
 	 * 2017年2月22日 下午4:14:40
 	 * 
 	 */
-	public HttpRequest() {
+	public HttpRequest(Node remote) {
+		this.remote = remote;
 	}
 
 	/**
@@ -274,6 +277,14 @@ public class HttpRequest extends HttpPacket {
 			str += getBodyString();
 		}
 		return str;
+	}
+
+	public Node getRemote() {
+		return remote;
+	}
+
+	public void setRemote(Node remote) {
+		this.remote = remote;
 	}
 
 //	/**

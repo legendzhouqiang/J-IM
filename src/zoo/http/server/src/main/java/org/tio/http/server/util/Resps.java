@@ -33,29 +33,29 @@ public class Resps {
 
 	/**
 	 * Content-Type: text/html; charset=utf-8
-	 * @param httpRequest
+	 * @param request
 	 * @param bodyString
 	 * @param charset
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse html(HttpRequest httpRequest, String bodyString, String charset) {
-		HttpResponse ret = string(httpRequest, bodyString, charset, MimeType.TEXT_HTML_HTML.getType() + "; charset=" + charset);
+	public static HttpResponse html(HttpRequest request, String bodyString, String charset) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_HTML_HTML.getType() + "; charset=" + charset);
 		return ret;
 	}
 
 	/**
 	 * 根据文件创建响应
-	 * @param httpRequest
+	 * @param request
 	 * @param fileOnServer
 	 * @return
 	 * @throws IOException
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse file(HttpRequest httpRequest, File fileOnServer) throws IOException {
+	public static HttpResponse file(HttpRequest request, File fileOnServer) throws IOException {
 		Date lastModified = FileUtil.lastModifiedTime(fileOnServer);
 		
-		String If_Modified_Since = httpRequest.getHeader(HttpConst.RequestHeaderKey.If_Modified_Since);//If-Modified-Since
+		String If_Modified_Since = request.getHeader(HttpConst.RequestHeaderKey.If_Modified_Since);//If-Modified-Since
 		if (StringUtils.isNoneBlank(If_Modified_Since)) {
 			Long If_Modified_Since_Date = null;
 			try {
@@ -75,7 +75,7 @@ public class Resps {
 				}
 //				long If_Modified_Since_Date_Time = If_Modified_Since_Date.getTime();
 				if (lastModifiedTime <= If_Modified_Since_Date) {
-					HttpResponse ret = new HttpResponse(httpRequest);
+					HttpResponse ret = new HttpResponse(request);
 					ret.setStatus(HttpResponseStatus.C304);
 					return ret;
 				}
@@ -84,22 +84,22 @@ public class Resps {
 		
 		byte[] bodyBytes = FileUtil.readBytes(fileOnServer);
 		String filename = fileOnServer.getName();
-		HttpResponse ret = file(httpRequest, bodyBytes, filename);
+		HttpResponse ret = file(request, bodyBytes, filename);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified,  lastModified.getTime() + "");
 		return ret;
 	}
 
 	/**
 	 * 根据文件创建响应
-	 * @param httpRequest
+	 * @param request
 	 * @param bodyBytes
 	 * @param filename
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse file(HttpRequest httpRequest, byte[] bodyBytes, String filename) {
-		HttpResponse ret = new HttpResponse(httpRequest);
-		ret.setBody(bodyBytes, httpRequest);
+	public static HttpResponse file(HttpRequest request, byte[] bodyBytes, String filename) {
+		HttpResponse ret = new HttpResponse(request);
+		ret.setBody(bodyBytes, request);
 
 		String mimeTypeStr = null;
 		String extension = FilenameUtils.getExtension(filename);
@@ -118,27 +118,27 @@ public class Resps {
 
 	/**
 	 * Content-Type: application/json; charset=utf-8
-	 * @param httpRequest
+	 * @param request
 	 * @param bodyString
 	 * @param charset
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse json(HttpRequest httpRequest, String bodyString, String charset) {
-		HttpResponse ret = string(httpRequest, bodyString, charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
+	public static HttpResponse json(HttpRequest request, String bodyString, String charset) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
 		return ret;
 	}
 
 	/**
 	 * Content-Type: text/css; charset=utf-8
-	 * @param httpRequest
+	 * @param request
 	 * @param bodyString
 	 * @param charset
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse css(HttpRequest httpRequest, String bodyString, String charset) {
-		HttpResponse ret = string(httpRequest, bodyString, charset, MimeType.TEXT_CSS_CSS.getType() + "; charset=" + charset);
+	public static HttpResponse css(HttpRequest request, String bodyString, String charset) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_CSS_CSS.getType() + "; charset=" + charset);
 		return ret;
 	}
 
@@ -149,8 +149,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse js(HttpRequest httpRequest, String bodyString, String charset) {
-		HttpResponse ret = string(httpRequest, bodyString, charset, MimeType.APPLICATION_JAVASCRIPT_JS.getType() + "; charset=" + charset);
+	public static HttpResponse js(HttpRequest request, String bodyString, String charset) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.APPLICATION_JAVASCRIPT_JS.getType() + "; charset=" + charset);
 		return ret;
 	}
 
@@ -161,8 +161,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse txt(HttpRequest httpRequest, String bodyString, String charset) {
-		HttpResponse ret = string(httpRequest, bodyString, charset, MimeType.TEXT_PLAIN_TXT.getType() + "; charset=" + charset);
+	public static HttpResponse txt(HttpRequest request, String bodyString, String charset) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_TXT.getType() + "; charset=" + charset);
 		return ret;
 	}
 
@@ -174,11 +174,11 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse string(HttpRequest httpRequest, String bodyString, String charset, String Content_Type) {
-		HttpResponse ret = new HttpResponse(httpRequest);
+	public static HttpResponse string(HttpRequest request, String bodyString, String charset, String Content_Type) {
+		HttpResponse ret = new HttpResponse(request);
 		if (bodyString != null) {
 			try {
-				ret.setBody(bodyString.getBytes(charset), httpRequest);
+				ret.setBody(bodyString.getBytes(charset), request);
 			} catch (UnsupportedEncodingException e) {
 				log.error(e.toString(), e);
 			}
@@ -189,13 +189,13 @@ public class Resps {
 	
 	/**
 	 * 重定向
-	 * @param httpRequest
+	 * @param request
 	 * @param path
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse redirect(HttpRequest httpRequest, String path) {
-		HttpResponse ret = new HttpResponse(httpRequest);
+	public static HttpResponse redirect(HttpRequest request, String path) {
+		HttpResponse ret = new HttpResponse(request);
 		ret.setStatus(HttpResponseStatus.C302);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Location, path);
 		return ret;

@@ -7,5 +7,5 @@ import org.tio.http.server.demo1.model.base.BaseUser;
  */
 @SuppressWarnings("serial")
 public class User extends BaseUser<User> {
-	
+
 }

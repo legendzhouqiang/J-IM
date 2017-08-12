@@ -52,7 +52,6 @@ public class DecodeRunnable implements Runnable {
 		newByteBuffer = null;
 	}
 
-
 	/**
 	 * 
 	 * @param channelContext
@@ -60,7 +59,7 @@ public class DecodeRunnable implements Runnable {
 	 * @param byteCount
 	 * @author: tanyaowu
 	 */
-	public static  void handler(ChannelContext channelContext, Packet packet, int byteCount) {
+	public static void handler(ChannelContext channelContext, Packet packet, int byteCount) {
 
 		GroupContext groupContext = channelContext.getGroupContext();
 		PacketHandlerMode packetHandlerMode = groupContext.getPacketHandlerMode();
@@ -134,7 +133,7 @@ public class DecodeRunnable implements Runnable {
 					channelContext.traceClient(ChannelAction.RECEIVED, packet, null);
 
 					packet.setByteCount(len);
-					
+
 					AioListener aioListener = channelContext.getGroupContext().getAioListener();
 					try {
 						if (log.isInfoEnabled()) {

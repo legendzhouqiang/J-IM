@@ -10,8 +10,7 @@ import org.tio.http.common.RequestLine;
  * @author tanyaowu 
  *
  */
-public interface IHttpRequestHandler
-{
+public interface IHttpRequestHandler {
 	/**
 	 * 
 	 * @param packet
@@ -21,8 +20,8 @@ public interface IHttpRequestHandler
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	public HttpResponse handler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext)  throws Exception;
-	
+	public HttpResponse handler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext) throws Exception;
+
 	/**
 	 * 
 	 * @param httpRequest
@@ -32,7 +31,7 @@ public interface IHttpRequestHandler
 	 * @author: tanyaowu
 	 */
 	public HttpResponse resp404(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext);
-	
+
 	/**
 	 * 
 	 * @param httpRequest

@@ -92,7 +92,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 		WsRequestPacket wsRequestPacket = (WsRequestPacket) packet;
 
 		if (wsRequestPacket.isHandShake()) {
-			WsSessionContext wsSessionContext = (WsSessionContext)channelContext.getAttribute();
+			WsSessionContext wsSessionContext = (WsSessionContext) channelContext.getAttribute();
 			HttpRequest httpRequest = wsSessionContext.getHandshakeRequestPacket();
 			HttpResponse httpResponse = wsSessionContext.getHandshakeResponsePacket();
 			HttpResponse r = wsMsgHandler.handshake(httpRequest, httpResponse, channelContext);
@@ -181,7 +181,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 				return null;
 			}
 		}
-		
+
 	}
 
 	/** 
@@ -199,7 +199,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 
 		//握手包
 		if (wsResponsePacket.isHandShake()) {
-			WsSessionContext imSessionContext = (WsSessionContext)channelContext.getAttribute();
+			WsSessionContext imSessionContext = (WsSessionContext) channelContext.getAttribute();
 			HttpResponse handshakeResponsePacket = imSessionContext.getHandshakeResponsePacket();
 			return HttpResponseEncoder.encode(handshakeResponsePacket, groupContext, channelContext);
 		}
@@ -220,7 +220,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 	 */
 	@Override
 	public WsRequestPacket decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
-		WsSessionContext imSessionContext = (WsSessionContext)channelContext.getAttribute();
+		WsSessionContext imSessionContext = (WsSessionContext) channelContext.getAttribute();
 		//		int initPosition = buffer.position();
 
 		if (!imSessionContext.isHandshaked()) {

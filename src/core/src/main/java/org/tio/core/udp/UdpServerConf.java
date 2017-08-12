@@ -8,14 +8,12 @@ import org.tio.core.udp.intf.UdpHandler;
  * 2017年7月5日 下午3:53:04
  */
 public class UdpServerConf extends UdpConf {
-//	private static Logger log = LoggerFactory.getLogger(UdpServerConf.class);
-	
+	//	private static Logger log = LoggerFactory.getLogger(UdpServerConf.class);
+
 	private UdpHandler udpHandler;
-	
-	private int readBufferSize = 1024* 1024;
 
+	private int readBufferSize = 1024 * 1024;
 
-	
 	public UdpServerConf(int port, UdpHandler udpHandler, int timeout) {
 		super(timeout);
 		this.setUdpHandler(udpHandler);
@@ -37,7 +35,7 @@ public class UdpServerConf extends UdpConf {
 	public void setUdpHandler(UdpHandler udpHandler) {
 		this.udpHandler = udpHandler;
 	}
-	
+
 	public int getReadBufferSize() {
 		return readBufferSize;
 	}

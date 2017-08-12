@@ -7,5 +7,5 @@ import org.tio.http.server.demo1.model.base.BaseDonate;
  */
 @SuppressWarnings("serial")
 public class Donate extends BaseDonate<Donate> {
-	
+
 }

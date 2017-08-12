@@ -6,8 +6,8 @@ package org.tio.http.common;
  */
 public class RequestLine {
 	private Method method;
-	private String path;    //譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是/user/get
-	private String query;   //譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是name=tan&id=789
+	private String path; //譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是/user/get
+	private String query; //譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是name=tan&id=789
 	private String pathAndQuery;
 	private String version;
 	private String line;

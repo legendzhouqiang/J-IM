@@ -20,7 +20,7 @@ public class UdpSendRunnable implements Runnable {
 	private UdpConf udpConf;
 
 	private boolean isStopped = false;
-	
+
 	private DatagramSocket datagramSocket;
 
 	/**

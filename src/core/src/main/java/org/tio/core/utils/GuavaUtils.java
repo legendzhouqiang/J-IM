@@ -16,15 +16,13 @@ import com.google.common.cache.RemovalNotification;
  * @author tanyaowu 
  * 2017年8月4日 下午5:42:37
  */
-public class GuavaUtils
-{
+public class GuavaUtils {
 	private static Logger log = LoggerFactory.getLogger(GuavaUtils.class);
 
 	/**
 	 * 
 	 */
-	public GuavaUtils()
-	{
+	public GuavaUtils() {
 
 	}
 
@@ -39,35 +37,27 @@ public class GuavaUtils
 	 * @param removalListener
 	 * @return
 	 */
-	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long expireAfterWrite,
-			Long expireAfterAccess, Integer initialCapacity, Integer maximumSize, boolean recordStats,
-			RemovalListener<K, V> removalListener)
-	{
+	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long expireAfterWrite, Long expireAfterAccess, Integer initialCapacity,
+			Integer maximumSize, boolean recordStats, RemovalListener<K, V> removalListener) {
 
-		if (removalListener == null)
-		{
-			removalListener = new RemovalListener<K, V>()
-			{
+		if (removalListener == null) {
+			removalListener = new RemovalListener<K, V>() {
 				@Override
-				public void onRemoval(RemovalNotification<K, V> notification)
-				{
+				public void onRemoval(RemovalNotification<K, V> notification) {
 					log.info(notification.getKey() + " was removed");
 				}
 			};
 		}
 
-		CacheBuilder<K, V> cacheBuilder = CacheBuilder.newBuilder().removalListener(
-				removalListener);
+		CacheBuilder<K, V> cacheBuilder = CacheBuilder.newBuilder().removalListener(removalListener);
 
 		//设置并发级别为8，并发级别是指可以同时写缓存的线程数
 		cacheBuilder.concurrencyLevel(concurrencyLevel);
-		if (expireAfterWrite != null && expireAfterWrite > 0)
-		{
+		if (expireAfterWrite != null && expireAfterWrite > 0) {
 			//设置写缓存后8秒钟过期
 			cacheBuilder.expireAfterWrite(expireAfterWrite, TimeUnit.SECONDS);
 		}
-		if (expireAfterAccess != null && expireAfterAccess > 0)
-		{
+		if (expireAfterAccess != null && expireAfterAccess > 0) {
 			//设置访问缓存后8秒钟过期
 			cacheBuilder.expireAfterAccess(expireAfterAccess, TimeUnit.SECONDS);
 		}
@@ -77,17 +67,14 @@ public class GuavaUtils
 		//设置缓存最大容量为100，超过100之后就会按照LRU最近最少使用算法来移除缓存项
 		cacheBuilder.maximumSize(maximumSize);
 
-		if (recordStats)
-		{
+		if (recordStats) {
 			//设置要统计缓存的命中率
 			cacheBuilder.recordStats();
 		}
 		//build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
-		LoadingCache<K, V> loadingCache = cacheBuilder.build(new CacheLoader<K, V>()
-		{
+		LoadingCache<K, V> loadingCache = cacheBuilder.build(new CacheLoader<K, V>() {
 			@Override
-			public V load(K key) throws Exception
-			{
+			public V load(K key) throws Exception {
 				return null;
 			}
 		});
@@ -117,23 +104,19 @@ public class GuavaUtils
 	 * @param recordStats
 	 * @return
 	 */
-	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long expireAfterWrite,
-			Long expireAfterAccess, Integer initialCapacity, Integer maximumSize, boolean recordStats)
-	{
-		return createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize,
-				recordStats, null);
+	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long expireAfterWrite, Long expireAfterAccess, Integer initialCapacity,
+			Integer maximumSize, boolean recordStats) {
+		return createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats, null);
 	}
 
-	public static void main(String[] args) throws Exception
-	{
+	public static void main(String[] args) throws Exception {
 		Integer concurrencyLevel = 8;
 		Long expireAfterWrite = 1L;
 		Long expireAfterAccess = null;
 		Integer initialCapacity = 10;
 		Integer maximumSize = 1000;
 		boolean recordStats = false;
-		LoadingCache<String, Object> loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite,
-				expireAfterAccess, initialCapacity, maximumSize, recordStats);
+		LoadingCache<String, Object> loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats);
 
 		loadingCache.put("1", "1");
 		Object o = loadingCache.get("1");

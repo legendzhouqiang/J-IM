@@ -17,12 +17,12 @@ public class MaintainUtils {
 	 * @author: tanyaowu
 	 *
 	 */
-	public static  void removeFromMaintain(ChannelContext channelContext) {
+	public static void removeFromMaintain(ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		try {
 			groupContext.connections.remove(channelContext);
 			groupContext.connecteds.remove(channelContext);

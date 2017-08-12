@@ -7,12 +7,12 @@ import org.tio.core.Node;
  * 2017年7月5日 下午2:53:38
  */
 public class UdpConf {
-//	private static Logger log = LoggerFactory.getLogger(UdpConf.class);
-	
+	//	private static Logger log = LoggerFactory.getLogger(UdpConf.class);
+
 	private int timeout = 5000;
-	
+
 	private Node serverNode = null;
-	
+
 	private String charset = "utf-8";
 
 	/**
@@ -30,8 +30,6 @@ public class UdpConf {
 	public static void main(String[] args) {
 
 	}
-
-
 
 	public Node getServerNode() {
 		return serverNode;

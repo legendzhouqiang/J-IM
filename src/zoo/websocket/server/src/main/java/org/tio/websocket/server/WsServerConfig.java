@@ -7,22 +7,21 @@ import org.tio.http.common.HttpConst;
  * 2017年6月28日 下午2:42:59
  */
 public class WsServerConfig {
-	
+
 	private String bindIp = null;//"127.0.0.1";
-	
+
 	private Integer bindPort = 9322;
-	
+
 	private String charset = HttpConst.CHARSET_NAME;
-	
-	
-//	private File rootFile = null;
+
+	//	private File rootFile = null;
 
 	/**
 	 * 
 	 * @author: tanyaowu
 	 */
 	public WsServerConfig(Integer bindPort) {
-		
+
 		this.bindPort = bindPort;
 	}
 
@@ -33,8 +32,6 @@ public class WsServerConfig {
 	public static void main(String[] args) {
 
 	}
-
-	
 
 	/**
 	 * @return the bindIp
@@ -70,7 +67,5 @@ public class WsServerConfig {
 	public void setCharset(String charset) {
 		this.charset = charset;
 	}
-
-
 
 }

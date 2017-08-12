@@ -13,27 +13,22 @@ public enum Opcode {
 
 	private final byte code;
 
-	public byte getCode()
-	{
+	public byte getCode() {
 		return code;
 	}
 
-	private Opcode(byte code)
-	{
+	private Opcode(byte code) {
 		this.code = code;
 	}
 
 	private static final Map<Byte, Opcode> map = new HashMap<>();
-	static
-	{
-		for (Opcode command : values())
-		{
+	static {
+		for (Opcode command : values()) {
 			map.put(command.getCode(), command);
 		}
 	}
 
-	public static Opcode valueOf(byte code)
-	{
+	public static Opcode valueOf(byte code) {
 		return map.get(code);
 	}
 

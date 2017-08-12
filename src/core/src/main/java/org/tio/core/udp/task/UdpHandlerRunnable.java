@@ -12,14 +12,13 @@ import org.tio.core.udp.intf.UdpHandler;
  * @author tanyaowu 
  * 2017年7月6日 上午9:47:24
  */
-public class UdpHandlerRunnable implements Runnable{
+public class UdpHandlerRunnable implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(UdpHandlerRunnable.class);
 
 	private UdpHandler udpHandler;
 	private LinkedBlockingQueue<UdpPacket> queue;
 	private DatagramSocket datagramSocket;
-	
-	
+
 	public UdpHandlerRunnable(UdpHandler udpHandler, LinkedBlockingQueue<UdpPacket> queue, DatagramSocket datagramSocket) {
 		super();
 		this.udpHandler = udpHandler;
@@ -39,18 +38,18 @@ public class UdpHandlerRunnable implements Runnable{
 
 	@Override
 	public void run() {
-		while(!isStopped) {
+		while (!isStopped) {
 			try {
 				UdpPacket udpPacket = queue.take();
 				if (udpPacket != null) {
-					udpHandler.handler(udpPacket, datagramSocket); 
+					udpHandler.handler(udpPacket, datagramSocket);
 				}
 			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			}
 		}
 	}
-	
+
 	public void stop() {
 		isStopped = true;
 	}

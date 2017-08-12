@@ -25,9 +25,9 @@ import io.github.lukehutch.fastclasspathscanner.matchprocessor.MethodAnnotationM
  */
 public class Routes {
 	private static Logger log = LoggerFactory.getLogger(Routes.class);
-//	private HttpServerConfig httpServerConfig = null;
+	//	private HttpServerConfig httpServerConfig = null;
 
-//	private String[] scanPackages = null;
+	//	private String[] scanPackages = null;
 
 	/**
 	 * 路径和对象映射
@@ -35,7 +35,7 @@ public class Routes {
 	 * value: object
 	 */
 	public Map<String, Object> pathBeanMap = new HashMap<>();
-	
+
 	/**
 	 * 路径和class映射
 	 * 只是用来打印的
@@ -84,11 +84,11 @@ public class Routes {
 	 * @author: tanyaowu
 	 */
 	public Routes(String[] scanPackages) {
-//		this.scanPackages = scanPackages;
-		
+		//		this.scanPackages = scanPackages;
+
 		if (scanPackages != null) {
 			final FastClasspathScanner fastClasspathScanner = new FastClasspathScanner(scanPackages);
-//			fastClasspathScanner.verbose();
+			//			fastClasspathScanner.verbose();
 			fastClasspathScanner.matchClassesWithAnnotation(RequestPath.class, new ClassAnnotationMatchProcessor() {
 				@Override
 				public void processMatch(Class<?> classWithAnnotation) {
@@ -96,12 +96,12 @@ public class Routes {
 						Object bean = classWithAnnotation.newInstance();
 						RequestPath mapping = classWithAnnotation.getAnnotation(RequestPath.class);
 						String beanPath = mapping.value();
-//						if (!StringUtils.endsWith(beanUrl, "/")) {
-//							beanUrl = beanUrl + "/";
-//						}
+						//						if (!StringUtils.endsWith(beanUrl, "/")) {
+						//							beanUrl = beanUrl + "/";
+						//						}
 
 						beanPath = formateBeanPath(beanPath);
-						
+
 						Object obj = pathBeanMap.get(beanPath);
 						if (obj != null) {
 							log.error("mapping[{}] already exists in class [{}]", beanPath, obj.getClass().getName());
@@ -111,76 +111,75 @@ public class Routes {
 							classPathMap.put(classWithAnnotation, beanPath);
 						}
 					} catch (Exception e) {
-						
+
 						log.error(e.toString(), e);
 					}
 				}
 			});
-			
-			fastClasspathScanner.matchClassesWithMethodAnnotation(RequestPath.class, new MethodAnnotationMatchProcessor(){
+
+			fastClasspathScanner.matchClassesWithMethodAnnotation(RequestPath.class, new MethodAnnotationMatchProcessor() {
 				@Override
 				public void processMatch(Class<?> matchingClass, Executable matchingMethodOrConstructor) {
-//					log.error(matchingMethodOrConstructor + "");
+					//					log.error(matchingMethodOrConstructor + "");
 					RequestPath mapping = matchingMethodOrConstructor.getAnnotation(RequestPath.class);
-					
+
 					String methodName = matchingMethodOrConstructor.getName();
 
-					
 					String methodPath = mapping.value();
 					methodPath = formateMethodPath(methodPath);
 					String beanPath = classPathMap.get(matchingClass);
-					
+
 					if (StringUtils.isBlank(beanPath)) {
 						log.error("方法有注解，但类没注解, method:{}, class:{}", methodName, matchingClass);
 						return;
 					}
-					
+
 					Object bean = pathBeanMap.get(beanPath);
 					String completeMethodPath = methodPath;
 					if (beanPath != null) {
 						completeMethodPath = beanPath + methodPath;
 					}
-					
+
 					Class<?>[] parameterTypes = matchingMethodOrConstructor.getParameterTypes();
 					Method method;
 					try {
 						method = matchingClass.getMethod(methodName, parameterTypes);
-						
+
 						Paranamer paranamer = new BytecodeReadingParanamer();
 						String[] parameterNames = paranamer.lookupParameterNames(method, false); // will return null if not found
-						
+
 						Method checkMethod = pathMethodMap.get(completeMethodPath);
 						if (checkMethod != null) {
 							log.error("mapping[{}] already exists in method [{}]", completeMethodPath, checkMethod.getDeclaringClass() + "#" + checkMethod.getName());
 							return;
 						}
-						
+
 						pathMethodMap.put(completeMethodPath, method);
 						pathMethodstrMap.put(completeMethodPath, matchingClass.getName() + "." + method.getName() + "(" + ArrayUtil.join(parameterNames, ",") + ")");
 						methodParamnameMap.put(method, parameterNames);
 						methodBeanMap.put(method, bean);
 					} catch (Exception e) {
 						log.error(e.toString(), e);
-					} 
+					}
 				}
 			});
-			
+
 			fastClasspathScanner.scan();
-			
+
 			log.info("class  mapping\r\n{}", Json.toFormatedJson(pathClassMap));
-//			log.info("classPathMap scan result :\r\n {}\r\n", Json.toFormatedJson(classPathMap));
+			//			log.info("classPathMap scan result :\r\n {}\r\n", Json.toFormatedJson(classPathMap));
 			log.info("method mapping\r\n{}", Json.toFormatedJson(pathMethodstrMap));
-//			log.info("methodParamnameMap scan result :\r\n {}\r\n", Json.toFormatedJson(methodParamnameMap));
+			//			log.info("methodParamnameMap scan result :\r\n {}\r\n", Json.toFormatedJson(methodParamnameMap));
 		}
 	}
-	
+
 	/**
 	 * 格式化成"/user","/"这样的路径
 	 * @param initPath
 	 * @return
 	 * @author: tanyaowu
 	 */
-	private static String formateBeanPath(String initPath){
+	private static String formateBeanPath(String initPath) {
 		if (StringUtils.isBlank(initPath)) {
 			return "/";
 		}
@@ -188,14 +187,14 @@ public class Routes {
 		if (!StringUtils.startsWith(initPath, "/")) {
 			initPath = "/" + initPath;
 		}
-		
+
 		if (StringUtils.endsWith(initPath, "/")) {
 			initPath = initPath.substring(0, initPath.length() - 1);
 		}
 		return initPath;
 	}
-	
-	private static String formateMethodPath(String initPath){
+
+	private static String formateMethodPath(String initPath) {
 		if (StringUtils.isBlank(initPath)) {
 			return "/";
 		}
@@ -203,7 +202,7 @@ public class Routes {
 		if (!StringUtils.startsWith(initPath, "/")) {
 			initPath = "/" + initPath;
 		}
-		
+
 		return initPath;
 	}
 

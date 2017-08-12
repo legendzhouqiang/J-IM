@@ -14,8 +14,7 @@ import org.tio.core.utils.ByteBufferUtils;
  * @author tanyaowu 
  *
  */
-public class WsServerEncoder
-{
+public class WsServerEncoder {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(WsServerEncoder.class);
 
@@ -25,57 +24,47 @@ public class WsServerEncoder
 	 * 2017年2月22日 下午4:06:42
 	 * 
 	 */
-	public WsServerEncoder()
-	{
+	public WsServerEncoder() {
 
 	}
 
 	public static final int MAX_HEADER_LENGTH = 20480;
 
-	public static ByteBuffer encode(WsResponsePacket wsResponsePacket, GroupContext groupContext,
-			ChannelContext channelContext)
-	{
+	public static ByteBuffer encode(WsResponsePacket wsResponsePacket, GroupContext groupContext, ChannelContext channelContext) {
 		byte[] imBody = wsResponsePacket.getBody();//就是ws的body，不包括ws的头
 		int wsBodyLength = 0;
 
-		if (imBody != null)
-		{
+		if (imBody != null) {
 			wsBodyLength += imBody.length;
 		}
 
-		
 		byte header0 = (byte) (0x8f & (wsResponsePacket.getWsOpcode().getCode() | 0xf0));
 		ByteBuffer buf = null;
-		if (wsBodyLength < 126)
-		{
+		if (wsBodyLength < 126) {
 			buf = ByteBuffer.allocate(2 + wsBodyLength);
 			buf.put(header0);
 			buf.put((byte) wsBodyLength);
-		} else if (wsBodyLength < ((1 << 16) - 1))
-		{
+		} else if (wsBodyLength < ((1 << 16) - 1)) {
 			buf = ByteBuffer.allocate(4 + wsBodyLength);
 			buf.put(header0);
 			buf.put((byte) 126);
 			ByteBufferUtils.writeUB2WithBigEdian(buf, wsBodyLength);
-		} else
-		{
+		} else {
 			buf = ByteBuffer.allocate(10 + wsBodyLength);
 			buf.put(header0);
 			buf.put((byte) 127);
-			buf.put(new byte[]{0,0,0,0});
+			buf.put(new byte[] { 0, 0, 0, 0 });
 			ByteBufferUtils.writeUB4WithBigEdian(buf, wsBodyLength);
 		}
 
-		if (imBody != null && imBody.length > 0)
-		{
+		if (imBody != null && imBody.length > 0) {
 			buf.put(imBody);
 		}
 
 		return buf;
 	}
 
-	public static void int2Byte(byte[] bytes, int value, int offset)
-	{
+	public static void int2Byte(byte[] bytes, int value, int offset) {
 		checkLength(bytes, 4, offset);
 
 		bytes[offset + 3] = (byte) ((value & 0xff));
@@ -84,20 +73,16 @@ public class WsServerEncoder
 		bytes[offset + 0] = (byte) ((value >> 8 * 3));
 	}
 
-	private static void checkLength(byte[] bytes, int length, int offset)
-	{
-		if (bytes == null)
-		{
+	private static void checkLength(byte[] bytes, int length, int offset) {
+		if (bytes == null) {
 			throw new IllegalArgumentException("null");
 		}
 
-		if (offset < 0)
-		{
+		if (offset < 0) {
 			throw new IllegalArgumentException("invalidate offset " + offset);
 		}
 
-		if (bytes.length - offset < length)
-		{
+		if (bytes.length - offset < length) {
 			throw new IllegalArgumentException("invalidate length " + bytes.length);
 		}
 	}

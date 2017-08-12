@@ -1,7 +1,6 @@
 package org.tio.http.server.session.impl;
 
 import org.tio.core.utils.GuavaUtils;
-import org.tio.http.server.HttpServerConfig;
 import org.tio.http.server.session.HttpSession;
 import org.tio.http.server.session.IHttpSessionStore;
 

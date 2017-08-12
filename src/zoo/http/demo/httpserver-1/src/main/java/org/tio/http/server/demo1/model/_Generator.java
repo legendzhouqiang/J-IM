@@ -31,19 +31,9 @@ public class _Generator {
 	/**
 	 * 部分功能使用 Db + Record 模式实现，无需生成 model 的 table 在此配置
 	 */
-	private static String[] excludedTable = {
-			"news_feed_reply",  // 暂不实现该功能
-			"project_page_view", "share_page_view", "feedback_page_view",
-			"login_log",
-			"sensitive_words",
-			"upload_counter",
-			"task_run_log",
-			"message_tip",
-			"friend",
-            "project_like", "share_like", "feedback_like",
-            "share_reply_like", "feedback_reply_like",
-            "like_message_log"
-	};
+	private static String[] excludedTable = { "news_feed_reply", // 暂不实现该功能
+			"project_page_view", "share_page_view", "feedback_page_view", "login_log", "sensitive_words", "upload_counter", "task_run_log", "message_tip", "friend", "project_like",
+			"share_like", "feedback_like", "share_reply_like", "feedback_reply_like", "like_message_log" };
 
 	/**
 	 * 重用 JFinalClubConfig 中的数据源配置，避免冗余配置
@@ -54,20 +44,18 @@ public class _Generator {
 
 	public static void main(String[] args) {
 		org.tio.http.server.demo1.init.JfinalInit.init();
-		
+
 		// model 所使用的包名 (MappingKit 默认使用的包名)
 		String modelPackageName = "org.tio.http.server.demo1.model";
-				
+
 		// base model 所使用的包名
 		String baseModelPackageName = modelPackageName + ".base";
-		
+
 		// base model 文件保存路径
-		String baseModelOutputDir = PathKit.getWebRootPath()
-				+ "/src/main/java/" + ReUtil.replaceAll(baseModelPackageName, "\\.", "/");
+		String baseModelOutputDir = PathKit.getWebRootPath() + "/src/main/java/" + ReUtil.replaceAll(baseModelPackageName, "\\.", "/");
 
-		System.out.println("输出路径："+ baseModelOutputDir);
+		System.out.println("输出路径：" + baseModelOutputDir);
 
-		
 		// model 文件保存路径 (MappingKit 与 DataDictionary 文件默认保存路径)
 		String modelOutputDir = baseModelOutputDir + "/..";
 
@@ -87,6 +75,6 @@ public class _Generator {
 		// gernerator.setRemovedTableNamePrefixes("t_");
 		// 生成
 		gen.generate();
-	
+
 	}
 }

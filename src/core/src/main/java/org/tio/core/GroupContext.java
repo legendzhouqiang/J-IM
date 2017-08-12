@@ -29,7 +29,7 @@ public abstract class GroupContext {
 	static Logger log = LoggerFactory.getLogger(GroupContext.class);
 
 	private static int CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
-	
+
 	//	public static final int CORE_POOL_SIZE = _CORE_POOL_SIZE;// < 160 ? 160 : _CORE_POOL_SIZE;
 
 	private static final int MAX_POOL_SIZE = CORE_POOL_SIZE * 4 < 256 ? 256 : CORE_POOL_SIZE * 4;
@@ -106,7 +106,7 @@ public abstract class GroupContext {
 	public GroupContext() {
 		this(null, null);
 	}
-	
+
 	public GroupContext(SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		super();
 		this.id = ID_ATOMIC.incrementAndGet() + "";
@@ -115,11 +115,11 @@ public abstract class GroupContext {
 		if (this.tioExecutor == null) {
 			LinkedBlockingQueue<Runnable> tioQueue = new LinkedBlockingQueue<Runnable>();
 			String tioThreadName = "tio";
-			this.tioExecutor = new SynThreadPoolExecutor(CORE_POOL_SIZE, CORE_POOL_SIZE, KEEP_ALIVE_TIME, tioQueue, DefaultThreadFactory.getInstance(tioThreadName, Thread.NORM_PRIORITY),
-					tioThreadName);
+			this.tioExecutor = new SynThreadPoolExecutor(CORE_POOL_SIZE, CORE_POOL_SIZE, KEEP_ALIVE_TIME, tioQueue,
+					DefaultThreadFactory.getInstance(tioThreadName, Thread.NORM_PRIORITY), tioThreadName);
 			this.tioExecutor.prestartAllCoreThreads();
 		}
-		
+
 		this.groupExecutor = groupExecutor;
 		if (this.groupExecutor == null) {
 			LinkedBlockingQueue<Runnable> groupQueue = new LinkedBlockingQueue<Runnable>();

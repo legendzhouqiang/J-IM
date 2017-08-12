@@ -15,7 +15,7 @@ public class UdpPacket {
 	 */
 	public UdpPacket() {
 	}
-	
+
 	public UdpPacket(byte[] data, Node remote) {
 		super();
 		this.data = data;
@@ -26,16 +26,16 @@ public class UdpPacket {
 	 * 
 	 */
 	private byte[] data;
-	
+
 	/**
 	 * 对端Node
 	 */
 	private Node remote;
-	
+
 	/**
 	 * 收到消息的时间
 	 */
-	private long time = SystemTimer.currentTimeMillis(); 
+	private long time = SystemTimer.currentTimeMillis();
 
 	/**
 	 * @param args

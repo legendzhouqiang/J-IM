@@ -131,13 +131,13 @@ public abstract class ChannelContext {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
 	 * 设置默认属性
 	 * @param value
 	 * @author: tanyaowu
 	 */
-	public void setAttribute(Object value){
+	public void setAttribute(Object value) {
 		setAttribute(DEFAULT_ATTUBITE_KEY, value);
 	}
 
@@ -152,18 +152,18 @@ public abstract class ChannelContext {
 		Map<String, Object> m = props.getObj();
 		Object ret = m.get(key);
 		return ret;
-		
-//		Lock lock = props.getLock().readLock();
-//		Map<String, Object> m = props.getObj();
-//		try {
-//			lock.lock();
-//			Object ret = m.get(key);
-//			return ret;
-//		} catch (Exception e) {
-//			throw e;
-//		} finally {
-//			lock.unlock();
-//		}
+
+		//		Lock lock = props.getLock().readLock();
+		//		Map<String, Object> m = props.getObj();
+		//		try {
+		//			lock.lock();
+		//			Object ret = m.get(key);
+		//			return ret;
+		//		} catch (Exception e) {
+		//			throw e;
+		//		} finally {
+		//			lock.unlock();
+		//		}
 	}
 
 	public Object getAttribute() {

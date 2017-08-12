@@ -58,7 +58,7 @@ public class Groups {
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		Lock lock = channelmap.getLock().writeLock();
 		try {
 			SetWithLock<String> set = null;
@@ -74,7 +74,7 @@ public class Groups {
 			}
 
 			if (set != null) {
-				
+
 				GroupListener groupListener = groupContext.getGroupListener();
 				Set<String> groups = set.getObj();
 				if (groups != null && groups.size() > 0) {
@@ -107,7 +107,7 @@ public class Groups {
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		if (StringUtils.isBlank(groupid)) {
 			return;
 		}
@@ -145,12 +145,12 @@ public class Groups {
 	 * @author: tanyaowu
 	 */
 	public void bind(String groupid, ChannelContext channelContext) {
-		
+
 		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		if (StringUtils.isBlank(groupid)) {
 			return;
 		}
@@ -220,7 +220,7 @@ public class Groups {
 		if (groupContext.isShortConnection()) {
 			return null;
 		}
-		
+
 		if (StringUtils.isBlank(groupid)) {
 			return null;
 		}
@@ -241,7 +241,7 @@ public class Groups {
 		if (groupContext.isShortConnection()) {
 			return null;
 		}
-		
+
 		Map<ChannelContext, SetWithLock<String>> map = channelmap.getObj();
 		SetWithLock<String> set = map.get(channelContext);
 		return set;

@@ -20,7 +20,7 @@ public class IpBlacklist {
 	/** remoteAndChannelContext key: "ip:port" value: ChannelContext. */
 	private SetWithLock<String> setWithLock = new SetWithLock<String>(new HashSet<String>());
 
-	public  void add(GroupContext groupContext, String ip) {
+	public void add(GroupContext groupContext, String ip) {
 		//先添加到黑名单列表
 		Lock lock = setWithLock.getLock().writeLock();
 		try {
@@ -62,7 +62,7 @@ public class IpBlacklist {
 			lock.unlock();
 		}
 	}
-	
+
 	public void clear() {
 		Lock lock = setWithLock.getLock().writeLock();
 		try {

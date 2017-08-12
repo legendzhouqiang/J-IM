@@ -7,5 +7,5 @@ import org.tio.http.server.demo1.model.base.BaseUserOsc;
  */
 @SuppressWarnings("serial")
 public class UserOsc extends BaseUserOsc<UserOsc> {
-	
+
 }

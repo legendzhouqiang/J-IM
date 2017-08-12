@@ -7,7 +7,7 @@ import org.tio.core.intf.TioUuid;
  * 2017年6月5日 上午10:31:40
  */
 public class DefaultTioUuid implements TioUuid {
-//	private static Logger log = LoggerFactory.getLogger(DefaultTioUuid.class);
+	//	private static Logger log = LoggerFactory.getLogger(DefaultTioUuid.class);
 
 	/**
 	 * 

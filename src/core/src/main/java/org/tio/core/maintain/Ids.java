@@ -20,8 +20,7 @@ public class Ids {
 	 * key: id
 	 * value: ChannelContext
 	 */
-	private MapWithLock<String, ChannelContext> map = new MapWithLock<String, ChannelContext>(
-			new HashMap<String, ChannelContext>());
+	private MapWithLock<String, ChannelContext> map = new MapWithLock<String, ChannelContext>(new HashMap<String, ChannelContext>());
 
 	/**
 	 * @return the map
@@ -40,7 +39,7 @@ public class Ids {
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		String key = channelContext.getId();
 		if (StringUtils.isBlank(key)) {
 			return;
@@ -67,7 +66,7 @@ public class Ids {
 		if (groupContext.isShortConnection()) {
 			return;
 		}
-		
+
 		String key = channelContext.getId();
 		if (StringUtils.isBlank(key)) {
 			return;
@@ -96,7 +95,7 @@ public class Ids {
 		if (groupContext.isShortConnection()) {
 			return null;
 		}
-		
+
 		if (StringUtils.isBlank(id)) {
 			return null;
 		}

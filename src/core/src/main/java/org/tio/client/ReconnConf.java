@@ -76,11 +76,11 @@ public class ReconnConf {
 		this.retryCount = retryCount;
 	}
 
-	public static  void put(ClientChannelContext clientChannelContext) {
+	public static void put(ClientChannelContext clientChannelContext) {
 		isNeedReconn(clientChannelContext, true);
 	}
 
-	public static  boolean isNeedReconn(ClientChannelContext clientChannelContext, boolean putIfTrue) {
+	public static boolean isNeedReconn(ClientChannelContext clientChannelContext, boolean putIfTrue) {
 		ClientGroupContext clientGroupContext = (ClientGroupContext) clientChannelContext.getGroupContext();
 		ReconnConf reconnConf = clientGroupContext.getReconnConf();
 		if (reconnConf != null && reconnConf.getInterval() > 0) {

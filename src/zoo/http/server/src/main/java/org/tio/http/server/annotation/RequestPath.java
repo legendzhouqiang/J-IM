@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @author tanyaowu 
  * 2017年6月29日 下午7:52:31
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestPath {
 	String value() default "";

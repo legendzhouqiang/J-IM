@@ -37,7 +37,7 @@ import com.xiaoleilu.hutool.util.RandomUtil;
 public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	private static Logger log = LoggerFactory.getLogger(DefaultHttpRequestHandler.class);
 	
-	private static final String SESSIONID_KEY = "tio-sessionid-key";
+//	private static final String SESSIONID_KEY = "tio-sessionid-key";
 
 	protected HttpServerConfig httpServerConfig;
 
@@ -112,6 +112,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
 			String name = httpServerConfig.getSessionCookieName();
 			long maxAge = httpServerConfig.getSessionTimeout();
+			maxAge = Integer.MAX_VALUE;  //把过期时间掌握在服务器端
 
 			sessionId = httpSession.getSessionId();//randomCookieValue();
 			
@@ -128,6 +129,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 				String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
 				String name = httpServerConfig.getSessionCookieName();
 				long maxAge = httpServerConfig.getSessionTimeout();
+				maxAge = Long.MAX_VALUE;  //把过期时间掌握在服务器端
 				
 				cookie = new Cookie(domain, name, sessionId, maxAge);
 				httpResponse.addCookie(cookie);

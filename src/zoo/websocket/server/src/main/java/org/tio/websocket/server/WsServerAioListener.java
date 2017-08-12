@@ -15,8 +15,8 @@ import org.tio.websocket.common.WsSessionContext;
  */
 public class WsServerAioListener implements ServerAioListener {
 
-//	private static Logger log = LoggerFactory.getLogger(WsServerAioListener.class);
-//	private static Logger iplog = LoggerFactory.getLogger("tio-ip-trace-log");
+	//	private static Logger log = LoggerFactory.getLogger(WsServerAioListener.class);
+	//	private static Logger iplog = LoggerFactory.getLogger("tio-ip-trace-log");
 
 	static Map<String, AtomicLong> ipmap = new java.util.concurrent.ConcurrentHashMap<>();
 	static AtomicLong accessCount = new AtomicLong();
@@ -40,7 +40,7 @@ public class WsServerAioListener implements ServerAioListener {
 
 	@Override
 	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) {
-		
+
 	}
 
 	@Override

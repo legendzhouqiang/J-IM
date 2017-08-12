@@ -7,5 +7,5 @@ import org.tio.http.server.demo1.model.base.BaseBlog;
  */
 @SuppressWarnings("serial")
 public class Blog extends BaseBlog<Blog> {
-	
+
 }

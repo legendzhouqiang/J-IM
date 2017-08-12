@@ -178,8 +178,7 @@ public class AioClient {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	public ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort, ClientChannelContext initClientChannelContext,
-			Integer timeout) throws Exception {
+	public ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort, ClientChannelContext initClientChannelContext, Integer timeout) throws Exception {
 		return connect(serverNode, bindIp, bindPort, initClientChannelContext, timeout, true);
 	}
 
@@ -195,8 +194,8 @@ public class AioClient {
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	private ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort,
-			ClientChannelContext initClientChannelContext, Integer timeout, boolean isSyn) throws Exception {
+	private ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort, ClientChannelContext initClientChannelContext, Integer timeout, boolean isSyn)
+			throws Exception {
 
 		AsynchronousSocketChannel asynchronousSocketChannel = null;
 		ClientChannelContext channelContext = null;
@@ -234,8 +233,7 @@ public class AioClient {
 
 		InetSocketAddress inetSocketAddress = new InetSocketAddress(serverNode.getIp(), serverNode.getPort());
 
-		ConnectionCompletionVo attachment = new ConnectionCompletionVo(channelContext, this, isReconnect, asynchronousSocketChannel, serverNode, bindIp,
-				bindPort);
+		ConnectionCompletionVo attachment = new ConnectionCompletionVo(channelContext, this, isReconnect, asynchronousSocketChannel, serverNode, bindIp, bindPort);
 
 		if (isSyn) {
 			Integer _timeout = timeout;

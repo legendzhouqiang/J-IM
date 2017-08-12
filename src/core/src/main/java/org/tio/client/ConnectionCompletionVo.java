@@ -48,8 +48,8 @@ public class ConnectionCompletionVo {
 	 * @author: tanyaowu
 	 * 
 	 */
-	public ConnectionCompletionVo(ClientChannelContext channelContext, AioClient aioClient, boolean isReconnect,
-			AsynchronousSocketChannel asynchronousSocketChannel, Node serverNode, String bindIp, Integer bindPort) {
+	public ConnectionCompletionVo(ClientChannelContext channelContext, AioClient aioClient, boolean isReconnect, AsynchronousSocketChannel asynchronousSocketChannel,
+			Node serverNode, String bindIp, Integer bindPort) {
 		super();
 		this.channelContext = channelContext;
 		this.aioClient = aioClient;

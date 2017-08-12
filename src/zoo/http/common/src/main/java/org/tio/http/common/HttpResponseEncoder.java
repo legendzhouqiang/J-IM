@@ -16,8 +16,7 @@ import org.tio.core.GroupContext;
  * @author tanyaowu 
  * 2017年8月4日 上午9:41:12
  */
-public class HttpResponseEncoder
-{
+public class HttpResponseEncoder {
 	private static Logger log = LoggerFactory.getLogger(HttpResponseEncoder.class);
 
 	/**
@@ -25,8 +24,7 @@ public class HttpResponseEncoder
 	 * 
 	 * @author: tanyaowu
 	 */
-	public HttpResponseEncoder()
-	{
+	public HttpResponseEncoder() {
 
 	}
 
@@ -40,12 +38,10 @@ public class HttpResponseEncoder
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static ByteBuffer encode(HttpResponse httpResponse, GroupContext groupContext, ChannelContext channelContext)
-	{
+	public static ByteBuffer encode(HttpResponse httpResponse, GroupContext groupContext, ChannelContext channelContext) {
 		int bodyLength = 0;
 		byte[] body = httpResponse.getBody();
-		if (body != null)
-		{
+		if (body != null) {
 			bodyLength = body.length;
 		}
 
@@ -56,16 +52,14 @@ public class HttpResponseEncoder
 		sb.append("HTTP/1.1 ").append(httpResponseStatus.getStatus()).append(" ").append(httpResponseStatus.getDescription()).append("\r\n");
 
 		Map<String, String> headers = httpResponse.getHeaders();
-		if (headers != null && headers.size() > 0)
-		{
+		if (headers != null && headers.size() > 0) {
 			headers.put(HttpConst.ResponseHeaderKey.Content_Length, bodyLength + "");
 			Set<Entry<String, String>> set = headers.entrySet();
-			for (Entry<String, String> entry : set)
-			{
+			for (Entry<String, String> entry : set) {
 				sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\r\n");
 			}
 		}
-		
+
 		//处理cookie
 		List<Cookie> cookies = httpResponse.getCookies();
 		if (cookies != null) {
@@ -78,25 +72,22 @@ public class HttpResponseEncoder
 				}
 			}
 		}
-		
+
 		sb.append("\r\n");
 
 		byte[] headerBytes = null;
-		try
-		{
+		try {
 			String headerString = sb.toString();
 			httpResponse.setHeaderString(headerString);
 			headerBytes = headerString.getBytes(httpResponse.getCharset());
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
 		ByteBuffer buffer = ByteBuffer.allocate(headerBytes.length + bodyLength);
 		buffer.put(headerBytes);
 
-		if (bodyLength > 0)
-		{
+		if (bodyLength > 0) {
 			buffer.put(body);
 		}
 		return buffer;
@@ -111,12 +102,10 @@ public class HttpResponseEncoder
 	 * 2017年2月23日 下午1:37:58
 	 *
 	 */
-	public static KeyValue parseHeaderLine(String line)
-	{
+	public static KeyValue parseHeaderLine(String line) {
 		KeyValue keyValue = new KeyValue();
 		int p = line.indexOf(":");
-		if (p == -1)
-		{
+		if (p == -1) {
 			keyValue.setKey(line);
 			return keyValue;
 		}
@@ -130,10 +119,7 @@ public class HttpResponseEncoder
 		return keyValue;
 	}
 
-	
-
-	public static enum Step
-	{
+	public static enum Step {
 		firstline, header, body
 	}
 
@@ -144,8 +130,7 @@ public class HttpResponseEncoder
 	 * 2017年2月22日 下午4:06:42
 	 * 
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 
 	}
 

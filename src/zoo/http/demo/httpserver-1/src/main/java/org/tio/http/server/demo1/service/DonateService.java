@@ -18,16 +18,16 @@ public class DonateService {
 	private static Logger log = LoggerFactory.getLogger(DonateService.class);
 	public static final DonateService me = new DonateService();
 	private final Donate dao = new Donate().dao();
-	
+
 	@SuppressWarnings("unchecked")
 	public Page<Donate> page(int pageNumber, int pageSize) {
 		String cacheName = EhcacheConst.CacheName.T_60;
 		String cacheKey = "donate_page" + "_" + pageNumber + "_" + pageSize;
 		Object obj = CacheKit.get(cacheName, cacheKey);
 		if (obj != null) {
-			return (Page<Donate>)obj;
+			return (Page<Donate>) obj;
 		}
-		
+
 		SqlPara sqlPara = dao.getSqlPara("donate.page");
 		Page<Donate> ret = dao.paginate(pageNumber, pageSize, sqlPara);
 		CacheKit.put(cacheName, cacheKey, ret);
@@ -47,7 +47,7 @@ public class DonateService {
 	 */
 	public static void main(String[] args) {
 		JfinalInit.init();
-		
+
 		Page<Donate> page = DonateService.me.page(1, 10);
 		System.out.println(page);
 	}

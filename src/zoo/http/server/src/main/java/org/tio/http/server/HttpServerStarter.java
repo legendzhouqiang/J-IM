@@ -109,6 +109,10 @@ public class HttpServerStarter {
 		
 		aioServer.start(this.httpServerConfig.getBindIp(), this.httpServerConfig.getBindPort());
 	}
+	
+	public void stop() throws IOException {
+		aioServer.stop();
+	}
 
 	/**
 	 * @return the httpServerAioHandler

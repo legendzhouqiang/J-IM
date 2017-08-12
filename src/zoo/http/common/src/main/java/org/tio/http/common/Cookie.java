@@ -97,9 +97,9 @@ public class Cookie {
 
 	@Override
 	public String toString() {
-		return (this.name != null || this.value != null ? (this.name + "=" + this.value) : "") + (this.domain != null ? ("; domain=" + this.domain) : "")
-				+ (this.maxAge != null ? ("; max-age=" + this.maxAge) : "") + (this.path != null ? ("; path=" + this.path) : " ") + (this.httpOnly ? "; httponly; " : "")
-				+ (this.secure ? "; secure" : "");
+		return (this.name != null || this.value != null ? (this.name + "=" + this.value) : "") + (this.domain != null ? ("; Domain=" + this.domain) : "")
+				+ (this.maxAge != null ? ("; Max-Age=" + this.maxAge) : "") + (this.path != null ? ("; Path=" + this.path) : " ") + (this.httpOnly ? "; httponly; " : "")
+				+ (this.secure ? "; Secure" : "");
 	}
 
 	/**

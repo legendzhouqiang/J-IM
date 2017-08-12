@@ -68,7 +68,7 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 
 		boolean isPacket = obj instanceof Packet;
 		if (isPacket) {
-			packet =  (Packet)obj;
+			packet = (Packet) obj;
 		} else {
 			packetWithMeta = (PacketWithMeta) obj;
 			packet = packetWithMeta.getPacket();
@@ -131,7 +131,7 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 		} catch (InterruptedException e) {
 			log.error(e.toString(), e);
 		}
-		
+
 		WriteCompletionVo writeCompletionVo = new WriteCompletionVo(byteBuffer, packets);
 		asynchronousSocketChannel.write(byteBuffer, writeCompletionVo, writeCompletionHandler);
 
@@ -170,7 +170,7 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 				if ((obj = msgQueue.poll()) != null) {
 					boolean isPacket = obj instanceof Packet;
 					if (isPacket) {
-						p =  (Packet)obj;
+						p = (Packet) obj;
 						packets.add(p);
 					} else {
 						packetWithMeta = (PacketWithMeta) obj;
@@ -205,7 +205,7 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 			if ((obj = msgQueue.poll()) != null) {
 				boolean isPacket = obj instanceof Packet;
 				if (isPacket) {
-					p =  (Packet)obj;
+					p = (Packet) obj;
 					sendPacket(p);
 				} else {
 					packetWithMeta = (PacketWithMeta) obj;

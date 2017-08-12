@@ -9,10 +9,10 @@ import org.tio.core.intf.Packet;
  */
 public class WsPacket extends Packet {
 
-//	private static Logger log = LoggerFactory.getLogger(WsPacket.class);
-//
-//	//不包含cookie的头部
-//	protected Map<String, String> headers = null;
+	//	private static Logger log = LoggerFactory.getLogger(WsPacket.class);
+	//
+	//	//不包含cookie的头部
+	//	protected Map<String, String> headers = null;
 
 	/**
 	 * 消息体最多为多少
@@ -37,8 +37,8 @@ public class WsPacket extends Packet {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {}
-
+	public static void main(String[] args) {
+	}
 
 	/**
 	 * @return the body
@@ -81,132 +81,115 @@ public class WsPacket extends Packet {
 	public void setHandShake(boolean isHandShake) {
 		this.isHandShake = isHandShake;
 	}
-	
 
 	public static final int MINIMUM_HEADER_LENGTH = 2;
 
-	public static final int MAX_BODY_LENGTH = 1024 * 512;  //最多接受的1024 * 512(半M)数据
+	public static final int MAX_BODY_LENGTH = 1024 * 512; //最多接受的1024 * 512(半M)数据
 
 	public static final String CHARSET_NAME = "utf-8";
-
-
 
 	private boolean wsEof;
 	private Opcode wsOpcode = Opcode.BINARY;
 	private boolean wsHasMask;
 	private long wsBodyLength;
 	private byte[] wsMask;
-	private String wsBodyText;  //当为文本时才有此字段
-	
+	private String wsBodyText; //当为文本时才有此字段
+
 	/**
 	 * @return the wsEof
 	 */
-	public boolean isWsEof()
-	{
+	public boolean isWsEof() {
 		return wsEof;
 	}
 
 	/**
 	 * @param wsEof the wsEof to set
 	 */
-	public void setWsEof(boolean wsEof)
-	{
+	public void setWsEof(boolean wsEof) {
 		this.wsEof = wsEof;
 	}
 
 	/**
 	 * @return the wsOpcode
 	 */
-	public Opcode getWsOpcode()
-	{
+	public Opcode getWsOpcode() {
 		return wsOpcode;
 	}
 
 	/**
 	 * @param wsOpcode the wsOpcode to set
 	 */
-	public void setWsOpcode(Opcode wsOpcode)
-	{
+	public void setWsOpcode(Opcode wsOpcode) {
 		this.wsOpcode = wsOpcode;
 	}
 
 	/**
 	 * @return the wsHasMask
 	 */
-	public boolean isWsHasMask()
-	{
+	public boolean isWsHasMask() {
 		return wsHasMask;
 	}
 
 	/**
 	 * @param wsHasMask the wsHasMask to set
 	 */
-	public void setWsHasMask(boolean wsHasMask)
-	{
+	public void setWsHasMask(boolean wsHasMask) {
 		this.wsHasMask = wsHasMask;
 	}
 
 	/**
 	 * @return the wsBodyLength
 	 */
-	public long getWsBodyLength()
-	{
+	public long getWsBodyLength() {
 		return wsBodyLength;
 	}
 
 	/**
 	 * @param wsBodyLength the wsBodyLength to set
 	 */
-	public void setWsBodyLength(long wsBodyLength)
-	{
+	public void setWsBodyLength(long wsBodyLength) {
 		this.wsBodyLength = wsBodyLength;
 	}
 
 	/**
 	 * @return the wsMask
 	 */
-	public byte[] getWsMask()
-	{
+	public byte[] getWsMask() {
 		return wsMask;
 	}
 
 	/**
 	 * @param wsMask the wsMask to set
 	 */
-	public void setWsMask(byte[] wsMask)
-	{
+	public void setWsMask(byte[] wsMask) {
 		this.wsMask = wsMask;
 	}
-
-
 
 	/**
 	 * @return the wsBodyText
 	 */
-	public String getWsBodyText()
-	{
+	public String getWsBodyText() {
 		return wsBodyText;
 	}
 
 	/**
 	 * @param wsBodyText the wsBodyText to set
 	 */
-	public void setWsBodyText(String wsBodyText)
-	{
+	public void setWsBodyText(String wsBodyText) {
 		this.wsBodyText = wsBodyText;
 	}
 
-//	/**
-//	 * @return the headers
-//	 */
-//	public Map<String, String> getHeaders() {
-//		return headers;
-//	}
-//
-//	/**
-//	 * @param headers the headers to set
-//	 */
-//	public void setHeaders(Map<String, String> headers) {
-//		this.headers = headers;
-//	}
+	//	/**
+	//	 * @return the headers
+	//	 */
+	//	public Map<String, String> getHeaders() {
+	//		return headers;
+	//	}
+	//
+	//	/**
+	//	 * @param headers the headers to set
+	//	 */
+	//	public void setHeaders(Map<String, String> headers) {
+	//		this.headers = headers;
+	//	}
 }

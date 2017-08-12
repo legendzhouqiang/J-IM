@@ -44,7 +44,7 @@ public abstract class Json {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public static String toFormatedJson(Object bean) {
 		try {
 			return JSON.toJSONString(bean, mapping, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.PrettyFormat);

@@ -178,9 +178,8 @@ public class HttpMultiBodyDecoder {
 			log.error(e.toString(), e);
 			throw new AioDecodeException(e.toString());
 		}
-		
-		
-//		for (int i = 0; i < lines.size(); i++) {
+
+		//		for (int i = 0; i < lines.size(); i++) {
 		//			String line = lines.get(i);
 		//			if (i == 0) {
 		//				String[] mapStrings = StringUtils.split(line, ";");
@@ -237,7 +236,7 @@ public class HttpMultiBodyDecoder {
 						uploadFile.setSize(dst.length);
 						httpRequest.addParam(header.getName(), uploadFile);
 					}
-				} else {  //该字段是普通的key-value
+				} else { //该字段是普通的key-value
 					httpRequest.addParam(header.getName(), new String(dst, httpRequest.getCharset()));
 				}
 				if (isEndBoundary) {
