@@ -157,7 +157,7 @@ public interface HttpConst {
 		/**
 		 * 
 		 */
-		String Access_Control_Allow_Headers = "Access-Control-Allow-Headers"; //value: x-requested-with,content-type
+		String Access_Control_Allow_Headers = "Access-Control-Allow-Headers".toLowerCase(); //value: x-requested-with,content-type
 	}
 
 	/**

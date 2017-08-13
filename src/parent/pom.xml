@@ -136,6 +136,11 @@
 				<artifactId>tio-im-server</artifactId>
 				<version>${tio-im.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.t-io</groupId>
+				<artifactId>tio-im-client</artifactId>
+				<version>${tio-im.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.jfinal</groupId>
