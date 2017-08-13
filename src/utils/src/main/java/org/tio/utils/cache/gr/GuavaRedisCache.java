@@ -175,7 +175,7 @@ public class GuavaRedisCache implements ICache {
 	 */
 	@Override
 	public Collection<String> keys() {
-		return null;
+		return redisCache.keys();
 	}
 
 	/** 
