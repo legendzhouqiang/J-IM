@@ -18,7 +18,7 @@ import org.tio.core.intf.Packet;
 import org.tio.core.intf.PacketWithMeta;
 import org.tio.core.threadpool.AbstractQueueRunnable;
 import org.tio.core.utils.AioUtils;
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.SystemTimer;
 
 /**
  * 

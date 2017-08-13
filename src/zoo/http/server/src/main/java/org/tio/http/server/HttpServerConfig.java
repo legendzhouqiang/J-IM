@@ -2,7 +2,7 @@ package org.tio.http.server;
 
 import org.tio.http.common.Const;
 import org.tio.http.common.HttpConst;
-import org.tio.http.server.session.IHttpSessionStore;
+import org.tio.utils.cache.ICache;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 
@@ -14,6 +14,8 @@ public class HttpServerConfig {
 
 	private String bindIp = null;//"127.0.0.1";
 	
+	public static final String HTTP_SESSION_CACHE_NAME = "tio-http-session";
+	
 	/**
 	 * 默认的超时时间，单位：秒
 	 */
@@ -23,7 +25,9 @@ public class HttpServerConfig {
 
 	private String charset = HttpConst.CHARSET_NAME;
 
-	private IHttpSessionStore httpSessionStore = null;
+	private ICache httpSessionStore = null;
+	
+	private String httpSessionCacheName = HTTP_SESSION_CACHE_NAME;
 
 	/**
 	 * session超时时间，单位：秒
@@ -125,12 +129,26 @@ public class HttpServerConfig {
 		this.sessionCookieName = sessionCookieName;
 	}
 
-	public IHttpSessionStore getHttpSessionStore() {
+	public ICache getHttpSessionStore() {
 		return httpSessionStore;
 	}
 
-	public void setHttpSessionStore(IHttpSessionStore httpSessionStore) {
+	public void setHttpSessionStore(ICache httpSessionStore) {
 		this.httpSessionStore = httpSessionStore;
+	}
+
+	/**
+	 * @return the httpSessionCacheName
+	 */
+	public String getHttpSessionCacheName() {
+		return httpSessionCacheName;
+	}
+
+	/**
+	 * @param httpSessionCacheName the httpSessionCacheName to set
+	 */
+	public void setHttpSessionCacheName(String httpSessionCacheName) {
+		this.httpSessionCacheName = httpSessionCacheName;
 	}
 
 }

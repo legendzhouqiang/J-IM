@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioListener;
 import org.tio.core.Node;
 import org.tio.core.ReadCompletionHandler;
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.SystemTimer;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package org.tio.core.utils.page;
+package org.tio.utils.page;
 
 import java.io.Serializable;
 import java.util.List;

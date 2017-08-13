@@ -2,13 +2,18 @@ package org.tio.core;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.SystemTimer;
 
 /**
  * @author tanyaowu 
  * 2017年4月1日 下午2:17:35
  */
 public class ChannelStat {
+	/**
+	 * 本次解码失败的次数
+	 */
+	private int decodeFailCount = 0;
+	
 	/**
 	 * 最近一次收到业务消息包的时间(一个完整的业务消息包，一部分消息不算)
 	 */
@@ -228,6 +233,20 @@ public class ChannelStat {
 	 */
 	public void setTimeFirstConnected(Long timeFirstConnected) {
 		this.timeFirstConnected = timeFirstConnected;
+	}
+
+	/**
+	 * @return the decodeFailCount
+	 */
+	public int getDecodeFailCount() {
+		return decodeFailCount;
+	}
+
+	/**
+	 * @param decodeFailCount the decodeFailCount to set
+	 */
+	public void setDecodeFailCount(int decodeFailCount) {
+		this.decodeFailCount = decodeFailCount;
 	}
 
 }

@@ -11,10 +11,10 @@ import org.tio.http.server.handler.DefaultHttpRequestHandler;
 import org.tio.http.server.handler.IHttpRequestHandler;
 import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
-import org.tio.http.server.session.IHttpSessionStore;
-import org.tio.http.server.session.impl.GuavaHttpSessionStore;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
+import org.tio.utils.cache.GuavaCache;
+import org.tio.utils.cache.ICache;
 
 /**
  * 
@@ -76,11 +76,11 @@ public class HttpServerStarter {
 		this(pageRootDir, serverPort, scanPackages, httpServerListener, null, null, null);
 	}
 	
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, IHttpSessionStore httpSessionStore) {
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache httpSessionStore) {
 		this(pageRootDir, serverPort, scanPackages, httpServerListener, httpSessionStore, null, null);
 	}
 	
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, IHttpSessionStore httpSessionStore, SynThreadPoolExecutor tioExecutor,
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache httpSessionStore, SynThreadPoolExecutor tioExecutor,
 			ThreadPoolExecutor groupExecutor) {
 		int port = serverPort;
 		String pageRoot = pageRootDir;
@@ -104,7 +104,8 @@ public class HttpServerStarter {
 	
 	public void start() throws IOException {
 		if (httpServerConfig.getHttpSessionStore() == null) {
-			httpServerConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpServerConfig.getSessionTimeout()));
+			GuavaCache guavaCache = GuavaCache.register(httpServerConfig.getHttpSessionCacheName(), null, httpServerConfig.getSessionTimeout());
+			httpServerConfig.setHttpSessionStore(guavaCache);
 		}
 		
 		aioServer.start(this.httpServerConfig.getBindIp(), this.httpServerConfig.getBindPort());

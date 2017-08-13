@@ -7,13 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelAction;
 import org.tio.core.ChannelContext;
+import org.tio.core.ChannelStat;
 import org.tio.core.GroupContext;
 import org.tio.core.PacketHandlerMode;
 import org.tio.core.exception.AioDecodeException;
 import org.tio.core.intf.AioListener;
 import org.tio.core.intf.Packet;
 import org.tio.core.utils.ByteBufferUtils;
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.SystemTimer;
 
 /**
  * 解码
@@ -103,17 +104,24 @@ public class DecodeRunnable implements Runnable {
 				int initPosition = byteBuffer.position();
 				Packet packet = channelContext.getGroupContext().getAioHandler().decode(byteBuffer, channelContext);
 
-				if (packet == null)// 数据不够，组不了包
+				if (packet == null)// 数据不够，解不了码
 				{
-					//					if (log.isDebugEnabled())
-					//					{
-					//						log.debug("{},数据不够，组不了包", channelContext.toString());
-					//					}
 					lastByteBuffer = ByteBufferUtils.copy(byteBuffer, initPosition, byteBuffer.limit());
+					ChannelStat channelStat = channelContext.getStat();
+					channelStat.setDecodeFailCount(channelStat.getDecodeFailCount() + 1);
+					int len = byteBuffer.capacity() - initPosition;
+					log.info("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节", channelContext, channelStat.getDecodeFailCount(), len);
+					if (channelStat.getDecodeFailCount() > 5) {
+						log.error("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节，请考虑要不要拉黑这个ip", channelContext, channelStat.getDecodeFailCount(), len);
+
+					}
 					return;
-				} else //组包成功
+				} else //解码成功
 				{
 					channelContext.getStat().setLatestTimeOfReceivedPacket(SystemTimer.currentTimeMillis());
+
+					ChannelStat channelStat = channelContext.getStat();
+					channelStat.setDecodeFailCount(0);
 
 					int afterDecodePosition = byteBuffer.position();
 					int len = afterDecodePosition - initPosition;

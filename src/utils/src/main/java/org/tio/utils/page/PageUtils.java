@@ -1,4 +1,4 @@
-package org.tio.core.utils.page;
+package org.tio.utils.page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.concurrent.locks.Lock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tio.core.ObjWithLock;
+import org.tio.utils.lock.ObjWithLock;
 
 /**
  * @author tanyaowu 

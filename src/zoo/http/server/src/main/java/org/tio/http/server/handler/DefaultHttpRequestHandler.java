@@ -93,7 +93,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		} else {
 //			httpSession = (HttpSession)httpSession.getAtrribute(SESSIONID_KEY);//loadingCache.getIfPresent(sessionCookie.getValue());
 			String sessionId = cookie.getValue();
-			httpSession = httpServerConfig.getHttpSessionStore().get(sessionId);
+			httpSession = (HttpSession)httpServerConfig.getHttpSessionStore().get(sessionId);
 			if (httpSession == null) {
 				log.info("{} session【{}】超时", channelContext, sessionId);
 				sessionId = RandomUtil.randomUUID();
@@ -118,11 +118,11 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			
 			cookie = new Cookie(domain, name, sessionId, maxAge);
 			httpResponse.addCookie(cookie);
-			httpServerConfig.getHttpSessionStore().save(sessionId, httpSession);
+			httpServerConfig.getHttpSessionStore().put(sessionId, httpSession);
 			log.info("{} 创建会话Cookie, {}", channelContext, cookie);
 		} else {
 			sessionId = cookie.getValue();
-			HttpSession httpSession1 = httpServerConfig.getHttpSessionStore().get(sessionId);
+			HttpSession httpSession1 = (HttpSession)httpServerConfig.getHttpSessionStore().get(sessionId);
 			
 			if (httpSession1 == null) {//有cookie但是超时了
 				sessionId = httpSession.getSessionId();
@@ -134,7 +134,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 				cookie = new Cookie(domain, name, sessionId, maxAge);
 				httpResponse.addCookie(cookie);
 				
-				httpServerConfig.getHttpSessionStore().save(sessionId, httpSession);
+				httpServerConfig.getHttpSessionStore().put(sessionId, httpSession);
 			}
 		}
 	}

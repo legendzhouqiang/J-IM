@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
-import org.tio.core.SetWithLock;
+import org.tio.utils.lock.SetWithLock;
 
 /**
  * 

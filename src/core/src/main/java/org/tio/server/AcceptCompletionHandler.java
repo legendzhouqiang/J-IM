@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelAction;
 import org.tio.core.ReadCompletionHandler;
-import org.tio.core.utils.SystemTimer;
 import org.tio.server.intf.ServerAioListener;
+import org.tio.utils.SystemTimer;
 
 /**
  * 

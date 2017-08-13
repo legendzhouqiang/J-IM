@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
-import org.tio.core.MapWithLock;
-import org.tio.core.SetWithLock;
 import org.tio.core.intf.GroupListener;
+import org.tio.utils.lock.MapWithLock;
+import org.tio.utils.lock.SetWithLock;
 
 public class Groups {
 

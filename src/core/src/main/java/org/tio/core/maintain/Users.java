@@ -6,7 +6,7 @@ import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.apache.commons.lang3.StringUtils;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
-import org.tio.core.ObjWithLock;
+import org.tio.utils.lock.ObjWithLock;
 
 /**
  * The Class Users.

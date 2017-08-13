@@ -1,7 +1,7 @@
 package org.tio.core.udp;
 
 import org.tio.core.Node;
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.SystemTimer;
 
 /**
  * @author tanyaowu 

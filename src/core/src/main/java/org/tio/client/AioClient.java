@@ -22,10 +22,10 @@ import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.ChannelStat;
 import org.tio.core.Node;
-import org.tio.core.SetWithLock;
 import org.tio.core.intf.Packet;
 import org.tio.core.threadpool.SynThreadPoolExecutor;
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.SystemTimer;
+import org.tio.utils.lock.SetWithLock;
 
 /**
  * 

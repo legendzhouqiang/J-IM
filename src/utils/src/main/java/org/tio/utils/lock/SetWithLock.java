@@ -1,4 +1,4 @@
-package org.tio.core;
+package org.tio.utils.lock;
 
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;

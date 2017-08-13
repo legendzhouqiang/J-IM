@@ -6,7 +6,7 @@ import java.util.concurrent.locks.Lock;
 
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
-import org.tio.core.SetWithLock;
+import org.tio.utils.lock.SetWithLock;
 
 /**
  * 

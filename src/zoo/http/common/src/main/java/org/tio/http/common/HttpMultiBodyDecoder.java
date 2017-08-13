@@ -11,8 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.exception.AioDecodeException;
-import org.tio.core.utils.SystemTimer;
 import org.tio.http.common.utils.HttpParseUtils;
+import org.tio.utils.SystemTimer;
 
 /**
  * @author tanyaowu 
