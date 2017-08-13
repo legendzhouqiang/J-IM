@@ -9,6 +9,10 @@
 
 ### [http://t-io.org](http://t-io.org "t-io官网")
 
+## **t-io项目全景图**
+
+[![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/tio-parent.png)](http://t-io.org/webim/)
+
 ####  **常见应用场景**
     
 - IM（官方提供了im例子，含web端）
