@@ -11,7 +11,7 @@
 
 ## **t-io项目全景图**
 
-[![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/tio-parent.png)](http://t-io.org/webim/)
+[![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/tio-parent.png)](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/tio-parent.png)
 
 ####  **常见应用场景**
     
