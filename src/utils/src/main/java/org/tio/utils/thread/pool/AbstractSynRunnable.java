@@ -1,4 +1,4 @@
-package org.tio.core.threadpool;
+package org.tio.utils.thread.pool;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Lock;
@@ -7,14 +7,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tio.core.threadpool.intf.SynRunnableIntf;
 
 /**
  *  
  * @author tanyaowu 
  * 
  */
-public abstract class AbstractSynRunnable implements SynRunnableIntf {
+public abstract class AbstractSynRunnable implements ISynRunnable {
 
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(AbstractSynRunnable.class);
@@ -31,7 +30,7 @@ public abstract class AbstractSynRunnable implements SynRunnableIntf {
 	}
 
 	/** 
-	 * @see org.tio.core.threadpool.intf.SynRunnableIntf#runningLock()
+	 * @see org.tio.core.threadpool.intf.ISynRunnable#runningLock()
 	 * 
 	 * @return
 	 * @author: tanyaowu

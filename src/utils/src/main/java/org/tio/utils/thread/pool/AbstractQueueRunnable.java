@@ -1,4 +1,4 @@
-package org.tio.core.threadpool;
+package org.tio.utils.thread.pool;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;

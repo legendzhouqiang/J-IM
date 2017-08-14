@@ -22,8 +22,8 @@ import org.tio.core.maintain.Ids;
 import org.tio.core.maintain.IpBlacklist;
 import org.tio.core.maintain.Users;
 import org.tio.core.stat.GroupStat;
-import org.tio.core.threadpool.DefaultThreadFactory;
-import org.tio.core.threadpool.SynThreadPoolExecutor;
+import org.tio.utils.thread.pool.DefaultThreadFactory;
+import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 public abstract class GroupContext {
 	static Logger log = LoggerFactory.getLogger(GroupContext.class);

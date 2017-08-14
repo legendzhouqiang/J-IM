@@ -1,4 +1,4 @@
-package org.tio.core.threadpool;
+package org.tio.utils.thread.pool;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Future;
@@ -7,8 +7,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
-
-import org.tio.core.threadpool.intf.SynRunnableIntf;
 
 /**
  * 
@@ -43,8 +41,8 @@ public class SynThreadPoolExecutor extends ThreadPoolExecutor {
 	 * @author: tanyaowu
 	 */
 	private boolean checkBeforeExecute(Runnable runnable) {
-		if (runnable instanceof SynRunnableIntf) {
-			SynRunnableIntf synRunnableIntf = (SynRunnableIntf) runnable;
+		if (runnable instanceof ISynRunnable) {
+			ISynRunnable synRunnableIntf = (ISynRunnable) runnable;
 			ReadWriteLock runningLock = synRunnableIntf.runningLock();
 			Lock writeLock = runningLock.writeLock();
 			boolean tryLock = false;

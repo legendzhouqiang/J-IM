@@ -13,11 +13,11 @@ import org.tio.core.GroupContext;
 import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.AioListener;
 import org.tio.core.stat.GroupStat;
-import org.tio.core.threadpool.SynThreadPoolExecutor;
 import org.tio.server.intf.ServerAioHandler;
 import org.tio.server.intf.ServerAioListener;
 import org.tio.utils.SystemTimer;
 import org.tio.utils.lock.ObjWithLock;
+import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
  * The Class ServerGroupContext.

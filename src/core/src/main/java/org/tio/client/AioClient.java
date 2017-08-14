@@ -23,9 +23,9 @@ import org.tio.core.ChannelContext;
 import org.tio.core.ChannelStat;
 import org.tio.core.Node;
 import org.tio.core.intf.Packet;
-import org.tio.core.threadpool.SynThreadPoolExecutor;
 import org.tio.utils.SystemTimer;
 import org.tio.utils.lock.SetWithLock;
+import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
  * 

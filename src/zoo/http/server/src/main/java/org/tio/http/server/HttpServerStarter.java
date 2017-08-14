@@ -5,7 +5,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tio.core.threadpool.SynThreadPoolExecutor;
 import org.tio.http.common.HttpUuid;
 import org.tio.http.server.handler.DefaultHttpRequestHandler;
 import org.tio.http.server.handler.IHttpRequestHandler;
@@ -15,6 +14,7 @@ import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
 import org.tio.utils.cache.ICache;
 import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
  * 

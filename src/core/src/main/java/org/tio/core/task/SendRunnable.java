@@ -16,9 +16,9 @@ import org.tio.core.WriteCompletionHandler.WriteCompletionVo;
 import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.Packet;
 import org.tio.core.intf.PacketWithMeta;
-import org.tio.core.threadpool.AbstractQueueRunnable;
 import org.tio.core.utils.AioUtils;
 import org.tio.utils.SystemTimer;
+import org.tio.utils.thread.pool.AbstractQueueRunnable;
 
 /**
  * 

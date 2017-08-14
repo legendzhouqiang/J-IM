@@ -13,7 +13,7 @@ import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.intf.Packet;
 import org.tio.core.maintain.ChannelContextMapWithLock;
-import org.tio.core.threadpool.AbstractQueueRunnable;
+import org.tio.utils.thread.pool.AbstractQueueRunnable;
 
 /**
  * 
@@ -85,7 +85,7 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 	}
 
 	/** 
-	 * @see org.tio.core.threadpool.intf.SynRunnableIntf#runTask()
+	 * @see org.tio.core.threadpool.intf.ISynRunnable#runTask()
 	 * 
 	 * @author: tanyaowu
 	 * 2016年12月5日 下午3:02:49
