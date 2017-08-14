@@ -1,4 +1,4 @@
-package org.tio.common.intf;
+package org.tio.common.runnable;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -12,21 +12,18 @@ public interface SynRunnable extends Runnable {
 
     /**
      * 获取同步任务锁
-     *
      * @return
      */
     ReentrantLock runningLock();
 
     /**
      * 是否被取消
-     *
      * @return
      */
     boolean isCanceled();
 
     /**
      * 设置任务取消
-     *
      * @param cancelFlag
      */
     void setCanceled(boolean cancelFlag);
