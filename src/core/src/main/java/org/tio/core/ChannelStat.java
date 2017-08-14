@@ -13,7 +13,7 @@ public class ChannelStat {
 	 * 本次解码失败的次数
 	 */
 	private int decodeFailCount = 0;
-	
+
 	/**
 	 * 最近一次收到业务消息包的时间(一个完整的业务消息包，一部分消息不算)
 	 */

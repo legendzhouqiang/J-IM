@@ -13,8 +13,8 @@ import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
-import org.tio.utils.cache.GuavaCache;
 import org.tio.utils.cache.ICache;
+import org.tio.utils.cache.guava.GuavaCache;
 
 /**
  * 
@@ -48,7 +48,7 @@ public class HttpServerStarter {
 	 */
 	public static void main(String[] args) throws IOException {
 	}
-	
+
 	private void init(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		this.httpServerConfig = httpServerConfig;
 		this.httpRequestHandler = httpRequestHandler;
@@ -75,13 +75,13 @@ public class HttpServerStarter {
 	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener) {
 		this(pageRootDir, serverPort, scanPackages, httpServerListener, null, null, null);
 	}
-	
+
 	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache httpSessionStore) {
 		this(pageRootDir, serverPort, scanPackages, httpServerListener, httpSessionStore, null, null);
 	}
-	
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache httpSessionStore, SynThreadPoolExecutor tioExecutor,
-			ThreadPoolExecutor groupExecutor) {
+
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache httpSessionStore,
+			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		int port = serverPort;
 		String pageRoot = pageRootDir;
 
@@ -90,27 +90,27 @@ public class HttpServerStarter {
 		if (httpSessionStore != null) {
 			httpServerConfig.setHttpSessionStore(httpSessionStore);
 		}
-//		} else {
-//			httpServerConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpServerConfig.getSessionTimeout()));
-//		}
-		
+		//		} else {
+		//			httpServerConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpServerConfig.getSessionTimeout()));
+		//		}
+
 		//		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
 		DefaultHttpRequestHandler httpRequestHandler = new DefaultHttpRequestHandler(httpServerConfig, routes);
 		httpRequestHandler.setHttpServerListener(httpServerListener);
-		
+
 		init(httpServerConfig, httpRequestHandler, tioExecutor, groupExecutor);
 	}
-	
+
 	public void start() throws IOException {
 		if (httpServerConfig.getHttpSessionStore() == null) {
 			GuavaCache guavaCache = GuavaCache.register(httpServerConfig.getHttpSessionCacheName(), null, httpServerConfig.getSessionTimeout());
 			httpServerConfig.setHttpSessionStore(guavaCache);
 		}
-		
+
 		aioServer.start(this.httpServerConfig.getBindIp(), this.httpServerConfig.getBindPort());
 	}
-	
+
 	public void stop() throws IOException {
 		aioServer.stop();
 	}

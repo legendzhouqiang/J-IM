@@ -54,17 +54,17 @@ public class Resps {
 	 */
 	public static HttpResponse file(HttpRequest request, File fileOnServer) throws IOException {
 		Date lastModified = FileUtil.lastModifiedTime(fileOnServer);
-		
+
 		String If_Modified_Since = request.getHeader(HttpConst.RequestHeaderKey.If_Modified_Since);//If-Modified-Since
 		if (StringUtils.isNoneBlank(If_Modified_Since)) {
 			Long If_Modified_Since_Date = null;
 			try {
-//				If_Modified_Since_Date = DatePattern.NORM_DATETIME_MS_FORMAT.parse(If_Modified_Since);
+				//				If_Modified_Since_Date = DatePattern.NORM_DATETIME_MS_FORMAT.parse(If_Modified_Since);
 				If_Modified_Since_Date = Long.parseLong(If_Modified_Since);
 			} catch (NumberFormatException e) {
 				log.warn("{}不是整数", If_Modified_Since);
 			}
-			
+
 			if (If_Modified_Since_Date != null) {
 				long lastModifiedTime = Long.MAX_VALUE;
 				try {
@@ -73,7 +73,7 @@ public class Resps {
 				} catch (Exception e) {
 					log.error(e.toString(), e);
 				}
-//				long If_Modified_Since_Date_Time = If_Modified_Since_Date.getTime();
+				//				long If_Modified_Since_Date_Time = If_Modified_Since_Date.getTime();
 				if (lastModifiedTime <= If_Modified_Since_Date) {
 					HttpResponse ret = new HttpResponse(request);
 					ret.setStatus(HttpResponseStatus.C304);
@@ -81,11 +81,11 @@ public class Resps {
 				}
 			}
 		}
-		
+
 		byte[] bodyBytes = FileUtil.readBytes(fileOnServer);
 		String filename = fileOnServer.getName();
 		HttpResponse ret = file(request, bodyBytes, filename);
-		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified,  lastModified.getTime() + "");
+		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified, lastModified.getTime() + "");
 		return ret;
 	}
 
@@ -186,7 +186,7 @@ public class Resps {
 		ret.addHeader(HttpConst.ResponseHeaderKey.Content_Type, Content_Type);
 		return ret;
 	}
-	
+
 	/**
 	 * 重定向
 	 * @param request
@@ -200,9 +200,8 @@ public class Resps {
 		ret.addHeader(HttpConst.ResponseHeaderKey.Location, path);
 		return ret;
 	}
-	
-//	　　302 （307）：与响应头location 结合完成页面重新跳转。
 
+	//	　　302 （307）：与响应头location 结合完成页面重新跳转。
 
 	/**
 	 * @param args

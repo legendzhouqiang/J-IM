@@ -16,10 +16,9 @@ import org.tio.http.common.HttpConst.RequestBodyFormat;
  *
  */
 public class HttpRequest extends HttpPacket {
-	
-//	private static Logger log = LoggerFactory.getLogger(HttpRequest.class);
 
-	
+	//	private static Logger log = LoggerFactory.getLogger(HttpRequest.class);
+
 	private RequestLine requestLine = null;
 	/**
 	 * 请求参数
@@ -28,15 +27,14 @@ public class HttpRequest extends HttpPacket {
 	private List<Cookie> cookies = null;
 	private Map<String, Cookie> cookieMap = null;
 	private int contentLength;
-//	private byte[] bodyBytes;
+	//	private byte[] bodyBytes;
 	private String bodyString;
-//	private UserAgent userAgent;
+	//	private UserAgent userAgent;
 	private RequestBodyFormat bodyFormat;
 	private String charset = HttpConst.CHARSET_NAME;
-	
-	private Node remote = null;
-//	private HttpSession httpSession = null;
 
+	private Node remote = null;
+	//	private HttpSession httpSession = null;
 
 	/**
 	 * 
@@ -59,13 +57,13 @@ public class HttpRequest extends HttpPacket {
 	public static void main(String[] args) {
 	}
 
-	public Cookie getCookie(String cooiename){
+	public Cookie getCookie(String cooiename) {
 		if (cookieMap == null) {
 			return null;
 		}
 		return cookieMap.get(cooiename);
 	}
-	
+
 	/**
 	 * @return the firstLine
 	 */
@@ -91,12 +89,12 @@ public class HttpRequest extends HttpPacket {
 		if (headers != null) {
 			parseCookie();
 		}
-		
-//		String Sec_WebSocket_Key = headers.get(HttpConst.RequestHeaderKey.Sec_WebSocket_Key);
-//		if (StringUtils.isNoneBlank(Sec_WebSocket_Key)) {
-//			ImSessionContext httpSession = channelContext.getAttribute();
-//			httpSession.setWebsocket(true);
-//		}
+
+		//		String Sec_WebSocket_Key = headers.get(HttpConst.RequestHeaderKey.Sec_WebSocket_Key);
+		//		if (StringUtils.isNoneBlank(Sec_WebSocket_Key)) {
+		//			ImSessionContext httpSession = channelContext.getAttribute();
+		//			httpSession.setWebsocket(true);
+		//		}
 	}
 
 	public void parseCookie() {
@@ -114,7 +112,7 @@ public class HttpRequest extends HttpPacket {
 				Cookie cookie = Cookie.buildCookie(cookieOneMap);
 				cookies.add(cookie);
 				cookieMap.put(cookie.getName(), cookie);
-//				log.error("{}, 收到cookie:{}", channelContext, cookie.toString());
+				//				log.error("{}, 收到cookie:{}", channelContext, cookie.toString());
 			}
 		}
 	}
@@ -125,7 +123,7 @@ public class HttpRequest extends HttpPacket {
 	public int getContentLength() {
 		return contentLength;
 	}
-	
+
 	public void setBody(byte[] body) {
 		this.body = body;
 	}
@@ -137,33 +135,33 @@ public class HttpRequest extends HttpPacket {
 		this.contentLength = contentLength;
 	}
 
-//	/**
-//	 * @return the bodyBytes
-//	 */
-//	public byte[] getBodyBytes() {
-//		return bodyBytes;
-//	}
-//
-//	/**
-//	 * @param bodyBytes the bodyBytes to set
-//	 */
-//	public void setBodyBytes(byte[] bodyBytes) {
-//		this.bodyBytes = bodyBytes;
-//	}
+	//	/**
+	//	 * @return the bodyBytes
+	//	 */
+	//	public byte[] getBodyBytes() {
+	//		return bodyBytes;
+	//	}
+	//
+	//	/**
+	//	 * @param bodyBytes the bodyBytes to set
+	//	 */
+	//	public void setBodyBytes(byte[] bodyBytes) {
+	//		this.bodyBytes = bodyBytes;
+	//	}
 
-//	/**
-//	 * @return the userAgent
-//	 */
-//	public UserAgent getUserAgent() {
-//		return userAgent;
-//	}
-//
-//	/**
-//	 * @param userAgent the userAgent to set
-//	 */
-//	public void setUserAgent(UserAgent userAgent) {
-//		this.userAgent = userAgent;
-//	}
+	//	/**
+	//	 * @return the userAgent
+	//	 */
+	//	public UserAgent getUserAgent() {
+	//		return userAgent;
+	//	}
+	//
+	//	/**
+	//	 * @param userAgent the userAgent to set
+	//	 */
+	//	public void setUserAgent(UserAgent userAgent) {
+	//		this.userAgent = userAgent;
+	//	}
 
 	/**
 	 * @return the cookies
@@ -220,7 +218,7 @@ public class HttpRequest extends HttpPacket {
 	public void setParams(Map<String, Object[]> params) {
 		this.params = params;
 	}
-	
+
 	public void addParam(String key, Object value) {
 		if (params == null) {
 			params = new HashMap<>();
@@ -287,18 +285,18 @@ public class HttpRequest extends HttpPacket {
 		this.remote = remote;
 	}
 
-//	/**
-//	 * @return the httpSession
-//	 */
-//	public HttpSession getHttpSession() {
-//		return httpSession;
-//	}
-//
-//	/**
-//	 * @param httpSession the httpSession to set
-//	 */
-//	public void setHttpSession(HttpSession httpSession) {
-//		this.httpSession = httpSession;
-//	}
+	//	/**
+	//	 * @return the httpSession
+	//	 */
+	//	public HttpSession getHttpSession() {
+	//		return httpSession;
+	//	}
+	//
+	//	/**
+	//	 * @param httpSession the httpSession to set
+	//	 */
+	//	public void setHttpSession(HttpSession httpSession) {
+	//		this.httpSession = httpSession;
+	//	}
 
 }

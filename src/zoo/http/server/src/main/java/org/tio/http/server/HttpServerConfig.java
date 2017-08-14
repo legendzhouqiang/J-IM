@@ -13,9 +13,9 @@ import com.xiaoleilu.hutool.io.FileUtil;
 public class HttpServerConfig {
 
 	private String bindIp = null;//"127.0.0.1";
-	
+
 	public static final String HTTP_SESSION_CACHE_NAME = "tio-http-session";
-	
+
 	/**
 	 * 默认的超时时间，单位：秒
 	 */
@@ -26,7 +26,7 @@ public class HttpServerConfig {
 	private String charset = HttpConst.CHARSET_NAME;
 
 	private ICache httpSessionStore = null;
-	
+
 	private String httpSessionCacheName = HTTP_SESSION_CACHE_NAME;
 
 	/**

@@ -9,23 +9,22 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2017年8月5日 上午10:16:26
  */
 public class HttpSession implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = 6077020620501316538L;
 
 	private Map<String, Object> map = new ConcurrentHashMap<>();
-	
+
 	private String sessionId = null;
-	
+
 	/**
 	 * @author: tanyaowu
 	 */
 	public HttpSession(String sessionId) {
 		this.sessionId = sessionId;
 	}
-	
+
 	public HttpSession() {
 	}
-	
 
 	/**
 	 * 设置会话属性
@@ -46,13 +45,13 @@ public class HttpSession implements java.io.Serializable {
 	public Object getAtrribute(String key) {
 		return map.get(key);
 	}
-	
+
 	/**
 	 * 清空所有属性
 	 * 
 	 * @author: tanyaowu
 	 */
-	public void clear(){
+	public void clear() {
 		map.clear();
 	}
 

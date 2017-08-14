@@ -20,18 +20,17 @@ import org.tio.server.intf.ServerAioHandler;
  *
  */
 public class HttpServerAioHandler implements ServerAioHandler {
-//	private static Logger log = LoggerFactory.getLogger(HttpServerAioHandler.class);
+	//	private static Logger log = LoggerFactory.getLogger(HttpServerAioHandler.class);
 
 	protected HttpServerConfig httpServerConfig;
-	
+
 	private IHttpRequestHandler httpRequestHandler;
 
-//	protected Routes routes = null;
+	//	protected Routes routes = null;
 
-//	public HttpServerAioHandler(IHttpRequestHandler httpRequestHandler) {
-//		this.httpRequestHandler = httpRequestHandler;
-//	}
-
+	//	public HttpServerAioHandler(IHttpRequestHandler httpRequestHandler) {
+	//		this.httpRequestHandler = httpRequestHandler;
+	//	}
 
 	/**
 	 * 
@@ -45,10 +44,10 @@ public class HttpServerAioHandler implements ServerAioHandler {
 		this.httpRequestHandler = httpRequestHandler;
 	}
 
-//	public HttpServerAioHandler(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler) {
-//		this(httpServerConfig, httpRequestHandler);
-////		this.routes = routes;
-//	}
+	//	public HttpServerAioHandler(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler) {
+	//		this(httpServerConfig, httpRequestHandler);
+	////		this.routes = routes;
+	//	}
 
 	/**
 	 * @param args
@@ -87,8 +86,7 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	 * 
 	 */
 	@Override
-	public ByteBuffer encode(Packet packet, GroupContext groupContext,
-			ChannelContext channelContext) {
+	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
 		HttpResponse httpResponse = (HttpResponse) packet;
 		ByteBuffer byteBuffer = HttpResponseEncoder.encode(httpResponse, groupContext, channelContext);
 		return byteBuffer;

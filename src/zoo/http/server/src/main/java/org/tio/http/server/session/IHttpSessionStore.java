@@ -20,7 +20,7 @@ public interface IHttpSessionStore {
 	 * @author: tanyaowu
 	 */
 	public void remove(String sessionId);
-	
+
 	/**
 	 * 
 	 * @param sessionId

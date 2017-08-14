@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 public class Cookie {
 	private static Logger log = LoggerFactory.getLogger(Cookie.class);
 
-	
 	private String domain = null;
 	private String path = null;
 	private Long maxAge = null;
@@ -150,7 +149,7 @@ public class Cookie {
 	 * @param maxAge	失效时间,单位秒
 	 * @return Cookie 对象
 	 */
-	public Cookie (String domain, String name, String value, Long maxAge) {
+	public Cookie(String domain, String name, String value, Long maxAge) {
 		setName(name);
 		setValue(value);
 		setPath("/");

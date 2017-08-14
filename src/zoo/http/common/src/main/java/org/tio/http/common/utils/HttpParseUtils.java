@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * 2017年7月27日 上午10:09:19
  */
 public class HttpParseUtils {
-//	private static Logger log = LoggerFactory.getLogger(HttpParseUtils.class);
+	//	private static Logger log = LoggerFactory.getLogger(HttpParseUtils.class);
 
 	/**
 	 * 

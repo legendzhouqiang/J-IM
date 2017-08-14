@@ -3,7 +3,7 @@ package org.tio.http.server.session.impl;
 import org.redisson.api.RedissonClient;
 import org.tio.http.server.session.HttpSession;
 import org.tio.http.server.session.IHttpSessionStore;
-import org.tio.utils.cache.RedisCache;
+import org.tio.utils.cache.redis.RedisCache;
 
 /**
  * 
@@ -11,13 +11,13 @@ import org.tio.utils.cache.RedisCache;
  * 2017年8月5日 上午10:16:26
  */
 public class RedisHttpSessionStore implements IHttpSessionStore {
-	
+
 	public static final String HTTP_SESSION_CACHE_NAME = "tio-http-session";
 
-//	private RMapCache<String, HttpSession> cachedMap = null;
-	
+	//	private RMapCache<String, HttpSession> cachedMap = null;
+
 	private static RedisHttpSessionStore instance;
-	
+
 	private RedisCache redisCache;
 
 	public static RedisHttpSessionStore getInstance(RedissonClient redisson, Long sessionTimeout) {
@@ -31,7 +31,7 @@ public class RedisHttpSessionStore implements IHttpSessionStore {
 		}
 		return instance;
 	}
-	
+
 	private RedisHttpSessionStore(RedisCache redisCache) {
 		this.redisCache = redisCache;
 
@@ -39,7 +39,8 @@ public class RedisHttpSessionStore implements IHttpSessionStore {
 
 	@Override
 	public void save(String sessionId, HttpSession session) {
-		redisCache.put(sessionId, session);;
+		redisCache.put(sessionId, session);
+		;
 	}
 
 	@Override
@@ -49,7 +50,7 @@ public class RedisHttpSessionStore implements IHttpSessionStore {
 
 	@Override
 	public HttpSession get(String sessionId) {
-		return (HttpSession)redisCache.get(sessionId);
+		return (HttpSession) redisCache.get(sessionId);
 	}
-	
+
 }

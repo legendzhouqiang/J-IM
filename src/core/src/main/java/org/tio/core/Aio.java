@@ -35,7 +35,7 @@ public abstract class Aio {
 	 * @param group
 	 * @author: tanyaowu
 	 */
-	public static  void bindGroup(ChannelContext channelContext, String group) {
+	public static void bindGroup(ChannelContext channelContext, String group) {
 		channelContext.getGroupContext().groups.bind(group, channelContext);
 	}
 
@@ -45,7 +45,7 @@ public abstract class Aio {
 	 * @param userid
 	 * @author: tanyaowu
 	 */
-	public static  void bindUser(ChannelContext channelContext, String userid) {
+	public static void bindUser(ChannelContext channelContext, String userid) {
 		channelContext.getGroupContext().users.bind(userid, channelContext);
 	}
 
@@ -55,7 +55,7 @@ public abstract class Aio {
 	 * @param remark
 	 * @author: tanyaowu
 	 */
-	public static  void close(ChannelContext channelContext, String remark) {
+	public static void close(ChannelContext channelContext, String remark) {
 		close(channelContext, null, remark);
 	}
 
@@ -66,7 +66,7 @@ public abstract class Aio {
 	 * @param remark
 	 * @author: tanyaowu
 	 */
-	public static  void close(ChannelContext channelContext, Throwable throwable, String remark) {
+	public static void close(ChannelContext channelContext, Throwable throwable, String remark) {
 		close(channelContext, throwable, remark, false);
 	}
 
@@ -78,7 +78,7 @@ public abstract class Aio {
 	 * @param isNeedRemove
 	 * @author: tanyaowu
 	 */
-	private static  void close(ChannelContext channelContext, Throwable throwable, String remark, boolean isNeedRemove) {
+	private static void close(ChannelContext channelContext, Throwable throwable, String remark, boolean isNeedRemove) {
 		if (channelContext.isWaitingClose()) {
 			log.info("{} 正在等待被关闭", channelContext);
 			return;
@@ -105,8 +105,7 @@ public abstract class Aio {
 	 * @param remark
 	 * @author: tanyaowu
 	 */
-	public static  void close(GroupContext groupContext, String clientIp, Integer clientPort, Throwable throwable,
-			String remark) {
+	public static void close(GroupContext groupContext, String clientIp, Integer clientPort, Throwable throwable, String remark) {
 		ChannelContext channelContext = groupContext.clientNodes.find(clientIp, clientPort);
 		close(channelContext, throwable, remark);
 	}
@@ -119,8 +118,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  ChannelContext getChannelContextByClientNode(GroupContext groupContext,
-			String clientIp, Integer clientPort) {
+	public static ChannelContext getChannelContextByClientNode(GroupContext groupContext, String clientIp, Integer clientPort) {
 		return groupContext.clientNodes.find(clientIp, clientPort);
 	}
 
@@ -130,8 +128,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  ChannelContext getChannelContextById(GroupContext groupContext,
-			String channelContextId) {
+	public static ChannelContext getChannelContextById(GroupContext groupContext, String channelContextId) {
 		return groupContext.ids.find(groupContext, channelContextId);
 	}
 
@@ -142,8 +139,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  ChannelContext getChannelContextByUserid(GroupContext groupContext,
-			String userid) {
+	public static ChannelContext getChannelContextByUserid(GroupContext groupContext, String userid) {
 		return groupContext.users.find(groupContext, userid);
 	}
 
@@ -154,8 +150,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  SetWithLock<ChannelContext> getChannelContextsByGroup(GroupContext groupContext,
-			String group) {
+	public static SetWithLock<ChannelContext> getChannelContextsByGroup(GroupContext groupContext, String group) {
 		return groupContext.groups.clients(groupContext, group);
 	}
 
@@ -168,8 +163,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  Page<ChannelContext> getPageOfGroup(GroupContext groupContext, String group,
-			Integer pageIndex, Integer pageSize) {
+	public static Page<ChannelContext> getPageOfGroup(GroupContext groupContext, String group, Integer pageIndex, Integer pageSize) {
 		ObjWithLock<Set<ChannelContext>> objWithLock = Aio.getChannelContextsByGroup(groupContext, group);
 		return PageUtils.fromSetWithLock(objWithLock, pageIndex, pageSize);
 	}
@@ -180,7 +174,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  SetWithLock<ChannelContext> getAllChannelContexts(GroupContext groupContext) {
+	public static SetWithLock<ChannelContext> getAllChannelContexts(GroupContext groupContext) {
 		return groupContext.connections.getSetWithLock();
 	}
 
@@ -192,8 +186,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  Page<ChannelContext> getPageOfAll(GroupContext groupContext, Integer pageIndex,
-			Integer pageSize) {
+	public static Page<ChannelContext> getPageOfAll(GroupContext groupContext, Integer pageIndex, Integer pageSize) {
 		SetWithLock<ChannelContext> setWithLock = Aio.getAllChannelContexts(groupContext);
 		return PageUtils.fromSetWithLock(setWithLock, pageIndex, pageSize);
 	}
@@ -204,8 +197,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  SetWithLock<ChannelContext> getAllConnectedsChannelContexts(
-			GroupContext groupContext) {
+	public static SetWithLock<ChannelContext> getAllConnectedsChannelContexts(GroupContext groupContext) {
 		return groupContext.connecteds.getSetWithLock();
 	}
 
@@ -217,8 +209,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  Page<ChannelContext> getPageOfConnecteds(GroupContext groupContext,
-			Integer pageIndex, Integer pageSize) {
+	public static Page<ChannelContext> getPageOfConnecteds(GroupContext groupContext, Integer pageIndex, Integer pageSize) {
 		ObjWithLock<Set<ChannelContext>> objWithLock = Aio.getAllConnectedsChannelContexts(groupContext);
 		return PageUtils.fromSetWithLock(objWithLock, pageIndex, pageSize);
 	}
@@ -229,7 +220,7 @@ public abstract class Aio {
 	 * @param remark
 	 * @author: tanyaowu
 	 */
-	public static  void remove(ChannelContext channelContext, String remark) {
+	public static void remove(ChannelContext channelContext, String remark) {
 		remove(channelContext, null, remark);
 	}
 
@@ -240,7 +231,7 @@ public abstract class Aio {
 	 * @param remark
 	 * @author: tanyaowu
 	 */
-	public static  void remove(ChannelContext channelContext, Throwable throwable, String remark) {
+	public static void remove(ChannelContext channelContext, Throwable throwable, String remark) {
 		close(channelContext, throwable, remark, true);
 	}
 
@@ -253,8 +244,7 @@ public abstract class Aio {
 	 * @param remark
 	 * @author: tanyaowu
 	 */
-	public static  void remove(GroupContext groupContext, String clientIp, Integer clientPort, Throwable throwable,
-			String remark) {
+	public static void remove(GroupContext groupContext, String clientIp, Integer clientPort, Throwable throwable, String remark) {
 		ChannelContext channelContext = groupContext.clientNodes.find(clientIp, clientPort);
 		remove(channelContext, throwable, remark);
 	}
@@ -265,7 +255,7 @@ public abstract class Aio {
 	 * @param packet
 	 * @author: tanyaowu
 	 */
-	public static  void send(ChannelContext channelContext, Packet packet) {
+	public static void send(ChannelContext channelContext, Packet packet) {
 		send(channelContext, packet, null, null);
 	}
 
@@ -278,13 +268,12 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	private static  Boolean send(final ChannelContext channelContext, final Packet packet, CountDownLatch countDownLatch,
-			PacketSendMode packetSendMode) {
+	private static Boolean send(final ChannelContext channelContext, final Packet packet, CountDownLatch countDownLatch, PacketSendMode packetSendMode) {
 		try {
 			if (packet == null) {
 				return false;
 			}
-			
+
 			if (channelContext == null || channelContext.isClosed() || channelContext.isRemoved()) {
 				if (countDownLatch != null) {
 					countDownLatch.countDown();
@@ -357,7 +346,7 @@ public abstract class Aio {
 	 * @param packet
 	 * @author: tanyaowu
 	 */
-	public static  void send(GroupContext groupContext, String ip, int port, Packet packet) {
+	public static void send(GroupContext groupContext, String ip, int port, Packet packet) {
 		send(groupContext, ip, port, packet, false);
 	}
 
@@ -371,7 +360,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	private static  Boolean send(GroupContext groupContext, String ip, int port, Packet packet, boolean isBlock) {
+	private static Boolean send(GroupContext groupContext, String ip, int port, Packet packet, boolean isBlock) {
 		ChannelContext channelContext = groupContext.clientNodes.find(ip, port);
 		if (channelContext != null) {
 			if (isBlock) {
@@ -393,8 +382,7 @@ public abstract class Aio {
 	 * @param channelContextFilter
 	 * @author: tanyaowu
 	 */
-	public static  void sendToAll(GroupContext groupContext, Packet packet,
-			ChannelContextFilter channelContextFilter) {
+	public static void sendToAll(GroupContext groupContext, Packet packet, ChannelContextFilter channelContextFilter) {
 		sendToAll(groupContext, packet, channelContextFilter, false);
 	}
 
@@ -406,8 +394,7 @@ public abstract class Aio {
 	 * @param isBlock
 	 * @author: tanyaowu
 	 */
-	private static  Boolean sendToAll(GroupContext groupContext, Packet packet,
-			ChannelContextFilter channelContextFilter, boolean isBlock) {
+	private static Boolean sendToAll(GroupContext groupContext, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
 		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.connections.getSetWithLock();
 		if (setWithLock == null) {
 			log.debug("没有任何连接");
@@ -424,7 +411,7 @@ public abstract class Aio {
 	 * @param packet
 	 * @author: tanyaowu
 	 */
-	public static  void sendToGroup(GroupContext groupContext, String group, Packet packet) {
+	public static void sendToGroup(GroupContext groupContext, String group, Packet packet) {
 		sendToGroup(groupContext, group, packet, null);
 	}
 
@@ -436,8 +423,7 @@ public abstract class Aio {
 	 * @param channelContextFilter
 	 * @author: tanyaowu
 	 */
-	public static  void sendToGroup(GroupContext groupContext, String group, Packet packet,
-			ChannelContextFilter channelContextFilter) {
+	public static void sendToGroup(GroupContext groupContext, String group, Packet packet, ChannelContextFilter channelContextFilter) {
 		sendToGroup(groupContext, group, packet, channelContextFilter, false);
 	}
 
@@ -449,8 +435,7 @@ public abstract class Aio {
 	 * @param channelContextFilter
 	 * @author: tanyaowu
 	 */
-	private static  Boolean sendToGroup(GroupContext groupContext, String group, Packet packet,
-			ChannelContextFilter channelContextFilter, boolean isBlock) {
+	private static Boolean sendToGroup(GroupContext groupContext, String group, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
 		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.groups.clients(groupContext, group);
 		if (setWithLock == null) {
 			log.error("组[{}]不存在", group);
@@ -468,8 +453,7 @@ public abstract class Aio {
 	 * @param channelContextFilter
 	 * @author: tanyaowu
 	 */
-	public static  void sendToSet(GroupContext groupContext,
-			ObjWithLock<Set<ChannelContext>> setWithLock, Packet packet, ChannelContextFilter channelContextFilter) {
+	public static void sendToSet(GroupContext groupContext, ObjWithLock<Set<ChannelContext>> setWithLock, Packet packet, ChannelContextFilter channelContextFilter) {
 		sendToSet(groupContext, setWithLock, packet, channelContextFilter, false);
 	}
 
@@ -482,8 +466,8 @@ public abstract class Aio {
 	 * @param isBlock
 	 * @author: tanyaowu
 	 */
-	private static  Boolean sendToSet(GroupContext groupContext,
-			ObjWithLock<Set<ChannelContext>> setWithLock, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
+	private static Boolean sendToSet(GroupContext groupContext, ObjWithLock<Set<ChannelContext>> setWithLock, Packet packet, ChannelContextFilter channelContextFilter,
+			boolean isBlock) {
 		//		if (isBlock)
 		//		{
 		//			try
@@ -581,7 +565,7 @@ public abstract class Aio {
 	 * @param packet
 	 * @author: tanyaowu
 	 */
-	public static  void sendToUser(GroupContext groupContext, String userid, Packet packet) {
+	public static void sendToUser(GroupContext groupContext, String userid, Packet packet) {
 		sendToUser(groupContext, userid, packet, false);
 	}
 
@@ -593,7 +577,7 @@ public abstract class Aio {
 	 * @param isBlock
 	 * @author: tanyaowu
 	 */
-	private static  Boolean sendToUser(GroupContext groupContext, String userid, Packet packet, boolean isBlock) {
+	private static Boolean sendToUser(GroupContext groupContext, String userid, Packet packet, boolean isBlock) {
 		ChannelContext channelContext = groupContext.users.find(groupContext, userid);
 		if (isBlock) {
 			return bSend(channelContext, packet);
@@ -609,7 +593,7 @@ public abstract class Aio {
 	 * @param packet
 	 * @author: tanyaowu
 	 */
-	public static  void bSendToId(GroupContext groupContext, String channelContextId, Packet packet) {
+	public static void bSendToId(GroupContext groupContext, String channelContextId, Packet packet) {
 		sendToId(groupContext, channelContextId, packet, true);
 	}
 
@@ -619,7 +603,7 @@ public abstract class Aio {
 	 * @param packet
 	 * @author: tanyaowu
 	 */
-	public static  void sendToId(GroupContext groupContext, String channelContextId, Packet packet) {
+	public static void sendToId(GroupContext groupContext, String channelContextId, Packet packet) {
 		sendToId(groupContext, channelContextId, packet, false);
 	}
 
@@ -631,7 +615,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	private static  Boolean sendToId(GroupContext groupContext, String channelContextId, Packet packet, boolean isBlock) {
+	private static Boolean sendToId(GroupContext groupContext, String channelContextId, Packet packet, boolean isBlock) {
 		ChannelContext channelContext = Aio.getChannelContextById(groupContext, channelContextId);
 		if (isBlock) {
 			return bSend(channelContext, packet);
@@ -648,7 +632,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  Boolean bSend(ChannelContext channelContext, Packet packet) {
+	public static Boolean bSend(ChannelContext channelContext, Packet packet) {
 		if (channelContext == null) {
 			return false;
 		}
@@ -664,7 +648,7 @@ public abstract class Aio {
 	 * @param packet
 	 * @author: tanyaowu
 	 */
-	public static  Boolean bSend(GroupContext groupContext, String ip, int port, Packet packet) {
+	public static Boolean bSend(GroupContext groupContext, String ip, int port, Packet packet) {
 		return send(groupContext, ip, port, packet, true);
 	}
 
@@ -675,8 +659,7 @@ public abstract class Aio {
 	 * @param channelContextFilter
 	 * @author: tanyaowu
 	 */
-	public static  Boolean bSendToAll(GroupContext groupContext, Packet packet,
-			ChannelContextFilter channelContextFilter) {
+	public static Boolean bSendToAll(GroupContext groupContext, Packet packet, ChannelContextFilter channelContextFilter) {
 		return sendToAll(groupContext, packet, channelContextFilter, true);
 	}
 
@@ -687,7 +670,7 @@ public abstract class Aio {
 	 * @param packet
 	 * @author: tanyaowu
 	 */
-	public static  void bSendToGroup(GroupContext groupContext, String group, Packet packet) {
+	public static void bSendToGroup(GroupContext groupContext, String group, Packet packet) {
 		bSendToGroup(groupContext, group, packet, null);
 	}
 
@@ -705,7 +688,7 @@ public abstract class Aio {
 	 * @author: tanyaowu
 	 */
 	@SuppressWarnings("finally")
-	public static  Packet synSend(ChannelContext channelContext, Packet packet, long timeout) {
+	public static Packet synSend(ChannelContext channelContext, Packet packet, long timeout) {
 		Integer synSeq = packet.getSynSeq();
 		if (synSeq == null || synSeq <= 0) {
 			throw new RuntimeException("synSeq必须大于0");
@@ -747,8 +730,7 @@ public abstract class Aio {
 	 * @param channelContextFilter
 	 * @author: tanyaowu
 	 */
-	public static  Boolean bSendToGroup(GroupContext groupContext, String group, Packet packet,
-			ChannelContextFilter channelContextFilter) {
+	public static Boolean bSendToGroup(GroupContext groupContext, String group, Packet packet, ChannelContextFilter channelContextFilter) {
 		return sendToGroup(groupContext, group, packet, channelContextFilter, true);
 	}
 
@@ -760,8 +742,7 @@ public abstract class Aio {
 	 * @param channelContextFilter
 	 * @author: tanyaowu
 	 */
-	public static  Boolean bSendToSet(GroupContext groupContext,
-			ObjWithLock<Set<ChannelContext>> setWithLock, Packet packet, ChannelContextFilter channelContextFilter) {
+	public static Boolean bSendToSet(GroupContext groupContext, ObjWithLock<Set<ChannelContext>> setWithLock, Packet packet, ChannelContextFilter channelContextFilter) {
 		return sendToSet(groupContext, setWithLock, packet, channelContextFilter, true);
 	}
 
@@ -773,7 +754,7 @@ public abstract class Aio {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static  Boolean bSendToUser(GroupContext groupContext, String userid, Packet packet) {
+	public static Boolean bSendToUser(GroupContext groupContext, String userid, Packet packet) {
 		return sendToUser(groupContext, userid, packet, true);
 	}
 
@@ -782,7 +763,7 @@ public abstract class Aio {
 	 * @param channelContext
 	 * @author: tanyaowu
 	 */
-	public static  void unbindGroup(ChannelContext channelContext) {
+	public static void unbindGroup(ChannelContext channelContext) {
 		channelContext.getGroupContext().groups.unbind(channelContext);
 	}
 
@@ -792,7 +773,7 @@ public abstract class Aio {
 	 * @param channelContext
 	 * @author: tanyaowu
 	 */
-	public static  void unbindGroup(String group, ChannelContext channelContext) {
+	public static void unbindGroup(String group, ChannelContext channelContext) {
 		channelContext.getGroupContext().groups.unbind(group, channelContext);
 	}
 
@@ -801,7 +782,7 @@ public abstract class Aio {
 	 * @param channelContext
 	 * @author: tanyaowu
 	 */
-	public static  void unbindUser(ChannelContext channelContext) {
+	public static void unbindUser(ChannelContext channelContext) {
 		channelContext.getGroupContext().users.unbind(channelContext);
 	}
 }

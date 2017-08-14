@@ -11,13 +11,12 @@ import org.tio.monitor.RateLimiterWrap;
  * @author tanyaowu 
  *
  */
-public class WsSessionContext
-{
+public class WsSessionContext {
 	/**
 	 * 消息请求频率控制器
 	 */
 	private RateLimiterWrap requestRateLimiter = null;
-	
+
 	/**
 	 * 是否已经握过手
 	 */
@@ -27,19 +26,17 @@ public class WsSessionContext
 	 * websocket 握手请求包
 	 */
 	private HttpRequest handshakeRequestPacket = null;
-	
+
 	/**
 	 * websocket 握手响应包
 	 */
 	private HttpResponse handshakeResponsePacket = null;
 
 	private String token = null;
-	
-	
+
 	//websocket 协议用到的，有时候数据包是分几个到的，注意那个fin字段，本im暂时不支持
 	private List<byte[]> lastParts = null;
-	
-	
+
 	/**
 	 * 
 	 *
@@ -47,9 +44,8 @@ public class WsSessionContext
 	 * 2017年2月21日 上午10:27:54
 	 * 
 	 */
-	public WsSessionContext()
-	{
-		
+	public WsSessionContext() {
+
 	}
 
 	/**
@@ -59,41 +55,35 @@ public class WsSessionContext
 	 * 2017年2月21日 上午10:27:54
 	 * 
 	 */
-	public static void main(String[] args)
-	{
-		
-	}
+	public static void main(String[] args) {
 
+	}
 
 	/**
 	 * @return the isHandshaked
 	 */
-	public boolean isHandshaked()
-	{
+	public boolean isHandshaked() {
 		return isHandshaked;
 	}
 
 	/**
 	 * @param isHandshaked the isHandshaked to set
 	 */
-	public void setHandshaked(boolean isHandshaked)
-	{
+	public void setHandshaked(boolean isHandshaked) {
 		this.isHandshaked = isHandshaked;
 	}
 
 	/**
 	 * @return the token
 	 */
-	public String getToken()
-	{
+	public String getToken() {
 		return token;
 	}
 
 	/**
 	 * @param token the token to set
 	 */
-	public void setToken(String token)
-	{
+	public void setToken(String token) {
 		this.token = token;
 	}
 
@@ -153,6 +143,4 @@ public class WsSessionContext
 		this.handshakeResponsePacket = handshakeResponsePacket;
 	}
 
-
-	
 }

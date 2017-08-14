@@ -14,34 +14,34 @@ import com.xiaoleilu.hutool.util.ZipUtil;
  *
  */
 public class HttpResponse extends HttpPacket {
-//	private static Logger log = LoggerFactory.getLogger(HttpResponse.class);
+	//	private static Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
 	private HttpResponseStatus status = HttpResponseStatus.C200;
-	
+
 	private HttpRequest httpRequest = null;
 
-	
 	private List<Cookie> cookies = null;
 	//	private int contentLength;
-//	private byte[] bodyBytes;
+	//	private byte[] bodyBytes;
 	private String charset = HttpConst.CHARSET_NAME;
+
 	/**
 	 * @author: tanyaowu
 	 * 2017年2月22日 下午4:14:40
 	 */
 	public HttpResponse(HttpRequest httpRequest) {
 		this.httpRequest = httpRequest;
-		
+
 		String Connection = StringUtils.lowerCase(httpRequest.getHeader(HttpConst.RequestHeaderKey.Connection));
 		if (StringUtils.equals(Connection, HttpConst.RequestHeaderValue.Connection.keep_alive)) {
 			addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.keep_alive);
 			addHeader(HttpConst.ResponseHeaderKey.Keep_Alive, "timeout=10, max=20");
 		}
-		
+
 		addHeader(HttpConst.ResponseHeaderKey.Server, HttpConst.SERVER_INFO);
-//		String xx = DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis());
-//		addHeader(HttpConst.ResponseHeaderKey.Date, DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis()));
-//		addHeader(HttpConst.ResponseHeaderKey.Date, new Date().toGMTString());
+		//		String xx = DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis());
+		//		addHeader(HttpConst.ResponseHeaderKey.Date, DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis()));
+		//		addHeader(HttpConst.ResponseHeaderKey.Date, new Date().toGMTString());
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class HttpResponse extends HttpPacket {
 		}
 		return cookies.add(cookie);
 	}
-	
+
 	/**
 	 * @param body the body to set
 	 */
@@ -74,7 +74,7 @@ public class HttpResponse extends HttpPacket {
 			gzip(httpRequest);
 		}
 	}
-	
+
 	private void gzip(HttpRequest httpRequest) {
 		//Accept-Encoding
 		//		检查浏览器是否支持gzip
@@ -107,8 +107,6 @@ public class HttpResponse extends HttpPacket {
 	//		return cookies.add(cookie);
 	//	}
 
-	
-
 	//	/**
 	//	 * @return the bodyLength
 	//	 */
@@ -139,19 +137,19 @@ public class HttpResponse extends HttpPacket {
 		this.status = status;
 	}
 
-//	/**
-//	 * @return the bodyBytes
-//	 */
-//	public byte[] getBodyBytes() {
-//		return bodyBytes;
-//	}
-//
-//	/**
-//	 * @param bodyBytes the bodyBytes to set
-//	 */
-//	public void setBody(byte[] bodyBytes) {
-//		this.bodyBytes = bodyBytes;
-//	}
+	//	/**
+	//	 * @return the bodyBytes
+	//	 */
+	//	public byte[] getBodyBytes() {
+	//		return bodyBytes;
+	//	}
+	//
+	//	/**
+	//	 * @param bodyBytes the bodyBytes to set
+	//	 */
+	//	public void setBody(byte[] bodyBytes) {
+	//		this.bodyBytes = bodyBytes;
+	//	}
 
 	/**
 	 * @return the cookies
@@ -194,12 +192,12 @@ public class HttpResponse extends HttpPacket {
 	public void setHttpRequestPacket(HttpRequest httpRequest) {
 		this.httpRequest = httpRequest;
 	}
-	
+
 	@Override
 	public String logstr() {
 		String str = null;
 		if (httpRequest != null) {
-			str = "\r\n响应: 请求ID_" + httpRequest.getId();			
+			str = "\r\n响应: 请求ID_" + httpRequest.getId();
 			str += "\r\n" + this.getHeaderString();
 		} else {
 			str = "\r\n响应\r\n" + status.getHeaderText();

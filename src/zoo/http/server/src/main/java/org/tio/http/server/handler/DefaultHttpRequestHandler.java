@@ -36,8 +36,8 @@ import com.xiaoleilu.hutool.util.RandomUtil;
  */
 public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	private static Logger log = LoggerFactory.getLogger(DefaultHttpRequestHandler.class);
-	
-//	private static final String SESSIONID_KEY = "tio-sessionid-key";
+
+	//	private static final String SESSIONID_KEY = "tio-sessionid-key";
 
 	protected HttpServerConfig httpServerConfig;
 
@@ -45,7 +45,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 	private IHttpServerListener httpServerListener;
 
-//	private LoadingCache<String, HttpSession> loadingCache = null;
+	//	private LoadingCache<String, HttpSession> loadingCache = null;
 
 	/**
 	 * 
@@ -55,13 +55,13 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	public DefaultHttpRequestHandler(HttpServerConfig httpServerConfig) {
 		this.httpServerConfig = httpServerConfig;
 
-//		Integer concurrencyLevel = 8;
-//		Long expireAfterWrite = null;
-//		Long expireAfterAccess = httpServerConfig.getSessionTimeout();
-//		Integer initialCapacity = 10;
-//		Integer maximumSize = 100000000;
-//		boolean recordStats = false;
-//		loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats);
+		//		Integer concurrencyLevel = 8;
+		//		Long expireAfterWrite = null;
+		//		Long expireAfterAccess = httpServerConfig.getSessionTimeout();
+		//		Integer initialCapacity = 10;
+		//		Integer maximumSize = 100000000;
+		//		boolean recordStats = false;
+		//		loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats);
 	}
 
 	private Cookie getSessionCookie(HttpRequest httpRequest, HttpServerConfig httpServerConfig) throws ExecutionException {
@@ -69,9 +69,9 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		return sessionCookie;
 	}
 
-//	private static String randomCookieValue() {
-//		return RandomUtil.randomUUID();
-//	}
+	//	private static String randomCookieValue() {
+	//		return RandomUtil.randomUUID();
+	//	}
 
 	/**
 	 * 
@@ -91,9 +91,9 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			String sessionId = RandomUtil.randomUUID();
 			httpSession = new HttpSession(sessionId);
 		} else {
-//			httpSession = (HttpSession)httpSession.getAtrribute(SESSIONID_KEY);//loadingCache.getIfPresent(sessionCookie.getValue());
+			//			httpSession = (HttpSession)httpSession.getAtrribute(SESSIONID_KEY);//loadingCache.getIfPresent(sessionCookie.getValue());
 			String sessionId = cookie.getValue();
-			httpSession = (HttpSession)httpServerConfig.getHttpSessionStore().get(sessionId);
+			httpSession = (HttpSession) httpServerConfig.getHttpSessionStore().get(sessionId);
 			if (httpSession == null) {
 				log.info("{} session【{}】超时", channelContext, sessionId);
 				sessionId = RandomUtil.randomUUID();
@@ -104,36 +104,36 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	}
 
 	private void processCookieAfterHandler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws ExecutionException {
-		HttpSession httpSession = (HttpSession)channelContext.getAttribute();//.getHttpSession();//not null
+		HttpSession httpSession = (HttpSession) channelContext.getAttribute();//.getHttpSession();//not null
 		Cookie cookie = getSessionCookie(httpRequest, httpServerConfig);
 		String sessionId = null;
-		
+
 		if (cookie == null) {
 			String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
 			String name = httpServerConfig.getSessionCookieName();
 			long maxAge = httpServerConfig.getSessionTimeout();
-			maxAge = Integer.MAX_VALUE;  //把过期时间掌握在服务器端
+			maxAge = Integer.MAX_VALUE; //把过期时间掌握在服务器端
 
 			sessionId = httpSession.getSessionId();//randomCookieValue();
-			
+
 			cookie = new Cookie(domain, name, sessionId, maxAge);
 			httpResponse.addCookie(cookie);
 			httpServerConfig.getHttpSessionStore().put(sessionId, httpSession);
 			log.info("{} 创建会话Cookie, {}", channelContext, cookie);
 		} else {
 			sessionId = cookie.getValue();
-			HttpSession httpSession1 = (HttpSession)httpServerConfig.getHttpSessionStore().get(sessionId);
-			
+			HttpSession httpSession1 = (HttpSession) httpServerConfig.getHttpSessionStore().get(sessionId);
+
 			if (httpSession1 == null) {//有cookie但是超时了
 				sessionId = httpSession.getSessionId();
 				String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
 				String name = httpServerConfig.getSessionCookieName();
 				long maxAge = httpServerConfig.getSessionTimeout();
-				maxAge = Long.MAX_VALUE;  //把过期时间掌握在服务器端
-				
+				maxAge = Long.MAX_VALUE; //把过期时间掌握在服务器端
+
 				cookie = new Cookie(domain, name, sessionId, maxAge);
 				httpResponse.addCookie(cookie);
-				
+
 				httpServerConfig.getHttpSessionStore().put(sessionId, httpSession);
 			}
 		}
@@ -143,7 +143,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	public HttpResponse handler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext) throws Exception {
 		HttpResponse ret = null;
 		processCookieBeforeHandler(httpRequest, requestLine, channelContext);
-		HttpSession httpSession = (HttpSession)channelContext.getAttribute();
+		HttpSession httpSession = (HttpSession) channelContext.getAttribute();
 		try {
 			if (httpServerListener != null) {
 				ret = httpServerListener.doBeforeHandler(httpRequest, requestLine, channelContext);

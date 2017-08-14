@@ -20,7 +20,7 @@ import org.tio.server.intf.ServerAioListener;
  */
 public class HttpServerAioListener implements ServerAioListener {
 
-//	private static Logger log = LoggerFactory.getLogger(HttpServerAioListener.class);
+	//	private static Logger log = LoggerFactory.getLogger(HttpServerAioListener.class);
 	private static Logger iplog = LoggerFactory.getLogger("tio-ip-trace-log");
 
 	static Map<String, AtomicLong> ipmap = new java.util.concurrent.ConcurrentHashMap<>();
@@ -64,11 +64,11 @@ public class HttpServerAioListener implements ServerAioListener {
 
 	@Override
 	public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) {
-//		HttpSessionContext httpSession = new HttpSessionContext();
-//		channelContext.setAttribute(httpSession);
+		//		HttpSessionContext httpSession = new HttpSessionContext();
+		//		channelContext.setAttribute(httpSession);
 
-//		GroupContext<HttpSessionContext, HttpPacket, Object> groupContext = channelContext.getGroupContext();
-//		log.info(groupContext.toString());
+		//		GroupContext<HttpSessionContext, HttpPacket, Object> groupContext = channelContext.getGroupContext();
+		//		log.info(groupContext.toString());
 		//		int permitsPerSecond = HttpServerStarter.conf.getInt("request.permitsPerSecond");
 		//		int warnClearInterval = 1000 * HttpServerStarter.conf.getInt("request.warnClearInterval");
 		//		int maxWarnCount = HttpServerStarter.conf.getInt("request.maxWarnCount");
@@ -114,9 +114,8 @@ public class HttpServerAioListener implements ServerAioListener {
 		//		}
 
 		HttpResponse httpResponse = (HttpResponse) packet;
-//		HttpRequestPacket httpRequest = httpResponse.getHttpRequestPacket();
-		
-		
+		//		HttpRequestPacket httpRequest = httpResponse.getHttpRequestPacket();
+
 		String Connection = httpResponse.getHeader(HttpConst.ResponseHeaderKey.Connection);
 		// 现在基本都是1.1了，所以用close来判断
 		if (StringUtils.equalsIgnoreCase(Connection, HttpConst.ResponseHeaderValue.Connection.close)) {

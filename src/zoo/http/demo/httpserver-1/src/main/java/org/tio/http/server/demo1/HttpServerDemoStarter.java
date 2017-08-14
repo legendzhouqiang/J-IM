@@ -24,9 +24,8 @@ import com.jfinal.kit.PropKit;
  */
 public class HttpServerDemoStarter {
 	private static Logger log = LoggerFactory.getLogger(HttpServerDemoStarter.class);
-	
-//	public static Config conf = ConfigFactory.load("app.properties");
-	
+
+	//	public static Config conf = ConfigFactory.load("app.properties");
 
 	/**
 	 * 
@@ -42,7 +41,7 @@ public class HttpServerDemoStarter {
 	 */
 	public static void main(String[] args) throws Exception {
 		PropKit.use("app.properties");
-		
+
 		JfinalInit.init();
 		HttpServerInit.init();
 	}

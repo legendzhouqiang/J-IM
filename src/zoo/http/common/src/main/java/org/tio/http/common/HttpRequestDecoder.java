@@ -41,32 +41,31 @@ public class HttpRequestDecoder {
 
 	public static HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
 		int initPosition = buffer.position();
-//		int count = 0;
+		//		int count = 0;
 		Step step = Step.firstline;
-//		StringBuilder currLine = new StringBuilder();
+		//		StringBuilder currLine = new StringBuilder();
 		Map<String, String> headers = new HashMap<>();
 		int contentLength = 0;
 		byte[] bodyBytes = null;
 		StringBuilder headerSb = new StringBuilder(512);
 		RequestLine firstLine = null;
-		
-		
+
 		while (buffer.hasRemaining()) {
-//			count++;
-//			if (count > MAX_HEADER_LENGTH) {
-//				
-//			}
-			
+			//			count++;
+			//			if (count > MAX_HEADER_LENGTH) {
+			//				
+			//			}
+
 			String line = ByteBufferUtils.readLine(buffer, null);
 			int newPosition = buffer.position();
 			if ((newPosition - initPosition) > MAX_HEADER_LENGTH) {
 				throw new AioDecodeException("max http header length " + MAX_HEADER_LENGTH);
 			}
-			
+
 			if (line == null) {
 				return null;
 			}
-			
+
 			headerSb.append(line).append("\r\n");
 			if ("".equals(line)) {//头部解析完成了
 				String contentLengthStr = headers.get(HttpConst.RequestHeaderKey.Content_Length);
@@ -94,7 +93,6 @@ public class HttpRequestDecoder {
 				continue;
 			}
 		}
-		
 
 		if (step != Step.body) {
 			return null;
@@ -198,7 +196,7 @@ public class HttpRequestDecoder {
 					log.error(e.toString(), e);
 				}
 			}
-			
+
 			//【multipart/form-data; boundary=----WebKitFormBoundaryuwYcfA2AIgxqIxA0】
 			String initboundary = HttpParseUtils.getPerprotyEqualValue(httpRequest.getHeaders(), HttpConst.RequestHeaderKey.Content_Type, "boundary");
 			HttpMultiBodyDecoder.decode(httpRequest, firstLine, bodyBytes, initboundary);
@@ -211,7 +209,7 @@ public class HttpRequestDecoder {
 			} catch (UnsupportedEncodingException e) {
 				log.error(e.toString(), e);
 			}
-			
+
 			if (bodyFormat == RequestBodyFormat.URLENCODED) {
 				parseUrlencoded(httpRequest, firstLine, bodyBytes, bodyString);
 			}
@@ -367,8 +365,6 @@ public class HttpRequestDecoder {
 		}
 		return ret;
 	}
-
-	
 
 	public static enum Step {
 		firstline, header, body

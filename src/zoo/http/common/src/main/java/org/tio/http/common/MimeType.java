@@ -9,9 +9,9 @@ public enum MimeType {
 
 	/* Preferred Common Types */
 	APPLICATION_PDF_PDF("application/pdf", "pdf"), APPLICATION_ZIP_ZIP("application/zip", "zip"), AUDIO_MPEG3_MP3("audio/mpeg3", "mp3"), IMAGE_GIF_GIF("image/gif",
-			"gif"), TEXT_HTML_HTML("text/html", "html"), IMAGE_JPEG_JPG("image/jpeg", "jpg"), IMAGE_PNG_PNG("image/png",
-					"png"), TEXT_CSS_CSS("text/css", "css"), TEXT_CSV_CSV("text/csv", "csv"), TEXT_JAVASCRIPT_JS("text/javascript",
-							"js"), TEXT_PLAIN_TXT("text/plain", "txt"), TEXT_PLAIN_JSON("application/json", "json"), VIDEO_AVI_AVI("video/avi",
+			"gif"), TEXT_HTML_HTML("text/html", "html"), IMAGE_JPEG_JPG("image/jpeg", "jpg"), IMAGE_PNG_PNG("image/png", "png"), TEXT_CSS_CSS("text/css",
+					"css"), TEXT_CSV_CSV("text/csv", "csv"), TEXT_JAVASCRIPT_JS("text/javascript", "js"), TEXT_PLAIN_TXT("text/plain", "txt"), TEXT_PLAIN_JSON("application/json",
+							"json"), VIDEO_AVI_AVI("video/avi",
 									"avi"), VIDEO_QUICKTIME_MOV("video/quicktime", "mov"), VIDEO_MPEG_MP4("video/mp4", "mp4"), VIDEO_MATROSKA_MKV("video/x-matroska", "mkv"),
 
 	/* Other */

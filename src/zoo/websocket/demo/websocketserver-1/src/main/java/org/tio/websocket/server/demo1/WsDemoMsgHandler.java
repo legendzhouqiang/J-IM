@@ -19,8 +19,7 @@ public class WsDemoMsgHandler implements IWsMsgHandler {
 	private static Logger log = LoggerFactory.getLogger(WsDemoMsgHandler.class);
 
 	@Override
-	public HttpResponse handshake(HttpRequest httpRequest, HttpResponse httpResponse,
-			ChannelContext channelContext) throws Exception {
+	public HttpResponse handshake(HttpRequest httpRequest, HttpResponse httpResponse, ChannelContext channelContext) throws Exception {
 		return httpResponse;
 	}
 
@@ -33,12 +32,11 @@ public class WsDemoMsgHandler implements IWsMsgHandler {
 	public Object onBytes(WsRequestPacket wsRequestPacket, byte[] bytes, ChannelContext channelContext) throws Exception {
 		String ss = new String(bytes, "utf-8");
 		log.info("收到byte消息:{},{}", bytes, ss);
-		
-//		byte[] bs1 = "收到byte消息".getBytes("utf-8");
+
+		//		byte[] bs1 = "收到byte消息".getBytes("utf-8");
 		ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
 		buffer.put(bytes);
-		
-		
+
 		return buffer;
 	}
 
@@ -52,7 +50,8 @@ public class WsDemoMsgHandler implements IWsMsgHandler {
 	 * 
 	 * @author: tanyaowu
 	 */
-	public WsDemoMsgHandler() {}
+	public WsDemoMsgHandler() {
+	}
 
 	/**
 	 * @param args
