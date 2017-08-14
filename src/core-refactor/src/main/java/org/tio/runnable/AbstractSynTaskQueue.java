@@ -1,4 +1,4 @@
-package org.tio.common.runnable;
+package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.CoreConstant;
@@ -28,18 +28,21 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable {
      */
     public boolean addMsg(T t) {
         if (this.isCanceled()) {
-            log.debug("taskQueue[{}] has been canceled.", this);
+            log.debug("taskQueue[{}] has been canceled.", getName());
             return false;
         }
         boolean flag = msgQueue.add(t);
-        if (msgQueue.size() > CoreConstant.defaultMaxMsgQueueSize) {
-            log.warn("");
+        int size = msgQueue.size();
+        if (size > CoreConstant.defaultMaxMsgQueueSize) {
+            log.warn("taskQueue[{}] is overflow the defaultMaxSize[{}], and the current size of taskQueue[{}] is {}.",
+                    getName(), CoreConstant.defaultMaxMsgQueueSize, getName(), size);
         }
         return flag;
     }
 
     /**
      * 任务队列是否为空
+     *
      * @return
      */
     public boolean hasRemaining() {
@@ -52,4 +55,11 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable {
     public void clearMsgQueue() {
         msgQueue.clear();
     }
+
+    /**
+     * 任务队列名称
+     *
+     * @return
+     */
+    abstract String getName();
 }
