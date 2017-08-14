@@ -11,5 +11,5 @@ public interface Packet {
     void id();
 
     void byteBuffer();
-    
+
 }
