@@ -12,7 +12,7 @@ public interface Packet extends Serializable {
 
     short packetCount();
 
-    void setPacketCount();
+    void setPacketCount(short count);
 
     byte packetType();
 
@@ -26,9 +26,17 @@ public interface Packet extends Serializable {
 
     byte optionalLength();
 
+    void setOptionalLength(byte optionalLength);
+
     byte[] optional();
+
+    void setOptional(byte[] optional);
 
     short bodyLength();
 
+    void setBodyLength(short bodyLength);
+
     byte[] body();
+
+    void setBody(byte[] body);
 }
