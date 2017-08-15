@@ -1,5 +1,6 @@
 package org.tio.http.server.session;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,7 +13,7 @@ public class HttpSession implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6077020620501316538L;
 
-	private Map<String, Object> map = new ConcurrentHashMap<>();
+	private Map<String, Serializable> map = new ConcurrentHashMap<>();
 
 	private String sessionId = null;
 
@@ -32,7 +33,7 @@ public class HttpSession implements java.io.Serializable {
 	 * @param value
 	 * @author: tanyaowu
 	 */
-	public void setAtrribute(String key, Object value) {
+	public void setAtrribute(String key, Serializable value) {
 		map.put(key, value);
 	}
 

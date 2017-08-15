@@ -88,7 +88,7 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	@Override
 	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
 		HttpResponse httpResponse = (HttpResponse) packet;
-		ByteBuffer byteBuffer = HttpResponseEncoder.encode(httpResponse, groupContext, channelContext);
+		ByteBuffer byteBuffer = HttpResponseEncoder.encode(httpResponse, groupContext, channelContext, false);
 		return byteBuffer;
 	}
 

@@ -19,6 +19,7 @@ public class HttpRequest extends HttpPacket {
 
 	//	private static Logger log = LoggerFactory.getLogger(HttpRequest.class);
 
+	private static final long serialVersionUID = -3849253977016967211L;
 	private RequestLine requestLine = null;
 	/**
 	 * 请求参数

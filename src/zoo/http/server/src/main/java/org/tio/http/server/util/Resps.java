@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +15,7 @@ import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.MimeType;
+import org.tio.http.server.HttpServerConfig;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 
@@ -36,25 +38,59 @@ public class Resps {
 	 * @param request
 	 * @param bodyString
 	 * @param charset
+	 * @param httpConfig
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse html(HttpRequest request, String bodyString, String charset) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_HTML_HTML.getType() + "; charset=" + charset);
+	public static HttpResponse html(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_HTML_HTML.getType() + "; charset=" + charset, httpConfig);
 		return ret;
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param bodyString
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse html(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
+		return html(request, bodyString, httpConfig.getCharset(), httpConfig);
 	}
 
 	/**
 	 * 根据文件创建响应
 	 * @param request
 	 * @param fileOnServer
+	 * @param httpConfig
 	 * @return
 	 * @throws IOException
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse file(HttpRequest request, File fileOnServer) throws IOException {
+	public static HttpResponse file(HttpRequest request, File fileOnServer, HttpServerConfig httpConfig) throws IOException {
 		Date lastModified = FileUtil.lastModifiedTime(fileOnServer);
+		HttpResponse ret = try304(request, lastModified.getTime(), httpConfig);
+		if (ret != null) {
+			return ret;
+		}
+		
+		byte[] bodyBytes = FileUtil.readBytes(fileOnServer);
+		String filename = fileOnServer.getName();
+		ret = file(request, bodyBytes, filename, httpConfig);
+		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified, lastModified.getTime() + "");
+		return ret;
+	}
 
+	/**
+	 * 尝试返回304
+	 * @param request
+	 * @param lastModified
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse try304(HttpRequest request, long lastModified, HttpServerConfig httpConfig) {
 		String If_Modified_Since = request.getHeader(HttpConst.RequestHeaderKey.If_Modified_Since);//If-Modified-Since
 		if (StringUtils.isNoneBlank(If_Modified_Since)) {
 			Long If_Modified_Since_Date = null;
@@ -69,24 +105,20 @@ public class Resps {
 				long lastModifiedTime = Long.MAX_VALUE;
 				try {
 					//此处这样写是为了保持粒度一致，否则可能会判断失误
-					lastModifiedTime = lastModified.getTime();
+					lastModifiedTime = lastModified;
 				} catch (Exception e) {
 					log.error(e.toString(), e);
 				}
 				//				long If_Modified_Since_Date_Time = If_Modified_Since_Date.getTime();
 				if (lastModifiedTime <= If_Modified_Since_Date) {
-					HttpResponse ret = new HttpResponse(request);
+					HttpResponse ret = new HttpResponse(request, httpConfig);
 					ret.setStatus(HttpResponseStatus.C304);
 					return ret;
 				}
 			}
 		}
 
-		byte[] bodyBytes = FileUtil.readBytes(fileOnServer);
-		String filename = fileOnServer.getName();
-		HttpResponse ret = file(request, bodyBytes, filename);
-		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified, lastModified.getTime() + "");
-		return ret;
+		return null;
 	}
 
 	/**
@@ -94,25 +126,53 @@ public class Resps {
 	 * @param request
 	 * @param bodyBytes
 	 * @param filename
+	 * @param httpConfig
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse file(HttpRequest request, byte[] bodyBytes, String filename) {
-		HttpResponse ret = new HttpResponse(request);
-		ret.setBody(bodyBytes, request);
-
-		String mimeTypeStr = null;
+	public static HttpResponse file(HttpRequest request, byte[] bodyBytes, String filename, HttpServerConfig httpConfig) {
+		String contentType = null;
 		String extension = FilenameUtils.getExtension(filename);
 		if (StringUtils.isNoneBlank(extension)) {
 			MimeType mimeType = MimeType.fromExtension(extension);
 			if (mimeType != null) {
-				mimeTypeStr = mimeType.getType();
+				contentType = mimeType.getType();
 			} else {
-				mimeTypeStr = "application/octet-stream";
+				contentType = "application/octet-stream";
 			}
 		}
-		ret.addHeader(HttpConst.ResponseHeaderKey.Content_Type, mimeTypeStr);
-		//		ret.addHeader(HttpConst.ResponseHeaderKey.Content_disposition, "attachment;filename=\"" + filename + "\"");
+		return fileWithContentType(request, bodyBytes, contentType, httpConfig);
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param bodyBytes
+	 * @param contentType 形如:application/octet-stream等
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse fileWithContentType(HttpRequest request, byte[] bodyBytes, String contentType, HttpServerConfig httpConfig) {
+		HttpResponse ret = new HttpResponse(request, httpConfig);
+		ret.setBodyAndGzip(bodyBytes, request);
+		ret.addHeader(HttpConst.ResponseHeaderKey.Content_Type, contentType);
+		return ret;
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param bodyBytes
+	 * @param headers
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse fileWithHeaders(HttpRequest request, byte[] bodyBytes, Map<String, String> headers, HttpServerConfig httpConfig) {
+		HttpResponse ret = new HttpResponse(request, httpConfig);
+		ret.setBodyAndGzip(bodyBytes, request);
+		ret.addHeaders(headers);
 		return ret;
 	}
 
@@ -124,9 +184,21 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse json(HttpRequest request, String bodyString, String charset) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
+	public static HttpResponse json(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset, httpConfig);
 		return ret;
+	}
+
+	/**
+	 * Content-Type: application/json; charset=utf-8
+	 * @param request
+	 * @param bodyString
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse json(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
+		return json(request, bodyString, httpConfig.getCharset(), httpConfig);
 	}
 
 	/**
@@ -134,51 +206,94 @@ public class Resps {
 	 * @param request
 	 * @param bodyString
 	 * @param charset
+	 * @param httpConfig
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse css(HttpRequest request, String bodyString, String charset) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_CSS_CSS.getType() + "; charset=" + charset);
+	public static HttpResponse css(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_CSS_CSS.getType() + "; charset=" + charset, httpConfig);
+		return ret;
+	}
+
+	/**
+	 * Content-Type: text/css; charset=utf-8
+	 * @param request
+	 * @param bodyString
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse css(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
+		return css(request, bodyString, httpConfig.getCharset(), httpConfig);
+	}
+
+	/**
+	 * Content-Type: application/javascript; charset=utf-8
+	 * @param request
+	 * @param bodyString
+	 * @param charset
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse js(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.APPLICATION_JAVASCRIPT_JS.getType() + "; charset=" + charset, httpConfig);
 		return ret;
 	}
 
 	/**
 	 * Content-Type: application/javascript; charset=utf-8
+	 * @param request
 	 * @param bodyString
-	 * @param charset
+	 * @param httpConfig
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse js(HttpRequest request, String bodyString, String charset) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.APPLICATION_JAVASCRIPT_JS.getType() + "; charset=" + charset);
+	public static HttpResponse js(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
+		return js(request, bodyString, httpConfig.getCharset(), httpConfig);
+	}
+
+	/**
+	 * Content-Type: text/plain; charset=utf-8
+	 * @param request
+	 * @param bodyString
+	 * @param charset
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse txt(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_TXT.getType() + "; charset=" + charset, httpConfig);
 		return ret;
 	}
 
 	/**
 	 * Content-Type: text/plain; charset=utf-8
+	 * @param request
 	 * @param bodyString
-	 * @param charset
+	 * @param httpConfig
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse txt(HttpRequest request, String bodyString, String charset) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_TXT.getType() + "; charset=" + charset);
-		return ret;
+	public static HttpResponse txt(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
+		return txt(request, bodyString, httpConfig.getCharset(), httpConfig);
 	}
 
 	/**
 	 * 创建字符串输出
+	 * @param request
 	 * @param bodyString
 	 * @param charset
 	 * @param Content_Type
+	 * @param httpConfig
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse string(HttpRequest request, String bodyString, String charset, String Content_Type) {
-		HttpResponse ret = new HttpResponse(request);
+	public static HttpResponse string(HttpRequest request, String bodyString, String charset, String Content_Type, HttpServerConfig httpConfig) {
+		HttpResponse ret = new HttpResponse(request, httpConfig);
 		if (bodyString != null) {
 			try {
-				ret.setBody(bodyString.getBytes(charset), request);
+				ret.setBodyAndGzip(bodyString.getBytes(charset), request);
 			} catch (UnsupportedEncodingException e) {
 				log.error(e.toString(), e);
 			}
@@ -188,14 +303,27 @@ public class Resps {
 	}
 
 	/**
+	 * 创建字符串输出
+	 * @param request
+	 * @param bodyString
+	 * @param Content_Type
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse string(HttpRequest request, String bodyString, String Content_Type, HttpServerConfig httpConfig) {
+		return string(request, bodyString, httpConfig.getCharset(), Content_Type, httpConfig);
+	}
+
+	/**
 	 * 重定向
 	 * @param request
 	 * @param path
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse redirect(HttpRequest request, String path) {
-		HttpResponse ret = new HttpResponse(request);
+	public static HttpResponse redirect(HttpRequest request, String path, HttpServerConfig httpConfig) {
+		HttpResponse ret = new HttpResponse(request, httpConfig);
 		ret.setStatus(HttpResponseStatus.C302);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Location, path);
 		return ret;

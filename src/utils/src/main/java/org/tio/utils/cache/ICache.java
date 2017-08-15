@@ -8,6 +8,7 @@ import java.util.Collection;
  * 2017年8月10日 上午11:38:26
  */
 public interface ICache {
+	
 	/**
 	 * @param key
 	 * @param value
@@ -29,7 +30,17 @@ public interface ICache {
 	 */
 	public Serializable get(String key);
 
+	/**
+	 * 
+	 * @return
+	 * @author: tanyaowu
+	 */
 	Collection<String> keys();
 
+	/**
+	 * 
+	 * 
+	 * @author: tanyaowu
+	 */
 	void clear();
 }

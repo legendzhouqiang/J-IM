@@ -10,11 +10,14 @@ import org.tio.http.server.handler.DefaultHttpRequestHandler;
 import org.tio.http.server.handler.IHttpRequestHandler;
 import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
+import org.tio.http.server.session.id.impl.UUIDSessionIdGenerator;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
 import org.tio.utils.cache.ICache;
 import org.tio.utils.cache.guava.GuavaCache;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
+
+import com.xiaoleilu.hutool.io.FileUtil;
 
 /**
  * 
@@ -104,8 +107,16 @@ public class HttpServerStarter {
 
 	public void start() throws IOException {
 		if (httpServerConfig.getHttpSessionStore() == null) {
-			GuavaCache guavaCache = GuavaCache.register(httpServerConfig.getHttpSessionCacheName(), null, httpServerConfig.getSessionTimeout());
+			GuavaCache guavaCache = GuavaCache.register(httpServerConfig.getSessionCacheName(), null, httpServerConfig.getSessionTimeout());
 			httpServerConfig.setHttpSessionStore(guavaCache);
+		}
+
+		if (httpServerConfig.getRoot() == null) {
+			httpServerConfig.setRoot(FileUtil.getAbsolutePath("classpath:page"));
+		}
+
+		if (httpServerConfig.getSessionIdGenerator() == null) {
+			httpServerConfig.setSessionIdGenerator(UUIDSessionIdGenerator.instance);
 		}
 
 		aioServer.start(this.httpServerConfig.getBindIp(), this.httpServerConfig.getBindPort());

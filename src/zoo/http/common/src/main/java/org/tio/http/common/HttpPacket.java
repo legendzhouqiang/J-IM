@@ -14,7 +14,9 @@ public class HttpPacket extends Packet {
 
 	//	private static Logger log = LoggerFactory.getLogger(HttpPacket.class);
 
-	public static final int MAX_LENGTH_OF_BODY = (int) (1024 * 1024 * 5.1); //只支持多少M数据
+	private static final long serialVersionUID = 3903186670675671956L;
+
+//	public static final int MAX_LENGTH_OF_BODY = (int) (1024 * 1024 * 5.1); //只支持多少M数据
 
 	protected byte[] body;
 
@@ -42,6 +44,12 @@ public class HttpPacket extends Packet {
 
 	public void addHeader(String key, String value) {
 		headers.put(key, value);
+	}
+	
+	public void addHeaders(Map<String, String> headers) {
+		if (headers != null) {
+			this.headers.putAll(headers);
+		}
 	}
 
 	public void removeHeader(String key, String value) {

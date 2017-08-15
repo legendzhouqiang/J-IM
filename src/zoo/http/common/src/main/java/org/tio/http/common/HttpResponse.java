@@ -16,7 +16,15 @@ import com.xiaoleilu.hutool.util.ZipUtil;
 public class HttpResponse extends HttpPacket {
 	//	private static Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
+	private static final long serialVersionUID = -3512681144230291786L;
+
 	private HttpResponseStatus status = HttpResponseStatus.C200;
+	
+	/**
+	 * 是否是静态资源
+	 * true: 静态资源
+	 */
+	private boolean isStaticRes = false;
 
 	private HttpRequest httpRequest = null;
 
@@ -24,12 +32,19 @@ public class HttpResponse extends HttpPacket {
 	//	private int contentLength;
 	//	private byte[] bodyBytes;
 	private String charset = HttpConst.CHARSET_NAME;
+	
+	/**
+	 * 已经编码好的byte[]
+	 */
+	private byte[] encodedBytes = null;
 
 	/**
+	 * 
+	 * @param httpRequest
+	 * @param httpConfig 可以为null
 	 * @author: tanyaowu
-	 * 2017年2月22日 下午4:14:40
 	 */
-	public HttpResponse(HttpRequest httpRequest) {
+	public HttpResponse(HttpRequest httpRequest, HttpConfig httpConfig) {
 		this.httpRequest = httpRequest;
 
 		String Connection = StringUtils.lowerCase(httpRequest.getHeader(HttpConst.RequestHeaderKey.Connection));
@@ -38,7 +53,9 @@ public class HttpResponse extends HttpPacket {
 			addHeader(HttpConst.ResponseHeaderKey.Keep_Alive, "timeout=10, max=20");
 		}
 
-		addHeader(HttpConst.ResponseHeaderKey.Server, HttpConst.SERVER_INFO);
+		if (httpConfig != null) {
+			addHeader(HttpConst.ResponseHeaderKey.Server, httpConfig.getServerInfo());
+		}
 		//		String xx = DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis());
 		//		addHeader(HttpConst.ResponseHeaderKey.Date, DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis()));
 		//		addHeader(HttpConst.ResponseHeaderKey.Date, new Date().toGMTString());
@@ -68,11 +85,15 @@ public class HttpResponse extends HttpPacket {
 	/**
 	 * @param body the body to set
 	 */
-	public void setBody(byte[] body, HttpRequest httpRequest) {
+	public void setBodyAndGzip(byte[] body, HttpRequest httpRequest) {
 		this.body = body;
 		if (body != null) {
 			gzip(httpRequest);
 		}
+	}
+	
+	public void setBody(byte[] body, HttpRequest httpRequest) {
+		this.body = body;
 	}
 
 	private void gzip(HttpRequest httpRequest) {
@@ -95,35 +116,6 @@ public class HttpResponse extends HttpPacket {
 	}
 
 	/**
-	 * 
-	 * @param key
-	 * @param value
-	 * @author: tanyaowu
-	 */
-	//	public void removeCookie(Cookie cookie) {
-	//		if (cookies == null) {
-	//			return;
-	//		}
-	//		return cookies.add(cookie);
-	//	}
-
-	//	/**
-	//	 * @return the bodyLength
-	//	 */
-	//	public int getContentLength()
-	//	{
-	//		return contentLength;
-	//	}
-	//
-	//	/**
-	//	 * @param bodyLength the bodyLength to set
-	//	 */
-	//	public void setContentLength(int contentLength)
-	//	{
-	//		this.contentLength = contentLength;
-	//	}
-
-	/**
 	 * @return the status
 	 */
 	public HttpResponseStatus getStatus() {
@@ -136,20 +128,6 @@ public class HttpResponse extends HttpPacket {
 	public void setStatus(HttpResponseStatus status) {
 		this.status = status;
 	}
-
-	//	/**
-	//	 * @return the bodyBytes
-	//	 */
-	//	public byte[] getBodyBytes() {
-	//		return bodyBytes;
-	//	}
-	//
-	//	/**
-	//	 * @param bodyBytes the bodyBytes to set
-	//	 */
-	//	public void setBody(byte[] bodyBytes) {
-	//		this.bodyBytes = bodyBytes;
-	//	}
 
 	/**
 	 * @return the cookies
@@ -197,7 +175,7 @@ public class HttpResponse extends HttpPacket {
 	public String logstr() {
 		String str = null;
 		if (httpRequest != null) {
-			str = "\r\n响应: 请求ID_" + httpRequest.getId();
+			str = "\r\n响应: 请求ID_" + httpRequest.getId() + "  " + httpRequest.getRequestLine().getPathAndQuery();
 			str += "\r\n" + this.getHeaderString();
 		} else {
 			str = "\r\n响应\r\n" + status.getHeaderText();
@@ -205,4 +183,31 @@ public class HttpResponse extends HttpPacket {
 		return str;
 	}
 
+	/**
+	 * @return the isStaticRes
+	 */
+	public boolean isStaticRes() {
+		return isStaticRes;
+	}
+
+	/**
+	 * @param isStaticRes the isStaticRes to set
+	 */
+	public void setStaticRes(boolean isStaticRes) {
+		this.isStaticRes = isStaticRes;
+	}
+
+	/**
+	 * @return the encodedBytes
+	 */
+	public byte[] getEncodedBytes() {
+		return encodedBytes;
+	}
+
+	/**
+	 * @param encodedBytes the encodedBytes to set
+	 */
+	public void setEncodedBytes(byte[] encodedBytes) {
+		this.encodedBytes = encodedBytes;
+	}
 }

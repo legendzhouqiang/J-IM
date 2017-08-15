@@ -31,7 +31,7 @@ public class ConfigController {
 		//		AppStarter.conf = ConfigFactory.load("app.conf");
 		PropKit.useless("app.properties");
 		PropKit.use("app.properties", "utf-8");
-		HttpResponse ret = Resps.json(httpRequest, "更新成功", httpServerConfig.getCharset());
+		HttpResponse ret = Resps.json(httpRequest, "更新成功", httpServerConfig);
 		return ret;
 	}
 

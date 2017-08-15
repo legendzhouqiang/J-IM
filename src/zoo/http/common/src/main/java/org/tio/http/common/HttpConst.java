@@ -6,6 +6,10 @@ package org.tio.http.common;
  *
  */
 public interface HttpConst {
+	
+	/**
+	 * 
+	 */
 	String SERVER_INFO = "tio-httpserver/0.0.1";
 
 	/**
@@ -22,7 +26,6 @@ public interface HttpConst {
 	 */
 	public enum RequestBodyFormat {
 		URLENCODED, MULTIPART, TEXT
-
 	}
 
 	/**
@@ -158,6 +161,13 @@ public interface HttpConst {
 		 * 
 		 */
 		String Access_Control_Allow_Headers = "Access-Control-Allow-Headers".toLowerCase(); //value: x-requested-with,content-type
+		
+		
+		
+		/**
+		 * 是否是从缓存中获取的数据，tio-httpserver特有的头部信息
+		 */
+		String tio_from_cache = "tio-from-cache";
 	}
 
 	/**

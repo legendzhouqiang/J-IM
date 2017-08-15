@@ -17,11 +17,12 @@ public interface IHttpServerListener {
 	 * @param packet
 	 * @param requestLine
 	 * @param channelContext
+	 * @param httpResponseFromCache 从缓存中获取到的HttpResponse对象
 	 * @return
 	 * @throws Exception
 	 * @author: tanyaowu
 	 */
-	public HttpResponse doBeforeHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext) throws Exception;
+	public HttpResponse doBeforeHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponseFromCache) throws Exception;
 
 	/**
 	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)后会调用此方法，业务层可以统一在这里给HttpResponsePacket作一些修饰

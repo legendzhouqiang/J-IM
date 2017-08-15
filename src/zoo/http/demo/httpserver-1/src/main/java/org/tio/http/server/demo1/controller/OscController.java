@@ -26,7 +26,7 @@ public class OscController {
 
 	@RequestPath(value = "/cb")
 	public HttpResponse json(HttpRequest httpRequest, HttpServerConfig httpServerConfig, ChannelContext channelContext) throws Exception {
-		HttpResponse ret = Resps.json(httpRequest, "ok", httpServerConfig.getCharset());
+		HttpResponse ret = Resps.json(httpRequest, "ok", httpServerConfig);
 		return ret;
 	}
 

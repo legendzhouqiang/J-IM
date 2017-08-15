@@ -201,7 +201,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 		if (wsResponsePacket.isHandShake()) {
 			WsSessionContext imSessionContext = (WsSessionContext) channelContext.getAttribute();
 			HttpResponse handshakeResponsePacket = imSessionContext.getHandshakeResponsePacket();
-			return HttpResponseEncoder.encode(handshakeResponsePacket, groupContext, channelContext);
+			return HttpResponseEncoder.encode(handshakeResponsePacket, groupContext, channelContext, false);
 		}
 
 		ByteBuffer byteBuffer = WsServerEncoder.encode(wsResponsePacket, groupContext, channelContext);
@@ -287,11 +287,9 @@ public class WsServerAioHandler implements ServerAioHandler {
 	 * 本方法改编自baseio: https://git.oschina.net/generallycloud/baseio<br>
 	 * 感谢开源作者的付出
 	 * @param httpRequest
+	 * @param channelContext
 	 * @return
-	 *
 	 * @author: tanyaowu
-	 * 2017年2月23日 下午4:11:41
-	 *
 	 */
 	public HttpResponse updateWebSocketProtocol(HttpRequest httpRequest, ChannelContext channelContext) {
 		Map<String, String> headers = httpRequest.getHeaders();
@@ -302,7 +300,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 			String Sec_WebSocket_Key_Magic = Sec_WebSocket_Key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 			byte[] key_array = SHA1Util.SHA1(Sec_WebSocket_Key_Magic);
 			String acceptKey = BASE64Util.byteArrayToBase64(key_array);
-			HttpResponse httpResponse = new HttpResponse(httpRequest);
+			HttpResponse httpResponse = new HttpResponse(httpRequest, null);
 
 			httpResponse.setStatus(HttpResponseStatus.C101);
 
