@@ -16,8 +16,6 @@ public interface CoreConstant {
     /** 心跳超时时间(单位: 毫秒)，如果用户不希望框架层面做心跳相关工作，请把此值设为0或负数 */
     long defaultHeartBeatTimeout = 1000 * 120;
 
-    /**
-     *
-     */
+    /** 默认最大消息队列长度，超出会打印警告日志 */
     long defaultMaxMsgQueueSize = 10000;
 }

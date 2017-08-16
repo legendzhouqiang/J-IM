@@ -7,7 +7,7 @@ package org.tio.common;
  * Desc: 消息处理模式
  */
 public enum PacketHandlerMode {
-    /** 处理消息与解码在同一个线程中处理 */
+    /** 当前线程中处理 */
     SINGLE_THREAD(1),
     /** 把packet丢到一个队列中，让线程池去处理 */
     QUEUE(2);
