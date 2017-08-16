@@ -55,11 +55,4 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable {
     public void clearMsgQueue() {
         msgQueue.clear();
     }
-
-    /**
-     * 任务队列名称
-     *
-     * @return
-     */
-    abstract String getName();
 }

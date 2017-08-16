@@ -78,8 +78,11 @@ public abstract class GroupContext {
 	protected ThreadPoolExecutor groupExecutor = null;
 
 	public final ClientNodes clientNodes = new ClientNodes();
+
 	public final ChannelContextSetWithLock connections = new ChannelContextSetWithLock();
+
 	public final ChannelContextSetWithLock connecteds = new ChannelContextSetWithLock();
+
 	public final ChannelContextSetWithLock closeds = new ChannelContextSetWithLock();
 
 	public final Groups groups = new Groups();

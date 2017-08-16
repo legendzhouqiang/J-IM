@@ -3,6 +3,7 @@ package org.tio.common;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.ByteOrder;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,12 +33,21 @@ public abstract class GroupContext {
     /** GroupContext 唯一标识 */
     protected String id;
 
+    /** 网络字节序对齐方式 */
+    private ByteOrder byteOrder = CoreConstant.byteOrder;
+
     /** statistics */
     protected GroupStat statistics;
 
     /** The group executor. */
     protected ThreadPoolExecutor tioExecutor = null;
 
+    /** The group executor. */
     protected ThreadPoolExecutor groupExecutor = null;
 
+    /** 等待关闭 */
+    private boolean waittingStop = false;
+
+    /** 完成关闭 */
+    private boolean isStopped = false;
 }

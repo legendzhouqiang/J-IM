@@ -32,4 +32,11 @@ public interface SynRunnable extends Runnable {
      * 实质任务payload
      */
     void runTask();
+
+    /**
+     * 任务队列名称
+     *
+     * @return
+     */
+    abstract String getName();
 }

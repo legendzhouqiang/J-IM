@@ -15,6 +15,6 @@ public class ReconnectConfig {
     private long interval = 5000;
 
     /** 连续重连次数，当连续重连这么多次都失败时，不再重连。0和负数则一直重连 */
-    private int retryCount = 0;
+    private int retryCount = 3;
 
 }
