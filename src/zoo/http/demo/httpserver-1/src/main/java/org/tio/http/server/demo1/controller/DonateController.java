@@ -32,11 +32,9 @@ public class DonateController {
 	}
 
 	@RequestPath(value = "/page")
-	public HttpResponse page(Integer pageNumber, Integer pageSize, HttpRequest httpRequest, HttpServerConfig httpServerConfig, ChannelContext channelContext) throws Exception {
+	public HttpResponse page(Integer pageNumber, Integer pageSize, HttpRequest httpRequest, HttpServerConfig httpConfig, ChannelContext channelContext) throws Exception {
 		Page<Donate> page = srv.page(pageNumber, pageSize);
-		HttpResponse ret = Resps.json(httpRequest, Json.toJson(page), httpServerConfig);
-		ret.addHeader("Access-Control-Allow-Origin", "*");
-		ret.addHeader("Access-Control-Allow-Headers", "x-requested-with,content-type");
+		HttpResponse ret = Resps.json(httpRequest, page, httpConfig);
 		return ret;
 	}
 

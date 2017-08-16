@@ -16,6 +16,7 @@ import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.MimeType;
 import org.tio.http.server.HttpServerConfig;
+import org.tio.json.Json;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 
@@ -74,7 +75,7 @@ public class Resps {
 		if (ret != null) {
 			return ret;
 		}
-		
+
 		byte[] bodyBytes = FileUtil.readBytes(fileOnServer);
 		String filename = fileOnServer.getName();
 		ret = file(request, bodyBytes, filename, httpConfig);
@@ -85,36 +86,26 @@ public class Resps {
 	/**
 	 * 尝试返回304
 	 * @param request
-	 * @param lastModified
+	 * @param lastModifiedOnServer 服务器中资源的lastModified
 	 * @param httpConfig
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse try304(HttpRequest request, long lastModified, HttpServerConfig httpConfig) {
+	public static HttpResponse try304(HttpRequest request, long lastModifiedOnServer, HttpServerConfig httpConfig) {
 		String If_Modified_Since = request.getHeader(HttpConst.RequestHeaderKey.If_Modified_Since);//If-Modified-Since
 		if (StringUtils.isNoneBlank(If_Modified_Since)) {
 			Long If_Modified_Since_Date = null;
 			try {
-				//				If_Modified_Since_Date = DatePattern.NORM_DATETIME_MS_FORMAT.parse(If_Modified_Since);
 				If_Modified_Since_Date = Long.parseLong(If_Modified_Since);
-			} catch (NumberFormatException e) {
-				log.warn("{}不是整数", If_Modified_Since);
-			}
 
-			if (If_Modified_Since_Date != null) {
-				long lastModifiedTime = Long.MAX_VALUE;
-				try {
-					//此处这样写是为了保持粒度一致，否则可能会判断失误
-					lastModifiedTime = lastModified;
-				} catch (Exception e) {
-					log.error(e.toString(), e);
-				}
-				//				long If_Modified_Since_Date_Time = If_Modified_Since_Date.getTime();
-				if (lastModifiedTime <= If_Modified_Since_Date) {
+				if (lastModifiedOnServer <= If_Modified_Since_Date) {
 					HttpResponse ret = new HttpResponse(request, httpConfig);
 					ret.setStatus(HttpResponseStatus.C304);
 					return ret;
 				}
+			} catch (NumberFormatException e) {
+				log.warn("{}, {}不是整数，浏览器信息:{}", request.getRemote(), If_Modified_Since, request.getHeader(HttpConst.RequestHeaderKey.User_Agent));
+				return null;
 			}
 		}
 
@@ -179,26 +170,36 @@ public class Resps {
 	/**
 	 * Content-Type: application/json; charset=utf-8
 	 * @param request
-	 * @param bodyString
+	 * @param body
 	 * @param charset
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse json(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset, httpConfig);
+	public static HttpResponse json(HttpRequest request, Object body, String charset, HttpServerConfig httpConfig) {
+		HttpResponse ret = null;
+		if (body == null) {
+			ret = string(request, "", charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset, httpConfig);
+		} else {
+			if (body.getClass() == String.class) {
+				ret = string(request, (String)body, charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset, httpConfig);
+			} else {
+				ret = string(request, Json.toJson(body), charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset, httpConfig);
+			}
+		}
+		
 		return ret;
 	}
 
 	/**
 	 * Content-Type: application/json; charset=utf-8
 	 * @param request
-	 * @param bodyString
+	 * @param body
 	 * @param httpConfig
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse json(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
-		return json(request, bodyString, httpConfig.getCharset(), httpConfig);
+	public static HttpResponse json(HttpRequest request, Object body, HttpServerConfig httpConfig) {
+		return json(request, body, httpConfig.getCharset(), httpConfig);
 	}
 
 	/**

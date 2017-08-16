@@ -27,11 +27,11 @@ public class ConfigController {
 	}
 
 	@RequestPath(value = "/update")
-	public HttpResponse json(HttpRequest httpRequest, HttpServerConfig httpServerConfig, ChannelContext channelContext) throws Exception {
+	public HttpResponse json(HttpRequest httpRequest, HttpServerConfig httpConfig, ChannelContext channelContext) throws Exception {
 		//		AppStarter.conf = ConfigFactory.load("app.conf");
 		PropKit.useless("app.properties");
 		PropKit.use("app.properties", "utf-8");
-		HttpResponse ret = Resps.json(httpRequest, "更新成功", httpServerConfig);
+		HttpResponse ret = Resps.json(httpRequest, "更新成功", httpConfig);
 		return ret;
 	}
 

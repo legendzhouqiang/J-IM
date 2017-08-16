@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.tio.core.Node;
@@ -33,6 +34,7 @@ public class HttpRequest extends HttpPacket {
 	//	private UserAgent userAgent;
 	private RequestBodyFormat bodyFormat;
 	private String charset = HttpConst.CHARSET_NAME;
+	private Boolean isAjax = null;
 
 	private Node remote = null;
 	//	private HttpSession httpSession = null;
@@ -284,6 +286,29 @@ public class HttpRequest extends HttpPacket {
 
 	public void setRemote(Node remote) {
 		this.remote = remote;
+	}
+
+	/**
+	 * @return the isAjax
+	 */
+	public Boolean getIsAjax() {
+		if (isAjax == null) {
+			String X_Requested_With = this.getHeader(HttpConst.RequestHeaderKey.X_Requested_With);
+			if (X_Requested_With != null && "XMLHttpRequest".equalsIgnoreCase(X_Requested_With)) {
+				isAjax = true;
+			} else {
+				isAjax = false;
+			}
+		}
+		
+		return isAjax;
+	}
+
+	/**
+	 * @param isAjax the isAjax to set
+	 */
+	public void setIsAjax(Boolean isAjax) {
+		this.isAjax = isAjax;
 	}
 
 	//	/**

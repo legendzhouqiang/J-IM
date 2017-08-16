@@ -27,7 +27,7 @@ public class HttpServerStarter {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(HttpServerStarter.class);
 
-	private HttpServerConfig httpServerConfig = null;
+	private HttpServerConfig httpConfig = null;
 
 	private HttpServerAioHandler httpServerAioHandler = null;
 
@@ -52,10 +52,10 @@ public class HttpServerStarter {
 	public static void main(String[] args) throws IOException {
 	}
 
-	private void init(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
-		this.httpServerConfig = httpServerConfig;
+	private void init(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		this.httpConfig = httpConfig;
 		this.httpRequestHandler = httpRequestHandler;
-		this.httpServerAioHandler = new HttpServerAioHandler(httpServerConfig, httpRequestHandler);
+		this.httpServerAioHandler = new HttpServerAioHandler(httpConfig, httpRequestHandler);
 		httpServerAioListener = new HttpServerAioListener();
 		serverGroupContext = new ServerGroupContext(httpServerAioHandler, httpServerAioListener, tioExecutor, groupExecutor);
 		serverGroupContext.setHeartbeatTimeout(1000 * 10);
@@ -67,12 +67,12 @@ public class HttpServerStarter {
 		serverGroupContext.setTioUuid(imTioUuid);
 	}
 
-	public HttpServerStarter(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
-		init(httpServerConfig, httpRequestHandler, tioExecutor, groupExecutor);
+	public HttpServerStarter(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		init(httpConfig, httpRequestHandler, tioExecutor, groupExecutor);
 	}
 
-	public HttpServerStarter(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler) {
-		this(httpServerConfig, httpRequestHandler, null, null);
+	public HttpServerStarter(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler) {
+		this(httpConfig, httpRequestHandler, null, null);
 	}
 
 	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener) {
@@ -88,38 +88,38 @@ public class HttpServerStarter {
 		int port = serverPort;
 		String pageRoot = pageRootDir;
 
-		httpServerConfig = new HttpServerConfig(port, null);
-		httpServerConfig.setRoot(pageRoot);
+		httpConfig = new HttpServerConfig(port, null);
+		httpConfig.setRoot(pageRoot);
 		if (httpSessionStore != null) {
-			httpServerConfig.setHttpSessionStore(httpSessionStore);
+			httpConfig.setSessionStore(httpSessionStore);
 		}
 		//		} else {
-		//			httpServerConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpServerConfig.getSessionTimeout()));
+		//			httpConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpConfig.getSessionTimeout()));
 		//		}
 
 		//		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
-		DefaultHttpRequestHandler httpRequestHandler = new DefaultHttpRequestHandler(httpServerConfig, routes);
+		DefaultHttpRequestHandler httpRequestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		httpRequestHandler.setHttpServerListener(httpServerListener);
 
-		init(httpServerConfig, httpRequestHandler, tioExecutor, groupExecutor);
+		init(httpConfig, httpRequestHandler, tioExecutor, groupExecutor);
 	}
 
 	public void start() throws IOException {
-		if (httpServerConfig.getHttpSessionStore() == null) {
-			GuavaCache guavaCache = GuavaCache.register(httpServerConfig.getSessionCacheName(), null, httpServerConfig.getSessionTimeout());
-			httpServerConfig.setHttpSessionStore(guavaCache);
+		if (httpConfig.getSessionStore() == null) {
+			GuavaCache guavaCache = GuavaCache.register(httpConfig.getSessionCacheName(), null, httpConfig.getSessionTimeout());
+			httpConfig.setSessionStore(guavaCache);
 		}
 
-		if (httpServerConfig.getRoot() == null) {
-			httpServerConfig.setRoot(FileUtil.getAbsolutePath("classpath:page"));
+		if (httpConfig.getRoot() == null) {
+			httpConfig.setRoot(FileUtil.getAbsolutePath("classpath:page"));
 		}
 
-		if (httpServerConfig.getSessionIdGenerator() == null) {
-			httpServerConfig.setSessionIdGenerator(UUIDSessionIdGenerator.instance);
+		if (httpConfig.getSessionIdGenerator() == null) {
+			httpConfig.setSessionIdGenerator(UUIDSessionIdGenerator.instance);
 		}
 
-		aioServer.start(this.httpServerConfig.getBindIp(), this.httpServerConfig.getBindPort());
+		aioServer.start(this.httpConfig.getBindIp(), this.httpConfig.getBindPort());
 	}
 
 	public void stop() throws IOException {
@@ -148,10 +148,10 @@ public class HttpServerStarter {
 	}
 
 	/**
-	 * @return the httpServerConfig
+	 * @return the httpConfig
 	 */
 	public HttpServerConfig getHttpServerConfig() {
-		return httpServerConfig;
+		return httpConfig;
 	}
 
 	public IHttpRequestHandler getHttpRequestHandler() {

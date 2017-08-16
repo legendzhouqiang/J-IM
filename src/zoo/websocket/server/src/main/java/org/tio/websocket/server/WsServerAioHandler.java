@@ -315,17 +315,17 @@ public class WsServerAioHandler implements ServerAioHandler {
 	}
 
 	/**
-	 * @return the httpServerConfig
+	 * @return the httpConfig
 	 */
 	public WsServerConfig getHttpServerConfig() {
 		return wsServerConfig;
 	}
 
 	/**
-	 * @param httpServerConfig the httpServerConfig to set
+	 * @param httpConfig the httpConfig to set
 	 */
-	public void setHttpServerConfig(WsServerConfig httpServerConfig) {
-		this.wsServerConfig = httpServerConfig;
+	public void setHttpServerConfig(WsServerConfig httpConfig) {
+		this.wsServerConfig = httpConfig;
 	}
 
 }

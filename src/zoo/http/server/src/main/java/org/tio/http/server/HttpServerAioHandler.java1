@@ -18,8 +18,8 @@ import org.tio.http.server.handler.AbstractHttpServerAioHandler;
  */
 public class HttpServerAioHandler extends AbstractHttpServerAioHandler {
 
-	public HttpServerAioHandler(HttpServerConfig httpServerConfig) {
-		super(httpServerConfig);
+	public HttpServerAioHandler(HttpServerConfig httpConfig) {
+		super(httpConfig);
 	}
 	
 	@Override

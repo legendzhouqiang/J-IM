@@ -43,7 +43,7 @@ public class HttpConfig {
 
 	private String charset = HttpConst.CHARSET_NAME;
 
-	private ICache httpSessionStore = null;
+	private ICache sessionStore = null;
 
 	/**
 	 * 存放HttpSession对象的cacheName
@@ -59,7 +59,7 @@ public class HttpConfig {
 	private String sessionCookieName = SESSION_COOKIE_NAME;
 	
 	/**
-	 * 静态资源缓存时间，单位：秒
+	 * 静态资源缓存时间，如果小于等于0则不缓存，单位：秒
 	 */
 	private int maxLiveTimeOfStaticRes = MAX_LIVETIME_OF_STATICRES;
 
@@ -157,12 +157,12 @@ public class HttpConfig {
 		this.sessionCookieName = sessionCookieName;
 	}
 
-	public ICache getHttpSessionStore() {
-		return httpSessionStore;
+	public ICache getSessionStore() {
+		return sessionStore;
 	}
 
-	public void setHttpSessionStore(ICache httpSessionStore) {
-		this.httpSessionStore = httpSessionStore;
+	public void setSessionStore(ICache sessionStore) {
+		this.sessionStore = sessionStore;
 	}
 
 	/**

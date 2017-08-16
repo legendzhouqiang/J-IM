@@ -13,6 +13,6 @@ public interface ISessionIdGenerator {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	String sessionId(HttpServerConfig httpServerConfig);
+	String sessionId(HttpServerConfig httpConfig);
 
 }

@@ -22,7 +22,7 @@ import org.tio.server.intf.ServerAioHandler;
 public class HttpServerAioHandler implements ServerAioHandler {
 	//	private static Logger log = LoggerFactory.getLogger(HttpServerAioHandler.class);
 
-	protected HttpServerConfig httpServerConfig;
+	protected HttpServerConfig httpConfig;
 
 	private IHttpRequestHandler httpRequestHandler;
 
@@ -39,13 +39,13 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	 * 2016年11月18日 上午9:13:15
 	 * 
 	 */
-	public HttpServerAioHandler(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler) {
-		this.httpServerConfig = httpServerConfig;
+	public HttpServerAioHandler(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler) {
+		this.httpConfig = httpConfig;
 		this.httpRequestHandler = httpRequestHandler;
 	}
 
-	//	public HttpServerAioHandler(HttpServerConfig httpServerConfig, IHttpRequestHandler httpRequestHandler) {
-	//		this(httpServerConfig, httpRequestHandler);
+	//	public HttpServerAioHandler(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler) {
+	//		this(httpConfig, httpRequestHandler);
 	////		this.routes = routes;
 	//	}
 
@@ -109,17 +109,17 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	}
 
 	/**
-	 * @return the httpServerConfig
+	 * @return the httpConfig
 	 */
 	public HttpServerConfig getHttpServerConfig() {
-		return httpServerConfig;
+		return httpConfig;
 	}
 
 	/**
-	 * @param httpServerConfig the httpServerConfig to set
+	 * @param httpConfig the httpConfig to set
 	 */
-	public void setHttpServerConfig(HttpServerConfig httpServerConfig) {
-		this.httpServerConfig = httpServerConfig;
+	public void setHttpServerConfig(HttpServerConfig httpConfig) {
+		this.httpConfig = httpConfig;
 	}
 
 }

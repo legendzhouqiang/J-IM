@@ -25,7 +25,7 @@ import org.tio.server.intf.ServerAioHandler;
 public abstract class AbstractHttpServerAioHandler implements ServerAioHandler, IHttpRequestHandler {
 	private static Logger log = LoggerFactory.getLogger(AbstractHttpServerAioHandler.class);
 
-	protected HttpServerConfig httpServerConfig;
+	protected HttpServerConfig httpConfig;
 
 	protected Routes routes = null;
 
@@ -40,12 +40,12 @@ public abstract class AbstractHttpServerAioHandler implements ServerAioHandler, 
 	 * 2016年11月18日 上午9:13:15
 	 * 
 	 */
-	public AbstractHttpServerAioHandler(HttpServerConfig httpServerConfig) {
-		this.httpServerConfig = httpServerConfig;
+	public AbstractHttpServerAioHandler(HttpServerConfig httpConfig) {
+		this.httpConfig = httpConfig;
 	}
 
-	public AbstractHttpServerAioHandler(HttpServerConfig httpServerConfig, Routes routes) {
-		this(httpServerConfig);
+	public AbstractHttpServerAioHandler(HttpServerConfig httpConfig, Routes routes) {
+		this(httpConfig);
 		this.routes = routes;
 	}
 
@@ -109,17 +109,17 @@ public abstract class AbstractHttpServerAioHandler implements ServerAioHandler, 
 	}
 
 	/**
-	 * @return the httpServerConfig
+	 * @return the httpConfig
 	 */
 	public HttpServerConfig getHttpServerConfig() {
-		return httpServerConfig;
+		return httpConfig;
 	}
 
 	/**
-	 * @param httpServerConfig the httpServerConfig to set
+	 * @param httpConfig the httpConfig to set
 	 */
-	public void setHttpServerConfig(HttpServerConfig httpServerConfig) {
-		this.httpServerConfig = httpServerConfig;
+	public void setHttpServerConfig(HttpServerConfig httpConfig) {
+		this.httpConfig = httpConfig;
 	}
 
 }

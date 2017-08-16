@@ -25,7 +25,7 @@ import io.github.lukehutch.fastclasspathscanner.matchprocessor.MethodAnnotationM
  */
 public class Routes {
 	private static Logger log = LoggerFactory.getLogger(Routes.class);
-	//	private HttpServerConfig httpServerConfig = null;
+	//	private HttpServerConfig httpConfig = null;
 
 	//	private String[] scanPackages = null;
 
@@ -180,28 +180,28 @@ public class Routes {
 	 * @author: tanyaowu
 	 */
 	private static String formateBeanPath(String initPath) {
-		if (StringUtils.isBlank(initPath)) {
-			return "/";
-		}
-		initPath = StringUtils.replaceAll(initPath, "//", "/");
-		if (!StringUtils.startsWith(initPath, "/")) {
-			initPath = "/" + initPath;
-		}
-
-		if (StringUtils.endsWith(initPath, "/")) {
-			initPath = initPath.substring(0, initPath.length() - 1);
-		}
+//		if (StringUtils.isBlank(initPath)) {
+//			return "/";
+//		}
+//		initPath = StringUtils.replaceAll(initPath, "//", "/");
+//		if (!StringUtils.startsWith(initPath, "/")) {
+//			initPath = "/" + initPath;
+//		}
+//
+//		if (StringUtils.endsWith(initPath, "/")) {
+//			initPath = initPath.substring(0, initPath.length() - 1);
+//		}
 		return initPath;
 	}
 
 	private static String formateMethodPath(String initPath) {
-		if (StringUtils.isBlank(initPath)) {
-			return "/";
-		}
-		initPath = StringUtils.replaceAll(initPath, "//", "/");
-		if (!StringUtils.startsWith(initPath, "/")) {
-			initPath = "/" + initPath;
-		}
+//		if (StringUtils.isBlank(initPath)) {
+//			return "";
+//		}
+//		initPath = StringUtils.replaceAll(initPath, "//", "/");
+//		if (!StringUtils.startsWith(initPath, "/")) {
+//			initPath = "/" + initPath;
+//		}
 
 		return initPath;
 	}
