@@ -19,10 +19,10 @@ import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.RequestLine;
+import org.tio.http.common.session.HttpSession;
 import org.tio.http.server.HttpServerConfig;
 import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
-import org.tio.http.server.session.HttpSession;
 import org.tio.http.server.util.ClassUtils;
 import org.tio.http.server.util.Resps;
 import org.tio.utils.cache.guava.GuavaCache;
@@ -108,7 +108,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	private HttpSession createHttpSession() {
+	private HttpSession createSession() {
 		String sessionId = httpConfig.getSessionIdGenerator().sessionId(httpConfig);
 		HttpSession httpSession = new HttpSession(sessionId);
 		return httpSession;
@@ -118,21 +118,21 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		Cookie cookie = getSessionCookie(request, httpConfig);
 		HttpSession httpSession = null;
 		if (cookie == null) {
-			httpSession = createHttpSession();
+			httpSession = createSession();
 		} else {
-			//			httpSession = (HttpSession)httpSession.getAtrribute(SESSIONID_KEY);//loadingCache.getIfPresent(sessionCookie.getValue());
+			//			httpSession = (HttpSession)httpSession.getAttribute(SESSIONID_KEY);//loadingCache.getIfPresent(sessionCookie.getValue());
 			String sessionId = cookie.getValue();
 			httpSession = (HttpSession) httpConfig.getSessionStore().get(sessionId);
 			if (httpSession == null) {
 				log.info("{} session【{}】超时", channelContext, sessionId);
-				httpSession = createHttpSession();
+				httpSession = createSession();
 			}
 		}
-		channelContext.setAttribute(httpSession);
+		request.setHttpSession(httpSession);
 	}
 
 	private void processCookieAfterHandler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws ExecutionException {
-		HttpSession httpSession = (HttpSession) channelContext.getAttribute();//.getHttpSession();//not null
+		HttpSession httpSession = httpRequest.getHttpSession();//(HttpSession) channelContext.getAttribute();//.getHttpSession();//not null
 		Cookie cookie = getSessionCookie(httpRequest, httpConfig);
 		String sessionId = null;
 
@@ -142,7 +142,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			long maxAge = httpConfig.getSessionTimeout();
 			//			maxAge = Integer.MAX_VALUE; //把过期时间掌握在服务器端
 
-			sessionId = httpSession.getSessionId();//randomCookieValue();
+			sessionId = httpSession.getId();//randomCookieValue();
 
 			cookie = new Cookie(domain, name, sessionId, maxAge);
 			httpResponse.addCookie(cookie);
@@ -153,7 +153,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			HttpSession httpSession1 = (HttpSession) httpConfig.getSessionStore().get(sessionId);
 
 			if (httpSession1 == null) {//有cookie但是超时了
-				sessionId = httpSession.getSessionId();
+				sessionId = httpSession.getId();
 				String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
 				String name = httpConfig.getSessionCookieName();
 				long maxAge = httpConfig.getSessionTimeout();
@@ -172,7 +172,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		HttpResponse ret = null;
 		try {
 			processCookieBeforeHandler(httpRequest, requestLine, channelContext);
-			HttpSession httpSession = (HttpSession) channelContext.getAttribute();
+			HttpSession httpSession = httpRequest.getHttpSession();//(HttpSession) channelContext.getAttribute();
 
 			//			GuavaCache guavaCache = GuavaCache.getCache(STATIC_RES_CACHENAME);
 			//			ret = (HttpResponse) guavaCache.get(requestLine.getPath());
@@ -395,7 +395,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 	@Override
 	public HttpResponse resp404(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext) {
-		String file404 = "/404.html";
+		String file404 = httpConfig.getPage404();
 		String root = httpConfig.getRoot();
 		File file = new File(root, file404);
 		if (file.exists()) {
@@ -409,7 +409,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 	@Override
 	public HttpResponse resp500(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext, Throwable throwable) {
-		String file500 = "/500.html";
+		String file500 = httpConfig.getPage500();
 		String root = httpConfig.getRoot();
 		File file = new File(root, file500);
 		if (file.exists()) {

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
 
@@ -45,6 +46,21 @@ public abstract class Json {
 		}
 	}
 
+	public static String toJson(Object bean, SerializeFilter serializeFilter) {
+		try {
+			if (serializeFilter != null) {
+				return JSON.toJSONString(bean, mapping, serializeFilter, SerializerFeature.DisableCircularReferenceDetect);
+			} else {
+				return JSON.toJSONString(bean, mapping, SerializerFeature.DisableCircularReferenceDetect);
+			}
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	
+	
 	public static String toFormatedJson(Object bean) {
 		try {
 			return JSON.toJSONString(bean, mapping, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.PrettyFormat);

@@ -9,10 +9,10 @@ import org.tio.core.ChannelContext;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.UploadFile;
+import org.tio.http.common.session.HttpSession;
 import org.tio.http.server.HttpServerConfig;
 import org.tio.http.server.annotation.RequestPath;
 import org.tio.http.server.demo1.model.User;
-import org.tio.http.server.session.HttpSession;
 import org.tio.http.server.util.Resps;
 import org.tio.json.Json;
 
@@ -40,14 +40,14 @@ public class TestController {
 	@RequestPath(value = "/putsession")
 	public HttpResponse putsession(String value, HttpRequest httpRequest, HttpServerConfig httpConfig, HttpSession httpSession, ChannelContext channelContext)
 			throws Exception {
-		httpSession.setAtrribute("test", value);
+		httpSession.setAttribute("test", value, httpConfig);
 		HttpResponse ret = Resps.json(httpRequest, "设置成功:" + value, httpConfig);
 		return ret;
 	}
 
 	@RequestPath(value = "/getsession")
 	public HttpResponse getsession(HttpRequest httpRequest, HttpServerConfig httpConfig, HttpSession httpSession, ChannelContext channelContext) throws Exception {
-		String value = (String) httpSession.getAtrribute("test");
+		String value = (String) httpSession.getAttribute("test");
 		HttpResponse ret = Resps.json(httpRequest, "获取的值:" + value, httpConfig);
 		return ret;
 	}

@@ -1,6 +1,6 @@
-package org.tio.http.server.session.id;
+package org.tio.http.common.session.id;
 
-import org.tio.http.server.HttpServerConfig;
+import org.tio.http.common.HttpConfig;
 
 /**
  * @author tanyaowu 
@@ -13,6 +13,6 @@ public interface ISessionIdGenerator {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	String sessionId(HttpServerConfig httpConfig);
+	String sessionId(HttpConfig httpConfig);
 
 }

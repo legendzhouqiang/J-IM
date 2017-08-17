@@ -6,11 +6,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.http.common.HttpUuid;
+import org.tio.http.common.session.id.impl.UUIDSessionIdGenerator;
 import org.tio.http.server.handler.DefaultHttpRequestHandler;
 import org.tio.http.server.handler.IHttpRequestHandler;
 import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
-import org.tio.http.server.session.id.impl.UUIDSessionIdGenerator;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
 import org.tio.utils.cache.ICache;
@@ -79,19 +79,19 @@ public class HttpServerStarter {
 		this(pageRootDir, serverPort, scanPackages, httpServerListener, null, null, null);
 	}
 
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache httpSessionStore) {
-		this(pageRootDir, serverPort, scanPackages, httpServerListener, httpSessionStore, null, null);
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache sessionStore) {
+		this(pageRootDir, serverPort, scanPackages, httpServerListener, sessionStore, null, null);
 	}
 
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache httpSessionStore,
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache sessionStore,
 			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		int port = serverPort;
 		String pageRoot = pageRootDir;
 
 		httpConfig = new HttpServerConfig(port, null);
 		httpConfig.setRoot(pageRoot);
-		if (httpSessionStore != null) {
-			httpConfig.setSessionStore(httpSessionStore);
+		if (sessionStore != null) {
+			httpConfig.setSessionStore(sessionStore);
 		}
 		//		} else {
 		//			httpConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpConfig.getSessionTimeout()));

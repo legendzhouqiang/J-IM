@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.tio.core.Node;
 import org.tio.http.common.HttpConst.RequestBodyFormat;
+import org.tio.http.common.session.HttpSession;
 
 /**
  * 
@@ -35,7 +35,7 @@ public class HttpRequest extends HttpPacket {
 	private RequestBodyFormat bodyFormat;
 	private String charset = HttpConst.CHARSET_NAME;
 	private Boolean isAjax = null;
-
+	private HttpSession httpSession;
 	private Node remote = null;
 	//	private HttpSession httpSession = null;
 
@@ -309,6 +309,20 @@ public class HttpRequest extends HttpPacket {
 	 */
 	public void setIsAjax(Boolean isAjax) {
 		this.isAjax = isAjax;
+	}
+
+	/**
+	 * @return the httpSession
+	 */
+	public HttpSession getHttpSession() {
+		return httpSession;
+	}
+
+	/**
+	 * @param httpSession the httpSession to set
+	 */
+	public void setHttpSession(HttpSession httpSession) {
+		this.httpSession = httpSession;
 	}
 
 	//	/**

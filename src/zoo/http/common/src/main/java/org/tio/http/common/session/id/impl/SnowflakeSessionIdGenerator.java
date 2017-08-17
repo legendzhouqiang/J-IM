@@ -1,7 +1,7 @@
-package org.tio.http.server.session.id.impl;
+package org.tio.http.common.session.id.impl;
 
-import org.tio.http.server.HttpServerConfig;
-import org.tio.http.server.session.id.ISessionIdGenerator;
+import org.tio.http.common.HttpConfig;
+import org.tio.http.common.session.id.ISessionIdGenerator;
 
 import com.xiaoleilu.hutool.lang.Snowflake;
 import com.xiaoleilu.hutool.util.RandomUtil;
@@ -35,7 +35,7 @@ public class SnowflakeSessionIdGenerator implements ISessionIdGenerator {
 	 * @author: tanyaowu
 	 */
 	@Override
-	public String sessionId(HttpServerConfig httpConfig) {
+	public String sessionId(HttpConfig httpConfig) {
 		return snowflake.nextId() + "";
 	}
 
