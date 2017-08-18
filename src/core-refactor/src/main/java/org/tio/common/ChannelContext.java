@@ -1,5 +1,6 @@
 package org.tio.common;
 
+import lombok.Data;
 import org.tio.runnable.SynRunnable;
 
 /**
@@ -8,6 +9,7 @@ import org.tio.runnable.SynRunnable;
  * Author: <a href="tywo45@163.com">谭耀武</a>
  * Desc: 通信管道上下文超类
  */
+@Data
 public abstract class ChannelContext {
 
     protected SynRunnable decodeRunnable = null;

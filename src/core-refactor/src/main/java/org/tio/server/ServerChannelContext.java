@@ -2,6 +2,8 @@ package org.tio.server;
 
 import org.tio.common.ChannelContext;
 
+import java.nio.channels.AsynchronousServerSocketChannel;
+
 /**
  * Copyright (c) for darkidiot
  * Date:2017/8/18
@@ -9,4 +11,9 @@ import org.tio.common.ChannelContext;
  * Desc:
  */
 public class ServerChannelContext extends ChannelContext{
+
+    private AsynchronousServerSocketChannel AsynchronousServerSocketChannel;
+
+    
+
 }
