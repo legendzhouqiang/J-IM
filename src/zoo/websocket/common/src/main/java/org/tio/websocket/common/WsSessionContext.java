@@ -7,11 +7,22 @@ import org.tio.http.common.HttpResponse;
 import org.tio.monitor.RateLimiterWrap;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class WsSessionContext {
+	/**
+	 * @param args
+	 *
+	 * @author tanyaowu
+	 * 2017年2月21日 上午10:27:54
+	 *
+	 */
+	public static void main(String[] args) {
+
+	}
+
 	/**
 	 * 消息请求频率控制器
 	 */
@@ -38,25 +49,49 @@ public class WsSessionContext {
 	private List<byte[]> lastParts = null;
 
 	/**
-	 * 
 	 *
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 * 2017年2月21日 上午10:27:54
-	 * 
+	 *
 	 */
 	public WsSessionContext() {
 
 	}
 
 	/**
-	 * @param args
-	 *
-	 * @author: tanyaowu
-	 * 2017年2月21日 上午10:27:54
-	 * 
+	 * @return the httpHandshakePacket
 	 */
-	public static void main(String[] args) {
+	public HttpRequest getHandshakeRequestPacket() {
+		return handshakeRequestPacket;
+	}
 
+	/**
+	 * @return the handshakeResponsePacket
+	 */
+	public HttpResponse getHandshakeResponsePacket() {
+		return handshakeResponsePacket;
+	}
+
+	/**
+	 * @return the lastPart
+	 */
+	public List<byte[]> getLastParts() {
+		return lastParts;
+	}
+
+	/**
+	 * @return the requestRateLimiter
+	 */
+	public RateLimiterWrap getRequestRateLimiter() {
+		return requestRateLimiter;
+	}
+
+	/**
+	 * @return the token
+	 */
+	public String getToken() {
+		return token;
 	}
 
 	/**
@@ -74,24 +109,17 @@ public class WsSessionContext {
 	}
 
 	/**
-	 * @return the token
+	 * @param httpHandshakePacket the httpHandshakePacket to set
 	 */
-	public String getToken() {
-		return token;
+	public void setHandshakeRequestPacket(HttpRequest handshakeRequestPacket) {
+		this.handshakeRequestPacket = handshakeRequestPacket;
 	}
 
 	/**
-	 * @param token the token to set
+	 * @param handshakeResponsePacket the handshakeResponsePacket to set
 	 */
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	/**
-	 * @return the lastPart
-	 */
-	public List<byte[]> getLastParts() {
-		return lastParts;
+	public void setHandshakeResponsePacket(HttpResponse handshakeResponsePacket) {
+		this.handshakeResponsePacket = handshakeResponsePacket;
 	}
 
 	/**
@@ -102,27 +130,6 @@ public class WsSessionContext {
 	}
 
 	/**
-	 * @return the httpHandshakePacket
-	 */
-	public HttpRequest getHandshakeRequestPacket() {
-		return handshakeRequestPacket;
-	}
-
-	/**
-	 * @param httpHandshakePacket the httpHandshakePacket to set
-	 */
-	public void setHandshakeRequestPacket(HttpRequest handshakeRequestPacket) {
-		this.handshakeRequestPacket = handshakeRequestPacket;
-	}
-
-	/**
-	 * @return the requestRateLimiter
-	 */
-	public RateLimiterWrap getRequestRateLimiter() {
-		return requestRateLimiter;
-	}
-
-	/**
 	 * @param requestRateLimiter the requestRateLimiter to set
 	 */
 	public void setRequestRateLimiter(RateLimiterWrap requestRateLimiter) {
@@ -130,17 +137,10 @@ public class WsSessionContext {
 	}
 
 	/**
-	 * @return the handshakeResponsePacket
+	 * @param token the token to set
 	 */
-	public HttpResponse getHandshakeResponsePacket() {
-		return handshakeResponsePacket;
-	}
-
-	/**
-	 * @param handshakeResponsePacket the handshakeResponsePacket to set
-	 */
-	public void setHandshakeResponsePacket(HttpResponse handshakeResponsePacket) {
-		this.handshakeResponsePacket = handshakeResponsePacket;
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }

@@ -14,8 +14,8 @@ import org.tio.http.common.HttpResponse;
 import org.tio.server.intf.ServerAioListener;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class HttpServerAioListener implements ServerAioListener {
@@ -27,34 +27,48 @@ public class HttpServerAioListener implements ServerAioListener {
 	static AtomicLong accessCount = new AtomicLong();
 
 	/**
-	 * 
+	 * @param args
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2016年12月16日 下午5:52:06
-	 * 
+	 *
+	 */
+	public static void main(String[] args) {
+	}
+
+	/**
+	 *
+	 *
+	 * @author tanyaowu
+	 * 2016年12月16日 下午5:52:06
+	 *
 	 */
 	public HttpServerAioListener() {
 	}
 
 	/**
-	 * @param args
+	 * @see org.tio.core.intf.AioListener#onAfterClose(org.tio.core.ChannelContext, java.lang.Throwable, java.lang.String)
 	 *
-	 * @author: tanyaowu
-	 * 2016年12月16日 下午5:52:06
-	 * 
+	 * @param channelContext
+	 * @param throwable
+	 * @param remark
+	 * @author tanyaowu
+	 * 2017年2月1日 上午11:03:11
+	 *
 	 */
-	public static void main(String[] args) {
+	@Override
+	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
 	}
 
-	/** 
+	/**
 	 * @see org.tio.server.intf.ServerAioListener#onAfterAccepted(java.nio.channels.AsynchronousSocketChannel, org.tio.server.AioServer)
-	 * 
+	 *
 	 * @param asynchronousSocketChannel
 	 * @param aioServer
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2016年12月20日 上午11:03:45
-	 * 
+	 *
 	 */
 	//	@Override
 	//	public boolean onAfterAccepted(AsynchronousSocketChannel asynchronousSocketChannel, AioServer<ImSessionContext, HttpPacket, Object> aioServer)
@@ -98,14 +112,29 @@ public class HttpServerAioListener implements ServerAioListener {
 		return;
 	}
 
-	/** 
-	 * @see org.tio.core.intf.AioListener#onBeforeSent(org.tio.core.ChannelContext, org.tio.core.intf.Packet, int)
-	 * 
+	/**
+	 * @see org.tio.core.intf.AioListener#onAfterReceived(org.tio.core.ChannelContext, org.tio.core.intf.Packet, int)
+	 *
 	 * @param channelContext
 	 * @param packet
-	 * @author: tanyaowu
+	 * @param packetSize
+	 * @author tanyaowu
 	 * 2016年12月20日 上午11:08:44
-	 * 
+	 *
+	 */
+	@Override
+	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) {
+		//		CommandStat.getCount(packet.getCommand()).received.incrementAndGet();
+	}
+
+	/**
+	 * @see org.tio.core.intf.AioListener#onBeforeSent(org.tio.core.ChannelContext, org.tio.core.intf.Packet, int)
+	 *
+	 * @param channelContext
+	 * @param packet
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:08:44
+	 *
 	 */
 	@Override
 	public void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) {
@@ -114,42 +143,13 @@ public class HttpServerAioListener implements ServerAioListener {
 		//		}
 
 		HttpResponse httpResponse = (HttpResponse) packet;
-		//		HttpRequestPacket httpRequest = httpResponse.getHttpRequestPacket();
+		//		HttpRequestPacket request = httpResponse.getHttpRequestPacket();
 
 		String Connection = httpResponse.getHeader(HttpConst.ResponseHeaderKey.Connection);
 		// 现在基本都是1.1了，所以用close来判断
 		if (StringUtils.equalsIgnoreCase(Connection, HttpConst.ResponseHeaderValue.Connection.close)) {
 			Aio.remove(channelContext, "onAfterSent");
 		}
-	}
-
-	/** 
-	 * @see org.tio.core.intf.AioListener#onAfterReceived(org.tio.core.ChannelContext, org.tio.core.intf.Packet, int)
-	 * 
-	 * @param channelContext
-	 * @param packet
-	 * @param packetSize
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:08:44
-	 * 
-	 */
-	@Override
-	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) {
-		//		CommandStat.getCount(packet.getCommand()).received.incrementAndGet();
-	}
-
-	/** 
-	 * @see org.tio.core.intf.AioListener#onAfterClose(org.tio.core.ChannelContext, java.lang.Throwable, java.lang.String)
-	 * 
-	 * @param channelContext
-	 * @param throwable
-	 * @param remark
-	 * @author: tanyaowu
-	 * 2017年2月1日 上午11:03:11
-	 * 
-	 */
-	@Override
-	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
 	}
 
 	@Override

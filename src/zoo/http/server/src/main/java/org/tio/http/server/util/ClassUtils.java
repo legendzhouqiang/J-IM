@@ -7,18 +7,11 @@ import org.tio.http.common.UploadFile;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月26日 下午6:46:11
  */
 public class ClassUtils {
 	private static Logger log = LoggerFactory.getLogger(ClassUtils.class);
-
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public ClassUtils() {
-	}
 
 	public static boolean isSimpleTypeOrArray(Class<?> clazz) {
 		return ClassUtil.isSimpleTypeOrArray(clazz) || clazz.isAssignableFrom(UploadFile.class);
@@ -26,9 +19,16 @@ public class ClassUtils {
 
 	/**
 	 * @param args
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
 
+	}
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public ClassUtils() {
 	}
 }

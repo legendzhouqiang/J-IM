@@ -1,7 +1,7 @@
 package org.tio.http.common;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年6月28日 下午2:20:32
  */
 public class RequestLine {
@@ -13,17 +13,17 @@ public class RequestLine {
 	private String line;
 
 	/**
+	 * @return the line
+	 */
+	public String getLine() {
+		return line;
+	}
+
+	/**
 	 * @return the method
 	 */
 	public Method getMethod() {
 		return method;
-	}
-
-	/**
-	 * @param method the method to set
-	 */
-	public void setMethod(Method method) {
-		this.method = method;
 	}
 
 	/**
@@ -33,39 +33,8 @@ public class RequestLine {
 		return path;
 	}
 
-	/**
-	 * @param path the path to set
-	 */
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	/**
-	 * @return the version
-	 */
-	public String getVersion() {
-		return version;
-	}
-
-	/**
-	 * @param version the version to set
-	 */
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	/**
-	 * @return the line
-	 */
-	public String getLine() {
-		return line;
-	}
-
-	/**
-	 * @param line the line to set
-	 */
-	public void setLine(String line) {
-		this.line = line;
+	public String getPathAndQuery() {
+		return pathAndQuery;
 	}
 
 	/**
@@ -76,17 +45,48 @@ public class RequestLine {
 	}
 
 	/**
+	 * @return the version
+	 */
+	public String getVersion() {
+		return version;
+	}
+
+	/**
+	 * @param line the line to set
+	 */
+	public void setLine(String line) {
+		this.line = line;
+	}
+
+	/**
+	 * @param method the method to set
+	 */
+	public void setMethod(Method method) {
+		this.method = method;
+	}
+
+	/**
+	 * @param path the path to set
+	 */
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setPathAndQuery(String pathAndQuery) {
+		this.pathAndQuery = pathAndQuery;
+	}
+
+	/**
 	 * @param query the query to set
 	 */
 	public void setQuery(String query) {
 		this.query = query;
 	}
 
-	public String getPathAndQuery() {
-		return pathAndQuery;
-	}
-
-	public void setPathAndQuery(String pathAndQuery) {
-		this.pathAndQuery = pathAndQuery;
+	/**
+	 * @param version the version to set
+	 */
+	public void setVersion(String version) {
+		this.version = version;
 	}
 }

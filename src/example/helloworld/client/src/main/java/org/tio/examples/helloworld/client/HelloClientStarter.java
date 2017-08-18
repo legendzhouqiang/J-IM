@@ -12,8 +12,8 @@ import org.tio.examples.helloworld.common.Const;
 import org.tio.examples.helloworld.common.HelloPacket;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class HelloClientStarter {

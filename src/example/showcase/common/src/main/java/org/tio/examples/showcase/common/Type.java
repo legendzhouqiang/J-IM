@@ -2,7 +2,7 @@ package org.tio.examples.showcase.common;
 
 /**
  * 消息类型定义
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月26日 下午8:18:13
  */
 public interface Type {

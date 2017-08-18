@@ -5,30 +5,31 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 登录请求
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月25日 上午8:22:06
  */
 public class LoginReqBody extends BaseBody {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(LoginReqBody.class);
 
-	private String loginname;
-	private String password;
-
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public LoginReqBody() {
-
-	}
-
 	/**
 	 * @param args
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
+
+	}
+
+	private String loginname;
+
+	private String password;
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public LoginReqBody() {
 
 	}
 
@@ -40,17 +41,17 @@ public class LoginReqBody extends BaseBody {
 	}
 
 	/**
-	 * @param loginname the loginname to set
-	 */
-	public void setLoginname(String loginname) {
-		this.loginname = loginname;
-	}
-
-	/**
 	 * @return the password
 	 */
 	public String getPassword() {
 		return password;
+	}
+
+	/**
+	 * @param loginname the loginname to set
+	 */
+	public void setLoginname(String loginname) {
+		this.loginname = loginname;
 	}
 
 	/**

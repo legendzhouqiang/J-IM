@@ -11,24 +11,28 @@ import org.tio.core.utils.ByteBufferUtils;
 /**
  * 参考了baseio: https://git.oschina.net/generallycloud/baseio
  * com.generallycloud.nio.codec.http11.WebSocketProtocolEncoder
- * @author tanyaowu 
+ * @author tanyaowu
  *
  */
 public class WsServerEncoder {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(WsServerEncoder.class);
 
-	/**
-	 * 
-	 * @author: tanyaowu
-	 * 2017年2月22日 下午4:06:42
-	 * 
-	 */
-	public WsServerEncoder() {
-
-	}
-
 	public static final int MAX_HEADER_LENGTH = 20480;
+
+	private static void checkLength(byte[] bytes, int length, int offset) {
+		if (bytes == null) {
+			throw new IllegalArgumentException("null");
+		}
+
+		if (offset < 0) {
+			throw new IllegalArgumentException("invalidate offset " + offset);
+		}
+
+		if (bytes.length - offset < length) {
+			throw new IllegalArgumentException("invalidate length " + bytes.length);
+		}
+	}
 
 	public static ByteBuffer encode(WsResponsePacket wsResponsePacket, GroupContext groupContext, ChannelContext channelContext) {
 		byte[] imBody = wsResponsePacket.getBody();//就是ws的body，不包括ws的头
@@ -44,7 +48,7 @@ public class WsServerEncoder {
 			buf = ByteBuffer.allocate(2 + wsBodyLength);
 			buf.put(header0);
 			buf.put((byte) wsBodyLength);
-		} else if (wsBodyLength < ((1 << 16) - 1)) {
+		} else if (wsBodyLength < (1 << 16) - 1) {
 			buf = ByteBuffer.allocate(4 + wsBodyLength);
 			buf.put(header0);
 			buf.put((byte) 126);
@@ -67,23 +71,19 @@ public class WsServerEncoder {
 	public static void int2Byte(byte[] bytes, int value, int offset) {
 		checkLength(bytes, 4, offset);
 
-		bytes[offset + 3] = (byte) ((value & 0xff));
-		bytes[offset + 2] = (byte) ((value >> 8 * 1) & 0xff);
-		bytes[offset + 1] = (byte) ((value >> 8 * 2) & 0xff);
-		bytes[offset + 0] = (byte) ((value >> 8 * 3));
+		bytes[offset + 3] = (byte) (value & 0xff);
+		bytes[offset + 2] = (byte) (value >> 8 * 1 & 0xff);
+		bytes[offset + 1] = (byte) (value >> 8 * 2 & 0xff);
+		bytes[offset + 0] = (byte) (value >> 8 * 3);
 	}
 
-	private static void checkLength(byte[] bytes, int length, int offset) {
-		if (bytes == null) {
-			throw new IllegalArgumentException("null");
-		}
+	/**
+	 *
+	 * @author tanyaowu
+	 * 2017年2月22日 下午4:06:42
+	 *
+	 */
+	public WsServerEncoder() {
 
-		if (offset < 0) {
-			throw new IllegalArgumentException("invalidate offset " + offset);
-		}
-
-		if (bytes.length - offset < length) {
-			throw new IllegalArgumentException("invalidate length " + bytes.length);
-		}
 	}
 }

@@ -7,6 +7,7 @@ import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.exception.AioDecodeException;
 import org.tio.core.intf.Packet;
+import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpRequestDecoder;
 import org.tio.http.common.HttpResponse;
@@ -15,75 +16,74 @@ import org.tio.http.server.handler.IHttpRequestHandler;
 import org.tio.server.intf.ServerAioHandler;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class HttpServerAioHandler implements ServerAioHandler {
 	//	private static Logger log = LoggerFactory.getLogger(HttpServerAioHandler.class);
 
-	protected HttpServerConfig httpConfig;
-
-	private IHttpRequestHandler httpRequestHandler;
-
-	//	protected Routes routes = null;
-
-	//	public HttpServerAioHandler(IHttpRequestHandler httpRequestHandler) {
-	//		this.httpRequestHandler = httpRequestHandler;
-	//	}
-
-	/**
-	 * 
-	 *
-	 * @author: tanyaowu
-	 * 2016年11月18日 上午9:13:15
-	 * 
-	 */
-	public HttpServerAioHandler(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler) {
-		this.httpConfig = httpConfig;
-		this.httpRequestHandler = httpRequestHandler;
-	}
-
-	//	public HttpServerAioHandler(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler) {
-	//		this(httpConfig, httpRequestHandler);
-	////		this.routes = routes;
-	//	}
-
 	/**
 	 * @param args
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2016年11月18日 上午9:13:15
-	 * 
+	 *
 	 */
 	public static void main(String[] args) {
 	}
 
-	/** 
-	 * @see org.tio.core.intf.AioHandler#handler(org.tio.core.intf.Packet)
-	 * 
-	 * @param packet
-	 * @return
-	 * @throws Exception 
-	 * @author: tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 * 
+	protected HttpConfig httpConfig;
+
+	//	protected Routes routes = null;
+
+	//	public HttpServerAioHandler(IHttpRequestHandler requestHandler) {
+	//		this.requestHandler = requestHandler;
+	//	}
+
+	private IHttpRequestHandler requestHandler;
+
+	//	public HttpServerAioHandler(HttpConfig httpConfig, IHttpRequestHandler requestHandler) {
+	//		this(httpConfig, requestHandler);
+	////		this.routes = routes;
+	//	}
+
+	/**
+	 *
+	 *
+	 * @author tanyaowu
+	 * 2016年11月18日 上午9:13:15
+	 *
 	 */
-	@Override
-	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
-		HttpRequest httpRequest = (HttpRequest) packet;
-		HttpResponse httpResponse = httpRequestHandler.handler(httpRequest, httpRequest.getRequestLine(), channelContext);
-		Aio.send(channelContext, httpResponse);
+	public HttpServerAioHandler(HttpConfig httpConfig, IHttpRequestHandler requestHandler) {
+		this.httpConfig = httpConfig;
+		this.requestHandler = requestHandler;
 	}
 
-	/** 
+	/**
+	 * @see org.tio.core.intf.AioHandler#decode(java.nio.ByteBuffer)
+	 *
+	 * @param buffer
+	 * @return
+	 * @throws AioDecodeException
+	 * @author tanyaowu
+	 * 2016年11月18日 上午9:37:44
+	 *
+	 */
+	@Override
+	public HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
+		HttpRequest request = HttpRequestDecoder.decode(buffer, channelContext);
+		return request;
+	}
+
+	/**
 	 * @see org.tio.core.intf.AioHandler#encode(org.tio.core.intf.Packet)
-	 * 
+	 *
 	 * @param packet
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2016年11月18日 上午9:37:44
-	 * 
+	 *
 	 */
 	@Override
 	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
@@ -92,33 +92,34 @@ public class HttpServerAioHandler implements ServerAioHandler {
 		return byteBuffer;
 	}
 
-	/** 
-	 * @see org.tio.core.intf.AioHandler#decode(java.nio.ByteBuffer)
-	 * 
-	 * @param buffer
-	 * @return
-	 * @throws AioDecodeException
-	 * @author: tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 * 
-	 */
-	@Override
-	public HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
-		HttpRequest httpRequest = HttpRequestDecoder.decode(buffer, channelContext);
-		return httpRequest;
-	}
-
 	/**
 	 * @return the httpConfig
 	 */
-	public HttpServerConfig getHttpServerConfig() {
+	public HttpConfig getHttpConfig() {
 		return httpConfig;
+	}
+
+	/**
+	 * @see org.tio.core.intf.AioHandler#handler(org.tio.core.intf.Packet)
+	 *
+	 * @param packet
+	 * @return
+	 * @throws Exception
+	 * @author tanyaowu
+	 * 2016年11月18日 上午9:37:44
+	 *
+	 */
+	@Override
+	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
+		HttpRequest request = (HttpRequest) packet;
+		HttpResponse httpResponse = requestHandler.handler(request, request.getRequestLine(), channelContext);
+		Aio.send(channelContext, httpResponse);
 	}
 
 	/**
 	 * @param httpConfig the httpConfig to set
 	 */
-	public void setHttpServerConfig(HttpServerConfig httpConfig) {
+	public void setHttpConfig(HttpConfig httpConfig) {
 		this.httpConfig = httpConfig;
 	}
 

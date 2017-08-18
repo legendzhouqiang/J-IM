@@ -14,27 +14,31 @@ import org.slf4j.LoggerFactory;
 import org.tio.utils.cache.ICache;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年8月10日 下午1:35:01
  */
 public class RedisCache implements ICache {
 	private static Logger log = LoggerFactory.getLogger(RedisCache.class);
 	private static Map<String, RedisCache> map = new HashMap<>();
-	private RedissonClient redisson = null;
-	private String cacheName = null;
 
-	private Long expireAfterWrite = null;
-	private Long expireAfterAccess = null;
-	private Long timeout = null;
+	public static String cacheKey(String cacheName, String key) {
+		return keyPrefix(cacheName) + key;
+	}
 
-	private RedisCache(RedissonClient redisson, String cacheName, Long expireAfterWrite, Long expireAfterAccess) {
-		this.redisson = redisson;
-		this.cacheName = cacheName;
-		this.expireAfterWrite = expireAfterWrite;
-		this.expireAfterAccess = expireAfterAccess;
-		this.timeout = this.expireAfterWrite == null ? this.expireAfterAccess : this.expireAfterWrite;
+	public static RedisCache getCache(String cacheName) {
+		RedisCache redisCache = map.get(cacheName);
+		if (redisCache == null) {
+			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(redisson, cacheName, expireAfterWrite, expireAfterAccess)", cacheName, RedisCache.class.getSimpleName());
+		}
+		return redisCache;
+	}
 
+	public static String keyPrefix(String cacheName) {
+		return "{" + cacheName + "}";
+	}
+
+	public static void main(String[] args) {
 	}
 
 	/**
@@ -43,7 +47,7 @@ public class RedisCache implements ICache {
 	 * @param expireAfterWrite
 	 * @param expireAfterAccess
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static RedisCache register(RedissonClient redisson, String cacheName, Long expireAfterWrite, Long expireAfterAccess) {
 		RedisTask.start();
@@ -61,32 +65,29 @@ public class RedisCache implements ICache {
 		return redisCache;
 	}
 
-	public static RedisCache getCache(String cacheName) {
-		RedisCache redisCache = map.get(cacheName);
-		if (redisCache == null) {
-			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(redisson, cacheName, expireAfterWrite, expireAfterAccess)", cacheName, RedisCache.class.getSimpleName());
-		}
-		return redisCache;
-	}
+	private RedissonClient redisson = null;
 
-	public static String keyPrefix(String cacheName) {
-		return "{" + cacheName + "}";
-	}
+	private String cacheName = null;
 
-	public static String cacheKey(String cacheName, String key) {
-		return keyPrefix(cacheName) + key;
-	}
+	private Long expireAfterWrite = null;
 
-	@Override
-	public void put(String key, Serializable value) {
-		RBucket<Serializable> bucket = getBucket(key);
-		bucket.set(value, timeout, TimeUnit.SECONDS);
+	private Long expireAfterAccess = null;
+
+	private Long timeout = null;
+
+	private RedisCache(RedissonClient redisson, String cacheName, Long expireAfterWrite, Long expireAfterAccess) {
+		this.redisson = redisson;
+		this.cacheName = cacheName;
+		this.expireAfterWrite = expireAfterWrite;
+		this.expireAfterAccess = expireAfterAccess;
+		this.timeout = this.expireAfterWrite == null ? this.expireAfterAccess : this.expireAfterWrite;
+
 	}
 
 	@Override
-	public void remove(String key) {
-		RBucket<Serializable> bucket = getBucket(key);
-		bucket.delete();
+	public void clear() {
+		RKeys keys = redisson.getKeys();
+		keys.deleteByPattern(keyPrefix(cacheName) + "*");
 	}
 
 	@Override
@@ -106,6 +107,26 @@ public class RedisCache implements ICache {
 		return bucket;
 	}
 
+	public String getCacheName() {
+		return cacheName;
+	}
+
+	public Long getExpireAfterAccess() {
+		return expireAfterAccess;
+	}
+
+	public Long getExpireAfterWrite() {
+		return expireAfterWrite;
+	}
+
+	public RedissonClient getRedisson() {
+		return redisson;
+	}
+
+	public Long getTimeout() {
+		return timeout;
+	}
+
 	@Override
 	public Collection<String> keys() {
 		RKeys keys = redisson.getKeys();
@@ -114,31 +135,14 @@ public class RedisCache implements ICache {
 	}
 
 	@Override
-	public void clear() {
-		RKeys keys = redisson.getKeys();
-		keys.deleteByPattern(keyPrefix(cacheName) + "*");
+	public void put(String key, Serializable value) {
+		RBucket<Serializable> bucket = getBucket(key);
+		bucket.set(value, timeout, TimeUnit.SECONDS);
 	}
 
-	public String getCacheName() {
-		return cacheName;
-	}
-
-	public Long getExpireAfterWrite() {
-		return expireAfterWrite;
-	}
-
-	public Long getExpireAfterAccess() {
-		return expireAfterAccess;
-	}
-
-	public Long getTimeout() {
-		return timeout;
-	}
-
-	public RedissonClient getRedisson() {
-		return redisson;
-	}
-
-	public static void main(String[] args) {
+	@Override
+	public void remove(String key) {
+		RBucket<Serializable> bucket = getBucket(key);
+		bucket.delete();
 	}
 }

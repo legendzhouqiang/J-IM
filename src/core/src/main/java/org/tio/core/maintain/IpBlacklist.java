@@ -11,14 +11,14 @@ import org.tio.core.GroupContext;
 import org.tio.utils.lock.SetWithLock;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年5月22日 下午2:53:47
  */
 public class IpBlacklist {
 
 	/** remoteAndChannelContext key: "ip:port" value: ChannelContext. */
-	private SetWithLock<String> setWithLock = new SetWithLock<String>(new HashSet<String>());
+	private SetWithLock<String> setWithLock = new SetWithLock<>(new HashSet<String>());
 
 	public void add(GroupContext groupContext, String ip) {
 		//先添加到黑名单列表
@@ -50,19 +50,6 @@ public class IpBlacklist {
 		}
 	}
 
-	public boolean remove(String ip) {
-		Lock lock = setWithLock.getLock().writeLock();
-		try {
-			lock.lock();
-			Set<String> m = setWithLock.getObj();
-			return m.remove(ip);
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
-	}
-
 	public void clear() {
 		Lock lock = setWithLock.getLock().writeLock();
 		try {
@@ -91,24 +78,20 @@ public class IpBlacklist {
 		}
 	}
 
-	public int size() {
-		Lock lock = setWithLock.getLock().readLock();
-		try {
-			lock.lock();
-			Set<String> m = setWithLock.getObj();
-			return m.size();
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
+	/**
+	 *
+	 *
+	 * @return
+	 */
+	public SetWithLock<String> getSetWithLock() {
+		return setWithLock;
 	}
 
 	/**
 	 * 是否在黑名单中
 	 * @param ip
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public boolean isInBlacklist(String ip) {
 		Lock lock = setWithLock.getLock().readLock();
@@ -123,13 +106,30 @@ public class IpBlacklist {
 		}
 	}
 
-	/**
-	 * 
-	 *
-	 * @return
-	 */
-	public SetWithLock<String> getSetWithLock() {
-		return setWithLock;
+	public boolean remove(String ip) {
+		Lock lock = setWithLock.getLock().writeLock();
+		try {
+			lock.lock();
+			Set<String> m = setWithLock.getObj();
+			return m.remove(ip);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	public int size() {
+		Lock lock = setWithLock.getLock().readLock();
+		try {
+			lock.lock();
+			Set<String> m = setWithLock.getObj();
+			return m.size();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 }

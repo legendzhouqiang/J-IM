@@ -10,30 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.tio.utils.lock.ObjWithLock;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年5月10日 下午1:14:15
  */
 public abstract class PageUtils {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(PageUtils.class);
-
-	private static <T> Page<T> pre(java.util.Collection<T> list, int pageIndex, int pageSize) {
-		if (list == null) {
-			return new Page<T>(null, pageIndex, pageSize, 0);
-		}
-
-		pageSize = processPageSize(pageSize);
-		pageIndex = processPageIndex(pageIndex);
-
-		int recordCount = list.size();
-		if (pageSize > recordCount) {
-			pageSize = recordCount;
-		}
-
-		List<T> pageData = new ArrayList<T>(pageSize);
-		Page<T> ret = new Page<T>(pageData, pageIndex, pageSize, recordCount);
-		return ret;
-	}
 
 	public static <T> Page<T> fromList(List<T> list, int pageIndex, int pageSize) {
 		if (list == null) {
@@ -48,7 +30,7 @@ public abstract class PageUtils {
 		}
 
 		int startIndex = Math.min((page.getPageIndex() - 1) * page.getPageSize(), list.size());
-		int endIndex = Math.min((page.getPageIndex()) * page.getPageSize(), list.size());
+		int endIndex = Math.min(page.getPageIndex() * page.getPageSize(), list.size());
 
 		for (int i = startIndex; i < endIndex; i++) {
 			pageData.add(list.get(i));
@@ -70,7 +52,7 @@ public abstract class PageUtils {
 		}
 
 		int startIndex = Math.min((page.getPageIndex() - 1) * page.getPageSize(), set.size());
-		int endIndex = Math.min((page.getPageIndex()) * page.getPageSize(), set.size());
+		int endIndex = Math.min(page.getPageIndex() * page.getPageSize(), set.size());
 
 		int i = 0;
 		for (T t : set) {
@@ -103,6 +85,24 @@ public abstract class PageUtils {
 			lock.unlock();
 		}
 
+	}
+
+	private static <T> Page<T> pre(java.util.Collection<T> list, int pageIndex, int pageSize) {
+		if (list == null) {
+			return new Page<>(null, pageIndex, pageSize, 0);
+		}
+
+		pageSize = processPageSize(pageSize);
+		pageIndex = processPageIndex(pageIndex);
+
+		int recordCount = list.size();
+		if (pageSize > recordCount) {
+			pageSize = recordCount;
+		}
+
+		List<T> pageData = new ArrayList<>(pageSize);
+		Page<T> ret = new Page<>(pageData, pageIndex, pageSize, recordCount);
+		return ret;
 	}
 
 	private static int processPageIndex(int pageIndex) {

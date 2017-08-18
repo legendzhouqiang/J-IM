@@ -1,27 +1,15 @@
 package org.tio.http.common;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public interface HttpConst {
-	
-	/**
-	 * 
-	 */
-	String SERVER_INFO = "tio-httpserver/0.0.1";
-
-	/**
-	 * 默认规定连接到本服务器的客户端统一用utf-8
-	 */
-	String CHARSET_NAME = "utf-8";
-
-	//	Content-Type: text/html;charset:utf-8;
 
 	/**
 	 * 请求体的格式
-	 * @author tanyaowu 
+	 * @author tanyaowu
 	 * 2017年6月28日 上午10:03:12
 	 */
 	public enum RequestBodyFormat {
@@ -41,8 +29,8 @@ public interface HttpConst {
 	                Connection : Upgrade
 	             Cache-Control : no-cache
 	                    Pragma : no-cache
-	 * 
-	 * @author tanyaowu 
+	 *
+	 * @author tanyaowu
 	 * 2017年5月27日 下午2:11:57
 	 */
 	public interface RequestHeaderKey {
@@ -62,19 +50,27 @@ public interface HttpConst {
 		String Content_Length = "Content-Length".toLowerCase(); //65
 		String Content_Type = "Content-Type".toLowerCase();// : 【application/x-www-form-urlencoded】【application/x-www-form-urlencoded; charset=UTF-8】【multipart/form-data; boundary=----WebKitFormBoundaryuwYcfA2AIgxqIxA0 】
 		String If_Modified_Since = "If-Modified-Since".toLowerCase(); //与Last-Modified配合
-		
+
 		/**
 		 * 值为XMLHttpRequest则为Ajax
 		 */
 		String X_Requested_With = "X-Requested-With".toLowerCase();//XMLHttpRequest
 	}
 
+	//	Content-Type: text/html;charset:utf-8;
+
 	/**
-	 * 
-	 * @author tanyaowu 
+	 *
+	 * @author tanyaowu
 	 * 2017年6月27日 下午8:23:58
 	 */
 	public interface RequestHeaderValue {
+		public interface Connection {
+			String keep_alive = "keep-alive".toLowerCase();
+			String Upgrade = "Upgrade".toLowerCase();
+			String close = "close".toLowerCase();
+		}
+
 		//application/x-www-form-urlencoded、multipart/form-data、text/plain
 		public interface Content_Type {
 			/**
@@ -89,12 +85,6 @@ public interface HttpConst {
 			 * 普通的key-value
 			 */
 			String application_x_www_form_urlencoded = "application/x-www-form-urlencoded".toLowerCase();
-		}
-
-		public interface Connection {
-			String keep_alive = "keep-alive".toLowerCase();
-			String Upgrade = "Upgrade".toLowerCase();
-			String close = "close".toLowerCase();
 		}
 	}
 
@@ -144,11 +134,11 @@ public interface HttpConst {
 		 */
 		String Location = "Location".toLowerCase();
 		/**
-		 * 表示浏览器应该在多少时间之后刷新文档，以秒计。除了刷新当前文档之外，你还可以通过setHeader("Refresh", "5; URL=http://host/path")让浏览器读取指定的页面。 
-		注意这种功能通常是通过设置HTML页面HEAD区的＜META HTTP-EQUIV="Refresh" CONTENT="5;URL=http://host/path"＞实现，这是因为，自动刷新或重定向对于那些不能使用CGI或Servlet的HTML编写者十分重要。但是，对于Servlet来说，直接设置Refresh头更加方便。 
-		
-		注意Refresh的意义是"N秒之后刷新本页面或访问指定页面"，而不是"每隔N秒刷新本页面或访问指定页面"。因此，连续刷新要求每次都发送一个Refresh头，而发送204状态代码则可以阻止浏览器继续刷新，不管是使用Refresh头还是＜META HTTP-EQUIV="Refresh" ...＞。 
-		
+		 * 表示浏览器应该在多少时间之后刷新文档，以秒计。除了刷新当前文档之外，你还可以通过setHeader("Refresh", "5; URL=http://host/path")让浏览器读取指定的页面。
+		注意这种功能通常是通过设置HTML页面HEAD区的＜META HTTP-EQUIV="Refresh" CONTENT="5;URL=http://host/path"＞实现，这是因为，自动刷新或重定向对于那些不能使用CGI或Servlet的HTML编写者十分重要。但是，对于Servlet来说，直接设置Refresh头更加方便。
+
+		注意Refresh的意义是"N秒之后刷新本页面或访问指定页面"，而不是"每隔N秒刷新本页面或访问指定页面"。因此，连续刷新要求每次都发送一个Refresh头，而发送204状态代码则可以阻止浏览器继续刷新，不管是使用Refresh头还是＜META HTTP-EQUIV="Refresh" ...＞。
+
 		注意Refresh头不属于HTTP 1.1正式规范的一部分，而是一个扩展，但Netscape和IE都支持它。
 		 */
 		String Refresh = "Refresh".toLowerCase();
@@ -158,17 +148,15 @@ public interface HttpConst {
 		String Server = "Server".toLowerCase();
 
 		/**
-		 * 
+		 *
 		 */
 		String Access_Control_Allow_Origin = "Access-Control-Allow-Origin".toLowerCase(); //value: *
 
 		/**
-		 * 
+		 *
 		 */
 		String Access_Control_Allow_Headers = "Access-Control-Allow-Headers".toLowerCase(); //value: x-requested-with,content-type
-		
-		
-		
+
 		/**
 		 * 是否是从缓存中获取的数据，tio-httpserver特有的头部信息
 		 */
@@ -176,8 +164,8 @@ public interface HttpConst {
 	}
 
 	/**
-	 * 
-	 * @author tanyaowu 
+	 *
+	 * @author tanyaowu
 	 * 2017年6月27日 下午8:24:02
 	 */
 	public interface ResponseHeaderValue {
@@ -187,4 +175,14 @@ public interface HttpConst {
 			String close = "close".toLowerCase();
 		}
 	}
+
+	/**
+	 *
+	 */
+	String SERVER_INFO = "tio-httpserver/0.0.1";
+
+	/**
+	 * 默认规定连接到本服务器的客户端统一用utf-8
+	 */
+	String CHARSET_NAME = "utf-8";
 }

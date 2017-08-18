@@ -6,19 +6,11 @@ import java.util.concurrent.CountDownLatch;
 import org.tio.core.Node;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月1日 上午9:32:17
  */
 public class ConnectionCompletionVo {
-
-	/**
-	 * @author: tanyaowu
-	 * 
-	 */
-	public ConnectionCompletionVo() {
-
-	}
 
 	private ClientChannelContext channelContext = null;
 
@@ -37,6 +29,14 @@ public class ConnectionCompletionVo {
 	private CountDownLatch countDownLatch = null;
 
 	/**
+	 * @author tanyaowu
+	 *
+	 */
+	public ConnectionCompletionVo() {
+
+	}
+
+	/**
 	 * @param channelContext
 	 * @param aioClient
 	 * @param isReconnect
@@ -45,8 +45,8 @@ public class ConnectionCompletionVo {
 	 * @param bindIp
 	 * @param bindPort
 	 *
-	 * @author: tanyaowu
-	 * 
+	 * @author tanyaowu
+	 *
 	 */
 	public ConnectionCompletionVo(ClientChannelContext channelContext, AioClient aioClient, boolean isReconnect, AsynchronousSocketChannel asynchronousSocketChannel,
 			Node serverNode, String bindIp, Integer bindPort) {
@@ -61,73 +61,10 @@ public class ConnectionCompletionVo {
 	}
 
 	/**
-	 * @return the serverNode
+	 * @return the aioClient
 	 */
-	public Node getServerNode() {
-		return serverNode;
-	}
-
-	/**
-	 * @param serverNode the serverNode to set
-	 */
-	public void setServerNode(Node serverNode) {
-		this.serverNode = serverNode;
-	}
-
-	/**
-	 * @return the bindIp
-	 */
-	public String getBindIp() {
-		return bindIp;
-	}
-
-	/**
-	 * @param bindIp the bindIp to set
-	 */
-	public void setBindIp(String bindIp) {
-		this.bindIp = bindIp;
-	}
-
-	/**
-	 * @return the bindPort
-	 */
-	public Integer getBindPort() {
-		return bindPort;
-	}
-
-	/**
-	 * @param bindPort the bindPort to set
-	 */
-	public void setBindPort(Integer bindPort) {
-		this.bindPort = bindPort;
-	}
-
-	/**
-	 * @return the channelContext
-	 */
-	public ClientChannelContext getChannelContext() {
-		return channelContext;
-	}
-
-	/**
-	 * @param channelContext the channelContext to set
-	 */
-	public void setChannelContext(ClientChannelContext channelContext) {
-		this.channelContext = channelContext;
-	}
-
-	/**
-	 * @return the isReconnect
-	 */
-	public boolean isReconnect() {
-		return isReconnect;
-	}
-
-	/**
-	 * @param isReconnect the isReconnect to set
-	 */
-	public void setReconnect(boolean isReconnect) {
-		this.isReconnect = isReconnect;
+	public AioClient getAioClient() {
+		return aioClient;
 	}
 
 	/**
@@ -138,24 +75,24 @@ public class ConnectionCompletionVo {
 	}
 
 	/**
-	 * @param asynchronousSocketChannel the asynchronousSocketChannel to set
+	 * @return the bindIp
 	 */
-	public void setAsynchronousSocketChannel(AsynchronousSocketChannel asynchronousSocketChannel) {
-		this.asynchronousSocketChannel = asynchronousSocketChannel;
+	public String getBindIp() {
+		return bindIp;
 	}
 
 	/**
-	 * @return the aioClient
+	 * @return the bindPort
 	 */
-	public AioClient getAioClient() {
-		return aioClient;
+	public Integer getBindPort() {
+		return bindPort;
 	}
 
 	/**
-	 * @param aioClient the aioClient to set
+	 * @return the channelContext
 	 */
-	public void setAioClient(AioClient aioClient) {
-		this.aioClient = aioClient;
+	public ClientChannelContext getChannelContext() {
+		return channelContext;
 	}
 
 	/**
@@ -166,10 +103,73 @@ public class ConnectionCompletionVo {
 	}
 
 	/**
+	 * @return the serverNode
+	 */
+	public Node getServerNode() {
+		return serverNode;
+	}
+
+	/**
+	 * @return the isReconnect
+	 */
+	public boolean isReconnect() {
+		return isReconnect;
+	}
+
+	/**
+	 * @param aioClient the aioClient to set
+	 */
+	public void setAioClient(AioClient aioClient) {
+		this.aioClient = aioClient;
+	}
+
+	/**
+	 * @param asynchronousSocketChannel the asynchronousSocketChannel to set
+	 */
+	public void setAsynchronousSocketChannel(AsynchronousSocketChannel asynchronousSocketChannel) {
+		this.asynchronousSocketChannel = asynchronousSocketChannel;
+	}
+
+	/**
+	 * @param bindIp the bindIp to set
+	 */
+	public void setBindIp(String bindIp) {
+		this.bindIp = bindIp;
+	}
+
+	/**
+	 * @param bindPort the bindPort to set
+	 */
+	public void setBindPort(Integer bindPort) {
+		this.bindPort = bindPort;
+	}
+
+	/**
+	 * @param channelContext the channelContext to set
+	 */
+	public void setChannelContext(ClientChannelContext channelContext) {
+		this.channelContext = channelContext;
+	}
+
+	/**
 	 * @param countDownLatch the countDownLatch to set
 	 */
 	public void setCountDownLatch(java.util.concurrent.CountDownLatch countDownLatch) {
 		this.countDownLatch = countDownLatch;
+	}
+
+	/**
+	 * @param isReconnect the isReconnect to set
+	 */
+	public void setReconnect(boolean isReconnect) {
+		this.isReconnect = isReconnect;
+	}
+
+	/**
+	 * @param serverNode the serverNode to set
+	 */
+	public void setServerNode(Node serverNode) {
+		this.serverNode = serverNode;
 	}
 
 }

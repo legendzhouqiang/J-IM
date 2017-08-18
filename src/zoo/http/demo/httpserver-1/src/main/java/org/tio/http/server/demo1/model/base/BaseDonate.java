@@ -9,76 +9,78 @@ import com.jfinal.plugin.activerecord.Model;
 @SuppressWarnings("serial")
 public abstract class BaseDonate<M extends BaseDonate<M>> extends Model<M> implements IBean {
 
-	public void setId(java.lang.Integer id) {
-		set("id", id);
+	private static final long serialVersionUID = -7992873894635460955L;
+
+	public java.lang.Double getAmount() {
+		return get("amount");
 	}
 
 	public java.lang.Integer getId() {
 		return get("id");
 	}
 
-	public void setAmount(java.lang.Double amount) {
-		set("amount", amount);
+	public java.lang.String getLeavemsg() {
+		return get("leavemsg");
 	}
 
-	public java.lang.Double getAmount() {
-		return get("amount");
-	}
-
-	public void setName(java.lang.String name) {
-		set("name", name);
+	public java.lang.String getMyremark() {
+		return get("myremark");
 	}
 
 	public java.lang.String getName() {
 		return get("name");
 	}
 
-	public void setUrl(java.lang.String url) {
-		set("url", url);
-	}
-
-	public java.lang.String getUrl() {
-		return get("url");
-	}
-
-	public void setTime(java.util.Date time) {
-		set("time", time);
+	public java.lang.String getRemark() {
+		return get("remark");
 	}
 
 	public java.util.Date getTime() {
 		return get("time");
 	}
 
-	public void setWay(java.lang.String way) {
-		set("way", way);
+	public java.lang.String getUrl() {
+		return get("url");
 	}
 
 	public java.lang.String getWay() {
 		return get("way");
 	}
 
-	public void setRemark(java.lang.String remark) {
-		set("remark", remark);
+	public void setAmount(java.lang.Double amount) {
+		set("amount", amount);
 	}
 
-	public java.lang.String getRemark() {
-		return get("remark");
+	public void setId(java.lang.Integer id) {
+		set("id", id);
 	}
 
 	public void setLeavemsg(java.lang.String leavemsg) {
 		set("leavemsg", leavemsg);
 	}
 
-	public java.lang.String getLeavemsg() {
-		return get("leavemsg");
-	}
-
 	public void setMyremark(java.lang.String myremark) {
 		set("myremark", myremark);
 	}
 
-	public java.lang.String getMyremark() {
-		return get("myremark");
+	public void setName(java.lang.String name) {
+		set("name", name);
+	}
+
+	public void setRemark(java.lang.String remark) {
+		set("remark", remark);
+	}
+
+	public void setTime(java.util.Date time) {
+		set("time", time);
+	}
+
+	public void setUrl(java.lang.String url) {
+		set("url", url);
+	}
+
+	public void setWay(java.lang.String way) {
+		set("way", way);
 	}
 
 }

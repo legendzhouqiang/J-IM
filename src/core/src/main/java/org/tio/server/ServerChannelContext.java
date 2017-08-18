@@ -9,8 +9,8 @@ import org.tio.core.GroupContext;
 import org.tio.core.Node;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class ServerChannelContext extends ChannelContext {
@@ -19,23 +19,23 @@ public class ServerChannelContext extends ChannelContext {
 	 * @param groupContext
 	 * @param asynchronousSocketChannel
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2016年12月6日 下午12:17:59
-	 * 
+	 *
 	 */
 	public ServerChannelContext(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
 		super(groupContext, asynchronousSocketChannel);
 	}
 
-	/** 
+	/**
 	 * @see org.tio.core.ChannelContext#createClientNode(java.nio.channels.AsynchronousSocketChannel)
-	 * 
+	 *
 	 * @param asynchronousSocketChannel
 	 * @return
-	 * @throws IOException 
-	 * @author: tanyaowu
+	 * @throws IOException
+	 * @author tanyaowu
 	 * 2016年12月6日 下午12:18:08
-	 * 
+	 *
 	 */
 	@Override
 	public Node createClientNode(AsynchronousSocketChannel asynchronousSocketChannel) throws IOException {

@@ -19,8 +19,8 @@ import org.tio.examples.showcase.server.handler.P2PReqHandler;
 import org.tio.server.intf.ServerAioHandler;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class ShowcaseServerAioHandler extends ShowcaseAbsAioHandler implements ServerAioHandler {
@@ -35,7 +35,7 @@ public class ShowcaseServerAioHandler extends ShowcaseAbsAioHandler implements S
 		handlerMap.put(Type.P2P_REQ, new P2PReqHandler());
 	}
 
-	/** 
+	/**
 	 * 处理消息
 	 */
 	@Override

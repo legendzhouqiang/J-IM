@@ -1,23 +1,11 @@
 package org.tio.http.common;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年7月26日 下午3:12:56
  */
 public class UploadFile {
-	private String name = null;
-	private int size = -1;
-	private byte[] data = null;
-	//    private File file = null;
-
-	/**
-	 * 
-	 */
-	public UploadFile() {
-
-	}
-
 	/**
 	 * @param args
 	 */
@@ -25,16 +13,29 @@ public class UploadFile {
 
 	}
 
-	public int getSize() {
-		return size;
-	}
+	private String name = null;
+	private int size = -1;
 
-	public void setSize(int size) {
-		this.size = size;
+	private byte[] data = null;
+	//    private File file = null;
+
+	/**
+	 *
+	 */
+	public UploadFile() {
+
 	}
 
 	public byte[] getData() {
 		return data;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getSize() {
+		return size;
 	}
 
 	public void setData(byte[] data) {
@@ -51,11 +52,11 @@ public class UploadFile {
 	//        this.file = file;
 	//    }
 
-	public String getName() {
-		return name;
-	}
-
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 }

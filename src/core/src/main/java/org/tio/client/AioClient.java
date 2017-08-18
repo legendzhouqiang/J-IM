@@ -28,11 +28,64 @@ import org.tio.utils.lock.SetWithLock;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月1日 上午9:29:58
  */
 public class AioClient {
+	private static class ReconnRunnable implements Runnable {
+		ClientChannelContext channelContext = null;
+		AioClient aioClient = null;
+
+		//		private static Map<Node, Long> map = new HashMap<>();
+
+		public ReconnRunnable(ClientChannelContext channelContext, AioClient aioClient) {
+			this.channelContext = channelContext;
+			this.aioClient = aioClient;
+		}
+
+		/**
+		 * @see java.lang.Runnable#run()
+		 *
+		 * @author tanyaowu
+		 * 2017年2月2日 下午8:24:40
+		 *
+		 */
+		@Override
+		public void run() {
+			ReentrantReadWriteLock closeLock = channelContext.getCloseLock();
+			WriteLock writeLock = closeLock.writeLock();
+
+			try {
+				writeLock.lock();
+				if (!channelContext.isClosed()) //已经连上了，不需要再重连了
+				{
+					return;
+				}
+				long start = SystemTimer.currentTimeMillis();
+				aioClient.reconnect(channelContext, 2);
+				long end = SystemTimer.currentTimeMillis();
+				long iv = end - start;
+				if (iv >= 100) {
+					log.error("{},重连耗时:{} ms", channelContext, iv);
+				} else {
+					log.info("{},重连耗时:{} ms", channelContext, iv);
+				}
+
+				if (channelContext.isClosed()) {
+					channelContext.setReconnCount(channelContext.getReconnCount() + 1);
+					//					map.put(channelContext.getServerNode(), SystemTimer.currentTimeMillis());
+					return;
+				}
+			} catch (java.lang.Throwable e) {
+				log.error(e.toString(), e);
+			} finally {
+				writeLock.unlock();
+			}
+
+		}
+	}
+
 	private static Logger log = LoggerFactory.getLogger(AioClient.class);
 
 	private AsynchronousChannelGroup channelGroup;
@@ -41,14 +94,14 @@ public class AioClient {
 
 	/**
 	 * @param serverIp 可以为空
-	 * @param serverPort 
+	 * @param serverPort
 	 * @param aioDecoder
 	 * @param aioEncoder
 	 * @param aioHandler
 	 *
-	 * @author: tanyaowu
-	 * @throws IOException 
-	 * 
+	 * @author tanyaowu
+	 * @throws IOException
+	 *
 	 */
 	public AioClient(final ClientGroupContext clientGroupContext) throws IOException {
 		super();
@@ -61,52 +114,11 @@ public class AioClient {
 	}
 
 	/**
-	 * 
-	 * @param serverNode
-	 * @return
-	 * @throws Exception
 	 *
-	 * @author: tanyaowu
-	 *
-	 */
-	public ClientChannelContext connect(Node serverNode) throws Exception {
-		return connect(serverNode, null);
-	}
-
-	/**
-	 * 
-	 * @param serverNode
-	 * @param timeout
-	 * @return
-	 * @throws Exception
-	 * @author: tanyaowu
-	 */
-	public ClientChannelContext connect(Node serverNode, Integer timeout) throws Exception {
-		return connect(serverNode, null, 0, timeout);
-	}
-
-	/**
-	 * 
-	 * @param serverNode
-	 * @param bindIp
-	 * @param bindPort
-	 * @param timeout 超时时间，单位秒
-	 * @return
-	 * @throws Exception
-	 *
-	 * @author: tanyaowu
-	 *
-	 */
-	public ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort, Integer timeout) throws Exception {
-		return connect(serverNode, bindIp, bindPort, null, timeout);
-	}
-
-	/**
-	 * 
 	 * @param serverNode
 	 * @throws Exception
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 *
 	 */
 	public void asynConnect(Node serverNode) throws Exception {
@@ -114,12 +126,12 @@ public class AioClient {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param serverNode
 	 * @param timeout
 	 * @throws Exception
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 *
 	 */
 	public void asynConnect(Node serverNode, Integer timeout) throws Exception {
@@ -127,14 +139,14 @@ public class AioClient {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param serverNode
 	 * @param bindIp
 	 * @param bindPort
 	 * @param timeout
 	 * @throws Exception
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 *
 	 */
 	public void asynConnect(Node serverNode, String bindIp, Integer bindPort, Integer timeout) throws Exception {
@@ -142,33 +154,32 @@ public class AioClient {
 	}
 
 	/**
-	 * 此方法生产环境中用不到，暂未测试
-	 * @return
 	 *
-	 * @author: tanyaowu
+	 * @param serverNode
+	 * @return
+	 * @throws Exception
+	 *
+	 * @author tanyaowu
 	 *
 	 */
-	public boolean stop() {
-		//		isWaitingStop = true;
-		boolean ret = true;
-		ExecutorService groupExecutor = clientGroupContext.getGroupExecutor();
-		SynThreadPoolExecutor tioExecutor = clientGroupContext.getTioExecutor();
-		groupExecutor.shutdown();
-		tioExecutor.shutdown();
-		clientGroupContext.setStopped(true);
-		try {
-			ret = ret && groupExecutor.awaitTermination(6000, TimeUnit.SECONDS);
-			ret = ret && tioExecutor.awaitTermination(6000, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			log.error(e.getLocalizedMessage(), e);
-		}
-		log.info("client resource has released");
-		return ret;
-
+	public ClientChannelContext connect(Node serverNode) throws Exception {
+		return connect(serverNode, null);
 	}
 
 	/**
-	 * 
+	 *
+	 * @param serverNode
+	 * @param timeout
+	 * @return
+	 * @throws Exception
+	 * @author tanyaowu
+	 */
+	public ClientChannelContext connect(Node serverNode, Integer timeout) throws Exception {
+		return connect(serverNode, null, 0, timeout);
+	}
+
+	/**
+	 *
 	 * @param serverNode
 	 * @param bindIp
 	 * @param bindPort
@@ -176,14 +187,14 @@ public class AioClient {
 	 * @param timeout 超时时间，单位秒
 	 * @return
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort, ClientChannelContext initClientChannelContext, Integer timeout) throws Exception {
 		return connect(serverNode, bindIp, bindPort, initClientChannelContext, timeout, true);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param serverNode
 	 * @param bindIp
 	 * @param bindPort
@@ -192,7 +203,7 @@ public class AioClient {
 	 * @param isSyn true: 同步, false: 异步
 	 * @return
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	private ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort, ClientChannelContext initClientChannelContext, Integer timeout, boolean isSyn)
 			throws Exception {
@@ -253,6 +264,22 @@ public class AioClient {
 	}
 
 	/**
+	 *
+	 * @param serverNode
+	 * @param bindIp
+	 * @param bindPort
+	 * @param timeout 超时时间，单位秒
+	 * @return
+	 * @throws Exception
+	 *
+	 * @author tanyaowu
+	 *
+	 */
+	public ClientChannelContext connect(Node serverNode, String bindIp, Integer bindPort, Integer timeout) throws Exception {
+		return connect(serverNode, bindIp, bindPort, null, timeout);
+	}
+
+	/**
 	 * @return the channelGroup
 	 */
 	public AsynchronousChannelGroup getChannelGroup() {
@@ -267,13 +294,13 @@ public class AioClient {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param channelContext
 	 * @param timeout
 	 * @return
 	 * @throws Exception
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 *
 	 */
 	public void reconnect(ClientChannelContext channelContext, Integer timeout) throws Exception {
@@ -289,7 +316,7 @@ public class AioClient {
 
 	/**
 	 * 定时任务：发心跳
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 *
 	 */
 	private void startHeartbeatTask() {
@@ -323,7 +350,7 @@ public class AioClient {
 							long timeLatestReceivedMsg = stat.getLatestTimeOfReceivedPacket();
 							long timeLatestSentMsg = stat.getLatestTimeOfSentPacket();
 							long compareTime = Math.max(timeLatestReceivedMsg, timeLatestSentMsg);
-							long interval = (currtime - compareTime);
+							long interval = currtime - compareTime;
 							if (interval >= heartbeatTimeout / 2) {
 								Packet packet = aioHandler.heartbeatPacket();
 								if (packet != null) {
@@ -357,64 +384,11 @@ public class AioClient {
 		}, "tio-timer-heartbeat" + id).start();
 	}
 
-	private static class ReconnRunnable implements Runnable {
-		ClientChannelContext channelContext = null;
-		AioClient aioClient = null;
-
-		//		private static Map<Node, Long> map = new HashMap<>(); 
-
-		public ReconnRunnable(ClientChannelContext channelContext, AioClient aioClient) {
-			this.channelContext = channelContext;
-			this.aioClient = aioClient;
-		}
-
-		/** 
-		 * @see java.lang.Runnable#run()
-		 *  
-		 * @author: tanyaowu
-		 * 2017年2月2日 下午8:24:40
-		 * 
-		 */
-		@Override
-		public void run() {
-			ReentrantReadWriteLock closeLock = channelContext.getCloseLock();
-			WriteLock writeLock = closeLock.writeLock();
-
-			try {
-				writeLock.lock();
-				if (!channelContext.isClosed()) //已经连上了，不需要再重连了
-				{
-					return;
-				}
-				long start = SystemTimer.currentTimeMillis();
-				aioClient.reconnect(channelContext, 2);
-				long end = SystemTimer.currentTimeMillis();
-				long iv = end - start;
-				if (iv >= 100) {
-					log.error("{},重连耗时:{} ms", channelContext, iv);
-				} else {
-					log.info("{},重连耗时:{} ms", channelContext, iv);
-				}
-
-				if (channelContext.isClosed()) {
-					channelContext.setReconnCount(channelContext.getReconnCount() + 1);
-					//					map.put(channelContext.getServerNode(), SystemTimer.currentTimeMillis());
-					return;
-				}
-			} catch (java.lang.Throwable e) {
-				log.error(e.toString(), e);
-			} finally {
-				writeLock.unlock();
-			}
-
-		}
-	}
-
 	/**
 	 * 启动重连任务
-	 * 
 	 *
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 *
 	 */
 	private void startReconnTask() {
@@ -470,6 +444,32 @@ public class AioClient {
 		thread.setName("tio-timer-reconnect-" + id);
 		thread.setDaemon(true);
 		thread.start();
+
+	}
+
+	/**
+	 * 此方法生产环境中用不到，暂未测试
+	 * @return
+	 *
+	 * @author tanyaowu
+	 *
+	 */
+	public boolean stop() {
+		//		isWaitingStop = true;
+		boolean ret = true;
+		ExecutorService groupExecutor = clientGroupContext.getGroupExecutor();
+		SynThreadPoolExecutor tioExecutor = clientGroupContext.getTioExecutor();
+		groupExecutor.shutdown();
+		tioExecutor.shutdown();
+		clientGroupContext.setStopped(true);
+		try {
+			ret = ret && groupExecutor.awaitTermination(6000, TimeUnit.SECONDS);
+			ret = ret && tioExecutor.awaitTermination(6000, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			log.error(e.getLocalizedMessage(), e);
+		}
+		log.info("client resource has released");
+		return ret;
 
 	}
 }

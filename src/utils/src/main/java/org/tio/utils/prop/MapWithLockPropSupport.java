@@ -9,50 +9,55 @@ import org.slf4j.LoggerFactory;
 import org.tio.utils.lock.MapWithLock;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月18日 下午5:36:02
  */
 public class MapWithLockPropSupport implements IPropSupport {
 	private static Logger log = LoggerFactory.getLogger(MapWithLockPropSupport.class);
-	
-	private MapWithLock<String, Object> props = null;//
-	
-	private void initProps() {
-		if (props == null) {
-			synchronized (this) {
-				if (props == null) {
-					props = new MapWithLock<String, Object>(new HashMap<String, Object>());
-				}
-			}
-		}
-	}
-	
+
 	/**
-	 * 
-	 * @param key
-	 * @param value
-	 * @author: tanyaowu
+	 * @param args
+	 * @author tanyaowu
 	 */
-	public void setAttribute(String key, Object value) {
+	public static void main(String[] args) {
+
+	}
+
+	private MapWithLock<String, Object> props = null;//
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public MapWithLockPropSupport() {
+	}
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	@Override
+	public void clearAttribute() {
 		initProps();
 		Lock lock = props.getLock().writeLock();
 		Map<String, Object> m = props.getObj();
 		try {
 			lock.lock();
-			m.put(key, value);
+			m.clear();
 		} catch (Exception e) {
 			throw e;
 		} finally {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param key
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
+	@Override
 	public Object getAttribute(String key) {
 		initProps();
 		Map<String, Object> m = props.getObj();
@@ -71,35 +76,20 @@ public class MapWithLockPropSupport implements IPropSupport {
 		//			lock.unlock();
 		//		}
 	}
-	
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public void clearAttribute() {
-		initProps();
-		Lock lock = props.getLock().writeLock();
-		Map<String, Object> m = props.getObj();
-		try {
-			lock.lock();
-			m.clear();
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			lock.unlock();
+
+	private void initProps() {
+		if (props == null) {
+			synchronized (this) {
+				if (props == null) {
+					props = new MapWithLock<>(new HashMap<String, Object>());
+				}
+			}
 		}
 	}
 
 	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public MapWithLockPropSupport() {
-	}
-
-	/** 
 	 * @param key
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void removeAttribute(String key) {
@@ -117,10 +107,23 @@ public class MapWithLockPropSupport implements IPropSupport {
 	}
 
 	/**
-	 * @param args
-	 * @author: tanyaowu
+	 *
+	 * @param key
+	 * @param value
+	 * @author tanyaowu
 	 */
-	public static void main(String[] args) {
-
+	@Override
+	public void setAttribute(String key, Object value) {
+		initProps();
+		Lock lock = props.getLock().writeLock();
+		Map<String, Object> m = props.getObj();
+		try {
+			lock.lock();
+			m.put(key, value);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			lock.unlock();
+		}
 	}
 }

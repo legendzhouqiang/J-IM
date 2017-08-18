@@ -12,7 +12,7 @@ import org.tio.http.server.util.Resps;
 import com.jfinal.plugin.activerecord.Page;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月22日 上午10:44:13
  */
 @RequestPath(value = "/donate")
@@ -22,8 +22,16 @@ public class DonateController {
 	static final DonateService srv = DonateService.me;
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
+
+	/**
+	 *
+	 * @author tanyaowu
 	 */
 	public DonateController() {
 	}
@@ -33,13 +41,5 @@ public class DonateController {
 		Page<Donate> page = srv.page(pageNumber, pageSize);
 		HttpResponse ret = Resps.json(request, page);
 		return ret;
-	}
-
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
 	}
 }

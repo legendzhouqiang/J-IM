@@ -20,7 +20,7 @@ import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.RequestLine;
 import org.tio.http.common.session.HttpSession;
-import org.tio.http.server.HttpServerConfig;
+import org.tio.http.common.HttpConfig;
 import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
 import org.tio.http.server.util.ClassUtils;
@@ -32,8 +32,8 @@ import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class DefaultHttpRequestHandler implements IHttpRequestHandler {
@@ -53,20 +53,30 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	 */
 	private static final String STATIC_RES_CONTENT_CACHENAME = "TIO_HTTP_STATIC_RES_CONTENT";
 
-	protected HttpServerConfig httpConfig;
+	/**
+	 * @param args
+	 *
+	 * @author tanyaowu
+	 * 2016年11月18日 上午9:13:15
+	 *
+	 */
+	public static void main(String[] args) {
+	}
+
+	protected HttpConfig httpConfig;
 
 	protected Routes routes = null;
 
-	private IHttpServerListener httpServerListener;
-
 	//	private LoadingCache<String, HttpSession> loadingCache = null;
 
+	private IHttpServerListener httpServerListener;
+
 	/**
-	 * 
+	 *
 	 * @param httpConfig
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
-	public DefaultHttpRequestHandler(HttpServerConfig httpConfig) {
+	public DefaultHttpRequestHandler(HttpConfig httpConfig) {
 		this.httpConfig = httpConfig;
 
 		if (httpConfig.getMaxLiveTimeOfStaticRes() > 0) {
@@ -83,22 +93,17 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		//		loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats);
 	}
 
-	private Cookie getSessionCookie(HttpRequest httpRequest, HttpServerConfig httpConfig) throws ExecutionException {
-		Cookie sessionCookie = httpRequest.getCookie(httpConfig.getSessionCookieName());
-		return sessionCookie;
-	}
-
 	//	private static String randomCookieValue() {
 	//		return RandomUtil.randomUUID();
 	//	}
 
 	/**
-	 * 
+	 *
 	 * @param httpConfig
 	 * @param routes
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
-	public DefaultHttpRequestHandler(HttpServerConfig httpConfig, Routes routes) {
+	public DefaultHttpRequestHandler(HttpConfig httpConfig, Routes routes) {
 		this(httpConfig);
 		this.routes = routes;
 	}
@@ -106,7 +111,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	/**
 	 * 创建httpsession
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	private HttpSession createSession() {
 		String sessionId = httpConfig.getSessionIdGenerator().sessionId(httpConfig);
@@ -114,65 +119,28 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		return httpSession;
 	}
 
-	private void processCookieBeforeHandler(HttpRequest request, RequestLine requestLine, ChannelContext channelContext) throws ExecutionException {
-		Cookie cookie = getSessionCookie(request, httpConfig);
-		HttpSession httpSession = null;
-		if (cookie == null) {
-			httpSession = createSession();
-		} else {
-			//			httpSession = (HttpSession)httpSession.getAttribute(SESSIONID_KEY);//loadingCache.getIfPresent(sessionCookie.getValue());
-			String sessionId = cookie.getValue();
-			httpSession = (HttpSession) httpConfig.getSessionStore().get(sessionId);
-			if (httpSession == null) {
-				log.info("{} session【{}】超时", channelContext, sessionId);
-				httpSession = createSession();
-			}
-		}
-		request.setHttpSession(httpSession);
+	/**
+	 * @return the httpConfig
+	 */
+	public HttpConfig getHttpConfig() {
+		return httpConfig;
 	}
 
-	private void processCookieAfterHandler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws ExecutionException {
-		HttpSession httpSession = httpRequest.getHttpSession();//(HttpSession) channelContext.getAttribute();//.getHttpSession();//not null
-		Cookie cookie = getSessionCookie(httpRequest, httpConfig);
-		String sessionId = null;
+	public IHttpServerListener getHttpServerListener() {
+		return httpServerListener;
+	}
 
-		if (cookie == null) {
-			String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
-			String name = httpConfig.getSessionCookieName();
-			long maxAge = httpConfig.getSessionTimeout();
-			//			maxAge = Integer.MAX_VALUE; //把过期时间掌握在服务器端
-
-			sessionId = httpSession.getId();//randomCookieValue();
-
-			cookie = new Cookie(domain, name, sessionId, maxAge);
-			httpResponse.addCookie(cookie);
-			httpConfig.getSessionStore().put(sessionId, httpSession);
-			log.info("{} 创建会话Cookie, {}", channelContext, cookie);
-		} else {
-			sessionId = cookie.getValue();
-			HttpSession httpSession1 = (HttpSession) httpConfig.getSessionStore().get(sessionId);
-
-			if (httpSession1 == null) {//有cookie但是超时了
-				sessionId = httpSession.getId();
-				String domain = httpRequest.getHeader(HttpConst.RequestHeaderKey.Host);
-				String name = httpConfig.getSessionCookieName();
-				long maxAge = httpConfig.getSessionTimeout();
-				//				maxAge = Long.MAX_VALUE; //把过期时间掌握在服务器端
-
-				cookie = new Cookie(domain, name, sessionId, maxAge);
-				httpResponse.addCookie(cookie);
-
-				httpConfig.getSessionStore().put(sessionId, httpSession);
-			}
-		}
+	private Cookie getSessionCookie(HttpRequest request, HttpConfig httpConfig) throws ExecutionException {
+		Cookie sessionCookie = request.getCookie(httpConfig.getSessionCookieName());
+		return sessionCookie;
 	}
 
 	@Override
-	public HttpResponse handler(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext) throws Exception {
+	public HttpResponse handler(HttpRequest request, RequestLine requestLine, ChannelContext channelContext) throws Exception {
 		HttpResponse ret = null;
 		try {
-			processCookieBeforeHandler(httpRequest, requestLine, channelContext);
-			HttpSession httpSession = httpRequest.getHttpSession();//(HttpSession) channelContext.getAttribute();
+			processCookieBeforeHandler(request, requestLine, channelContext);
+			HttpSession httpSession = request.getHttpSession();//(HttpSession) channelContext.getAttribute();
 
 			//			GuavaCache guavaCache = GuavaCache.getCache(STATIC_RES_CACHENAME);
 			//			ret = (HttpResponse) guavaCache.get(requestLine.getPath());
@@ -181,7 +149,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			//			}
 
 			if (httpServerListener != null) {
-				ret = httpServerListener.doBeforeHandler(httpRequest, requestLine, channelContext, ret);
+				ret = httpServerListener.doBeforeHandler(request, requestLine, channelContext, ret);
 				if (ret != null) {
 					return ret;
 				}
@@ -201,7 +169,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 				Object bean = routes.methodBeanMap.get(method);
 				Object obj = null;
-				Map<String, Object[]> params = httpRequest.getParams();
+				Map<String, Object[]> params = request.getParams();
 				if (parameterTypes == null || parameterTypes.length == 0) {
 					obj = method.invoke(bean);
 				} else {
@@ -211,8 +179,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					for (Class<?> paramType : parameterTypes) {
 						try {
 							if (paramType.isAssignableFrom(HttpRequest.class)) {
-								paramValues[i] = httpRequest;
-							} else if (paramType.isAssignableFrom(HttpServerConfig.class)) {
+								paramValues[i] = request;
+							} else if (paramType.isAssignableFrom(HttpConfig.class)) {
 								paramValues[i] = httpConfig;
 							} else if (paramType.isAssignableFrom(ChannelContext.class)) {
 								paramValues[i] = channelContext;
@@ -295,21 +263,21 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					long lastModified = fileCache.getLastModified();
 					log.info("从缓存获取:[{}], {}", path, bodyBytes.length);
 
-					ret = Resps.try304(httpRequest, lastModified);
+					ret = Resps.try304(request, lastModified);
 					if (ret != null) {
 						ret.addHeader(HttpConst.ResponseHeaderKey.tio_from_cache, "true");
 
 						return ret;
 					}
 
-					ret = new HttpResponse(httpRequest, httpConfig);
-					ret.setBody(bodyBytes, httpRequest);
+					ret = new HttpResponse(request, httpConfig);
+					ret.setBody(bodyBytes, request);
 					ret.addHeaders(headers);
 					return ret;
 				} else {
 					String root = httpConfig.getRoot();
 					File file = new File(root, path);
-					if ((!file.exists()) || file.isDirectory()) {
+					if (!file.exists() || file.isDirectory()) {
 						if (StringUtils.endsWith(path, "/")) {
 							path = path + "index.html";
 						} else {
@@ -319,7 +287,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					}
 
 					if (file.exists()) {
-						ret = Resps.file(httpRequest, file);
+						ret = Resps.file(request, file);
 						ret.setStaticRes(true);
 
 						if (contentCache != null) {
@@ -352,21 +320,21 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 				}
 			}
 
-			ret = resp404(httpRequest, requestLine, channelContext);//Resps.html(httpRequest, "404--并没有找到你想要的内容", httpConfig.getCharset());
+			ret = resp404(request, requestLine, channelContext);//Resps.html(request, "404--并没有找到你想要的内容", httpConfig.getCharset());
 			return ret;
 		} catch (Exception e) {
-			logError(httpRequest, requestLine, e);
-			ret = resp500(httpRequest, requestLine, channelContext, e);//Resps.html(httpRequest, "500--服务器出了点故障", httpConfig.getCharset());
+			logError(request, requestLine, e);
+			ret = resp500(request, requestLine, channelContext, e);//Resps.html(request, "500--服务器出了点故障", httpConfig.getCharset());
 			return ret;
 		} finally {
 			if (ret != null) {
 				try {
-					processCookieAfterHandler(httpRequest, requestLine, channelContext, ret);
+					processCookieAfterHandler(request, requestLine, channelContext, ret);
 					if (httpServerListener != null) {
-						httpServerListener.doAfterHandler(httpRequest, requestLine, channelContext, ret);
+						httpServerListener.doAfterHandler(request, requestLine, channelContext, ret);
 					}
 				} catch (Exception e) {
-					logError(httpRequest, requestLine, e);
+					logError(request, requestLine, e);
 				}
 
 				//				try {
@@ -379,74 +347,106 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 				//						guavaCache.put(requestLine.getPath(), ret);
 				//					}
 				//				} catch (Exception e) {
-				//					logError(httpRequest, requestLine, e);
+				//					logError(request, requestLine, e);
 				//				}
 			}
 		}
 	}
 
-	private void logError(HttpRequest httpRequest, RequestLine requestLine, Exception e) {
+	private void logError(HttpRequest request, RequestLine requestLine, Exception e) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("\r\n").append("remote  :").append(httpRequest.getRemote());
+		sb.append("\r\n").append("remote  :").append(request.getRemote());
 		sb.append("\r\n").append("request :").append(requestLine.getLine());
 		log.error(sb.toString(), e);
 
 	}
 
+	private void processCookieAfterHandler(HttpRequest request, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws ExecutionException {
+		HttpSession httpSession = request.getHttpSession();//(HttpSession) channelContext.getAttribute();//.getHttpSession();//not null
+		Cookie cookie = getSessionCookie(request, httpConfig);
+		String sessionId = null;
+
+		if (cookie == null) {
+			String domain = request.getHeader(HttpConst.RequestHeaderKey.Host);
+			String name = httpConfig.getSessionCookieName();
+			long maxAge = httpConfig.getSessionTimeout();
+			//			maxAge = Integer.MAX_VALUE; //把过期时间掌握在服务器端
+
+			sessionId = httpSession.getId();//randomCookieValue();
+
+			cookie = new Cookie(domain, name, sessionId, maxAge);
+			httpResponse.addCookie(cookie);
+			httpConfig.getSessionStore().put(sessionId, httpSession);
+			log.info("{} 创建会话Cookie, {}", channelContext, cookie);
+		} else {
+			sessionId = cookie.getValue();
+			HttpSession httpSession1 = (HttpSession) httpConfig.getSessionStore().get(sessionId);
+
+			if (httpSession1 == null) {//有cookie但是超时了
+				sessionId = httpSession.getId();
+				String domain = request.getHeader(HttpConst.RequestHeaderKey.Host);
+				String name = httpConfig.getSessionCookieName();
+				long maxAge = httpConfig.getSessionTimeout();
+				//				maxAge = Long.MAX_VALUE; //把过期时间掌握在服务器端
+
+				cookie = new Cookie(domain, name, sessionId, maxAge);
+				httpResponse.addCookie(cookie);
+
+				httpConfig.getSessionStore().put(sessionId, httpSession);
+			}
+		}
+	}
+
+	private void processCookieBeforeHandler(HttpRequest request, RequestLine requestLine, ChannelContext channelContext) throws ExecutionException {
+		Cookie cookie = getSessionCookie(request, httpConfig);
+		HttpSession httpSession = null;
+		if (cookie == null) {
+			httpSession = createSession();
+		} else {
+			//			httpSession = (HttpSession)httpSession.getAttribute(SESSIONID_KEY);//loadingCache.getIfPresent(sessionCookie.getValue());
+			String sessionId = cookie.getValue();
+			httpSession = (HttpSession) httpConfig.getSessionStore().get(sessionId);
+			if (httpSession == null) {
+				log.info("{} session【{}】超时", channelContext, sessionId);
+				httpSession = createSession();
+			}
+		}
+		request.setHttpSession(httpSession);
+	}
+
 	@Override
-	public HttpResponse resp404(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext) {
+	public HttpResponse resp404(HttpRequest request, RequestLine requestLine, ChannelContext channelContext) {
 		String file404 = httpConfig.getPage404();
 		String root = httpConfig.getRoot();
 		File file = new File(root, file404);
 		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(httpRequest, file404 + "?initpath=" + requestLine.getPathAndQuery());
+			HttpResponse ret = Resps.redirect(request, file404 + "?initpath=" + requestLine.getPathAndQuery());
 			return ret;
 		} else {
-			HttpResponse ret = Resps.html(httpRequest, "404");
+			HttpResponse ret = Resps.html(request, "404");
 			return ret;
 		}
 	}
 
 	@Override
-	public HttpResponse resp500(HttpRequest httpRequest, RequestLine requestLine, ChannelContext channelContext, Throwable throwable) {
+	public HttpResponse resp500(HttpRequest request, RequestLine requestLine, ChannelContext channelContext, Throwable throwable) {
 		String file500 = httpConfig.getPage500();
 		String root = httpConfig.getRoot();
 		File file = new File(root, file500);
 		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(httpRequest, file500 + "?initpath=" + requestLine.getPathAndQuery());
+			HttpResponse ret = Resps.redirect(request, file500 + "?initpath=" + requestLine.getPathAndQuery());
 			return ret;
 		} else {
-			HttpResponse ret = Resps.html(httpRequest, "500");
+			HttpResponse ret = Resps.html(request, "500");
 			return ret;
 		}
-	}
-
-	/**
-	 * @param args
-	 *
-	 * @author: tanyaowu
-	 * 2016年11月18日 上午9:13:15
-	 * 
-	 */
-	public static void main(String[] args) {
-	}
-
-	/**
-	 * @return the httpConfig
-	 */
-	public HttpServerConfig getHttpServerConfig() {
-		return httpConfig;
 	}
 
 	/**
 	 * @param httpConfig the httpConfig to set
 	 */
-	public void setHttpServerConfig(HttpServerConfig httpConfig) {
+	public void setHttpConfig(HttpConfig httpConfig) {
 		this.httpConfig = httpConfig;
-	}
-
-	public IHttpServerListener getHttpServerListener() {
-		return httpServerListener;
 	}
 
 	public void setHttpServerListener(IHttpServerListener httpServerListener) {

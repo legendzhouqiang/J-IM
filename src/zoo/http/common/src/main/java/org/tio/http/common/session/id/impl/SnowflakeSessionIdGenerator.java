@@ -7,43 +7,43 @@ import com.xiaoleilu.hutool.lang.Snowflake;
 import com.xiaoleilu.hutool.util.RandomUtil;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月15日 上午10:58:22
  */
 public class SnowflakeSessionIdGenerator implements ISessionIdGenerator {
-	
+
+	/**
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
+
 	private Snowflake snowflake;
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
+	 */
+	public SnowflakeSessionIdGenerator() {
+		snowflake = new Snowflake(RandomUtil.randomInt(0, 31), RandomUtil.randomInt(0, 31));
+	}
+
+	/**
+	 *
+	 * @author tanyaowu
 	 */
 	public SnowflakeSessionIdGenerator(int workerId, int datacenterId) {
 		snowflake = new Snowflake(workerId, datacenterId);
 	}
 
 	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public SnowflakeSessionIdGenerator() {
-		snowflake = new Snowflake(RandomUtil.randomInt(0, 31), RandomUtil.randomInt(0, 31));
-	}
-
-	/** 
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public String sessionId(HttpConfig httpConfig) {
 		return snowflake.nextId() + "";
-	}
-
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
 	}
 }

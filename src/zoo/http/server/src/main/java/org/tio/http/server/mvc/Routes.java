@@ -20,14 +20,55 @@ import io.github.lukehutch.fastclasspathscanner.matchprocessor.ClassAnnotationMa
 import io.github.lukehutch.fastclasspathscanner.matchprocessor.MethodAnnotationMatchProcessor;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月1日 上午9:05:30
  */
 public class Routes {
 	private static Logger log = LoggerFactory.getLogger(Routes.class);
-	//	private HttpServerConfig httpConfig = null;
+	//	private HttpConfig httpConfig = null;
 
 	//	private String[] scanPackages = null;
+
+	/**
+	 * 格式化成"/user","/"这样的路径
+	 * @param initPath
+	 * @return
+	 * @author tanyaowu
+	 */
+	private static String formateBeanPath(String initPath) {
+		//		if (StringUtils.isBlank(initPath)) {
+		//			return "/";
+		//		}
+		//		initPath = StringUtils.replaceAll(initPath, "//", "/");
+		//		if (!StringUtils.startsWith(initPath, "/")) {
+		//			initPath = "/" + initPath;
+		//		}
+		//
+		//		if (StringUtils.endsWith(initPath, "/")) {
+		//			initPath = initPath.substring(0, initPath.length() - 1);
+		//		}
+		return initPath;
+	}
+
+	private static String formateMethodPath(String initPath) {
+		//		if (StringUtils.isBlank(initPath)) {
+		//			return "";
+		//		}
+		//		initPath = StringUtils.replaceAll(initPath, "//", "/");
+		//		if (!StringUtils.startsWith(initPath, "/")) {
+		//			initPath = "/" + initPath;
+		//		}
+
+		return initPath;
+	}
+
+	/**
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
 
 	/**
 	 * 路径和对象映射
@@ -35,7 +76,6 @@ public class Routes {
 	 * value: object
 	 */
 	public Map<String, Object> pathBeanMap = new HashMap<>();
-
 	/**
 	 * 路径和class映射
 	 * 只是用来打印的
@@ -57,6 +97,7 @@ public class Routes {
 	 * value: method
 	 */
 	public Map<String, Method> pathMethodMap = new HashMap<>();
+
 	/**
 	 * Method路径映射
 	 * 只是用于打印日志
@@ -80,8 +121,8 @@ public class Routes {
 	public Map<Method, Object> methodBeanMap = new HashMap<>();
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
 	public Routes(String[] scanPackages) {
 		//		this.scanPackages = scanPackages;
@@ -171,46 +212,5 @@ public class Routes {
 			log.info("method mapping\r\n{}", Json.toFormatedJson(pathMethodstrMap));
 			//			log.info("methodParamnameMap scan result :\r\n {}\r\n", Json.toFormatedJson(methodParamnameMap));
 		}
-	}
-
-	/**
-	 * 格式化成"/user","/"这样的路径
-	 * @param initPath
-	 * @return
-	 * @author: tanyaowu
-	 */
-	private static String formateBeanPath(String initPath) {
-//		if (StringUtils.isBlank(initPath)) {
-//			return "/";
-//		}
-//		initPath = StringUtils.replaceAll(initPath, "//", "/");
-//		if (!StringUtils.startsWith(initPath, "/")) {
-//			initPath = "/" + initPath;
-//		}
-//
-//		if (StringUtils.endsWith(initPath, "/")) {
-//			initPath = initPath.substring(0, initPath.length() - 1);
-//		}
-		return initPath;
-	}
-
-	private static String formateMethodPath(String initPath) {
-//		if (StringUtils.isBlank(initPath)) {
-//			return "";
-//		}
-//		initPath = StringUtils.replaceAll(initPath, "//", "/");
-//		if (!StringUtils.startsWith(initPath, "/")) {
-//			initPath = "/" + initPath;
-//		}
-
-		return initPath;
-	}
-
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
 	}
 }

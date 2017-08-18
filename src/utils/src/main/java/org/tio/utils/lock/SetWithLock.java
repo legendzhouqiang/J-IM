@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年5月14日 上午9:55:37
  */
 public class SetWithLock<T> extends ObjWithLock<Set<T>> {
@@ -16,7 +16,7 @@ public class SetWithLock<T> extends ObjWithLock<Set<T>> {
 
 	/**
 	 * @param set
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public SetWithLock(Set<T> set) {
 		super(set);
@@ -25,17 +25,17 @@ public class SetWithLock<T> extends ObjWithLock<Set<T>> {
 	/**
 	 * @param set
 	 * @param lock
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public SetWithLock(Set<T> set, ReentrantReadWriteLock lock) {
 		super(set, lock);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param t
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public boolean add(T t) {
 		WriteLock writeLock = this.getLock().writeLock();
@@ -52,10 +52,28 @@ public class SetWithLock<T> extends ObjWithLock<Set<T>> {
 	}
 
 	/**
-	 * 
+	 *
+	 *
+	 * @author tanyaowu
+	 */
+	public void clear() {
+		WriteLock writeLock = this.getLock().writeLock();
+		writeLock.lock();
+		try {
+			Set<T> set = this.getObj();
+			set.clear();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		} finally {
+			writeLock.unlock();
+		}
+	}
+
+	/**
+	 *
 	 * @param t
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public boolean remove(T t) {
 		WriteLock writeLock = this.getLock().writeLock();
@@ -69,23 +87,5 @@ public class SetWithLock<T> extends ObjWithLock<Set<T>> {
 			writeLock.unlock();
 		}
 		return false;
-	}
-
-	/**
-	 * 
-	 * 
-	 * @author: tanyaowu
-	 */
-	public void clear() {
-		WriteLock writeLock = this.getLock().writeLock();
-		writeLock.lock();
-		try {
-			Set<T> set = this.getObj();
-			set.clear();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		} finally {
-			writeLock.unlock();
-		}
 	}
 }

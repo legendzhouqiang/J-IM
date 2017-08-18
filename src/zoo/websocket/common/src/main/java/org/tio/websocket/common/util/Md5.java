@@ -5,18 +5,18 @@ import java.io.UnsupportedEncodingException;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年7月30日 上午10:11:28
  */
 public class Md5 {
 
 	/**
-	 * 
+	 *
 	 * @param content
 	 * @param charset
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	private static byte[] getContentBytes(String content, String charset) {
 		if (charset == null || "".equals(charset)) {
@@ -27,6 +27,10 @@ public class Md5 {
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("MD5签名过程中出现错误,指定的编码集不对,您目前指定的编码集是:" + charset);
 		}
+	}
+
+	public static String getMD5(String input) {
+		return sign(input, "", "utf-8");
 	}
 
 	/**
@@ -57,10 +61,6 @@ public class Md5 {
 		} else {
 			return false;
 		}
-	}
-
-	public static String getMD5(String input) {
-		return sign(input, "", "utf-8");
 	}
 
 }

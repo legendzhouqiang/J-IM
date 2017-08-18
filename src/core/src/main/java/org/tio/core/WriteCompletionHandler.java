@@ -14,11 +14,56 @@ import org.tio.core.intf.PacketWithMeta;
 import org.tio.core.stat.GroupStat;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class WriteCompletionHandler implements CompletionHandler<Integer, WriteCompletionVo> {
+
+	public static class WriteCompletionVo {
+		private ByteBuffer byteBuffer = null;
+
+		private Object obj = null;
+
+		/**
+		 * @param byteBuffer
+		 * @param obj
+		 * @author tanyaowu
+		 */
+		public WriteCompletionVo(ByteBuffer byteBuffer, Object obj) {
+			super();
+			this.byteBuffer = byteBuffer;
+			this.obj = obj;
+		}
+
+		/**
+		 * @return the byteBuffer
+		 */
+		public ByteBuffer getByteBuffer() {
+			return byteBuffer;
+		}
+
+		/**
+		 * @return the obj
+		 */
+		public Object getObj() {
+			return obj;
+		}
+
+		/**
+		 * @param byteBuffer the byteBuffer to set
+		 */
+		public void setByteBuffer(ByteBuffer byteBuffer) {
+			this.byteBuffer = byteBuffer;
+		}
+
+		/**
+		 * @param obj the obj to set
+		 */
+		public void setObj(Object obj) {
+			this.obj = obj;
+		}
+	}
 
 	private static Logger log = LoggerFactory.getLogger(WriteCompletionHandler.class);
 
@@ -52,11 +97,18 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 	}
 
 	/**
-	 * 
+	 * @return the writeSemaphore
+	 */
+	public java.util.concurrent.Semaphore getWriteSemaphore() {
+		return writeSemaphore;
+	}
+
+	/**
+	 *
 	 * @param result
 	 * @param throwable
 	 * @param attachment Packet or PacketWithMeta or List<PacketWithMeta> or List<Packet>
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public void handle(Integer result, Throwable throwable, WriteCompletionVo writeCompletionVo) {
 		this.writeSemaphore.release();
@@ -108,12 +160,12 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 	}
 
 	/**
-	 * 
+	 *
 	 * @param result
 	 * @param throwable
 	 * @param obj PacketWithMeta or Packet
 	 * @param isSentSuccess
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public void handleOne(Integer result, Throwable throwable, Object obj, Boolean isSentSuccess) {
 		Packet packet = null;
@@ -135,57 +187,6 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 			log.error(e.toString(), e);
 		}
 
-	}
-
-	/**
-	 * @return the writeSemaphore
-	 */
-	public java.util.concurrent.Semaphore getWriteSemaphore() {
-		return writeSemaphore;
-	}
-
-	public static class WriteCompletionVo {
-		/**
-		 * @param byteBuffer
-		 * @param obj
-		 * @author: tanyaowu
-		 */
-		public WriteCompletionVo(ByteBuffer byteBuffer, Object obj) {
-			super();
-			this.byteBuffer = byteBuffer;
-			this.obj = obj;
-		}
-
-		private ByteBuffer byteBuffer = null;
-		private Object obj = null;
-
-		/**
-		 * @return the byteBuffer
-		 */
-		public ByteBuffer getByteBuffer() {
-			return byteBuffer;
-		}
-
-		/**
-		 * @param byteBuffer the byteBuffer to set
-		 */
-		public void setByteBuffer(ByteBuffer byteBuffer) {
-			this.byteBuffer = byteBuffer;
-		}
-
-		/**
-		 * @return the obj
-		 */
-		public Object getObj() {
-			return obj;
-		}
-
-		/**
-		 * @param obj the obj to set
-		 */
-		public void setObj(Object obj) {
-			this.obj = obj;
-		}
 	}
 
 }

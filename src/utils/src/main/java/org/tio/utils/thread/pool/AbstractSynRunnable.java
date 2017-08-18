@@ -9,9 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  
- * @author tanyaowu 
- * 
+ *
+ * @author tanyaowu
+ *
  */
 public abstract class AbstractSynRunnable implements ISynRunnable {
 
@@ -22,6 +22,8 @@ public abstract class AbstractSynRunnable implements ISynRunnable {
 
 	private Executor executor;
 
+	private boolean isCanceled = false;
+
 	/**
 	 * Instantiates a new abstract syn runnable.
 	 */
@@ -29,17 +31,16 @@ public abstract class AbstractSynRunnable implements ISynRunnable {
 		this.setExecutor(executor);
 	}
 
-	/** 
-	 * @see org.tio.core.threadpool.intf.ISynRunnable#runningLock()
-	 * 
-	 * @return
-	 * @author: tanyaowu
-	 * 2016年12月3日 下午1:53:03
-	 * 
+	/**
+	 * @return the executor
 	 */
+	public Executor getExecutor() {
+		return executor;
+	}
+
 	@Override
-	public ReadWriteLock runningLock() {
-		return runningLock;
+	public boolean isCanceled() {
+		return isCanceled;
 	}
 
 	@Override
@@ -68,23 +69,22 @@ public abstract class AbstractSynRunnable implements ISynRunnable {
 		}
 	}
 
-	private boolean isCanceled = false;
-
+	/**
+	 * @see org.tio.core.threadpool.intf.ISynRunnable#runningLock()
+	 *
+	 * @return
+	 * @author tanyaowu
+	 * 2016年12月3日 下午1:53:03
+	 *
+	 */
 	@Override
-	public boolean isCanceled() {
-		return isCanceled;
+	public ReadWriteLock runningLock() {
+		return runningLock;
 	}
 
 	@Override
 	public void setCanceled(boolean isCanceled) {
 		this.isCanceled = isCanceled;
-	}
-
-	/**
-	 * @return the executor
-	 */
-	public Executor getExecutor() {
-		return executor;
 	}
 
 	/**

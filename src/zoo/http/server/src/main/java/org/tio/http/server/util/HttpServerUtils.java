@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.http.common.GroupContextKey;
+import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpRequest;
-import org.tio.http.server.HttpServerConfig;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月18日 下午5:47:00
  */
 public class HttpServerUtils {
@@ -17,23 +17,29 @@ public class HttpServerUtils {
 
 	/**
 	 * 
-	 * @author: tanyaowu
+	 * @param request
+	 * @return
+	 * @author tanyaowu
 	 */
-	public HttpServerUtils() {
-	}
-	
-	public static HttpServerConfig getHttpConfig(HttpRequest request) {
+	public static HttpConfig getHttpConfig(HttpRequest request) {
 		ChannelContext channelContext = request.getChannelContext();
 		GroupContext groupContext = channelContext.getGroupContext();
-		HttpServerConfig httpServerConfig = (HttpServerConfig)groupContext.getAttribute(GroupContextKey.HTTP_SERVER_CONFIG);
-		return httpServerConfig;
+		HttpConfig httpConfig = (HttpConfig) groupContext.getAttribute(GroupContextKey.HTTP_SERVER_CONFIG);
+		return httpConfig;
 	}
 
 	/**
 	 * @param args
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
 
+	}
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public HttpServerUtils() {
 	}
 }

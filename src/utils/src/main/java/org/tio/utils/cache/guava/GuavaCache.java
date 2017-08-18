@@ -14,8 +14,8 @@ import org.tio.utils.cache.ICache;
 import com.google.common.cache.LoadingCache;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年8月5日 上午10:16:26
  */
 public class GuavaCache implements ICache {
@@ -23,10 +23,12 @@ public class GuavaCache implements ICache {
 
 	public static Map<String, GuavaCache> map = new HashMap<>();
 
-	private LoadingCache<String, Serializable> loadingCache = null;
-
-	private GuavaCache(LoadingCache<String, Serializable> loadingCache) {
-		this.loadingCache = loadingCache;
+	public static GuavaCache getCache(String cacheName) {
+		GuavaCache guavaCache = map.get(cacheName);
+		if (guavaCache == null) {
+			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, expireAfterWrite, expireAfterAccess)", cacheName, GuavaCache.class.getSimpleName());
+		}
+		return guavaCache;
 	}
 
 	/**
@@ -35,7 +37,7 @@ public class GuavaCache implements ICache {
 	 * @param expireAfterWrite
 	 * @param expireAfterAccess
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static GuavaCache register(String cacheName, Long expireAfterWrite, Long expireAfterAccess) {
 		GuavaCache guavaCache = map.get(cacheName);
@@ -57,22 +59,15 @@ public class GuavaCache implements ICache {
 		return guavaCache;
 	}
 
-	public static GuavaCache getCache(String cacheName) {
-		GuavaCache guavaCache = map.get(cacheName);
-		if (guavaCache == null) {
-			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, expireAfterWrite, expireAfterAccess)", cacheName, GuavaCache.class.getSimpleName());
-		}
-		return guavaCache;
+	private LoadingCache<String, Serializable> loadingCache = null;
+
+	private GuavaCache(LoadingCache<String, Serializable> loadingCache) {
+		this.loadingCache = loadingCache;
 	}
 
 	@Override
-	public void put(String key, Serializable value) {
-		loadingCache.put(key, value);
-	}
-
-	@Override
-	public void remove(String key) {
-		loadingCache.invalidate(key);
+	public void clear() {
+		loadingCache.invalidateAll();
 	}
 
 	@Override
@@ -87,7 +82,12 @@ public class GuavaCache implements ICache {
 	}
 
 	@Override
-	public void clear() {
-		loadingCache.invalidateAll();
+	public void put(String key, Serializable value) {
+		loadingCache.put(key, value);
+	}
+
+	@Override
+	public void remove(String key) {
+		loadingCache.invalidate(key);
 	}
 }

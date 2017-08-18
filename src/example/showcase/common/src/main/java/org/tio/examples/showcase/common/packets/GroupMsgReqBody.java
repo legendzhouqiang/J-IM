@@ -5,12 +5,21 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 群消息请求
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月25日 上午8:22:06
  */
 public class GroupMsgReqBody extends BaseBody {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(GroupMsgReqBody.class);
+
+	/**
+	 * @param args
+	 *
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
 
 	//消息内容，必填
 	private String text;
@@ -19,19 +28,10 @@ public class GroupMsgReqBody extends BaseBody {
 	private String toGroup;
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
 	public GroupMsgReqBody() {
-
-	}
-
-	/**
-	 * @param args
-	 *
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
 
 	}
 
@@ -43,17 +43,17 @@ public class GroupMsgReqBody extends BaseBody {
 	}
 
 	/**
-	 * @param text the text to set
-	 */
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	/**
 	 * @return the toGroup
 	 */
 	public String getToGroup() {
 		return toGroup;
+	}
+
+	/**
+	 * @param text the text to set
+	 */
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	/**

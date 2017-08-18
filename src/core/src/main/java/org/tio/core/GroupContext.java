@@ -42,12 +42,14 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	//	 */
 	//	private static final long DEFAULT_HEARTBEAT_TIMEOUT = 1000 * 120;
 
-	/** 
+	/**
 	 * 默认的接收数据的buffer size
 	 */
 	public static final int READ_BUFFER_SIZE = Integer.getInteger("tio.default.read.buffer.size", 2048);
 
 	public static final long KEEP_ALIVE_TIME = 90L;
+
+	private final static AtomicInteger ID_ATOMIC = new AtomicInteger();
 
 	private ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
 
@@ -77,15 +79,15 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	protected SynThreadPoolExecutor tioExecutor = null;
 
 	protected ThreadPoolExecutor groupExecutor = null;
-
 	public final ClientNodes clientNodes = new ClientNodes();
 	public final ChannelContextSetWithLock connections = new ChannelContextSetWithLock();
 	public final ChannelContextSetWithLock connecteds = new ChannelContextSetWithLock();
-	public final ChannelContextSetWithLock closeds = new ChannelContextSetWithLock();
 
+	public final ChannelContextSetWithLock closeds = new ChannelContextSetWithLock();
 	public final Groups groups = new Groups();
 	public final Users users = new Users();
 	public final Ids ids = new Ids();
+
 	/**
 	 * ip黑名单
 	 */
@@ -102,8 +104,6 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 
 	private boolean isStopped = false;
 
-	private final static AtomicInteger ID_ATOMIC = new AtomicInteger();
-
 	public GroupContext() {
 		this(null, null);
 	}
@@ -114,7 +114,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 
 		this.tioExecutor = tioExecutor;
 		if (this.tioExecutor == null) {
-			LinkedBlockingQueue<Runnable> tioQueue = new LinkedBlockingQueue<Runnable>();
+			LinkedBlockingQueue<Runnable> tioQueue = new LinkedBlockingQueue<>();
 			String tioThreadName = "tio";
 			this.tioExecutor = new SynThreadPoolExecutor(CORE_POOL_SIZE, CORE_POOL_SIZE, KEEP_ALIVE_TIME, tioQueue,
 					DefaultThreadFactory.getInstance(tioThreadName, Thread.NORM_PRIORITY), tioThreadName);
@@ -123,7 +123,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 
 		this.groupExecutor = groupExecutor;
 		if (this.groupExecutor == null) {
-			LinkedBlockingQueue<Runnable> groupQueue = new LinkedBlockingQueue<Runnable>();
+			LinkedBlockingQueue<Runnable> groupQueue = new LinkedBlockingQueue<>();
 			String groupThreadName = "tio-group";
 			this.groupExecutor = new ThreadPoolExecutor(MAX_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, groupQueue,
 					DefaultThreadFactory.getInstance(groupThreadName, Thread.NORM_PRIORITY));
@@ -132,31 +132,61 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * 
 	 * @return
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:32:02
+	 *
+	 */
+	public abstract AioHandler getAioHandler();
+
+	/**
+	 * @return
+	 *
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:33:28
+	 *
+	 */
+	public abstract AioListener getAioListener();
+
+	/**
+	 *
+	 * @return
+	 * @author tanyaowu
 	 */
 	public ByteOrder getByteOrder() {
 		return byteOrder;
 	}
 
 	/**
-	 * 
-	 * @param byteOrder
-	 * @author: tanyaowu
+	 * @return the clientTraceHandler
 	 */
-	public void setByteOrder(ByteOrder byteOrder) {
-		this.byteOrder = byteOrder;
+	public ChannelTraceHandler getClientTraceHandler() {
+		return clientTraceHandler;
 	}
 
 	/**
-	 * 
-	 * @return
-	 * @author: tanyaowu
+	 * @return the groupExecutor
 	 */
-	public String getId() {
-		return id;
+	public ThreadPoolExecutor getGroupExecutor() {
+		return groupExecutor;
 	}
+
+	/**
+	 * @return the groupListener
+	 */
+	public GroupListener getGroupListener() {
+		return groupListener;
+	}
+
+	/**
+	 * @return
+	 *
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:33:02
+	 *
+	 */
+	public abstract GroupStat getGroupStat();
 
 	/**
 	 * @return the heartbeatTimeout
@@ -166,10 +196,19 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * @param heartbeatTimeout the heartbeatTimeout to set
+	 *
+	 * @return
+	 * @author tanyaowu
 	 */
-	public void setHeartbeatTimeout(long heartbeatTimeout) {
-		this.heartbeatTimeout = heartbeatTimeout;
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @return the packetHandlerMode
+	 */
+	public PacketHandlerMode getPacketHandlerMode() {
+		return packetHandlerMode;
 	}
 
 	/**
@@ -180,44 +219,24 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * @param readBufferSize the readBufferSize to set
-	 */
-	public void setReadBufferSize(int readBufferSize) {
-		this.readBufferSize = readBufferSize;
-	}
-
-	/**
-	 * @return
-	 *
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:32:02
-	 * 
-	 */
-	public abstract AioHandler getAioHandler();
-
-	/**
-	 * @return
-	 *
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:33:02
-	 * 
-	 */
-	public abstract GroupStat getGroupStat();
-
-	/**
-	 * @return
-	 *
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:33:28
-	 * 
-	 */
-	public abstract AioListener getAioListener();
-
-	/**
 	 * @return the reconnConf
 	 */
 	public ReconnConf getReconnConf() {
 		return reconnConf;
+	}
+
+	/**
+	 * @return the groupExecutor
+	 */
+	public SynThreadPoolExecutor getTioExecutor() {
+		return tioExecutor;
+	}
+
+	/**
+	 * @return the tioUuid
+	 */
+	public TioUuid getTioUuid() {
+		return tioUuid;
 	}
 
 	/**
@@ -235,10 +254,10 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * @param isEncodeCareWithChannelContext the isEncodeCareWithChannelContext to set
+	 * @return the isShortConnection
 	 */
-	public void setEncodeCareWithChannelContext(boolean isEncodeCareWithChannelContext) {
-		this.isEncodeCareWithChannelContext = isEncodeCareWithChannelContext;
+	public boolean isShortConnection() {
+		return isShortConnection;
 	}
 
 	/**
@@ -249,45 +268,12 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * @param isStop the isStop to set
+	 *
+	 * @param byteOrder
+	 * @author tanyaowu
 	 */
-	public void setStopped(boolean isStopped) {
-		this.isStopped = isStopped;
-	}
-
-	/**
-	 * @return the packetHandlerMode
-	 */
-	public PacketHandlerMode getPacketHandlerMode() {
-		return packetHandlerMode;
-	}
-
-	/**
-	 * @param packetHandlerMode the packetHandlerMode to set
-	 */
-	public void setPacketHandlerMode(PacketHandlerMode packetHandlerMode) {
-		this.packetHandlerMode = packetHandlerMode;
-	}
-
-	/**
-	 * @return the groupExecutor
-	 */
-	public SynThreadPoolExecutor getTioExecutor() {
-		return tioExecutor;
-	}
-
-	/**
-	 * @return the groupExecutor
-	 */
-	public ThreadPoolExecutor getGroupExecutor() {
-		return groupExecutor;
-	}
-
-	/**
-	 * @return the clientTraceHandler
-	 */
-	public ChannelTraceHandler getClientTraceHandler() {
-		return clientTraceHandler;
+	public void setByteOrder(ByteOrder byteOrder) {
+		this.byteOrder = byteOrder;
 	}
 
 	/**
@@ -298,10 +284,10 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * @return the groupListener
+	 * @param isEncodeCareWithChannelContext the isEncodeCareWithChannelContext to set
 	 */
-	public GroupListener getGroupListener() {
-		return groupListener;
+	public void setEncodeCareWithChannelContext(boolean isEncodeCareWithChannelContext) {
+		this.isEncodeCareWithChannelContext = isEncodeCareWithChannelContext;
 	}
 
 	/**
@@ -312,24 +298,24 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * @return the tioUuid
+	 * @param heartbeatTimeout the heartbeatTimeout to set
 	 */
-	public TioUuid getTioUuid() {
-		return tioUuid;
+	public void setHeartbeatTimeout(long heartbeatTimeout) {
+		this.heartbeatTimeout = heartbeatTimeout;
 	}
 
 	/**
-	 * @param tioUuid the tioUuid to set
+	 * @param packetHandlerMode the packetHandlerMode to set
 	 */
-	public void setTioUuid(TioUuid tioUuid) {
-		this.tioUuid = tioUuid;
+	public void setPacketHandlerMode(PacketHandlerMode packetHandlerMode) {
+		this.packetHandlerMode = packetHandlerMode;
 	}
 
 	/**
-	 * @return the isShortConnection
+	 * @param readBufferSize the readBufferSize to set
 	 */
-	public boolean isShortConnection() {
-		return isShortConnection;
+	public void setReadBufferSize(int readBufferSize) {
+		this.readBufferSize = readBufferSize;
 	}
 
 	/**
@@ -337,5 +323,19 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	 */
 	public void setShortConnection(boolean isShortConnection) {
 		this.isShortConnection = isShortConnection;
+	}
+
+	/**
+	 * @param isStop the isStop to set
+	 */
+	public void setStopped(boolean isStopped) {
+		this.isStopped = isStopped;
+	}
+
+	/**
+	 * @param tioUuid the tioUuid to set
+	 */
+	public void setTioUuid(TioUuid tioUuid) {
+		this.tioUuid = tioUuid;
 	}
 }

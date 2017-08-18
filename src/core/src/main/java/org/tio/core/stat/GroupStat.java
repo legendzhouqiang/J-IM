@@ -33,59 +33,10 @@ public class GroupStat {
 	private AtomicLong sentBytes = new AtomicLong();
 
 	/**
-	 * @return the receivedPacket
-	 */
-	public AtomicLong getReceivedPacket() {
-		return receivedPacket;
-	}
-
-	/**
-	 * @return the handledPacket
-	 */
-	public AtomicLong getHandledPacket() {
-		return handledPacket;
-	}
-
-	/**
-	 * @return the sentPacket
-	 */
-	public AtomicLong getSentPacket() {
-		return sentPacket;
-	}
-
-	/**
 	 * @return the closed
 	 */
 	public AtomicLong getClosed() {
 		return closed;
-	}
-
-	/**
-	 * @param closed the closed to set
-	 */
-	public void setClosed(AtomicLong closed) {
-		this.closed = closed;
-	}
-
-	/**
-	 * @return the sentBytes
-	 */
-	public AtomicLong getSentBytes() {
-		return sentBytes;
-	}
-
-	/**
-	 * @return the receivedBytes
-	 */
-	public AtomicLong getReceivedBytes() {
-		return receivedBytes;
-	}
-
-	/**
-	 * @param receivedBytes the receivedBytes to set
-	 */
-	public void setReceivedBytes(AtomicLong receivedBytes) {
-		this.receivedBytes = receivedBytes;
 	}
 
 	/**
@@ -96,10 +47,59 @@ public class GroupStat {
 	}
 
 	/**
+	 * @return the handledPacket
+	 */
+	public AtomicLong getHandledPacket() {
+		return handledPacket;
+	}
+
+	/**
+	 * @return the receivedBytes
+	 */
+	public AtomicLong getReceivedBytes() {
+		return receivedBytes;
+	}
+
+	/**
+	 * @return the receivedPacket
+	 */
+	public AtomicLong getReceivedPacket() {
+		return receivedPacket;
+	}
+
+	/**
+	 * @return the sentBytes
+	 */
+	public AtomicLong getSentBytes() {
+		return sentBytes;
+	}
+
+	/**
+	 * @return the sentPacket
+	 */
+	public AtomicLong getSentPacket() {
+		return sentPacket;
+	}
+
+	/**
+	 * @param closed the closed to set
+	 */
+	public void setClosed(AtomicLong closed) {
+		this.closed = closed;
+	}
+
+	/**
 	 * @param handledBytes the handledBytes to set
 	 */
 	public void setHandledBytes(AtomicLong handledBytes) {
 		this.handledBytes = handledBytes;
+	}
+
+	/**
+	 * @param receivedBytes the receivedBytes to set
+	 */
+	public void setReceivedBytes(AtomicLong receivedBytes) {
+		this.receivedBytes = receivedBytes;
 	}
 
 }

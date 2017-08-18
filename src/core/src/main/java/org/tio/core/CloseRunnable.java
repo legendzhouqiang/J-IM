@@ -23,11 +23,11 @@ public class CloseRunnable implements Runnable {
 	private boolean isNeedRemove;
 
 	/**
-	 * 
 	 *
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 * 2017年3月1日 下午1:52:12
-	 * 
+	 *
 	 */
 	public CloseRunnable(ChannelContext channelContext, Throwable throwable, String remark, boolean isNeedRemove) {
 		this.channelContext = channelContext;
@@ -36,12 +36,12 @@ public class CloseRunnable implements Runnable {
 		this.isNeedRemove = isNeedRemove;
 	}
 
-	/** 
+	/**
 	 * @see java.lang.Runnable#run()
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 * 2017年3月1日 下午1:54:34
-	 * 
+	 *
 	 */
 	@Override
 	public void run() {
@@ -169,7 +169,7 @@ public class CloseRunnable implements Runnable {
 				} catch (Throwable e) {
 					log.error(e.toString(), e);
 				} finally {
-					if (!isRemove && channelContext.isClosed() && (isClientChannelContext)) //不删除且没有连接上，则加到重连队列中
+					if (!isRemove && channelContext.isClosed() && isClientChannelContext) //不删除且没有连接上，则加到重连队列中
 					{
 						ClientChannelContext clientChannelContext = (ClientChannelContext) channelContext;
 						ReconnConf.put(clientChannelContext);

@@ -3,84 +3,14 @@ package org.tio.utils.cache.redis;
 import java.util.Objects;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月14日 下午1:40:14
  */
 public class ExpireVo {
 
-	public ExpireVo(String cacheName, String key, long expire) {
-		super();
-		this.cacheName = cacheName;
-		this.key = key;
-		this.expire = expire;
-		//		this.expirable = expirable;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cacheName == null) ? 0 : cacheName.hashCode());
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ExpireVo other = (ExpireVo) obj;
-
-		return Objects.equals(cacheName, other.cacheName) && Objects.equals(key, other.key);
-	}
-
-	public String getCacheName() {
-		return cacheName;
-	}
-
-	public void setCacheName(String cacheName) {
-		this.cacheName = cacheName;
-	}
-
-	//	public RExpirable getExpirable() {
-	//		return expirable;
-	//	}
-	//
-	//	public void setExpirable(RExpirable expirable) {
-	//		this.expirable = expirable;
-	//	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
-
-	public long getExpire() {
-		return expire;
-	}
-
-	public void setExpire(long expire) {
-		this.expire = expire;
-	}
-
-	private String cacheName;
-
-	private String key;
-
-	private long expire;
-
-	//	private RExpirable expirable;
-
 	/**
 	 * @param args
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
 
@@ -96,5 +26,78 @@ public class ExpireVo {
 		//
 		//		System.out.println(set.size());
 
+	}
+
+	private String cacheName;
+
+	private String key;
+
+	private long expire;
+
+	public ExpireVo(String cacheName, String key, long expire) {
+		super();
+		this.cacheName = cacheName;
+		this.key = key;
+		this.expire = expire;
+		//		this.expirable = expirable;
+	}
+
+	//	public RExpirable getExpirable() {
+	//		return expirable;
+	//	}
+	//
+	//	public void setExpirable(RExpirable expirable) {
+	//		this.expirable = expirable;
+	//	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		ExpireVo other = (ExpireVo) obj;
+
+		return Objects.equals(cacheName, other.cacheName) && Objects.equals(key, other.key);
+	}
+
+	public String getCacheName() {
+		return cacheName;
+	}
+
+	public long getExpire() {
+		return expire;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (cacheName == null ? 0 : cacheName.hashCode());
+		result = prime * result + (key == null ? 0 : key.hashCode());
+		return result;
+	}
+
+	public void setCacheName(String cacheName) {
+		this.cacheName = cacheName;
+	}
+
+	public void setExpire(long expire) {
+		this.expire = expire;
+	}
+
+	//	private RExpirable expirable;
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 }

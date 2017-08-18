@@ -3,17 +3,11 @@ package org.tio.http.common;
 import java.util.Objects;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年6月28日 下午2:23:16
  */
 public enum Method {
 	GET("GET"), POST("POST"), HEAD("HEAD"), PUT("PUT"), TRACE("TRACE"), OPTIONS("OPTIONS"), PATCH("PATCH");
-	String value;
-
-	private Method(String value) {
-		this.value = value;
-	}
-
 	public static Method from(String method) {
 		Method[] values = Method.values();
 		for (Method v : values) {
@@ -22,5 +16,11 @@ public enum Method {
 			}
 		}
 		return GET;
+	}
+
+	String value;
+
+	private Method(String value) {
+		this.value = value;
 	}
 }

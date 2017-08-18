@@ -2,16 +2,16 @@ package org.tio.http.common;
 
 /**
  * 本类大部分摘自github的一个项目（当时找过后，忘记记录地址，后面工到后补充进来），部分为tio作者补充，感谢作者的贡献
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月5日 上午10:36:37
  */
 public enum MimeType {
 
 	/* Preferred Common Types */
 	APPLICATION_PDF_PDF("application/pdf", "pdf"), APPLICATION_ZIP_ZIP("application/zip", "zip"), AUDIO_MPEG3_MP3("audio/mpeg3", "mp3"), IMAGE_GIF_GIF("image/gif",
-			"gif"), TEXT_HTML_HTML("text/html", "html"), IMAGE_JPEG_JPG("image/jpeg", "jpg"), IMAGE_PNG_PNG("image/png", "png"), TEXT_CSS_CSS("text/css",
-					"css"), TEXT_CSV_CSV("text/csv", "csv"), TEXT_JAVASCRIPT_JS("text/javascript", "js"), TEXT_PLAIN_TXT("text/plain", "txt"), TEXT_PLAIN_JSON("application/json",
-							"json"), VIDEO_AVI_AVI("video/avi",
+			"gif"), TEXT_HTML_HTML("text/html", "html"), IMAGE_JPEG_JPG("image/jpeg", "jpg"), IMAGE_PNG_PNG("image/png",
+					"png"), TEXT_CSS_CSS("text/css", "css"), TEXT_CSV_CSV("text/csv", "csv"), TEXT_JAVASCRIPT_JS("text/javascript",
+							"js"), TEXT_PLAIN_TXT("text/plain", "txt"), TEXT_PLAIN_JSON("application/json", "json"), VIDEO_AVI_AVI("video/avi",
 									"avi"), VIDEO_QUICKTIME_MOV("video/quicktime", "mov"), VIDEO_MPEG_MP4("video/mp4", "mp4"), VIDEO_MATROSKA_MKV("video/x-matroska", "mkv"),
 
 	/* Other */
@@ -1247,28 +1247,22 @@ public enum MimeType {
 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																													"x-world/x-vrt",
 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																													"vrt");
 
-	private final String type;
-	private final String extension;
-
-	MimeType(String type, String extension) {
-		this.type = type;
-		this.extension = extension;
-	}
-
 	/**
-	 * Get a String representation of this type. e.g. "application/zip"
-	 * @return
+	 * Gets the first matching mime-type for the given extension
+	 * @param extension e.g. "zip"
+	 * @return The MimeType that matched the given extension
 	 */
-	public String getType() {
-		return type;
-	}
+	public static MimeType fromExtension(String extension) {
+		if (extension != null) {
+			extension = extension.trim().toLowerCase();
+			for (MimeType mt : MimeType.values()) {
+				if (mt.getExtension().equals(extension)) {
+					return mt;
+				}
+			}
+		}
 
-	/**
-	 * Get the extension for this type. e.g. "zip"
-	 * @return
-	 */
-	public String getExtension() {
-		return extension;
+		return null;
 	}
 
 	/**
@@ -1289,21 +1283,28 @@ public enum MimeType {
 		return null;
 	}
 
-	/**
-	 * Gets the first matching mime-type for the given extension
-	 * @param extension e.g. "zip"
-	 * @return The MimeType that matched the given extension
-	 */
-	public static MimeType fromExtension(String extension) {
-		if (extension != null) {
-			extension = extension.trim().toLowerCase();
-			for (MimeType mt : MimeType.values()) {
-				if (mt.getExtension().equals(extension)) {
-					return mt;
-				}
-			}
-		}
+	private final String type;
 
-		return null;
+	private final String extension;
+
+	MimeType(String type, String extension) {
+		this.type = type;
+		this.extension = extension;
+	}
+
+	/**
+	 * Get the extension for this type. e.g. "zip"
+	 * @return
+	 */
+	public String getExtension() {
+		return extension;
+	}
+
+	/**
+	 * Get a String representation of this type. e.g. "application/zip"
+	 * @return
+	 */
+	public String getType() {
+		return type;
 	}
 }

@@ -5,37 +5,37 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 登录响应
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月25日 上午8:39:02
  */
 public class LoginRespBody extends BaseBody {
-	@SuppressWarnings("unused")
-	private static Logger log = LoggerFactory.getLogger(LoginRespBody.class);
-
 	public static interface Code {
 		Integer SUCCESS = 1;
 		Integer FAIL = 2;
 	}
 
-	private String token;
-
-	private Integer code;
-	private String msg;
-
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public LoginRespBody() {
-
-	}
+	@SuppressWarnings("unused")
+	private static Logger log = LoggerFactory.getLogger(LoginRespBody.class);
 
 	/**
 	 * @param args
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
+
+	}
+
+	private String token;
+	private Integer code;
+
+	private String msg;
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public LoginRespBody() {
 
 	}
 
@@ -47,13 +47,6 @@ public class LoginRespBody extends BaseBody {
 	}
 
 	/**
-	 * @param code the code to set
-	 */
-	public void setCode(Integer code) {
-		this.code = code;
-	}
-
-	/**
 	 * @return the msg
 	 */
 	public String getMsg() {
@@ -61,17 +54,24 @@ public class LoginRespBody extends BaseBody {
 	}
 
 	/**
-	 * @param msg the msg to set
-	 */
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-
-	/**
 	 * @return the token
 	 */
 	public String getToken() {
 		return token;
+	}
+
+	/**
+	 * @param code the code to set
+	 */
+	public void setCode(Integer code) {
+		this.code = code;
+	}
+
+	/**
+	 * @param msg the msg to set
+	 */
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 	/**

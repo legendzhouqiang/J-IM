@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.tio.http.common.HttpConfig;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年8月5日 上午10:16:26
  */
 public class HttpSession implements java.io.Serializable {
@@ -19,25 +19,23 @@ public class HttpSession implements java.io.Serializable {
 
 	private String id = null;
 
+	public HttpSession() {
+	}
+
 	/**
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public HttpSession(String id) {
 		this.id = id;
 	}
 
-	public HttpSession() {
-	}
-
 	/**
-	 * 设置会话属性
-	 * @param key
-	 * @param value
+	 * 清空所有属性
 	 * @param httpConfig
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
-	public void setAttribute(String key, Serializable value, HttpConfig httpConfig) {
-		data.put(key, value);
+	public void clear(HttpConfig httpConfig) {
+		data.clear();
 		httpConfig.getSessionStore().put(id, this);
 	}
 
@@ -45,17 +43,25 @@ public class HttpSession implements java.io.Serializable {
 	 * 获取会话属性
 	 * @param key
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public Object getAttribute(String key) {
 		return data.get(key);
 	}
 
+	public Map<String, Serializable> getData() {
+		return data;
+	}
+
+	public String getId() {
+		return id;
+	}
+
 	/**
-	 * 
+	 *
 	 * @param key
 	 * @param httpConfig
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public void removeAttribute(String key, HttpConfig httpConfig) {
 		data.remove(key);
@@ -63,28 +69,22 @@ public class HttpSession implements java.io.Serializable {
 	}
 
 	/**
-	 * 清空所有属性
+	 * 设置会话属性
+	 * @param key
+	 * @param value
 	 * @param httpConfig
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
-	public void clear(HttpConfig httpConfig) {
-		data.clear();
+	public void setAttribute(String key, Serializable value, HttpConfig httpConfig) {
+		data.put(key, value);
 		httpConfig.getSessionStore().put(id, this);
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public Map<String, Serializable> getData() {
-		return data;
 	}
 
 	public void setData(Map<String, Serializable> data) {
 		this.data = data;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.xiaoleilu.hutool.util.RandomUtil;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月12日 下午9:30:31
  */
 public class CacheChangedVo implements Serializable {
@@ -14,13 +14,36 @@ public class CacheChangedVo implements Serializable {
 
 	public static final String CLIENTID = RandomUtil.randomString(10);
 
+	/**
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
+
 	private String cacheName;
+
 	private String key;
+
+	private String clientId = CLIENTID;
+
+	//	private String serverId;
+	private CacheChangeType type;
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public CacheChangedVo() {
+	}
+
+	//	private
 
 	/**
 	 * @param cacheName
 	 * @param type
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public CacheChangedVo(String cacheName, CacheChangeType type) {
 		super();
@@ -32,34 +55,13 @@ public class CacheChangedVo implements Serializable {
 	 * @param cacheName
 	 * @param key
 	 * @param type
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public CacheChangedVo(String cacheName, String key, CacheChangeType type) {
 		super();
 		this.cacheName = cacheName;
 		this.key = key;
 		this.type = type;
-	}
-
-	private String clientId = CLIENTID;
-	//	private String serverId;
-	private CacheChangeType type;
-
-	//	private
-
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public CacheChangedVo() {
-	}
-
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
 	}
 
 	/**
@@ -70,10 +72,10 @@ public class CacheChangedVo implements Serializable {
 	}
 
 	/**
-	 * @param cacheName the cacheName to set
+	 * @return the clientId
 	 */
-	public void setCacheName(String cacheName) {
-		this.cacheName = cacheName;
+	public String getClientId() {
+		return clientId;
 	}
 
 	/**
@@ -84,17 +86,17 @@ public class CacheChangedVo implements Serializable {
 	}
 
 	/**
-	 * @param key the key to set
+	 * @return the type
 	 */
-	public void setKey(String key) {
-		this.key = key;
+	public CacheChangeType getType() {
+		return type;
 	}
 
 	/**
-	 * @return the clientId
+	 * @param cacheName the cacheName to set
 	 */
-	public String getClientId() {
-		return clientId;
+	public void setCacheName(String cacheName) {
+		this.cacheName = cacheName;
 	}
 
 	/**
@@ -105,10 +107,10 @@ public class CacheChangedVo implements Serializable {
 	}
 
 	/**
-	 * @return the type
+	 * @param key the key to set
 	 */
-	public CacheChangeType getType() {
-		return type;
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	/**

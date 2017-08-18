@@ -9,8 +9,8 @@ import org.tio.core.GroupContext;
 import org.tio.core.Node;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月1日 上午9:31:16
  */
 public class ClientChannelContext extends ChannelContext {
@@ -23,22 +23,22 @@ public class ClientChannelContext extends ChannelContext {
 	 * @param groupContext
 	 * @param asynchronousSocketChannel
 	 *
-	 * @author: tanyaowu
-	 * 
+	 * @author tanyaowu
+	 *
 	 */
 	public ClientChannelContext(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
 		super(groupContext, asynchronousSocketChannel);
 	}
 
-	/** 
+	/**
 	 * @see org.tio.core.ChannelContext#createClientNode(java.nio.channels.AsynchronousSocketChannel)
-	 * 
+	 *
 	 * @param asynchronousSocketChannel
 	 * @return
-	 * @throws IOException 
-	 * @author: tanyaowu
+	 * @throws IOException
+	 * @author tanyaowu
 	 * 2016年12月6日 下午12:18:08
-	 * 
+	 *
 	 */
 	@Override
 	public Node createClientNode(AsynchronousSocketChannel asynchronousSocketChannel) throws IOException {
@@ -55,17 +55,17 @@ public class ClientChannelContext extends ChannelContext {
 	}
 
 	/**
-	 * @param bindIp the bindIp to set
-	 */
-	public void setBindIp(String bindIp) {
-		this.bindIp = bindIp;
-	}
-
-	/**
 	 * @return the bindPort
 	 */
 	public Integer getBindPort() {
 		return bindPort;
+	}
+
+	/**
+	 * @param bindIp the bindIp to set
+	 */
+	public void setBindIp(String bindIp) {
+		this.bindIp = bindIp;
 	}
 
 	/**

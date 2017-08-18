@@ -30,15 +30,15 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	private static final String DEFAULT_ATTUBITE_KEY = "t-io-d-a-k";
 
+	public static final String UNKNOWN_ADDRESS_IP = "$UNKNOWN";
+
+	public static final AtomicInteger UNKNOWN_ADDRESS_PORT_SEQ = new AtomicInteger();
+
 	private boolean isTraceClient = false;
 
 	private boolean isTraceSynPacket = false;
 
 	private MapWithLock<String, Object> props = null;//
-
-	public static final String UNKNOWN_ADDRESS_IP = "$UNKNOWN";
-
-	public static final AtomicInteger UNKNOWN_ADDRESS_PORT_SEQ = new AtomicInteger();
 
 	private GroupContext groupContext = null;
 
@@ -74,104 +74,17 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	private Node serverNode;
 
+	private Logger traceSynPacketLog = LoggerFactory.getLogger("tio-client-trace-syn-log");
+
 	/**
-	 * 
+	 *
 	 * @param groupContext
 	 * @param asynchronousSocketChannel
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public ChannelContext(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
 		super();
 		init(groupContext, asynchronousSocketChannel);
-	}
-
-	public void init(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
-		id = groupContext.getTioUuid().uuid();
-		this.setGroupContext(groupContext);
-		groupContext.ids.bind(this);
-		this.setAsynchronousSocketChannel(asynchronousSocketChannel);
-		this.readCompletionHandler = new ReadCompletionHandler(this);
-		this.writeCompletionHandler = new WriteCompletionHandler(this);
-	}
-
-	/**
-	 * 
-	 * @param asynchronousSocketChannel
-	 * @return
-	 * @throws IOException
-	 * @author: tanyaowu
-	 */
-	public abstract Node createClientNode(AsynchronousSocketChannel asynchronousSocketChannel) throws IOException;
-
-	
-
-	
-
-	/**
-	 * 设置默认属性
-	 * @param value
-	 * @author: tanyaowu
-	 */
-	public void setAttribute(Object value) {
-		setAttribute(DEFAULT_ATTUBITE_KEY, value);
-	}
-
-	
-
-	public Object getAttribute() {
-		return getAttribute(DEFAULT_ATTUBITE_KEY);
-	}
-
-//	public MapWithLock<String, Object> getAttributes() {
-//		initProps();
-//		return props;
-//	}
-
-	
-
-	@Override
-	public String toString() {
-		return this.getClientNode().toString();
-	}
-
-	/**
-	 * @return the asynchronousSocketChannel
-	 */
-	public AsynchronousSocketChannel getAsynchronousSocketChannel() {
-		return asynchronousSocketChannel;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @return the remoteNode
-	 */
-	public Node getClientNode() {
-		return clientNode;
-	}
-
-	/**
-	 * @param asynchronousSocketChannel the asynchronousSocketChannel to set
-	 */
-	public void setAsynchronousSocketChannel(AsynchronousSocketChannel asynchronousSocketChannel) {
-		this.asynchronousSocketChannel = asynchronousSocketChannel;
-
-		if (asynchronousSocketChannel != null) {
-			try {
-				Node clientNode = createClientNode(asynchronousSocketChannel);
-				setClientNode(clientNode);
-			} catch (IOException e) {
-				log.info(e.toString(), e);
-				assignAnUnknownClientNode();
-			}
-		} else {
-			assignAnUnknownClientNode();
-		}
 	}
 
 	private void assignAnUnknownClientNode() {
@@ -180,217 +93,19 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * @param remoteNode the remoteNode to set
-	 */
-	private void setClientNode(Node clientNode) {
-		if (this.clientNode != null) {
-			try {
-				groupContext.clientNodes.remove(this);
-			} catch (Exception e1) {
-				log.error(e1.toString(), e1);
-			}
-		}
-
-		this.clientNode = clientNode;
-
-		if (this.clientNode != null && !Objects.equals(UNKNOWN_ADDRESS_IP, this.clientNode.getIp())) {
-			try {
-				groupContext.clientNodes.put(this);
-			} catch (Exception e1) {
-				log.error(e1.toString(), e1);
-			}
-		}
-
-		clientNodeTraceFilename = StringUtils.replaceAll(clientNode.toString(), ":", "_");
-	}
-
-	/**
-	 * @return the groupContext
-	 */
-	public GroupContext getGroupContext() {
-		return groupContext;
-	}
-
-	/**
-	 * @param groupContext the groupContext to set
-	 */
-	public void setGroupContext(GroupContext groupContext) {
-		this.groupContext = groupContext;
-
-		if (groupContext != null) {
-			decodeRunnable = new DecodeRunnable(this);
-			//			closeRunnable = new CloseRunnable(this, null, null, groupContext.getCloseExecutor());
-
-			//			handlerRunnableHighPrior = new HandlerRunnable(this, groupContext.getHandlerExecutorHighPrior());
-			handlerRunnable = new HandlerRunnable(this, groupContext.getTioExecutor());
-
-			//			sendRunnableHighPrior = new SendRunnable(this, groupContext.getSendExecutorHighPrior());
-			sendRunnable = new SendRunnable(this, groupContext.getTioExecutor());
-
-			groupContext.connections.add(this);
-		}
-	}
-
-	/**
-	 * @return the readCompletionHandler
-	 */
-	public ReadCompletionHandler getReadCompletionHandler() {
-		return readCompletionHandler;
-	}
-
-	/**
-	 * @return the decodeRunnable
-	 */
-	public DecodeRunnable getDecodeRunnable() {
-		return decodeRunnable;
-	}
-
-	/**
-	 * @return the handlerRunnable
-	 */
-	public HandlerRunnable getHandlerRunnable() {
-		return handlerRunnable;
-	}
-
-	/**
-	 * @return the sendRunnable
-	 */
-	public SendRunnable getSendRunnable() {
-		return sendRunnable;
-	}
-
-	/**
-	 * @return the userid
-	 */
-	public String getUserid() {
-		return userid;
-	}
-
-	/**
-	 * @param userid the userid to set
-	 * 给框架内部用的，用户请勿调用此方法
-	 */
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
-
-	/**
-	 * @return the isClosed
-	 */
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	/**
-	 * @param isClosed the isClosed to set
-	 */
-	public void setClosed(boolean isClosed) {
-		this.isClosed = isClosed;
-		if (isClosed) {
-			if (clientNode == null || (!UNKNOWN_ADDRESS_IP.equals(clientNode.getIp()))) {
-				String before = this.toString();
-				assignAnUnknownClientNode();
-				log.info("关闭前{}, 关闭后{}", before, this);
-			}
-		}
-	}
-
-	/**
-	 * @return the stat
-	 */
-	public ChannelStat getStat() {
-		return stat;
-	}
-
-	/**
-	 * @return the writeCompletionHandler
-	 */
-	public WriteCompletionHandler getWriteCompletionHandler() {
-		return writeCompletionHandler;
-	}
-
-	/**
-	 * @return the reConnCount
-	 */
-	public int getReconnCount() {
-		return reconnCount;
-	}
-
-	/**
-	 * @param reConnCount the reConnCount to set
-	 */
-	public void setReconnCount(int reconnCount) {
-		this.reconnCount = reconnCount;
-	}
-
-	/**
-	 * @return the isRemoved
-	 */
-	public boolean isRemoved() {
-		return isRemoved;
-	}
-
-	/**
-	 * @param isRemoved the isRemoved to set
-	 */
-	public void setRemoved(boolean isRemoved) {
-		this.isRemoved = isRemoved;
-	}
-
-	/**
-	 * @return the serverNode
-	 */
-	public Node getServerNode() {
-		return serverNode;
-	}
-
-	/**
-	 * @param serverNode the serverNode to set
-	 */
-	public void setServerNode(Node serverNode) {
-		this.serverNode = serverNode;
-	}
-
-	/**
-	 * @return the closeLock
-	 */
-	public ReentrantReadWriteLock getCloseLock() {
-		return closeLock;
-	}
-
-	/**
-	 * @return the isWaitingClose
-	 */
-	public boolean isWaitingClose() {
-		return isWaitingClose;
-	}
-
-	/**
-	 * @param isWaitingClose the isWaitingClose to set
-	 */
-	public void setWaitingClose(boolean isWaitingClose) {
-		this.isWaitingClose = isWaitingClose;
-	}
-
-	/**
-	 * 
+	 *
+	 * @param asynchronousSocketChannel
 	 * @return
-	 * @author: tanyaowu
+	 * @throws IOException
+	 * @author tanyaowu
 	 */
-	@Override
-	public int hashCode() {
-		if (StringUtils.isNoneBlank(id)) {
-			return this.id.hashCode();
-		} else {
-			return super.hashCode();
-		}
-	}
+	public abstract Node createClientNode(AsynchronousSocketChannel asynchronousSocketChannel) throws IOException;
 
 	/**
-	 * 
+	 *
 	 * @param obj
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -404,71 +119,27 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		return Objects.equals(other.hashCode(), this.hashCode());
 	}
 
+	//	public MapWithLock<String, Object> getAttributes() {
+	//		initProps();
+	//		return props;
+	//	}
+
 	/**
-	 * 跟踪消息
-	 * @param channelAction
-	 * @param packet
-	 * @param extmsg
-	 * @author: tanyaowu
+	 * @return the asynchronousSocketChannel
 	 */
-	public void traceClient(ChannelAction channelAction, Packet packet, Map<String, Object> extmsg) {
-		if (isTraceClient) {
-			this.getGroupContext().getClientTraceHandler().traceChannel(this, channelAction, packet, extmsg);
-		}
+	public AsynchronousSocketChannel getAsynchronousSocketChannel() {
+		return asynchronousSocketChannel;
 	}
 
-	private Logger traceSynPacketLog = LoggerFactory.getLogger("tio-client-trace-syn-log");
-
-	/**
-	 * 跟踪同步消息，主要是跟踪锁的情况，用于问题排查。
-	 * @param synPacketAction
-	 * @param packet
-	 * @param extmsg
-	 * @author: tanyaowu
-	 */
-	public void traceBlockPacket(SynPacketAction synPacketAction, Packet packet, CountDownLatch countDownLatch, Map<String, Object> extmsg) {
-		if (isTraceSynPacket) {
-			ChannelContext channelContext = this;
-			Map<String, Object> map = new HashMap<>();
-			map.put("time", DateTime.now().toString(DatePattern.NORM_DATETIME_MS_FORMAT));
-			map.put("c_id", channelContext.getId());
-			map.put("c", channelContext.toString());
-			map.put("action", synPacketAction);
-
-			MDC.put("tio_client_syn", channelContext.getClientNodeTraceFilename());
-
-			if (packet != null) {
-				map.put("p_id", channelContext.getClientNode().getPort() + "_" + packet.getId()); //packet id
-				map.put("p_respId", packet.getRespId());
-				map.put("packet", packet.logstr());
-			}
-
-			if (countDownLatch != null) {
-				map.put("countDownLatch", countDownLatch.hashCode() + " " + countDownLatch.getCount());
-			}
-
-			if (extmsg != null) {
-				map.putAll(extmsg);
-			}
-			String logstr = Json.toJson(map);
-			traceSynPacketLog.info(logstr);
-			log.error(logstr);
-
-		}
+	public Object getAttribute() {
+		return getAttribute(DEFAULT_ATTUBITE_KEY);
 	}
 
 	/**
-	 * @return the isTraceClient
+	 * @return the remoteNode
 	 */
-	public boolean isTraceClient() {
-		return isTraceClient;
-	}
-
-	/**
-	 * @param isTraceClient the isTraceClient to set
-	 */
-	public void setTraceClient(boolean isTraceClient) {
-		this.isTraceClient = isTraceClient;
+	public Node getClientNode() {
+		return clientNode;
 	}
 
 	/**
@@ -479,17 +150,152 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * @param clientNodeTraceFilename the clientNodeTraceFilename to set
+	 * @return the closeLock
 	 */
-	public void setClientNodeTraceFilename(String clientNodeTraceFilename) {
-		this.clientNodeTraceFilename = clientNodeTraceFilename;
+	public ReentrantReadWriteLock getCloseLock() {
+		return closeLock;
 	}
 
 	/**
-	 * 
+	 * @return the decodeRunnable
+	 */
+	public DecodeRunnable getDecodeRunnable() {
+		return decodeRunnable;
+	}
+
+	/**
+	 * @return the groupContext
+	 */
+	public GroupContext getGroupContext() {
+		return groupContext;
+	}
+
+	/**
+	 * @return the handlerRunnable
+	 */
+	public HandlerRunnable getHandlerRunnable() {
+		return handlerRunnable;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @return the readCompletionHandler
+	 */
+	public ReadCompletionHandler getReadCompletionHandler() {
+		return readCompletionHandler;
+	}
+
+	/**
+	 * @return the reConnCount
+	 */
+	public int getReconnCount() {
+		return reconnCount;
+	}
+
+	/**
+	 * @return the sendRunnable
+	 */
+	public SendRunnable getSendRunnable() {
+		return sendRunnable;
+	}
+
+	/**
+	 * @return the serverNode
+	 */
+	public Node getServerNode() {
+		return serverNode;
+	}
+
+	/**
+	 * @return the stat
+	 */
+	public ChannelStat getStat() {
+		return stat;
+	}
+
+	/**
+	 * @return the userid
+	 */
+	public String getUserid() {
+		return userid;
+	}
+
+	/**
+	 * @return the writeCompletionHandler
+	 */
+	public WriteCompletionHandler getWriteCompletionHandler() {
+		return writeCompletionHandler;
+	}
+
+	/**
+	 *
+	 * @return
+	 * @author tanyaowu
+	 */
+	@Override
+	public int hashCode() {
+		if (StringUtils.isNoneBlank(id)) {
+			return this.id.hashCode();
+		} else {
+			return super.hashCode();
+		}
+	}
+
+	public void init(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
+		id = groupContext.getTioUuid().uuid();
+		this.setGroupContext(groupContext);
+		groupContext.ids.bind(this);
+		this.setAsynchronousSocketChannel(asynchronousSocketChannel);
+		this.readCompletionHandler = new ReadCompletionHandler(this);
+		this.writeCompletionHandler = new WriteCompletionHandler(this);
+	}
+
+	/**
+	 * @return the isClosed
+	 */
+	public boolean isClosed() {
+		return isClosed;
+	}
+
+	/**
+	 * @return the isRemoved
+	 */
+	public boolean isRemoved() {
+		return isRemoved;
+	}
+
+	/**
+	 * @return the isTraceClient
+	 */
+	public boolean isTraceClient() {
+		return isTraceClient;
+	}
+
+	/**
+	 * @return the isTraceSynPacket
+	 */
+	public boolean isTraceSynPacket() {
+		return isTraceSynPacket;
+	}
+
+	/**
+	 * @return the isWaitingClose
+	 */
+	public boolean isWaitingClose() {
+		return isWaitingClose;
+	}
+
+	/**
+	 *
 	 * @param obj PacketWithMeta or Packet
 	 * @param isSentSuccess
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public void processAfterSent(Object obj, Boolean isSentSuccess) {
 		Packet packet = null;
@@ -524,10 +330,125 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 * @return the isTraceSynPacket
+	 * @param asynchronousSocketChannel the asynchronousSocketChannel to set
 	 */
-	public boolean isTraceSynPacket() {
-		return isTraceSynPacket;
+	public void setAsynchronousSocketChannel(AsynchronousSocketChannel asynchronousSocketChannel) {
+		this.asynchronousSocketChannel = asynchronousSocketChannel;
+
+		if (asynchronousSocketChannel != null) {
+			try {
+				Node clientNode = createClientNode(asynchronousSocketChannel);
+				setClientNode(clientNode);
+			} catch (IOException e) {
+				log.info(e.toString(), e);
+				assignAnUnknownClientNode();
+			}
+		} else {
+			assignAnUnknownClientNode();
+		}
+	}
+
+	/**
+	 * 设置默认属性
+	 * @param value
+	 * @author tanyaowu
+	 */
+	public void setAttribute(Object value) {
+		setAttribute(DEFAULT_ATTUBITE_KEY, value);
+	}
+
+	/**
+	 * @param remoteNode the remoteNode to set
+	 */
+	private void setClientNode(Node clientNode) {
+		if (this.clientNode != null) {
+			try {
+				groupContext.clientNodes.remove(this);
+			} catch (Exception e1) {
+				log.error(e1.toString(), e1);
+			}
+		}
+
+		this.clientNode = clientNode;
+
+		if (this.clientNode != null && !Objects.equals(UNKNOWN_ADDRESS_IP, this.clientNode.getIp())) {
+			try {
+				groupContext.clientNodes.put(this);
+			} catch (Exception e1) {
+				log.error(e1.toString(), e1);
+			}
+		}
+
+		clientNodeTraceFilename = StringUtils.replaceAll(clientNode.toString(), ":", "_");
+	}
+
+	/**
+	 * @param clientNodeTraceFilename the clientNodeTraceFilename to set
+	 */
+	public void setClientNodeTraceFilename(String clientNodeTraceFilename) {
+		this.clientNodeTraceFilename = clientNodeTraceFilename;
+	}
+
+	/**
+	 * @param isClosed the isClosed to set
+	 */
+	public void setClosed(boolean isClosed) {
+		this.isClosed = isClosed;
+		if (isClosed) {
+			if (clientNode == null || !UNKNOWN_ADDRESS_IP.equals(clientNode.getIp())) {
+				String before = this.toString();
+				assignAnUnknownClientNode();
+				log.info("关闭前{}, 关闭后{}", before, this);
+			}
+		}
+	}
+
+	/**
+	 * @param groupContext the groupContext to set
+	 */
+	public void setGroupContext(GroupContext groupContext) {
+		this.groupContext = groupContext;
+
+		if (groupContext != null) {
+			decodeRunnable = new DecodeRunnable(this);
+			//			closeRunnable = new CloseRunnable(this, null, null, groupContext.getCloseExecutor());
+
+			//			handlerRunnableHighPrior = new HandlerRunnable(this, groupContext.getHandlerExecutorHighPrior());
+			handlerRunnable = new HandlerRunnable(this, groupContext.getTioExecutor());
+
+			//			sendRunnableHighPrior = new SendRunnable(this, groupContext.getSendExecutorHighPrior());
+			sendRunnable = new SendRunnable(this, groupContext.getTioExecutor());
+
+			groupContext.connections.add(this);
+		}
+	}
+
+	/**
+	 * @param reConnCount the reConnCount to set
+	 */
+	public void setReconnCount(int reconnCount) {
+		this.reconnCount = reconnCount;
+	}
+
+	/**
+	 * @param isRemoved the isRemoved to set
+	 */
+	public void setRemoved(boolean isRemoved) {
+		this.isRemoved = isRemoved;
+	}
+
+	/**
+	 * @param serverNode the serverNode to set
+	 */
+	public void setServerNode(Node serverNode) {
+		this.serverNode = serverNode;
+	}
+
+	/**
+	 * @param isTraceClient the isTraceClient to set
+	 */
+	public void setTraceClient(boolean isTraceClient) {
+		this.isTraceClient = isTraceClient;
 	}
 
 	/**
@@ -535,6 +456,77 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	 */
 	public void setTraceSynPacket(boolean isTraceSynPacket) {
 		this.isTraceSynPacket = isTraceSynPacket;
+	}
+
+	/**
+	 * @param userid the userid to set
+	 * 给框架内部用的，用户请勿调用此方法
+	 */
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+	/**
+	 * @param isWaitingClose the isWaitingClose to set
+	 */
+	public void setWaitingClose(boolean isWaitingClose) {
+		this.isWaitingClose = isWaitingClose;
+	}
+
+	@Override
+	public String toString() {
+		return this.getClientNode().toString();
+	}
+
+	/**
+	 * 跟踪同步消息，主要是跟踪锁的情况，用于问题排查。
+	 * @param synPacketAction
+	 * @param packet
+	 * @param extmsg
+	 * @author tanyaowu
+	 */
+	public void traceBlockPacket(SynPacketAction synPacketAction, Packet packet, CountDownLatch countDownLatch, Map<String, Object> extmsg) {
+		if (isTraceSynPacket) {
+			ChannelContext channelContext = this;
+			Map<String, Object> map = new HashMap<>();
+			map.put("time", DateTime.now().toString(DatePattern.NORM_DATETIME_MS_FORMAT));
+			map.put("c_id", channelContext.getId());
+			map.put("c", channelContext.toString());
+			map.put("action", synPacketAction);
+
+			MDC.put("tio_client_syn", channelContext.getClientNodeTraceFilename());
+
+			if (packet != null) {
+				map.put("p_id", channelContext.getClientNode().getPort() + "_" + packet.getId()); //packet id
+				map.put("p_respId", packet.getRespId());
+				map.put("packet", packet.logstr());
+			}
+
+			if (countDownLatch != null) {
+				map.put("countDownLatch", countDownLatch.hashCode() + " " + countDownLatch.getCount());
+			}
+
+			if (extmsg != null) {
+				map.putAll(extmsg);
+			}
+			String logstr = Json.toJson(map);
+			traceSynPacketLog.info(logstr);
+			log.error(logstr);
+
+		}
+	}
+
+	/**
+	 * 跟踪消息
+	 * @param channelAction
+	 * @param packet
+	 * @param extmsg
+	 * @author tanyaowu
+	 */
+	public void traceClient(ChannelAction channelAction, Packet packet, Map<String, Object> extmsg) {
+		if (isTraceClient) {
+			this.getGroupContext().getClientTraceHandler().traceChannel(this, channelAction, packet, extmsg);
+		}
 	}
 
 }

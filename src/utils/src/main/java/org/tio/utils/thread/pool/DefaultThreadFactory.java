@@ -6,23 +6,21 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月28日 下午1:30:39
  */
 public class DefaultThreadFactory implements ThreadFactory {
 
-	/** The thread pool name. */
-	private String threadPoolName = null;
-
 	/** The map of name and thread factory. */
-	private static Map<String, DefaultThreadFactory> mapOfNameAndThreadFactory = new HashMap<String, DefaultThreadFactory>();
+	private static Map<String, DefaultThreadFactory> mapOfNameAndThreadFactory = new HashMap<>();
 
 	/** The map of name and atomic integer. */
-	private static Map<String, AtomicInteger> mapOfNameAndAtomicInteger = new HashMap<String, AtomicInteger>();
+	private static Map<String, AtomicInteger> mapOfNameAndAtomicInteger = new HashMap<>();
 
-	/** The priority. */
-	private int priority = Thread.NORM_PRIORITY;
+	public static DefaultThreadFactory getInstance(String threadName) {
+		return getInstance(threadName, Thread.NORM_PRIORITY);
+	}
 
 	/**
 	 * Gets the single instance of DefaultThreadFactory.
@@ -46,32 +44,17 @@ public class DefaultThreadFactory implements ThreadFactory {
 		return defaultThreadFactory;
 	}
 
-	public static DefaultThreadFactory getInstance(String threadName) {
-		return getInstance(threadName, Thread.NORM_PRIORITY);
-	}
+	/** The thread pool name. */
+	private String threadPoolName = null;
+
+	/** The priority. */
+	private int priority = Thread.NORM_PRIORITY;
 
 	/**
 	 * Instantiates a new default thread factory.
 	 */
 	private DefaultThreadFactory() {
 
-	}
-
-	/** 
-	 * @see java.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
-	 * 
-	 * @param r
-	 * @return
-	 * @author: tanyaowu
-	 * 2016年11月15日 上午9:07:00
-	 * 
-	 */
-	@Override
-	public Thread newThread(Runnable r) {
-		Thread thread = new Thread(r);
-		thread.setName(this.getThreadPoolName() + "-" + mapOfNameAndAtomicInteger.get(this.getThreadPoolName()).incrementAndGet());
-		thread.setPriority(priority);
-		return thread;
 	}
 
 	/**
@@ -81,6 +64,23 @@ public class DefaultThreadFactory implements ThreadFactory {
 	 */
 	public String getThreadPoolName() {
 		return threadPoolName;
+	}
+
+	/**
+	 * @see java.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+	 *
+	 * @param r
+	 * @return
+	 * @author tanyaowu
+	 * 2016年11月15日 上午9:07:00
+	 *
+	 */
+	@Override
+	public Thread newThread(Runnable r) {
+		Thread thread = new Thread(r);
+		thread.setName(this.getThreadPoolName() + "-" + mapOfNameAndAtomicInteger.get(this.getThreadPoolName()).incrementAndGet());
+		thread.setPriority(priority);
+		return thread;
 	}
 
 	/**

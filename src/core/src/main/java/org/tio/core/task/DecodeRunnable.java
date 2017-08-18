@@ -18,47 +18,20 @@ import org.tio.utils.SystemTimer;
 
 /**
  * 解码
- * 
+ *
  * @author 谭耀武
  * 2012-08-09
- * 
+ *
  */
 public class DecodeRunnable implements Runnable {
 	private static final Logger log = LoggerFactory.getLogger(DecodeRunnable.class);
 
-	private ChannelContext channelContext = null;
-
 	/**
-	 * 上一次解码剩下的数据
-	 */
-	private ByteBuffer lastByteBuffer = null;
-
-	/**
-	 * 新收到的数据
-	 */
-	private ByteBuffer newByteBuffer = null;
-
-	/**
-	 * 
-	 */
-	public DecodeRunnable(ChannelContext channelContext) {
-		this.channelContext = channelContext;
-	}
-
-	/**
-	 * 清空处理的队列消息
-	 */
-	public void clearMsgQueue() {
-		lastByteBuffer = null;
-		newByteBuffer = null;
-	}
-
-	/**
-	 * 
+	 *
 	 * @param channelContext
 	 * @param packet
 	 * @param byteCount
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void handler(ChannelContext channelContext, Packet packet, int byteCount) {
 
@@ -75,17 +48,39 @@ public class DecodeRunnable implements Runnable {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + ":" + channelContext.toString();
+	private ChannelContext channelContext = null;
+
+	/**
+	 * 上一次解码剩下的数据
+	 */
+	private ByteBuffer lastByteBuffer = null;
+
+	/**
+	 * 新收到的数据
+	 */
+	private ByteBuffer newByteBuffer = null;
+
+	/**
+	 *
+	 */
+	public DecodeRunnable(ChannelContext channelContext) {
+		this.channelContext = channelContext;
 	}
 
-	/** 
+	/**
+	 * 清空处理的队列消息
+	 */
+	public void clearMsgQueue() {
+		lastByteBuffer = null;
+		newByteBuffer = null;
+	}
+
+	/**
 	 * @see java.lang.Runnable#run()
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 * 2017年3月21日 下午4:26:39
-	 * 
+	 *
 	 */
 	@Override
 	public void run() {
@@ -180,6 +175,11 @@ public class DecodeRunnable implements Runnable {
 	 */
 	public void setNewByteBuffer(ByteBuffer newByteBuffer) {
 		this.newByteBuffer = newByteBuffer;
+	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + ":" + channelContext.toString();
 	}
 
 }

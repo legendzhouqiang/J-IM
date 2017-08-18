@@ -9,33 +9,46 @@ import org.tio.examples.showcase.common.ShowcaseSessionContext;
 import org.tio.json.Json;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月26日 下午8:20:51
  */
 public class ShowcaseClientAioListener implements ClientAioListener {
 	private static Logger log = LoggerFactory.getLogger(ShowcaseClientAioListener.class);
 
 	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public ShowcaseClientAioListener() {
-	}
-
-	/**
 	 * @param args
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
 
 	}
 
-	/** 
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public ShowcaseClientAioListener() {
+	}
+
+	/**
+	 * @param channelContext
+	 * @param throwable
+	 * @param remark
+	 * @param isRemove
+	 * @throws Exception
+	 * @author tanyaowu
+	 */
+	@Override
+	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception {
+		log.info("onAfterClose channelContext:{}, throwable:{}, remark:{}, isRemove:{}", channelContext, throwable, remark, isRemove);
+	}
+
+	/**
 	 * @param channelContext
 	 * @param isConnected
 	 * @param isReconnect
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) throws Exception {
@@ -46,41 +59,28 @@ public class ShowcaseClientAioListener implements ClientAioListener {
 
 	}
 
-	/** 
-	 * @param channelContext
-	 * @param packet
-	 * @param isSentSuccess
-	 * @throws Exception
-	 * @author: tanyaowu
-	 */
-	@Override
-	public void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) throws Exception {
-		log.info("onAfterSent channelContext:{}, packet:{}, isSentSuccess:{}", channelContext, Json.toJson(packet), isSentSuccess);
-	}
-
-	/** 
+	/**
 	 * @param channelContext
 	 * @param packet
 	 * @param packetSize
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) throws Exception {
 		log.info("onAfterReceived channelContext:{}, packet:{}, packetSize:{}", channelContext, Json.toJson(packet), packetSize);
 	}
 
-	/** 
+	/**
 	 * @param channelContext
-	 * @param throwable
-	 * @param remark
-	 * @param isRemove
+	 * @param packet
+	 * @param isSentSuccess
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
-	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception {
-		log.info("onAfterClose channelContext:{}, throwable:{}, remark:{}, isRemove:{}", channelContext, throwable, remark, isRemove);
+	public void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) throws Exception {
+		log.info("onAfterSent channelContext:{}, packet:{}, isSentSuccess:{}", channelContext, Json.toJson(packet), isSentSuccess);
 	}
 
 	@Override

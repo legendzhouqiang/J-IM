@@ -3,8 +3,8 @@ package org.tio.server.intf;
 import org.tio.core.intf.AioListener;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public interface ServerAioListener extends AioListener {
@@ -15,7 +15,7 @@ public interface ServerAioListener extends AioListener {
 	 * @param aioServer
 	 * @return false: 表示拒绝这个连接, true: 表示接受这个连接
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2016年12月20日 上午10:10:56
 	 *
 	 */

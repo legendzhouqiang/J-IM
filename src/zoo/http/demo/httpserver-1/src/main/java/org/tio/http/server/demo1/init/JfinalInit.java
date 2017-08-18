@@ -15,18 +15,11 @@ import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月19日 下午5:23:21
  */
 public class JfinalInit {
 	private static Logger log = LoggerFactory.getLogger(JfinalInit.class);
-
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public JfinalInit() {
-	}
 
 	public static DruidPlugin druidPlugin;
 
@@ -85,9 +78,16 @@ public class JfinalInit {
 
 	/**
 	 * @param args
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
 
+	}
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public JfinalInit() {
 	}
 }

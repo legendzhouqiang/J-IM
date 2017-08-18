@@ -16,24 +16,6 @@ import org.tio.core.exception.AioDecodeException;
 public interface AioHandler {
 
 	/**
-	 * 处理消息包
-	 *
-	 * @param packet the packet
-	 * @return the r
-	 * @author: tanyaowu
-	 */
-	void handler(Packet packet, ChannelContext channelContext) throws Exception;
-
-	/**
-	 * 编码
-	 *
-	 * @param packet the packet
-	 * @return the byte buffer
-	 * @author: tanyaowu
-	 */
-	ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext);
-
-	/**
 	 * 根据ByteBuffer解码成业务需要的Packet对象.
 	 *
 	 * @param buffer the buffer
@@ -41,5 +23,23 @@ public interface AioHandler {
 	 * @throws AioDecodeException the aio decode exception
 	 */
 	Packet decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException;
+
+	/**
+	 * 编码
+	 *
+	 * @param packet the packet
+	 * @return the byte buffer
+	 * @author tanyaowu
+	 */
+	ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext);
+
+	/**
+	 * 处理消息包
+	 *
+	 * @param packet the packet
+	 * @return the r
+	 * @author tanyaowu
+	 */
+	void handler(Packet packet, ChannelContext channelContext) throws Exception;
 
 }

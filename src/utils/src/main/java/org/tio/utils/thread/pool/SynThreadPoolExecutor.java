@@ -9,8 +9,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月26日 下午2:18:30
  */
 public class SynThreadPoolExecutor extends ThreadPoolExecutor {
@@ -20,14 +20,14 @@ public class SynThreadPoolExecutor extends ThreadPoolExecutor {
 	private String name = null;
 
 	/**
-	 * 
+	 *
 	 * @param corePoolSize
 	 * @param maximumPoolSize
 	 * @param keepAliveTime 单位: 秒
 	 * @param runnableQueue
 	 * @param threadFactory
 	 * @param name
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public SynThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, BlockingQueue<Runnable> runnableQueue, ThreadFactory threadFactory, String name) {
 		super(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, runnableQueue, threadFactory);
@@ -35,10 +35,10 @@ public class SynThreadPoolExecutor extends ThreadPoolExecutor {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param runnable
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	private boolean checkBeforeExecute(Runnable runnable) {
 		if (runnable instanceof ISynRunnable) {
@@ -67,16 +67,6 @@ public class SynThreadPoolExecutor extends ThreadPoolExecutor {
 		}
 	}
 
-	@Override
-	public <R> Future<R> submit(Runnable runnable, R result) {
-		if (checkBeforeExecute(runnable)) {
-			Future<R> ret = super.submit(runnable, result);
-			return ret;
-		} else {
-			return null;
-		}
-	}
-
 	/**
 	 * Gets the name.
 	 *
@@ -93,6 +83,16 @@ public class SynThreadPoolExecutor extends ThreadPoolExecutor {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public <R> Future<R> submit(Runnable runnable, R result) {
+		if (checkBeforeExecute(runnable)) {
+			Future<R> ret = super.submit(runnable, result);
+			return ret;
+		} else {
+			return null;
+		}
 	}
 
 }

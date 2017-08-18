@@ -12,32 +12,27 @@ import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年8月4日 上午9:41:12
  */
 public class HttpResponseEncoder {
-	private static Logger log = LoggerFactory.getLogger(HttpResponseEncoder.class);
-
-	/**
-	 * 
-	 * 
-	 * @author: tanyaowu
-	 */
-	public HttpResponseEncoder() {
-
+	public static enum Step {
+		firstline, header, body
 	}
+
+	private static Logger log = LoggerFactory.getLogger(HttpResponseEncoder.class);
 
 	public static final int MAX_HEADER_LENGTH = 20480;
 
 	/**
-	 * 
+	 *
 	 * @param httpResponse
 	 * @param groupContext
 	 * @param channelContext
 	 * @param skipCookie true: 忽略掉cookie部分的编码
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static ByteBuffer encode(HttpResponse httpResponse, GroupContext groupContext, ChannelContext channelContext, boolean skipCookie) {
 		byte[] encodedBytes = httpResponse.getEncodedBytes();
@@ -46,7 +41,7 @@ public class HttpResponseEncoder {
 			ret.position(ret.limit());
 			return ret;
 		}
-		
+
 		int bodyLength = 0;
 		byte[] body = httpResponse.getBody();
 		if (body != null) {
@@ -82,7 +77,6 @@ public class HttpResponseEncoder {
 				}
 			}
 		}
-		
 
 		sb.append("\r\n");
 
@@ -105,11 +99,22 @@ public class HttpResponseEncoder {
 	}
 
 	/**
+	 * @param args
+	 *
+	 * @author tanyaowu
+	 * 2017年2月22日 下午4:06:42
+	 *
+	 */
+	public static void main(String[] args) {
+
+	}
+
+	/**
 	 * 解析请求头的每一行
 	 * @param line
 	 * @return
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2017年2月23日 下午1:37:58
 	 *
 	 */
@@ -130,18 +135,12 @@ public class HttpResponseEncoder {
 		return keyValue;
 	}
 
-	public static enum Step {
-		firstline, header, body
-	}
-
 	/**
-	 * @param args
 	 *
-	 * @author: tanyaowu
-	 * 2017年2月22日 下午4:06:42
-	 * 
+	 *
+	 * @author tanyaowu
 	 */
-	public static void main(String[] args) {
+	public HttpResponseEncoder() {
 
 	}
 

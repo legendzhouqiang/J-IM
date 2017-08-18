@@ -12,22 +12,30 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年8月4日 下午5:42:37
  */
 public class GuavaUtils {
 	private static Logger log = LoggerFactory.getLogger(GuavaUtils.class);
 
 	/**
-	 * 
+	 *
+	 * @param concurrencyLevel
+	 * @param expireAfterWrite 设置写缓存后过期时间（单位：秒）
+	 * @param expireAfterAccess 设置读缓存后过期时间（单位：秒）
+	 * @param initialCapacity
+	 * @param maximumSize
+	 * @param recordStats
+	 * @return
 	 */
-	public GuavaUtils() {
-
+	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long expireAfterWrite, Long expireAfterAccess, Integer initialCapacity,
+			Integer maximumSize, boolean recordStats) {
+		return createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats, null);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param concurrencyLevel
 	 * @param expireAfterWrite 设置写缓存后过期时间（单位：秒）
 	 * @param expireAfterAccess 设置读缓存后过期时间（单位：秒）
@@ -94,21 +102,6 @@ public class GuavaUtils {
 		//		System.out.println(studentCache.stats().toString());
 	}
 
-	/**
-	 * 
-	 * @param concurrencyLevel
-	 * @param expireAfterWrite 设置写缓存后过期时间（单位：秒）
-	 * @param expireAfterAccess 设置读缓存后过期时间（单位：秒）
-	 * @param initialCapacity
-	 * @param maximumSize
-	 * @param recordStats
-	 * @return
-	 */
-	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long expireAfterWrite, Long expireAfterAccess, Integer initialCapacity,
-			Integer maximumSize, boolean recordStats) {
-		return createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats, null);
-	}
-
 	public static void main(String[] args) throws Exception {
 		Integer concurrencyLevel = 8;
 		Long expireAfterWrite = 1L;
@@ -128,5 +121,12 @@ public class GuavaUtils {
 		System.out.println(o);
 		o = loadingCache.getIfPresent("2");
 		System.out.println(o);
+	}
+
+	/**
+	 *
+	 */
+	public GuavaUtils() {
+
 	}
 }

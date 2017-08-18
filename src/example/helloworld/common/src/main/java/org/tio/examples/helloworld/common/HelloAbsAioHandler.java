@@ -10,42 +10,10 @@ import org.tio.core.intf.Packet;
 
 /**
  * hello world版中服务器端和客户端的编码解码算法是一样的，所以抽象一个公共的父类出来
- * @author tanyaowu 
+ * @author tanyaowu
  *
  */
 public abstract class HelloAbsAioHandler implements AioHandler {
-	/**
-	 * 编码：把业务消息包编码为可以发送的ByteBuffer
-	 * 总的消息结构：消息头 + 消息体
-	 * 消息头结构：    4个字节，存储消息体的长度
-	 * 消息体结构：   对象的json串的byte[]
-	 */
-	@Override
-	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
-		HelloPacket helloPacket = (HelloPacket) packet;
-		byte[] body = helloPacket.getBody();
-		int bodyLen = 0;
-		if (body != null) {
-			bodyLen = body.length;
-		}
-
-		//bytebuffer的总长度是 = 消息头的长度 + 消息体的长度
-		int allLen = HelloPacket.HEADER_LENGHT + bodyLen;
-		//创建一个新的bytebuffer
-		ByteBuffer buffer = ByteBuffer.allocate(allLen);
-		//设置字节序
-		buffer.order(groupContext.getByteOrder());
-
-		//写入消息头----消息头的内容就是消息体的长度
-		buffer.putInt(bodyLen);
-
-		//写入消息体
-		if (body != null) {
-			buffer.put(body);
-		}
-		return buffer;
-	}
-
 	/**
 	 * 解码：把接收到的ByteBuffer，解码成应用可以识别的业务消息包
 	 * 总的消息结构：消息头 + 消息体
@@ -85,5 +53,37 @@ public abstract class HelloAbsAioHandler implements AioHandler {
 			}
 			return imPacket;
 		}
+	}
+
+	/**
+	 * 编码：把业务消息包编码为可以发送的ByteBuffer
+	 * 总的消息结构：消息头 + 消息体
+	 * 消息头结构：    4个字节，存储消息体的长度
+	 * 消息体结构：   对象的json串的byte[]
+	 */
+	@Override
+	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
+		HelloPacket helloPacket = (HelloPacket) packet;
+		byte[] body = helloPacket.getBody();
+		int bodyLen = 0;
+		if (body != null) {
+			bodyLen = body.length;
+		}
+
+		//bytebuffer的总长度是 = 消息头的长度 + 消息体的长度
+		int allLen = HelloPacket.HEADER_LENGHT + bodyLen;
+		//创建一个新的bytebuffer
+		ByteBuffer buffer = ByteBuffer.allocate(allLen);
+		//设置字节序
+		buffer.order(groupContext.getByteOrder());
+
+		//写入消息头----消息头的内容就是消息体的长度
+		buffer.putInt(bodyLen);
+
+		//写入消息体
+		if (body != null) {
+			buffer.put(body);
+		}
+		return buffer;
 	}
 }

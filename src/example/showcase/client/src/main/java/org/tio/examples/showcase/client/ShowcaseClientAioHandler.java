@@ -16,8 +16,8 @@ import org.tio.examples.showcase.common.Type;
 import org.tio.examples.showcase.common.intf.AbsShowcaseBsHandler;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年3月27日 上午12:18:11
  */
 public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements ClientAioHandler {
@@ -30,7 +30,9 @@ public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements C
 		handlerMap.put(Type.P2P_RESP, new P2PRespHandler());
 	}
 
-	/** 
+	private static ShowcasePacket heartbeatPacket = new ShowcasePacket(Type.HEART_BEAT_REQ, null);
+
+	/**
 	 * 处理消息
 	 */
 	@Override
@@ -42,9 +44,7 @@ public class ShowcaseClientAioHandler extends ShowcaseAbsAioHandler implements C
 		return;
 	}
 
-	private static ShowcasePacket heartbeatPacket = new ShowcasePacket(Type.HEART_BEAT_REQ, null);
-
-	/** 
+	/**
 	 * 此方法如果返回null，框架层面则不会发心跳；如果返回非null，框架层面会定时发本方法返回的消息包
 	 */
 	@Override

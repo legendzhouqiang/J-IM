@@ -6,14 +6,12 @@ import org.tio.utils.cache.ICache;
 import com.xiaoleilu.hutool.io.FileUtil;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月15日 下午1:21:14
  */
 public class HttpConfig {
-	
-//	private static Logger log = LoggerFactory.getLogger(HttpConfig.class);
 
-	private String bindIp = null;//"127.0.0.1";
+	//	private static Logger log = LoggerFactory.getLogger(HttpConfig.class);
 
 	/**
 	 * 存放HttpSession对象的cacheName
@@ -29,11 +27,21 @@ public class HttpConfig {
 	 * session默认的超时时间，单位：秒
 	 */
 	public static final long DEFAULT_SESSION_TIMEOUT = 30 * 60;
-	
+
 	/**
 	 * 默认的静态资源缓存时间，单位：秒
 	 */
 	public static final int MAX_LIVETIME_OF_STATICRES = 60 * 10;
+
+	/**
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
+
+	private String bindIp = null;//"127.0.0.1";
 
 	/**
 	 * 监听端口
@@ -48,7 +56,7 @@ public class HttpConfig {
 
 	/**
 	 * 存放HttpSession对象的cacheName
-
+	
 	 */
 	private String sessionCacheName = SESSION_CACHE_NAME;
 
@@ -58,44 +66,19 @@ public class HttpConfig {
 	private long sessionTimeout = DEFAULT_SESSION_TIMEOUT;
 
 	private String sessionCookieName = SESSION_COOKIE_NAME;
-	
+
 	/**
 	 * 静态资源缓存时间，如果小于等于0则不缓存，单位：秒
 	 */
 	private int maxLiveTimeOfStaticRes = MAX_LIVETIME_OF_STATICRES;
-	
+
 	private String page404 = "/404.html";
-	
-	
+
+	//	private HttpSessionManager httpSessionManager;
 
 	private String page500 = "/500.html";
-	
-//	private HttpSessionManager httpSessionManager;
 
 	private ISessionIdGenerator sessionIdGenerator;
-
-	public ISessionIdGenerator getSessionIdGenerator() {
-		return sessionIdGenerator;
-	}
-
-	public void setSessionIdGenerator(ISessionIdGenerator sessionIdGenerator) {
-		this.sessionIdGenerator = sessionIdGenerator;
-	}
-
-//	/**
-//	 * @return the httpSessionManager
-//	 */
-//	public HttpSessionManager getHttpSessionManager() {
-//		return httpSessionManager;
-//	}
-//
-//	/**
-//	 * @param httpSessionManager the httpSessionManager to set
-//	 */
-//	public void setHttpSessionManager(HttpSessionManager httpSessionManager) {
-//		this.httpSessionManager = httpSessionManager;
-//	}
-
 
 	/**
 	 * 示例：
@@ -104,11 +87,23 @@ public class HttpConfig {
 	 */
 	private String root = null;//FileUtil.getAbsolutePath("classpath:page");//"/page";
 
-	//	private File rootFile = null;
+	//	/**
+	//	 * @return the httpSessionManager
+	//	 */
+	//	public HttpSessionManager getHttpSessionManager() {
+	//		return httpSessionManager;
+	//	}
+	//
+	//	/**
+	//	 * @param httpSessionManager the httpSessionManager to set
+	//	 */
+	//	public void setHttpSessionManager(HttpSessionManager httpSessionManager) {
+	//		this.httpSessionManager = httpSessionManager;
+	//	}
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
 	public HttpConfig(Integer bindPort, Long sessionTimeout) {
 		this.bindPort = bindPort;
@@ -117,26 +112,13 @@ public class HttpConfig {
 		}
 	}
 
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
-	}
+	//	private File rootFile = null;
 
 	/**
 	 * @return the bindIp
 	 */
 	public String getBindIp() {
 		return bindIp;
-	}
-
-	/**
-	 * @param bindIp the bindIp to set
-	 */
-	public void setBindIp(String bindIp) {
-		this.bindIp = bindIp;
 	}
 
 	/**
@@ -154,10 +136,18 @@ public class HttpConfig {
 	}
 
 	/**
-	 * @param charset the charset to set
+	 * @return the maxLiveTimeOfStaticRes
 	 */
-	public void setCharset(String charset) {
-		this.charset = charset;
+	public int getMaxLiveTimeOfStaticRes() {
+		return maxLiveTimeOfStaticRes;
+	}
+
+	public String getPage404() {
+		return page404;
+	}
+
+	public String getPage500() {
+		return page500;
 	}
 
 	/**
@@ -168,35 +158,10 @@ public class HttpConfig {
 	}
 
 	/**
-	 * @param root the root to set
+	 * @return the serverInfo
 	 */
-	public void setRoot(String root) {
-		this.root = FileUtil.getAbsolutePath(root);//"/page";;
-	}
-
-	public long getSessionTimeout() {
-		return sessionTimeout;
-	}
-
-	//	public void setSessionTimeout(long sessionTimeout) {
-	//		this.sessionTimeout = sessionTimeout;
-	//	}
-
-	public String getSessionCookieName() {
-		return sessionCookieName;
-	}
-
-	public void setSessionCookieName(String sessionCookieName) {
-		this.sessionCookieName = sessionCookieName;
-	}
-
-	public ICache getSessionStore() {
-		return sessionStore;
-	}
-
-	public void setSessionStore(ICache sessionStore) {
-		this.sessionStore = sessionStore;
-//		this.httpSessionManager = HttpSessionManager.getInstance(sessionStore);
+	public String getServerInfo() {
+		return serverInfo;
 	}
 
 	/**
@@ -206,18 +171,60 @@ public class HttpConfig {
 		return sessionCacheName;
 	}
 
-	/**
-	 * @param sessionCacheName the sessionCacheName to set
-	 */
-	public void setSessionCacheName(String sessionCacheName) {
-		this.sessionCacheName = sessionCacheName;
+	public String getSessionCookieName() {
+		return sessionCookieName;
+	}
+
+	//	public void setSessionTimeout(long sessionTimeout) {
+	//		this.sessionTimeout = sessionTimeout;
+	//	}
+
+	public ISessionIdGenerator getSessionIdGenerator() {
+		return sessionIdGenerator;
+	}
+
+	public ICache getSessionStore() {
+		return sessionStore;
+	}
+
+	public long getSessionTimeout() {
+		return sessionTimeout;
 	}
 
 	/**
-	 * @return the serverInfo
+	 * @param bindIp the bindIp to set
 	 */
-	public String getServerInfo() {
-		return serverInfo;
+	public void setBindIp(String bindIp) {
+		this.bindIp = bindIp;
+	}
+
+	/**
+	 * @param charset the charset to set
+	 */
+	public void setCharset(String charset) {
+		this.charset = charset;
+	}
+
+	/**
+	 * @param maxLiveTimeOfStaticRes the maxLiveTimeOfStaticRes to set
+	 */
+	public void setMaxLiveTimeOfStaticRes(int maxLiveTimeOfStaticRes) {
+		this.maxLiveTimeOfStaticRes = maxLiveTimeOfStaticRes;
+	}
+
+	public void setPage404(String page404) {
+		this.page404 = page404;
+	}
+
+	public void setPage500(String page500) {
+		this.page500 = page500;
+	}
+
+	/**
+	 * @param root the root to set
+	 */
+	public void setRoot(String root) {
+		this.root = FileUtil.getAbsolutePath(root);//"/page";;
 	}
 
 	/**
@@ -228,32 +235,22 @@ public class HttpConfig {
 	}
 
 	/**
-	 * @return the maxLiveTimeOfStaticRes
+	 * @param sessionCacheName the sessionCacheName to set
 	 */
-	public int getMaxLiveTimeOfStaticRes() {
-		return maxLiveTimeOfStaticRes;
+	public void setSessionCacheName(String sessionCacheName) {
+		this.sessionCacheName = sessionCacheName;
 	}
 
-	/**
-	 * @param maxLiveTimeOfStaticRes the maxLiveTimeOfStaticRes to set
-	 */
-	public void setMaxLiveTimeOfStaticRes(int maxLiveTimeOfStaticRes) {
-		this.maxLiveTimeOfStaticRes = maxLiveTimeOfStaticRes;
+	public void setSessionCookieName(String sessionCookieName) {
+		this.sessionCookieName = sessionCookieName;
 	}
 
-	public String getPage404() {
-		return page404;
+	public void setSessionIdGenerator(ISessionIdGenerator sessionIdGenerator) {
+		this.sessionIdGenerator = sessionIdGenerator;
 	}
 
-	public void setPage404(String page404) {
-		this.page404 = page404;
-	}
-
-	public String getPage500() {
-		return page500;
-	}
-
-	public void setPage500(String page500) {
-		this.page500 = page500;
+	public void setSessionStore(ICache sessionStore) {
+		this.sessionStore = sessionStore;
+		//		this.httpSessionManager = HttpSessionManager.getInstance(sessionStore);
 	}
 }

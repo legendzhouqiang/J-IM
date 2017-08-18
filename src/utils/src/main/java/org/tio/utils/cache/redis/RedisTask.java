@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.utils.lock.SetWithLock;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月14日 下午1:34:06
  */
 public class RedisTask {
@@ -19,6 +19,25 @@ public class RedisTask {
 	//	private static RedisTask instance = null;
 
 	private static boolean started = false;
+
+	private static Set<ExpireVo> set = new HashSet<>();
+
+	private static SetWithLock<ExpireVo> setWithLock = new SetWithLock<>(set);
+
+	//	private RedissonClient redisson;
+
+	public static void add(String cacheName, String key, long expire) {
+		ExpireVo expireVo = new ExpireVo(cacheName, key, expire);
+		setWithLock.add(expireVo);
+	}
+
+	/**
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
 
 	public static void start() {
 		//		instance = new RedisTask();
@@ -64,29 +83,10 @@ public class RedisTask {
 	}
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
 	private RedisTask() {
 		//		this.redisson = redisson;
-	}
-
-	//	private RedissonClient redisson;
-
-	private static Set<ExpireVo> set = new HashSet<>();
-
-	private static SetWithLock<ExpireVo> setWithLock = new SetWithLock<>(set);
-
-	public static void add(String cacheName, String key, long expire) {
-		ExpireVo expireVo = new ExpireVo(cacheName, key, expire);
-		setWithLock.add(expireVo);
-	}
-
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
 	}
 }

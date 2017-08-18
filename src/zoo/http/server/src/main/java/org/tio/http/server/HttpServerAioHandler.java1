@@ -18,7 +18,7 @@ import org.tio.http.server.handler.AbstractHttpServerAioHandler;
  */
 public class HttpServerAioHandler extends AbstractHttpServerAioHandler {
 
-	public HttpServerAioHandler(HttpServerConfig httpConfig) {
+	public HttpServerAioHandler(HttpConfig httpConfig) {
 		super(httpConfig);
 	}
 	
@@ -30,12 +30,12 @@ public class HttpServerAioHandler extends AbstractHttpServerAioHandler {
 	}
 
 	@Override
-	public HttpResponsePacket resp404(HttpRequestPacket httpRequest, RequestLine requestLine, ChannelContext<HttpSessionContext, HttpPacket, Object> channelContext) {
+	public HttpResponsePacket resp404(HttpRequestPacket request, RequestLine requestLine, ChannelContext<HttpSessionContext, HttpPacket, Object> channelContext) {
 		return null;
 	}
 
 	@Override
-	public HttpResponsePacket resp500(HttpRequestPacket httpRequest, RequestLine requestLine, ChannelContext<HttpSessionContext, HttpPacket, Object> channelContext) {
+	public HttpResponsePacket resp500(HttpRequestPacket request, RequestLine requestLine, ChannelContext<HttpSessionContext, HttpPacket, Object> channelContext) {
 		return null;
 	}
 

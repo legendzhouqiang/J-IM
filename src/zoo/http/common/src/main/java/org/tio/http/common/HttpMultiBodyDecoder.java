@@ -15,24 +15,94 @@ import org.tio.http.common.utils.HttpParseUtils;
 import org.tio.utils.SystemTimer;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月26日 下午2:20:43
  */
 public class HttpMultiBodyDecoder {
-	private static Logger log = LoggerFactory.getLogger(HttpMultiBodyDecoder.class);
+	public static class Header {
+		private String contentDisposition = "form-data";
+		private String name = null;
+		private String filename = null;
+		private String contentType = null;
+
+		private Map<String, String> map = new HashMap<>();
+
+		public String getContentDisposition() {
+			return contentDisposition;
+		}
+
+		public String getContentType() {
+			return contentType;
+		}
+
+		public String getFilename() {
+			return filename;
+		}
+
+		public Map<String, String> getMap() {
+			return map;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setContentDisposition(String contentDisposition) {
+			this.contentDisposition = contentDisposition;
+		}
+
+		public void setContentType(String contentType) {
+			this.contentType = contentType;
+		}
+
+		public void setFilename(String filename) {
+			this.filename = filename;
+		}
+
+		public void setMap(Map<String, String> map) {
+			this.map = map;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
 
 	/**
-	 * 
+	 * 【
+	 * Content-Disposition: form-data; name="uploadFile"; filename=""
+	 * Content-Type: application/octet-stream
+	 * 】
+	 *
+	 * 【
+	 * Content-Disposition: form-data; name="end"
+	 * 】
+	 * @author tanyaowu
+	 * 2017年7月27日 上午10:18:01
 	 */
-	public HttpMultiBodyDecoder() {
-
+	public static interface MultiBodyHeaderKey {
+		String Content_Disposition = "Content-Disposition".toLowerCase();
+		String Content_Type = "Content-Type".toLowerCase();
 	}
 
 	public static enum Step {
 		BOUNDARY, HEADER, BODY, END
 	}
 
-	public static void decode(HttpRequest httpRequest, RequestLine firstLine, byte[] bodyBytes, String initboundary) throws AioDecodeException {
+	private static Logger log = LoggerFactory.getLogger(HttpMultiBodyDecoder.class);
+
+	//    public static int processReadIndex(ByteBuffer buffer)
+	//    {
+	//        int newReaderIndex = buffer.readerIndex();
+	//        if (newReaderIndex < buffer.capacity())
+	//        {
+	//            buffer.readerIndex(newReaderIndex + 1);
+	//            return 1;
+	//        }
+	//        return 0;
+	//    }
+
+	public static void decode(HttpRequest request, RequestLine firstLine, byte[] bodyBytes, String initboundary) throws AioDecodeException {
 		long start = SystemTimer.currentTimeMillis();
 
 		ByteBuffer buffer = ByteBuffer.wrap(bodyBytes);
@@ -47,7 +117,7 @@ public class HttpMultiBodyDecoder {
 		try {
 			label1: while (true) {
 				if (step == Step.BOUNDARY) {
-					String line = getLine(buffer, httpRequest.getCharset());
+					String line = getLine(buffer, request.getCharset());
 					//                    int offset = HttpMultiBodyDecoder.processReadIndex(buffer);
 					if (boundary.equals(line)) {
 						step = Step.HEADER;
@@ -64,7 +134,7 @@ public class HttpMultiBodyDecoder {
 				if (step == Step.HEADER) {
 					List<String> lines = new ArrayList<>(2);
 					label2: while (true) {
-						String line = getLine(buffer, httpRequest.getCharset());
+						String line = getLine(buffer, request.getCharset());
 						if ("".equals(line)) {
 							break label2;
 						} else {
@@ -77,7 +147,7 @@ public class HttpMultiBodyDecoder {
 				}
 
 				if (step == Step.BODY) {
-					Step newParseStep = parseBody(multiBodyHeader, httpRequest, buffer, boundary, endBoundary);
+					Step newParseStep = parseBody(multiBodyHeader, request, buffer, boundary, endBoundary);
 					step = newParseStep;
 
 					if (step == Step.END) {
@@ -95,17 +165,6 @@ public class HttpMultiBodyDecoder {
 		}
 
 	}
-
-	//    public static int processReadIndex(ByteBuffer buffer)
-	//    {
-	//        int newReaderIndex = buffer.readerIndex();
-	//        if (newReaderIndex < buffer.capacity())
-	//        {
-	//            buffer.readerIndex(newReaderIndex + 1);
-	//            return 1;
-	//        }
-	//        return 0;
-	//    }
 
 	/**
 	 * 返回值不包括最后的\r\n
@@ -139,17 +198,79 @@ public class HttpMultiBodyDecoder {
 	}
 
 	/**
+	 * @param args
+	 * @throws UnsupportedEncodingException
+	 */
+	public static void main(String[] args) throws UnsupportedEncodingException {
+		String testString = "hello\r\nddd\r\n";
+		ByteBuffer buffer = ByteBuffer.wrap(testString.getBytes());
+
+		String xString = getLine(buffer, "utf-8");
+		System.out.println(xString);
+		xString = getLine(buffer, "utf-8");
+		System.out.println(xString);
+	}
+
+	/**
+	 *
+	 * @param header
+	 * @param request
+	 * @param buffer
+	 * @param boundary
+	 * @param endBoundary
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @author tanyaowu
+	 */
+	public static Step parseBody(Header header, HttpRequest request, ByteBuffer buffer, String boundary, String endBoundary) throws UnsupportedEncodingException {
+		int initPosition = buffer.position();
+
+		while (buffer.hasRemaining()) {
+			String line = getLine(buffer, request.getCharset());
+			boolean isEndBoundary = endBoundary.equals(line);
+			boolean isBoundary = boundary.equals(line);
+			if (isBoundary || isEndBoundary) {
+				int startIndex = initPosition;
+				int endIndex = buffer.position() - line.getBytes().length - 2 - 2;
+				int length = endIndex - startIndex;
+				byte[] dst = new byte[length];
+
+				System.arraycopy(buffer.array(), startIndex, dst, 0, length);
+				String filename = header.getFilename();
+				if (filename != null)//该字段类型是file
+				{
+					if (!"".equals(filename)) { //
+						UploadFile uploadFile = new UploadFile();
+						uploadFile.setName(filename);
+						uploadFile.setData(dst);
+						uploadFile.setSize(dst.length);
+						request.addParam(header.getName(), uploadFile);
+					}
+				} else { //该字段是普通的key-value
+					request.addParam(header.getName(), new String(dst, request.getCharset()));
+				}
+				if (isEndBoundary) {
+					return Step.END;
+				} else {
+					return Step.HEADER;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * 【
 	 * Content-Disposition: form-data; name="uploadFile"; filename=""
 	 * Content-Type: application/octet-stream
 	 * 】
-	 * 
+	 *
 	 * 【
 	 * Content-Disposition: form-data; name="end"
 	 * 】
 	 * @param lines
 	 * @param header
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void parseHeader(List<String> lines, Header header) throws AioDecodeException {
 		if (lines == null || lines.size() == 0) {
@@ -202,131 +323,10 @@ public class HttpMultiBodyDecoder {
 	}
 
 	/**
-	 * 
-	 * @param header
-	 * @param httpRequest
-	 * @param buffer
-	 * @param boundary
-	 * @param endBoundary
-	 * @return
-	 * @throws UnsupportedEncodingException
-	 * @author: tanyaowu
+	 *
 	 */
-	public static Step parseBody(Header header, HttpRequest httpRequest, ByteBuffer buffer, String boundary, String endBoundary) throws UnsupportedEncodingException {
-		int initPosition = buffer.position();
+	public HttpMultiBodyDecoder() {
 
-		while (buffer.hasRemaining()) {
-			String line = getLine(buffer, httpRequest.getCharset());
-			boolean isEndBoundary = endBoundary.equals(line);
-			boolean isBoundary = boundary.equals(line);
-			if (isBoundary || isEndBoundary) {
-				int startIndex = initPosition;
-				int endIndex = buffer.position() - line.getBytes().length - 2 - 2;
-				int length = endIndex - startIndex;
-				byte[] dst = new byte[length];
-
-				System.arraycopy(buffer.array(), startIndex, dst, 0, length);
-				String filename = header.getFilename();
-				if (filename != null)//该字段类型是file
-				{
-					if (!"".equals(filename)) { //
-						UploadFile uploadFile = new UploadFile();
-						uploadFile.setName(filename);
-						uploadFile.setData(dst);
-						uploadFile.setSize(dst.length);
-						httpRequest.addParam(header.getName(), uploadFile);
-					}
-				} else { //该字段是普通的key-value
-					httpRequest.addParam(header.getName(), new String(dst, httpRequest.getCharset()));
-				}
-				if (isEndBoundary) {
-					return Step.END;
-				} else {
-					return Step.HEADER;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @param args
-	 * @throws UnsupportedEncodingException
-	 */
-	public static void main(String[] args) throws UnsupportedEncodingException {
-		String testString = "hello\r\nddd\r\n";
-		ByteBuffer buffer = ByteBuffer.wrap(testString.getBytes());
-
-		String xString = getLine(buffer, "utf-8");
-		System.out.println(xString);
-		xString = getLine(buffer, "utf-8");
-		System.out.println(xString);
-	}
-
-	public static class Header {
-		private String contentDisposition = "form-data";
-		private String name = null;
-		private String filename = null;
-		private String contentType = null;
-
-		private Map<String, String> map = new HashMap<>();
-
-		public String getContentDisposition() {
-			return contentDisposition;
-		}
-
-		public void setContentDisposition(String contentDisposition) {
-			this.contentDisposition = contentDisposition;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getFilename() {
-			return filename;
-		}
-
-		public void setFilename(String filename) {
-			this.filename = filename;
-		}
-
-		public String getContentType() {
-			return contentType;
-		}
-
-		public void setContentType(String contentType) {
-			this.contentType = contentType;
-		}
-
-		public Map<String, String> getMap() {
-			return map;
-		}
-
-		public void setMap(Map<String, String> map) {
-			this.map = map;
-		}
-	}
-
-	/**
-	 * 【
-	 * Content-Disposition: form-data; name="uploadFile"; filename=""
-	 * Content-Type: application/octet-stream
-	 * 】
-	 * 
-	 * 【
-	 * Content-Disposition: form-data; name="end"
-	 * 】
-	 * @author tanyaowu 
-	 * 2017年7月27日 上午10:18:01
-	 */
-	public static interface MultiBodyHeaderKey {
-		String Content_Disposition = "Content-Disposition".toLowerCase();
-		String Content_Type = "Content-Type".toLowerCase();
 	}
 
 }

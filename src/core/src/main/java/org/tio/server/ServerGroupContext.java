@@ -40,6 +40,20 @@ public class ServerGroupContext extends GroupContext {
 
 	private Thread checkHeartbeatThread = null;
 
+	/**
+	 *
+	 * @param serverAioHandler
+	 * @param serverAioListener
+	 * @param groupExecutor
+	 *
+	 * @author tanyaowu
+	 * 2017年2月2日 下午1:40:11
+	 *
+	 */
+	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener) {
+		this(serverAioHandler, serverAioListener, null, null);
+	}
+
 	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		super(tioExecutor, groupExecutor);
 		this.acceptCompletionHandler = new AcceptCompletionHandler();
@@ -75,7 +89,7 @@ public class ServerGroupContext extends GroupContext {
 							long timeLatestSentMsg = stat.getLatestTimeOfSentPacket();
 							long compareTime = Math.max(timeLatestReceivedMsg, timeLatestSentMsg);
 							long currtime = SystemTimer.currentTimeMillis();
-							long interval = (currtime - compareTime);
+							long interval = currtime - compareTime;
 							if (interval > heartbeatTimeout) {
 								log.info("{}, {} ms没有收发消息", channelContext, interval);
 								Aio.remove(channelContext, interval + " ms没有收发消息");
@@ -95,17 +109,17 @@ public class ServerGroupContext extends GroupContext {
 							//								{
 							//									groups = objwithlock.getObj().size();
 							//								}
-							//								
+							//
 							//								log.warn("[{}]:[{}]: 当前连接个数:{}, 群组(g):{}, 共接受连接:{}, 一共关闭过的连接个数:{}, 已接收消息:({}p)({}b), 已处理消息:{}p, 已发送消息:({}p)({}b)", SystemTimer.currentTimeMillis(), id,
 							//										set.size(), groups, serverGroupStat.getAccepted().get(), serverGroupStat.getClosed().get(), serverGroupStat.getReceivedPacket().get(),
 							//										serverGroupStat.getReceivedBytes().get(), serverGroupStat.getHandledPacket().get(), serverGroupStat.getSentPacket().get(),
 							//										serverGroupStat.getSentBytes().get());
 							//							}
-							//							
+							//
 							//							//打印各集合信息
 							//							if (log.isWarnEnabled())
-							//							{							
-							//								log.warn("clientNodes:{},connections:{},connecteds:{},closeds:{},groups:[channelmap:{}, groupmap:{}],users:{},syns:{}", 
+							//							{
+							//								log.warn("clientNodes:{},connections:{},connecteds:{},closeds:{},groups:[channelmap:{}, groupmap:{}],users:{},syns:{}",
 							//										ServerGroupContext.this.clientNodes.getMap().getObj().size(),
 							//										ServerGroupContext.this.connections.getSetWithLock().getObj().size(),
 							//										ServerGroupContext.this.connecteds.getSetWithLock().getObj().size(),
@@ -115,7 +129,7 @@ public class ServerGroupContext extends GroupContext {
 							//										ServerGroupContext.this.waitingResps.getMap().getObj().size()
 							//										);
 							//							}
-							//							
+							//
 							//							if (log.isInfoEnabled())
 							//							{
 							//								long end = SystemTimer.currentTimeMillis();
@@ -138,28 +152,49 @@ public class ServerGroupContext extends GroupContext {
 	}
 
 	/**
-	 * 
-	 * @param serverAioHandler
-	 * @param serverAioListener
-	 * @param groupExecutor
-	 *
-	 * @author: tanyaowu
-	 * 2017年2月2日 下午1:40:11
-	 *
-	 */
-	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener) {
-		this(serverAioHandler, serverAioListener, null, null);
-	}
-
-	public ServerGroupStat getServerGroupStat() {
-		return serverGroupStat;
-	}
-
-	/**
 	 * @return the acceptCompletionHandler
 	 */
 	public AcceptCompletionHandler getAcceptCompletionHandler() {
 		return acceptCompletionHandler;
+	}
+
+	/**
+	 * @see org.tio.core.GroupContext#getAioHandler()
+	 *
+	 * @return
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:34:37
+	 *
+	 */
+	@Override
+	public AioHandler getAioHandler() {
+		return this.getServerAioHandler();
+	}
+
+	/**
+	 * @see org.tio.core.GroupContext#getAioListener()
+	 *
+	 * @return
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:34:37
+	 *
+	 */
+	@Override
+	public AioListener getAioListener() {
+		return getServerAioListener();
+	}
+
+	/**
+	 * @see org.tio.core.GroupContext#getGroupStat()
+	 *
+	 * @return
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:34:37
+	 *
+	 */
+	@Override
+	public GroupStat getGroupStat() {
+		return this.getServerGroupStat();
 	}
 
 	/**
@@ -176,42 +211,7 @@ public class ServerGroupContext extends GroupContext {
 		return serverAioListener;
 	}
 
-	/** 
-	 * @see org.tio.core.GroupContext#getAioHandler()
-	 * 
-	 * @return
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:34:37
-	 * 
-	 */
-	@Override
-	public AioHandler getAioHandler() {
-		return this.getServerAioHandler();
-	}
-
-	/** 
-	 * @see org.tio.core.GroupContext#getGroupStat()
-	 * 
-	 * @return
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:34:37
-	 * 
-	 */
-	@Override
-	public GroupStat getGroupStat() {
-		return this.getServerGroupStat();
-	}
-
-	/** 
-	 * @see org.tio.core.GroupContext#getAioListener()
-	 * 
-	 * @return
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:34:37
-	 * 
-	 */
-	@Override
-	public AioListener getAioListener() {
-		return getServerAioListener();
+	public ServerGroupStat getServerGroupStat() {
+		return serverGroupStat;
 	}
 }

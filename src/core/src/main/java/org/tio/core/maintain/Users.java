@@ -21,71 +21,14 @@ public class Users {
 	 * key: userid
 	 * value: ChannelContext
 	 */
-	private ObjWithLock<DualHashBidiMap<String, ChannelContext>> map = new ObjWithLock<DualHashBidiMap<String, ChannelContext>>(new DualHashBidiMap<String, ChannelContext>());
-
-	/**
-	 * @return the map
-	 */
-	public ObjWithLock<DualHashBidiMap<String, ChannelContext>> getMap() {
-		return map;
-	}
-
-	/**
-	 * 解除绑定
-	 *
-	 * @param channelContext the channel context
-	 */
-	public void unbind(ChannelContext channelContext) {
-		GroupContext groupContext = channelContext.getGroupContext();
-		if (groupContext.isShortConnection()) {
-			return;
-		}
-
-		Lock lock = map.getLock().writeLock();
-		DualHashBidiMap<String, ChannelContext> m = map.getObj();
-		try {
-			lock.lock();
-			m.removeValue(channelContext);
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * 解除绑定
-	 *
-	 * @param userid the userid
-	 * @author: tanyaowu
-	 */
-	public void unbind(GroupContext groupContext, String userid) {
-		if (groupContext.isShortConnection()) {
-			return;
-		}
-
-		if (StringUtils.isBlank(userid)) {
-			return;
-		}
-
-		Lock lock = map.getLock().writeLock();
-		DualHashBidiMap<String, ChannelContext> m = map.getObj();
-		try {
-			lock.lock();
-			m.remove(userid);
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
-	}
+	private ObjWithLock<DualHashBidiMap<String, ChannelContext>> map = new ObjWithLock<>(new DualHashBidiMap<String, ChannelContext>());
 
 	/**
 	 * 绑定userid.
 	 *
 	 * @param userid the userid
 	 * @param channelContext the channel context
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public void bind(String userid, ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
@@ -132,6 +75,63 @@ public class Users {
 		try {
 			lock.lock();
 			return m.get(key);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * @return the map
+	 */
+	public ObjWithLock<DualHashBidiMap<String, ChannelContext>> getMap() {
+		return map;
+	}
+
+	/**
+	 * 解除绑定
+	 *
+	 * @param channelContext the channel context
+	 */
+	public void unbind(ChannelContext channelContext) {
+		GroupContext groupContext = channelContext.getGroupContext();
+		if (groupContext.isShortConnection()) {
+			return;
+		}
+
+		Lock lock = map.getLock().writeLock();
+		DualHashBidiMap<String, ChannelContext> m = map.getObj();
+		try {
+			lock.lock();
+			m.removeValue(channelContext);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 解除绑定
+	 *
+	 * @param userid the userid
+	 * @author tanyaowu
+	 */
+	public void unbind(GroupContext groupContext, String userid) {
+		if (groupContext.isShortConnection()) {
+			return;
+		}
+
+		if (StringUtils.isBlank(userid)) {
+			return;
+		}
+
+		Lock lock = map.getLock().writeLock();
+		DualHashBidiMap<String, ChannelContext> m = map.getObj();
+		try {
+			lock.lock();
+			m.remove(userid);
 		} catch (Exception e) {
 			throw e;
 		} finally {

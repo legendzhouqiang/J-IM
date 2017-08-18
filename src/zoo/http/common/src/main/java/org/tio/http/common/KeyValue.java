@@ -1,8 +1,8 @@
 package org.tio.http.common;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class KeyValue {
@@ -17,17 +17,17 @@ public class KeyValue {
 	}
 
 	/**
-	 * @param key the key to set
-	 */
-	public void setKey(String key) {
-		this.key = key;
-	}
-
-	/**
 	 * @return the value
 	 */
 	public String getValue() {
 		return value;
+	}
+
+	/**
+	 * @param key the key to set
+	 */
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	/**

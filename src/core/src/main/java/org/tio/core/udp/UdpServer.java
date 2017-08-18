@@ -18,11 +18,46 @@ import org.tio.core.udp.task.UdpHandlerRunnable;
 import org.tio.core.udp.task.UdpSendRunnable;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月5日 下午2:47:16
  */
 public class UdpServer {
 	private static Logger log = LoggerFactory.getLogger(UdpServer.class);
+
+	/**
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) throws IOException {
+		final AtomicLong count = new AtomicLong();
+		UdpServer udpServer = null;
+		UdpHandler udpHandler = new UdpHandler() {
+			@Override
+			public void handler(UdpPacket udpPacket, DatagramSocket datagramSocket) {
+				byte[] data = udpPacket.getData();
+				Node remote = udpPacket.getRemote();
+				long c = count.incrementAndGet();
+				if (c % 100000 == 0) {
+					String str = "【" + new String(data) + "】 from " + remote;
+					log.error(str);
+				}
+
+				log.error(udpPacket.getRemote() + "");
+				DatagramPacket datagramPacket = new DatagramPacket(data, data.length, new InetSocketAddress(udpPacket.getRemote().getIp(), udpPacket.getRemote().getPort()));
+				try {
+					datagramSocket.send(datagramPacket);
+				} catch (Exception e) {
+					log.error(e.toString(), e);
+				}
+
+			}
+		};
+		UdpServerConf udpServerConf = new UdpServerConf(3000, udpHandler, 5000);
+
+		udpServer = new UdpServer(udpServerConf);
+
+		udpServer.start();
+	}
 
 	private LinkedBlockingQueue<UdpPacket> handlerQueue = new LinkedBlockingQueue<>();
 
@@ -38,10 +73,12 @@ public class UdpServer {
 
 	private UdpSendRunnable udpSendRunnable = null;
 
+	private UdpServerConf udpServerConf;
+
 	/**
-	 * 
-	 * @author: tanyaowu
-	 * @throws SocketException 
+	 *
+	 * @author tanyaowu
+	 * @throws SocketException
 	 */
 	public UdpServer(UdpServerConf udpServerConf) throws SocketException {
 		this.udpServerConf = udpServerConf;
@@ -52,18 +89,14 @@ public class UdpServer {
 		udpSendRunnable = new UdpSendRunnable(sendQueue, udpServerConf, datagramSocket);
 	}
 
-	private UdpServerConf udpServerConf;
-
-	public void start() {
-		startListen();
-		startHandler();
-		startSend();
-	}
-
 	public void send(byte[] data, Node remoteNode) {
 		InetSocketAddress inetSocketAddress = new InetSocketAddress(remoteNode.getIp(), remoteNode.getPort());
 		DatagramPacket datagramPacket = new DatagramPacket(data, data.length, inetSocketAddress);
 		sendQueue.add(datagramPacket);
+	}
+
+	public void send(String str, Node remoteNode) {
+		send(str, null, remoteNode);
 	}
 
 	public void send(String data, String charset, Node remoteNode) {
@@ -81,12 +114,14 @@ public class UdpServer {
 		}
 	}
 
-	public void send(String str, Node remoteNode) {
-		send(str, null, remoteNode);
+	public void start() {
+		startListen();
+		startHandler();
+		startSend();
 	}
 
-	private void startSend() {
-		Thread thread = new Thread(udpSendRunnable, "tio-udp-client-send");
+	private void startHandler() {
+		Thread thread = new Thread(udpHandlerRunnable, "tio-udp-server-handler");
 		thread.setDaemon(false);
 		thread.start();
 	}
@@ -128,8 +163,8 @@ public class UdpServer {
 		thread.start();
 	}
 
-	private void startHandler() {
-		Thread thread = new Thread(udpHandlerRunnable, "tio-udp-server-handler");
+	private void startSend() {
+		Thread thread = new Thread(udpSendRunnable, "tio-udp-client-send");
 		thread.setDaemon(false);
 		thread.start();
 	}
@@ -138,40 +173,5 @@ public class UdpServer {
 		isStopped = true;
 		datagramSocket.close();
 		udpHandlerRunnable.stop();
-	}
-
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) throws IOException {
-		final AtomicLong count = new AtomicLong();
-		UdpServer udpServer = null;
-		UdpHandler udpHandler = new UdpHandler() {
-			@Override
-			public void handler(UdpPacket udpPacket, DatagramSocket datagramSocket) {
-				byte[] data = udpPacket.getData();
-				Node remote = udpPacket.getRemote();
-				long c = count.incrementAndGet();
-				if (c % 100000 == 0) {
-					String str = "【" + new String(data) + "】 from " + remote;
-					log.error(str);
-				}
-
-				log.error(udpPacket.getRemote() + "");
-				DatagramPacket datagramPacket = new DatagramPacket(data, data.length, new InetSocketAddress(udpPacket.getRemote().getIp(), udpPacket.getRemote().getPort()));
-				try {
-					datagramSocket.send(datagramPacket);
-				} catch (Exception e) {
-					log.error(e.toString(), e);
-				}
-
-			}
-		};
-		UdpServerConf udpServerConf = new UdpServerConf(3000, udpHandler, 5000);
-
-		udpServer = new UdpServer(udpServerConf);
-
-		udpServer.start();
 	}
 }

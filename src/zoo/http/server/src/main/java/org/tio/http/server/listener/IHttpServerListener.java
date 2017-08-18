@@ -6,10 +6,22 @@ import org.tio.http.common.HttpResponse;
 import org.tio.http.common.RequestLine;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月25日 下午2:16:06
  */
 public interface IHttpServerListener {
+
+	/**
+	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)后会调用此方法，业务层可以统一在这里给HttpResponsePacket作一些修饰
+	 * @param packet
+	 * @param requestLine
+	 * @param channelContext
+	 * @param httpResponse
+	 * @return
+	 * @throws Exception
+	 * @author tanyaowu
+	 */
+	public void doAfterHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws Exception;
 
 	/**
 	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)前会先调用这个方法<br>
@@ -20,20 +32,8 @@ public interface IHttpServerListener {
 	 * @param httpResponseFromCache 从缓存中获取到的HttpResponse对象
 	 * @return
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public HttpResponse doBeforeHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponseFromCache) throws Exception;
-
-	/**
-	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)后会调用此方法，业务层可以统一在这里给HttpResponsePacket作一些修饰
-	 * @param packet
-	 * @param requestLine
-	 * @param channelContext
-	 * @param httpResponse
-	 * @return
-	 * @throws Exception
-	 * @author: tanyaowu
-	 */
-	public void doAfterHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws Exception;
 
 }

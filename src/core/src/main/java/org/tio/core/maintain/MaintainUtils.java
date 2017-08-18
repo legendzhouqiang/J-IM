@@ -14,7 +14,7 @@ public class MaintainUtils {
 	 * 彻底删除，不再维护
 	 * @param channelContext
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 *
 	 */
 	public static void removeFromMaintain(ChannelContext channelContext) {

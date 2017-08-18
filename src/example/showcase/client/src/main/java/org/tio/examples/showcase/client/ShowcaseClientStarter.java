@@ -19,8 +19,8 @@ import org.tio.examples.showcase.common.packets.P2PReqBody;
 import org.tio.json.Json;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  */
 public class ShowcaseClientStarter {
 	static String serverIp = "127.0.0.1";
@@ -38,12 +38,6 @@ public class ShowcaseClientStarter {
 	private static AioClient aioClient = null;
 
 	static ClientChannelContext clientChannelContext;
-
-	public static void main(String[] args) throws Exception {
-		aioClient = new AioClient(clientGroupContext);
-		clientChannelContext = aioClient.connect(serverNode);
-		command();
-	}
 
 	public static void command() throws Exception {
 		@SuppressWarnings("resource")
@@ -77,6 +71,12 @@ public class ShowcaseClientStarter {
 
 		aioClient.stop();
 		System.exit(0);
+	}
+
+	public static void main(String[] args) throws Exception {
+		aioClient = new AioClient(clientGroupContext);
+		clientChannelContext = aioClient.connect(serverNode);
+		command();
 	}
 
 	public static void processCommand(String line) throws Exception {

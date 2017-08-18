@@ -9,8 +9,8 @@ import org.tio.server.intf.ServerAioHandler;
 import org.tio.server.intf.ServerAioListener;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月4日 下午12:22:58
  */
 public class HelloServerStarter {

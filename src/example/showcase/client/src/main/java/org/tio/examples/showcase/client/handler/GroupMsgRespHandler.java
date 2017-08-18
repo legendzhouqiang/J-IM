@@ -9,43 +9,43 @@ import org.tio.examples.showcase.common.packets.GroupMsgRespBody;
 import org.tio.json.Json;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月27日 下午9:51:28
  */
 public class GroupMsgRespHandler extends AbsShowcaseBsHandler<GroupMsgRespBody> {
 	private static Logger log = LoggerFactory.getLogger(GroupMsgRespHandler.class);
 
 	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public GroupMsgRespHandler() {
-	}
-
-	/**
 	 * @param args
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
 
 	}
 
-	/** 
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public GroupMsgRespHandler() {
+	}
+
+	/**
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public Class<GroupMsgRespBody> bodyClass() {
 		return GroupMsgRespBody.class;
 	}
 
-	/** 
+	/**
 	 * @param packet
 	 * @param bsBody
 	 * @param channelContext
 	 * @return
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public Object handler(ShowcasePacket packet, GroupMsgRespBody bsBody, ChannelContext channelContext) throws Exception {

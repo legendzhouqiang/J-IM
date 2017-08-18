@@ -17,7 +17,7 @@ import org.tio.utils.cache.redis.RedisCache;
 import org.tio.utils.cache.redis.RedisTask;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月12日 下午9:13:54
  */
 public class GuavaRedisCache implements ICache {
@@ -27,15 +27,17 @@ public class GuavaRedisCache implements ICache {
 	private static Logger log = LoggerFactory.getLogger(GuavaRedisCache.class);
 	public static Map<String, GuavaRedisCache> map = new HashMap<>();
 
-	GuavaCache guavaCache;
-
-	RedisCache redisCache;
-
-	String cacheName;
-
 	static RTopic<CacheChangedVo> topic;
 
 	private static boolean inited = false;
+
+	public static GuavaRedisCache getCache(String cacheName) {
+		GuavaRedisCache guavaRedisCache = map.get(cacheName);
+		if (guavaRedisCache == null) {
+			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, expireAfterWrite, expireAfterAccess)", cacheName, GuavaRedisCache.class.getSimpleName());
+		}
+		return guavaRedisCache;
+	}
 
 	private static void init(RedissonClient redisson) {
 		if (!inited) {
@@ -72,6 +74,14 @@ public class GuavaRedisCache implements ICache {
 		}
 	}
 
+	/**
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
+
 	public static GuavaRedisCache register(RedissonClient redisson, String cacheName, Long expireAfterWrite, Long expireAfterAccess) {
 		init(redisson);
 
@@ -91,18 +101,23 @@ public class GuavaRedisCache implements ICache {
 		return guavaRedisCache;
 	}
 
-	public static GuavaRedisCache getCache(String cacheName) {
-		GuavaRedisCache guavaRedisCache = map.get(cacheName);
-		if (guavaRedisCache == null) {
-			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, expireAfterWrite, expireAfterAccess)", cacheName, GuavaRedisCache.class.getSimpleName());
-		}
-		return guavaRedisCache;
+	GuavaCache guavaCache;
+
+	RedisCache redisCache;
+
+	String cacheName;
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public GuavaRedisCache() {
 	}
 
 	/**
 	 * @param guavaCache
 	 * @param redisCache
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public GuavaRedisCache(String cacheName, GuavaCache guavaCache, RedisCache redisCache) {
 		super();
@@ -112,51 +127,22 @@ public class GuavaRedisCache implements ICache {
 	}
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
-	public GuavaRedisCache() {
+	@Override
+	public void clear() {
+		guavaCache.clear();
+		redisCache.clear();
+
+		CacheChangedVo cacheChangedVo = new CacheChangedVo(cacheName, CacheChangeType.CLEAR);
+		topic.publish(cacheChangedVo);
 	}
 
 	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
-	}
-
-	/** 
-	 * @param key
-	 * @param value
-	 * @author: tanyaowu
-	 */
-	@Override
-	public void put(String key, Serializable value) {
-		guavaCache.put(key, value);
-		redisCache.put(key, value);
-
-		CacheChangedVo cacheChangedVo = new CacheChangedVo(cacheName, key, CacheChangeType.PUT);
-		topic.publish(cacheChangedVo);
-	}
-
-	/** 
-	 * @param key
-	 * @author: tanyaowu
-	 */
-	@Override
-	public void remove(String key) {
-		guavaCache.remove(key);
-		redisCache.remove(key);
-
-		CacheChangedVo cacheChangedVo = new CacheChangedVo(cacheName, key, CacheChangeType.REMOVE);
-		topic.publish(cacheChangedVo);
-	}
-
-	/** 
 	 * @param key
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public Serializable get(String key) {
@@ -175,25 +161,39 @@ public class GuavaRedisCache implements ICache {
 		return ret;
 	}
 
-	/** 
+	/**
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public Collection<String> keys() {
 		return redisCache.keys();
 	}
 
-	/** 
-	 * 
-	 * @author: tanyaowu
+	/**
+	 * @param key
+	 * @param value
+	 * @author tanyaowu
 	 */
 	@Override
-	public void clear() {
-		guavaCache.clear();
-		redisCache.clear();
+	public void put(String key, Serializable value) {
+		guavaCache.put(key, value);
+		redisCache.put(key, value);
 
-		CacheChangedVo cacheChangedVo = new CacheChangedVo(cacheName, CacheChangeType.CLEAR);
+		CacheChangedVo cacheChangedVo = new CacheChangedVo(cacheName, key, CacheChangeType.PUT);
+		topic.publish(cacheChangedVo);
+	}
+
+	/**
+	 * @param key
+	 * @author tanyaowu
+	 */
+	@Override
+	public void remove(String key) {
+		guavaCache.remove(key);
+		redisCache.remove(key);
+
+		CacheChangedVo cacheChangedVo = new CacheChangedVo(cacheName, key, CacheChangeType.REMOVE);
 		topic.publish(cacheChangedVo);
 	}
 }

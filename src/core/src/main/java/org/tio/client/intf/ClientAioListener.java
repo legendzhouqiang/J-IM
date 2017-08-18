@@ -3,8 +3,8 @@ package org.tio.client.intf;
 import org.tio.core.intf.AioListener;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月1日 上午9:15:04
  */
 public interface ClientAioListener extends AioListener {
@@ -15,7 +15,7 @@ public interface ClientAioListener extends AioListener {
 	 * @param isConnected true: 表示重连成功，false: 表示重连失败
 	 * @return
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 *
 	 */
 	//	void onAfterReconnected(ChannelContext channelContext, boolean isConnected) throws Exception;
@@ -25,7 +25,7 @@ public interface ClientAioListener extends AioListener {
 	//	 * @param channelContext
 	//	 * @param isReconnect 是否是重连
 	//	 * @param throwable 有可能是null
-	//	 * @author: tanyaowu
+	//	 * @author tanyaowu
 
 	//	 *
 	//	 */

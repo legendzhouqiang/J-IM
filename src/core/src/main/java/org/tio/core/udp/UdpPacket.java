@@ -4,26 +4,21 @@ import org.tio.core.Node;
 import org.tio.utils.SystemTimer;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月5日 下午4:46:24
  */
 public class UdpPacket {
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 * @param args
+	 * @author tanyaowu
 	 */
-	public UdpPacket() {
-	}
+	public static void main(String[] args) {
 
-	public UdpPacket(byte[] data, Node remote) {
-		super();
-		this.data = data;
-		this.remote = remote;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private byte[] data;
 
@@ -38,31 +33,36 @@ public class UdpPacket {
 	private long time = SystemTimer.currentTimeMillis();
 
 	/**
-	 * @param args
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
-	public static void main(String[] args) {
+	public UdpPacket() {
+	}
 
+	public UdpPacket(byte[] data, Node remote) {
+		super();
+		this.data = data;
+		this.remote = remote;
 	}
 
 	public byte[] getData() {
 		return data;
 	}
 
-	public void setData(byte[] data) {
-		this.data = data;
-	}
-
 	public Node getRemote() {
 		return remote;
 	}
 
-	public void setRemote(Node remote) {
-		this.remote = remote;
-	}
-
 	public long getTime() {
 		return time;
+	}
+
+	public void setData(byte[] data) {
+		this.data = data;
+	}
+
+	public void setRemote(Node remote) {
+		this.remote = remote;
 	}
 
 	public void setTime(long time) {

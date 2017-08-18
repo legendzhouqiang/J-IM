@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.http.common.GroupContextKey;
+import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpUuid;
 import org.tio.http.common.session.id.impl.UUIDSessionIdGenerator;
 import org.tio.http.server.handler.DefaultHttpRequestHandler;
@@ -21,60 +22,44 @@ import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 import com.xiaoleilu.hutool.io.FileUtil;
 
 /**
- * 
+ *
  * @author tanyaowu
  */
 public class HttpServerStarter {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(HttpServerStarter.class);
 
-	private HttpServerConfig httpConfig = null;
+	/**
+	 * @param args
+	 *
+	 * @author tanyaowu
+	 * @throws IOException
+	 * 2016年11月17日 下午5:59:24
+	 *
+	 */
+	public static void main(String[] args) throws IOException {
+	}
+
+	private HttpConfig httpConfig = null;
 
 	private HttpServerAioHandler httpServerAioHandler = null;
 
-	private HttpServerAioListener httpServerAioListener = null;
-
 	//	private HttpGroupListener httpGroupListener = null;
+
+	private HttpServerAioListener httpServerAioListener = null;
 
 	private ServerGroupContext serverGroupContext = null;
 
 	private AioServer aioServer = null;
 
-	private IHttpRequestHandler httpRequestHandler;
+	private IHttpRequestHandler requestHandler;
 
-	/**
-	 * @param args
-	 *
-	 * @author: tanyaowu
-	 * @throws IOException 
-	 * 2016年11月17日 下午5:59:24
-	 * 
-	 */
-	public static void main(String[] args) throws IOException {
+	public HttpServerStarter(HttpConfig httpConfig, IHttpRequestHandler requestHandler) {
+		this(httpConfig, requestHandler, null, null);
 	}
 
-	private void init(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
-		this.httpConfig = httpConfig;
-		this.httpRequestHandler = httpRequestHandler;
-		this.httpServerAioHandler = new HttpServerAioHandler(httpConfig, httpRequestHandler);
-		httpServerAioListener = new HttpServerAioListener();
-		serverGroupContext = new ServerGroupContext(httpServerAioHandler, httpServerAioListener, tioExecutor, groupExecutor);
-		serverGroupContext.setHeartbeatTimeout(1000 * 10);
-		serverGroupContext.setShortConnection(true);
-		serverGroupContext.setAttribute(GroupContextKey.HTTP_SERVER_CONFIG, httpConfig);
-
-		aioServer = new AioServer(serverGroupContext);
-
-		HttpUuid imTioUuid = new HttpUuid();
-		serverGroupContext.setTioUuid(imTioUuid);
-	}
-
-	public HttpServerStarter(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
-		init(httpConfig, httpRequestHandler, tioExecutor, groupExecutor);
-	}
-
-	public HttpServerStarter(HttpServerConfig httpConfig, IHttpRequestHandler httpRequestHandler) {
-		this(httpConfig, httpRequestHandler, null, null);
+	public HttpServerStarter(HttpConfig httpConfig, IHttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
 	}
 
 	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener) {
@@ -90,7 +75,7 @@ public class HttpServerStarter {
 		int port = serverPort;
 		String pageRoot = pageRootDir;
 
-		httpConfig = new HttpServerConfig(port, null);
+		httpConfig = new HttpConfig(port, null);
 		httpConfig.setRoot(pageRoot);
 		if (sessionStore != null) {
 			httpConfig.setSessionStore(sessionStore);
@@ -101,10 +86,62 @@ public class HttpServerStarter {
 
 		//		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
-		DefaultHttpRequestHandler httpRequestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
-		httpRequestHandler.setHttpServerListener(httpServerListener);
+		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
+		requestHandler.setHttpServerListener(httpServerListener);
 
-		init(httpConfig, httpRequestHandler, tioExecutor, groupExecutor);
+		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
+	}
+
+	public IHttpRequestHandler getHttpRequestHandler() {
+		return requestHandler;
+	}
+
+	/**
+	 * @return the httpServerAioHandler
+	 */
+	public HttpServerAioHandler getHttpServerAioHandler() {
+		return httpServerAioHandler;
+	}
+
+	/**
+	 * @return the httpServerAioListener
+	 */
+	public HttpServerAioListener getHttpServerAioListener() {
+		return httpServerAioListener;
+	}
+
+	/**
+	 * @return the httpConfig
+	 */
+	public HttpConfig getHttpConfig() {
+		return httpConfig;
+	}
+
+	/**
+	 * @return the serverGroupContext
+	 */
+	public ServerGroupContext getServerGroupContext() {
+		return serverGroupContext;
+	}
+
+	private void init(HttpConfig httpConfig, IHttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		this.httpConfig = httpConfig;
+		this.requestHandler = requestHandler;
+		this.httpServerAioHandler = new HttpServerAioHandler(httpConfig, requestHandler);
+		httpServerAioListener = new HttpServerAioListener();
+		serverGroupContext = new ServerGroupContext(httpServerAioHandler, httpServerAioListener, tioExecutor, groupExecutor);
+		serverGroupContext.setHeartbeatTimeout(1000 * 10);
+		serverGroupContext.setShortConnection(true);
+		serverGroupContext.setAttribute(GroupContextKey.HTTP_SERVER_CONFIG, httpConfig);
+
+		aioServer = new AioServer(serverGroupContext);
+
+		HttpUuid imTioUuid = new HttpUuid();
+		serverGroupContext.setTioUuid(imTioUuid);
+	}
+
+	public void setHttpRequestHandler(IHttpRequestHandler requestHandler) {
+		this.requestHandler = requestHandler;
 	}
 
 	public void start() throws IOException {
@@ -126,41 +163,5 @@ public class HttpServerStarter {
 
 	public void stop() throws IOException {
 		aioServer.stop();
-	}
-
-	/**
-	 * @return the httpServerAioHandler
-	 */
-	public HttpServerAioHandler getHttpServerAioHandler() {
-		return httpServerAioHandler;
-	}
-
-	/**
-	 * @return the httpServerAioListener
-	 */
-	public HttpServerAioListener getHttpServerAioListener() {
-		return httpServerAioListener;
-	}
-
-	/**
-	 * @return the serverGroupContext
-	 */
-	public ServerGroupContext getServerGroupContext() {
-		return serverGroupContext;
-	}
-
-	/**
-	 * @return the httpConfig
-	 */
-	public HttpServerConfig getHttpServerConfig() {
-		return httpConfig;
-	}
-
-	public IHttpRequestHandler getHttpRequestHandler() {
-		return httpRequestHandler;
-	}
-
-	public void setHttpRequestHandler(IHttpRequestHandler httpRequestHandler) {
-		this.httpRequestHandler = httpRequestHandler;
 	}
 }

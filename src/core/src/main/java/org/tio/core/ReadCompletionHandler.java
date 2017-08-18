@@ -12,8 +12,8 @@ import org.tio.core.task.DecodeRunnable;
 import org.tio.core.utils.AioUtils;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月4日 上午9:22:04
  */
 public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuffer> {
@@ -24,9 +24,9 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 	//	private ByteBuffer byteBuffer = ByteBuffer.allocate(ChannelContext.READ_BUFFER_SIZE);
 
 	/**
-	 * 
+	 *
 	 * @param channelContext
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public ReadCompletionHandler(ChannelContext channelContext) {
 		this.channelContext = channelContext;
@@ -71,10 +71,10 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 	}
 
 	/**
-	 * 
+	 *
 	 * @param exc
 	 * @param byteBuffer
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void failed(Throwable exc, ByteBuffer byteBuffer) {
@@ -82,9 +82,9 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public ByteBuffer getReadByteBuffer() {
 		return readByteBuffer;

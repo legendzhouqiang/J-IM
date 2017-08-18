@@ -13,7 +13,16 @@ import org.tio.utils.lock.MapWithLock;
 public class ChannelContextMapWithLock {
 
 	/** remoteAndChannelContext key: "ip:port" value: ChannelContext. */
-	private MapWithLock<Integer, Packet> map = new MapWithLock<Integer, Packet>(new HashMap<Integer, Packet>());
+	private MapWithLock<Integer, Packet> map = new MapWithLock<>(new HashMap<Integer, Packet>());
+
+	/**
+	 * Gets the map.
+	 *
+	 * @return the map
+	 */
+	public MapWithLock<Integer, Packet> getMap() {
+		return map;
+	}
 
 	/**
 	 * Adds the.
@@ -45,15 +54,6 @@ public class ChannelContextMapWithLock {
 		} finally {
 			lock.unlock();
 		}
-	}
-
-	/**
-	 * Gets the map.
-	 *
-	 * @return the map
-	 */
-	public MapWithLock<Integer, Packet> getMap() {
-		return map;
 	}
 
 }

@@ -13,43 +13,43 @@ import org.tio.examples.showcase.common.packets.P2PRespBody;
 import org.tio.json.Json;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月27日 下午9:51:28
  */
 public class P2PReqHandler extends AbsShowcaseBsHandler<P2PReqBody> {
 	private static Logger log = LoggerFactory.getLogger(P2PReqHandler.class);
 
 	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public P2PReqHandler() {
-	}
-
-	/**
 	 * @param args
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
 
 	}
 
-	/** 
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public P2PReqHandler() {
+	}
+
+	/**
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public Class<P2PReqBody> bodyClass() {
 		return P2PReqBody.class;
 	}
 
-	/** 
+	/**
 	 * @param packet
 	 * @param bsBody
 	 * @param channelContext
 	 * @return
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public Object handler(ShowcasePacket packet, P2PReqBody bsBody, ChannelContext channelContext) throws Exception {

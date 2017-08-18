@@ -3,8 +3,8 @@ package org.tio.http.common;
 /**
  * 本类直接摘自baseio: https://git.oschina.net/generallycloud/baseio<br>
  * 谢谢作者整理<br>
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public enum HttpResponseStatus {
@@ -158,6 +158,16 @@ public enum HttpResponseStatus {
 	 */
 	C505(505, "HTTP Version Not Supported", "505 HTTP Version Not Supported");
 
+	public static HttpResponseStatus getHttpStatus(int status) {
+		HttpResponseStatus[] values = HttpResponseStatus.values();
+		for (HttpResponseStatus v : values) {
+			if (v.getStatus() == status) {
+				return v;
+			}
+		}
+		return C505;
+	}
+
 	private int status;
 
 	private String description;
@@ -173,30 +183,20 @@ public enum HttpResponseStatus {
 		this.headerBinary = headerText.getBytes();
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
 	public String getDescription() {
 		return description;
-	}
-
-	public String getHeaderText() {
-		return headerText;
 	}
 
 	public byte[] getHeaderBinary() {
 		return headerBinary;
 	}
 
-	public static HttpResponseStatus getHttpStatus(int status) {
-		HttpResponseStatus[] values = HttpResponseStatus.values();
-		for (HttpResponseStatus v : values) {
-			if (v.getStatus() == status) {
-				return v;
-			}
-		}
-		return C505;
+	public String getHeaderText() {
+		return headerText;
+	}
+
+	public int getStatus() {
+		return status;
 	}
 
 }

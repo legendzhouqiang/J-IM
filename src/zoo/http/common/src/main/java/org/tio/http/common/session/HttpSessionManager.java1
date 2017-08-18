@@ -18,7 +18,7 @@ public class HttpSessionManager implements java.io.Serializable {
 	private static HttpSessionManager instance = null;
 
 	/**
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	private HttpSessionManager(ICache store) {
 		this.store = store;
@@ -28,7 +28,7 @@ public class HttpSessionManager implements java.io.Serializable {
 	 * 
 	 * @param store
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static HttpSessionManager getInstance(ICache store) {
 		if (instance == null) {
@@ -45,7 +45,7 @@ public class HttpSessionManager implements java.io.Serializable {
 	 * 
 	 * @param sessionId
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public HttpSession getHttpSession(String sessionId) {
 		HttpSession httpSession = (HttpSession)store.get(sessionId);
@@ -56,7 +56,7 @@ public class HttpSessionManager implements java.io.Serializable {
 	 * 设置会话属性
 	 * @param key
 	 * @param value
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public void setAttribute(HttpSession httpSession, String key, Serializable value) {
 		httpSession.setAttribute(key, value);
@@ -67,7 +67,7 @@ public class HttpSessionManager implements java.io.Serializable {
 	 * 获取会话属性
 	 * @param key
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public Object getAttribute(HttpSession httpSession, String key) {
 		return httpSession.getAttribute(key);
@@ -76,7 +76,7 @@ public class HttpSessionManager implements java.io.Serializable {
 	/**
 	 * 
 	 * @param key
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public void removeAttribute(HttpSession httpSession, String key) {
 		httpSession.removeAttribute(key);
@@ -86,7 +86,7 @@ public class HttpSessionManager implements java.io.Serializable {
 	/**
 	 * 清空所有属性
 	 * 
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public void clear(HttpSession httpSession) {
 		httpSession.clear();

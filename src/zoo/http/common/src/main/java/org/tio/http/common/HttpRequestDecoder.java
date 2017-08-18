@@ -19,23 +19,16 @@ import org.tio.http.common.utils.HttpParseUtils;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class HttpRequestDecoder {
-	private static Logger log = LoggerFactory.getLogger(HttpRequestDecoder.class);
-
-	/**
-	 * 
-	 *
-	 * @author: tanyaowu
-	 * 2017年2月22日 下午4:06:42
-	 * 
-	 */
-	public HttpRequestDecoder() {
-
+	public static enum Step {
+		firstline, header, body
 	}
+
+	private static Logger log = LoggerFactory.getLogger(HttpRequestDecoder.class);
 
 	public static final int MAX_HEADER_LENGTH = 20480;
 
@@ -53,12 +46,12 @@ public class HttpRequestDecoder {
 		while (buffer.hasRemaining()) {
 			//			count++;
 			//			if (count > MAX_HEADER_LENGTH) {
-			//				
+			//
 			//			}
 
 			String line = ByteBufferUtils.readLine(buffer, null);
 			int newPosition = buffer.position();
-			if ((newPosition - initPosition) > MAX_HEADER_LENGTH) {
+			if (newPosition - initPosition > MAX_HEADER_LENGTH) {
 				throw new AioDecodeException("max http header length " + MAX_HEADER_LENGTH);
 			}
 
@@ -102,25 +95,25 @@ public class HttpRequestDecoder {
 			throw new AioDecodeException("there is no host header");
 		}
 
-		HttpRequest httpRequest = new HttpRequest(channelContext.getClientNode());
-		httpRequest.setChannelContext(channelContext);
-		httpRequest.setHttpConfig((HttpConfig)channelContext.getGroupContext().getAttribute(GroupContextKey.HTTP_SERVER_CONFIG));
-		httpRequest.setHeaderString(headerSb.toString());
-		httpRequest.setRequestLine(firstLine);
-		httpRequest.setHeaders(headers);
-		httpRequest.setContentLength(contentLength);
+		HttpRequest request = new HttpRequest(channelContext.getClientNode());
+		request.setChannelContext(channelContext);
+		request.setHttpConfig((HttpConfig) channelContext.getGroupContext().getAttribute(GroupContextKey.HTTP_SERVER_CONFIG));
+		request.setHeaderString(headerSb.toString());
+		request.setRequestLine(firstLine);
+		request.setHeaders(headers);
+		request.setContentLength(contentLength);
 
 		if (contentLength == 0) {
 			if (StringUtils.isNotBlank(firstLine.getQuery())) {
-				Map<String, Object[]> params = decodeParams(firstLine.getQuery(), httpRequest.getCharset());
-				httpRequest.setParams(params);
+				Map<String, Object[]> params = decodeParams(firstLine.getQuery(), request.getCharset());
+				request.setParams(params);
 			}
 		} else {
 			bodyBytes = new byte[contentLength];
 			buffer.get(bodyBytes);
-			httpRequest.setBody(bodyBytes);
+			request.setBody(bodyBytes);
 			//解析消息体
-			parseBody(httpRequest, firstLine, bodyBytes, channelContext);
+			parseBody(request, firstLine, bodyBytes, channelContext);
 		}
 
 		//解析User_Agent(浏览器操作系统等信息)
@@ -129,7 +122,7 @@ public class HttpRequestDecoder {
 		//			//			long start = System.currentTimeMillis();
 		//			UserAgentAnalyzer userAgentAnalyzer = UserAgentAnalyzerFactory.getUserAgentAnalyzer();
 		//			UserAgent userAgent = userAgentAnalyzer.parse(User_Agent);
-		//			httpRequest.setUserAgent(userAgent);
+		//			request.setUserAgent(userAgent);
 		//		}
 
 		//		StringBuilder logstr = new StringBuilder();
@@ -142,190 +135,8 @@ public class HttpRequestDecoder {
 		//		logstr.append("------------------ websocket header start ------------------------\r\n");
 		//		log.error(logstr.toString());
 
-		return httpRequest;
+		return request;
 
-	}
-
-	/**
-	 * Content-Type : application/x-www-form-urlencoded; charset=UTF-8
-	 * Content-Type : application/x-www-form-urlencoded; charset=UTF-8
-	 * @param httpRequest
-	 * @param headers
-	 * @author: tanyaowu
-	 */
-	public static void parseBodyFormat(HttpRequest httpRequest, Map<String, String> headers) {
-		String Content_Type = StringUtils.lowerCase(headers.get(HttpConst.RequestHeaderKey.Content_Type));
-		RequestBodyFormat bodyFormat = null;
-		if (StringUtils.contains(Content_Type, HttpConst.RequestHeaderValue.Content_Type.application_x_www_form_urlencoded)) {
-			bodyFormat = RequestBodyFormat.URLENCODED;
-		} else if (StringUtils.contains(Content_Type, HttpConst.RequestHeaderValue.Content_Type.multipart_form_data)) {
-			bodyFormat = RequestBodyFormat.MULTIPART;
-		} else {
-			bodyFormat = RequestBodyFormat.TEXT;
-		}
-		httpRequest.setBodyFormat(bodyFormat);
-
-		if (StringUtils.isNoneBlank(Content_Type)) {
-			String charset = HttpParseUtils.getPerprotyEqualValue(headers, HttpConst.RequestHeaderKey.Content_Type, "charset");
-			if (StringUtils.isNoneBlank(charset)) {
-				httpRequest.setCharset(charset);
-			}
-		}
-	}
-
-	/**
-	 * 解析消息体
-	 * @param httpRequest
-	 * @param firstLine
-	 * @param bodyBytes
-	 * @param channelContext
-	 * @throws AioDecodeException
-	 * @author: tanyaowu
-	 */
-	private static void parseBody(HttpRequest httpRequest, RequestLine firstLine, byte[] bodyBytes, ChannelContext channelContext) throws AioDecodeException {
-		parseBodyFormat(httpRequest, httpRequest.getHeaders());
-		RequestBodyFormat bodyFormat = httpRequest.getBodyFormat();
-
-		httpRequest.setBody(bodyBytes);
-
-		if (bodyFormat == RequestBodyFormat.MULTIPART) {
-			if (log.isInfoEnabled()) {
-				String bodyString = null;
-				try {
-					bodyString = new String(bodyBytes, httpRequest.getCharset());
-					log.info("{} body string\r\n{}", channelContext, bodyString);
-				} catch (UnsupportedEncodingException e) {
-					log.error(e.toString(), e);
-				}
-			}
-
-			//【multipart/form-data; boundary=----WebKitFormBoundaryuwYcfA2AIgxqIxA0】
-			String initboundary = HttpParseUtils.getPerprotyEqualValue(httpRequest.getHeaders(), HttpConst.RequestHeaderKey.Content_Type, "boundary");
-			HttpMultiBodyDecoder.decode(httpRequest, firstLine, bodyBytes, initboundary);
-		} else {
-			String bodyString = null;
-			try {
-				bodyString = new String(bodyBytes, httpRequest.getCharset());
-				httpRequest.setBodyString(bodyString);
-				log.info("{} body string\r\n{}", channelContext, bodyString);
-			} catch (UnsupportedEncodingException e) {
-				log.error(e.toString(), e);
-			}
-
-			if (bodyFormat == RequestBodyFormat.URLENCODED) {
-				parseUrlencoded(httpRequest, firstLine, bodyBytes, bodyString);
-			}
-		}
-	}
-
-	/**
-	 * 解析URLENCODED格式的消息体
-	 * 形如： 【Content-Type : application/x-www-form-urlencoded; charset=UTF-8】
-	 * @author: tanyaowu
-	 */
-	private static void parseUrlencoded(HttpRequest httpRequest, RequestLine firstLine, byte[] bodyBytes, String bodyString) {
-		String paramStr = "";
-		if (StringUtils.isNotBlank(firstLine.getQuery())) {
-			paramStr += firstLine.getQuery();
-		}
-		if (bodyString != null) {
-			if (paramStr != null) {
-				paramStr += "&";
-			}
-			paramStr += bodyString;
-		}
-
-		if (paramStr != null) {
-			Map<String, Object[]> params = decodeParams(paramStr, httpRequest.getCharset());
-			httpRequest.setParams(params);
-			//			log.error("paramStr:{}", paramStr);
-			//			log.error("param:{}", Json.toJson(params));
-		}
-	}
-
-	//	private static void parseText(HttpRequestPacket httpRequest, RequestLine firstLine, byte[] bodyBytes, String bodyString) {
-	//		String paramStr = "";
-	//		if (StringUtils.isNotBlank(firstLine.getQueryStr())) {
-	//			paramStr += firstLine.getQueryStr();
-	//		}
-	//		if (bodyString != null) {
-	//			if (paramStr != null) {
-	//				paramStr += "&";
-	//			}
-	//			paramStr += bodyString;
-	//		}
-	//
-	//		if (paramStr != null) {
-	//			Map<String, List<String>> params = HttpUtil.decodeParams(paramStr, httpRequest.getCharset());
-	//			httpRequest.setParams(params);
-	//			log.error("paramStr:{}", paramStr);
-	//			log.error("param:{}", Json.toJson(params));
-	//		}
-	//	}
-
-	/**
-	 * 解析第一行(请求行)
-	 * @param line
-	 * @return
-	 *
-	 * @author: tanyaowu
-	 * 2017年2月23日 下午1:37:51
-	 *
-	 */
-	public static RequestLine parseRequestLine(String line) {
-		int index1 = line.indexOf(' ');
-		String _method = StringUtils.upperCase(line.substring(0, index1));
-		Method method = Method.from(_method);
-		int index2 = line.indexOf(' ', index1 + 1);
-		String pathAndQuerystr = line.substring(index1 + 1, index2); // "/user/get?name=999"
-		String path = null; //"/user/get"
-		String queryStr = null;
-		int indexOfQuestionmark = pathAndQuerystr.indexOf("?");
-		if (indexOfQuestionmark != -1) {
-			queryStr = StringUtils.substring(pathAndQuerystr, indexOfQuestionmark + 1);
-			path = StringUtils.substring(pathAndQuerystr, 0, indexOfQuestionmark);
-		} else {
-			path = pathAndQuerystr;
-			queryStr = "";
-		}
-
-		String version = line.substring(index2 + 1);
-
-		RequestLine requestLine = new RequestLine();
-		requestLine.setMethod(method);
-		requestLine.setPath(path);
-		requestLine.setPathAndQuery(pathAndQuerystr);
-		requestLine.setQuery(queryStr);
-		requestLine.setVersion(version);
-		requestLine.setLine(line);
-
-		return requestLine;
-	}
-
-	/**
-	 * 解析请求头的每一行
-	 * @param line
-	 * @return
-	 *
-	 * @author: tanyaowu
-	 * 2017年2月23日 下午1:37:58
-	 *
-	 */
-	public static KeyValue parseHeaderLine(String line) {
-		KeyValue keyValue = new KeyValue();
-		int p = line.indexOf(":");
-		if (p == -1) {
-			keyValue.setKey(line);
-			return keyValue;
-		}
-
-		String name = StringUtils.lowerCase(line.substring(0, p).trim());
-		String value = line.substring(p + 1).trim();
-
-		keyValue.setKey(name);
-		keyValue.setValue(value);
-
-		return keyValue;
 	}
 
 	public static Map<String, Object[]> decodeParams(String paramsStr, String charset) {
@@ -368,18 +179,207 @@ public class HttpRequestDecoder {
 		return ret;
 	}
 
-	public static enum Step {
-		firstline, header, body
-	}
-
 	/**
 	 * @param args
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2017年2月22日 下午4:06:42
-	 * 
+	 *
 	 */
 	public static void main(String[] args) {
+
+	}
+
+	/**
+	 * 解析消息体
+	 * @param request
+	 * @param firstLine
+	 * @param bodyBytes
+	 * @param channelContext
+	 * @throws AioDecodeException
+	 * @author tanyaowu
+	 */
+	private static void parseBody(HttpRequest request, RequestLine firstLine, byte[] bodyBytes, ChannelContext channelContext) throws AioDecodeException {
+		parseBodyFormat(request, request.getHeaders());
+		RequestBodyFormat bodyFormat = request.getBodyFormat();
+
+		request.setBody(bodyBytes);
+
+		if (bodyFormat == RequestBodyFormat.MULTIPART) {
+			if (log.isInfoEnabled()) {
+				String bodyString = null;
+				try {
+					bodyString = new String(bodyBytes, request.getCharset());
+					log.info("{} body string\r\n{}", channelContext, bodyString);
+				} catch (UnsupportedEncodingException e) {
+					log.error(e.toString(), e);
+				}
+			}
+
+			//【multipart/form-data; boundary=----WebKitFormBoundaryuwYcfA2AIgxqIxA0】
+			String initboundary = HttpParseUtils.getPerprotyEqualValue(request.getHeaders(), HttpConst.RequestHeaderKey.Content_Type, "boundary");
+			HttpMultiBodyDecoder.decode(request, firstLine, bodyBytes, initboundary);
+		} else {
+			String bodyString = null;
+			try {
+				bodyString = new String(bodyBytes, request.getCharset());
+				request.setBodyString(bodyString);
+				log.info("{} body string\r\n{}", channelContext, bodyString);
+			} catch (UnsupportedEncodingException e) {
+				log.error(e.toString(), e);
+			}
+
+			if (bodyFormat == RequestBodyFormat.URLENCODED) {
+				parseUrlencoded(request, firstLine, bodyBytes, bodyString);
+			}
+		}
+	}
+
+	//	private static void parseText(HttpRequestPacket request, RequestLine firstLine, byte[] bodyBytes, String bodyString) {
+	//		String paramStr = "";
+	//		if (StringUtils.isNotBlank(firstLine.getQueryStr())) {
+	//			paramStr += firstLine.getQueryStr();
+	//		}
+	//		if (bodyString != null) {
+	//			if (paramStr != null) {
+	//				paramStr += "&";
+	//			}
+	//			paramStr += bodyString;
+	//		}
+	//
+	//		if (paramStr != null) {
+	//			Map<String, List<String>> params = HttpUtil.decodeParams(paramStr, request.getCharset());
+	//			request.setParams(params);
+	//			log.error("paramStr:{}", paramStr);
+	//			log.error("param:{}", Json.toJson(params));
+	//		}
+	//	}
+
+	/**
+	 * Content-Type : application/x-www-form-urlencoded; charset=UTF-8
+	 * Content-Type : application/x-www-form-urlencoded; charset=UTF-8
+	 * @param request
+	 * @param headers
+	 * @author tanyaowu
+	 */
+	public static void parseBodyFormat(HttpRequest request, Map<String, String> headers) {
+		String Content_Type = StringUtils.lowerCase(headers.get(HttpConst.RequestHeaderKey.Content_Type));
+		RequestBodyFormat bodyFormat = null;
+		if (StringUtils.contains(Content_Type, HttpConst.RequestHeaderValue.Content_Type.application_x_www_form_urlencoded)) {
+			bodyFormat = RequestBodyFormat.URLENCODED;
+		} else if (StringUtils.contains(Content_Type, HttpConst.RequestHeaderValue.Content_Type.multipart_form_data)) {
+			bodyFormat = RequestBodyFormat.MULTIPART;
+		} else {
+			bodyFormat = RequestBodyFormat.TEXT;
+		}
+		request.setBodyFormat(bodyFormat);
+
+		if (StringUtils.isNoneBlank(Content_Type)) {
+			String charset = HttpParseUtils.getPerprotyEqualValue(headers, HttpConst.RequestHeaderKey.Content_Type, "charset");
+			if (StringUtils.isNoneBlank(charset)) {
+				request.setCharset(charset);
+			}
+		}
+	}
+
+	/**
+	 * 解析请求头的每一行
+	 * @param line
+	 * @return
+	 *
+	 * @author tanyaowu
+	 * 2017年2月23日 下午1:37:58
+	 *
+	 */
+	public static KeyValue parseHeaderLine(String line) {
+		KeyValue keyValue = new KeyValue();
+		int p = line.indexOf(":");
+		if (p == -1) {
+			keyValue.setKey(line);
+			return keyValue;
+		}
+
+		String name = StringUtils.lowerCase(line.substring(0, p).trim());
+		String value = line.substring(p + 1).trim();
+
+		keyValue.setKey(name);
+		keyValue.setValue(value);
+
+		return keyValue;
+	}
+
+	/**
+	 * 解析第一行(请求行)
+	 * @param line
+	 * @return
+	 *
+	 * @author tanyaowu
+	 * 2017年2月23日 下午1:37:51
+	 *
+	 */
+	public static RequestLine parseRequestLine(String line) {
+		int index1 = line.indexOf(' ');
+		String _method = StringUtils.upperCase(line.substring(0, index1));
+		Method method = Method.from(_method);
+		int index2 = line.indexOf(' ', index1 + 1);
+		String pathAndQuerystr = line.substring(index1 + 1, index2); // "/user/get?name=999"
+		String path = null; //"/user/get"
+		String queryStr = null;
+		int indexOfQuestionmark = pathAndQuerystr.indexOf("?");
+		if (indexOfQuestionmark != -1) {
+			queryStr = StringUtils.substring(pathAndQuerystr, indexOfQuestionmark + 1);
+			path = StringUtils.substring(pathAndQuerystr, 0, indexOfQuestionmark);
+		} else {
+			path = pathAndQuerystr;
+			queryStr = "";
+		}
+
+		String version = line.substring(index2 + 1);
+
+		RequestLine requestLine = new RequestLine();
+		requestLine.setMethod(method);
+		requestLine.setPath(path);
+		requestLine.setPathAndQuery(pathAndQuerystr);
+		requestLine.setQuery(queryStr);
+		requestLine.setVersion(version);
+		requestLine.setLine(line);
+
+		return requestLine;
+	}
+
+	/**
+	 * 解析URLENCODED格式的消息体
+	 * 形如： 【Content-Type : application/x-www-form-urlencoded; charset=UTF-8】
+	 * @author tanyaowu
+	 */
+	private static void parseUrlencoded(HttpRequest request, RequestLine firstLine, byte[] bodyBytes, String bodyString) {
+		String paramStr = "";
+		if (StringUtils.isNotBlank(firstLine.getQuery())) {
+			paramStr += firstLine.getQuery();
+		}
+		if (bodyString != null) {
+			if (paramStr != null) {
+				paramStr += "&";
+			}
+			paramStr += bodyString;
+		}
+
+		if (paramStr != null) {
+			Map<String, Object[]> params = decodeParams(paramStr, request.getCharset());
+			request.setParams(params);
+			//			log.error("paramStr:{}", paramStr);
+			//			log.error("param:{}", Json.toJson(params));
+		}
+	}
+
+	/**
+	 *
+	 *
+	 * @author tanyaowu
+	 * 2017年2月22日 下午4:06:42
+	 *
+	 */
+	public HttpRequestDecoder() {
 
 	}
 

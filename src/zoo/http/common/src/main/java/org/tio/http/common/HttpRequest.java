@@ -13,8 +13,8 @@ import org.tio.http.common.HttpConst.RequestBodyFormat;
 import org.tio.http.common.session.HttpSession;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class HttpRequest extends HttpPacket {
@@ -22,6 +22,17 @@ public class HttpRequest extends HttpPacket {
 	//	private static Logger log = LoggerFactory.getLogger(HttpRequest.class);
 
 	private static final long serialVersionUID = -3849253977016967211L;
+
+	/**
+	 * @param args
+	 *
+	 * @author tanyaowu
+	 * 2017年2月22日 下午4:14:40
+	 *
+	 */
+	public static void main(String[] args) {
+	}
+
 	private RequestLine requestLine = null;
 	/**
 	 * 请求参数
@@ -40,27 +51,70 @@ public class HttpRequest extends HttpPacket {
 	private Node remote = null;
 	//	private HttpSession httpSession = null;
 	private ChannelContext channelContext;
+
 	private HttpConfig httpConfig;
 
 	/**
-	 * 
 	 *
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 * 2017年2月22日 下午4:14:40
-	 * 
+	 *
 	 */
 	public HttpRequest(Node remote) {
 		this.remote = remote;
 	}
 
+	public void addParam(String key, Object value) {
+		if (params == null) {
+			params = new HashMap<>();
+		}
+
+		Object[] existValue = params.get(key);
+		if (existValue != null) {
+			Object[] newExistValue = new Object[existValue.length + 1];
+			System.arraycopy(existValue, 0, newExistValue, 0, existValue.length);
+			newExistValue[newExistValue.length - 1] = value;
+			params.put(key, newExistValue);
+		} else {
+			Object[] newExistValue = new Object[] { value };
+			params.put(key, newExistValue);
+		}
+	}
+
 	/**
-	 * @param args
-	 *
-	 * @author: tanyaowu
-	 * 2017年2月22日 下午4:14:40
-	 * 
+	 * @return the bodyFormat
 	 */
-	public static void main(String[] args) {
+	public RequestBodyFormat getBodyFormat() {
+		return bodyFormat;
+	}
+
+	/**
+	 * @return the bodyString
+	 */
+	public String getBodyString() {
+		return bodyString;
+	}
+
+	/**
+	 * @return the channelContext
+	 */
+	public ChannelContext getChannelContext() {
+		return channelContext;
+	}
+
+	/**
+	 * @return the charset
+	 */
+	public String getCharset() {
+		return charset;
+	}
+
+	/**
+	 * @return the bodyLength
+	 */
+	public int getContentLength() {
+		return contentLength;
 	}
 
 	public Cookie getCookie(String cooiename) {
@@ -71,74 +125,10 @@ public class HttpRequest extends HttpPacket {
 	}
 
 	/**
-	 * @return the firstLine
+	 * @return the cookieMap
 	 */
-	public RequestLine getRequestLine() {
-		return requestLine;
-	}
-
-	/**
-	 * @param requestLine the requestLine to set
-	 */
-	public void setRequestLine(RequestLine requestLine) {
-		this.requestLine = requestLine;
-	}
-
-	/**
-	 * 设置好header后，会把cookie等头部信息也设置好
-	 * @param headers the headers to set
-	 * @param channelContext 
-	 */
-	@Override
-	public void setHeaders(Map<String, String> headers) {
-		this.headers = headers;
-		if (headers != null) {
-			parseCookie();
-		}
-
-		//		String Sec_WebSocket_Key = headers.get(HttpConst.RequestHeaderKey.Sec_WebSocket_Key);
-		//		if (StringUtils.isNoneBlank(Sec_WebSocket_Key)) {
-		//			ImSessionContext httpSession = channelContext.getAttribute();
-		//			httpSession.setWebsocket(true);
-		//		}
-	}
-
-	public void parseCookie() {
-		String cookieline = headers.get(HttpConst.RequestHeaderKey.Cookie);
-		if (StringUtils.isNotBlank(cookieline)) {
-			cookies = new ArrayList<>();
-			cookieMap = new HashMap<>();
-			Map<String, String> _cookiemap = Cookie.getEqualMap(cookieline);
-			List<Map<String, String>> cookieListMap = new ArrayList<Map<String, String>>();
-			for (Entry<String, String> cookieMapEntry : _cookiemap.entrySet()) {
-				HashMap<String, String> cookieOneMap = new HashMap<String, String>();
-				cookieOneMap.put(cookieMapEntry.getKey(), cookieMapEntry.getValue());
-				cookieListMap.add(cookieOneMap);
-
-				Cookie cookie = Cookie.buildCookie(cookieOneMap);
-				cookies.add(cookie);
-				cookieMap.put(cookie.getName(), cookie);
-				//				log.error("{}, 收到cookie:{}", channelContext, cookie.toString());
-			}
-		}
-	}
-
-	/**
-	 * @return the bodyLength
-	 */
-	public int getContentLength() {
-		return contentLength;
-	}
-
-	public void setBody(byte[] body) {
-		this.body = body;
-	}
-
-	/**
-	 * @param bodyLength the bodyLength to set
-	 */
-	public void setContentLength(int contentLength) {
-		this.contentLength = contentLength;
+	public Map<String, Cookie> getCookieMap() {
+		return cookieMap;
 	}
 
 	//	/**
@@ -177,118 +167,17 @@ public class HttpRequest extends HttpPacket {
 	}
 
 	/**
-	 * @param cookies the cookies to set
+	 * @return the httpConfig
 	 */
-	public void setCookies(List<Cookie> cookies) {
-		this.cookies = cookies;
+	public HttpConfig getHttpConfig() {
+		return httpConfig;
 	}
 
 	/**
-	 * @return the cookieMap
+	 * @return the httpSession
 	 */
-	public Map<String, Cookie> getCookieMap() {
-		return cookieMap;
-	}
-
-	/**
-	 * @param cookieMap the cookieMap to set
-	 */
-	public void setCookieMap(Map<String, Cookie> cookieMap) {
-		this.cookieMap = cookieMap;
-	}
-
-	/**
-	 * @return the bodyString
-	 */
-	public String getBodyString() {
-		return bodyString;
-	}
-
-	/**
-	 * @param bodyString the bodyString to set
-	 */
-	public void setBodyString(String bodyString) {
-		this.bodyString = bodyString;
-	}
-
-	/**
-	 * @return the params
-	 */
-	public Map<String, Object[]> getParams() {
-		return params;
-	}
-
-	/**
-	 * @param params the params to set
-	 */
-	public void setParams(Map<String, Object[]> params) {
-		this.params = params;
-	}
-
-	public void addParam(String key, Object value) {
-		if (params == null) {
-			params = new HashMap<>();
-		}
-
-		Object[] existValue = params.get(key);
-		if (existValue != null) {
-			Object[] newExistValue = new Object[existValue.length + 1];
-			System.arraycopy(existValue, 0, newExistValue, 0, existValue.length);
-			newExistValue[newExistValue.length - 1] = value;
-			params.put(key, newExistValue);
-		} else {
-			Object[] newExistValue = new Object[] { value };
-			params.put(key, newExistValue);
-		}
-	}
-
-	/**
-	 * @return the bodyFormat
-	 */
-	public RequestBodyFormat getBodyFormat() {
-		return bodyFormat;
-	}
-
-	/**
-	 * @param bodyFormat the bodyFormat to set
-	 */
-	public void setBodyFormat(RequestBodyFormat bodyFormat) {
-		this.bodyFormat = bodyFormat;
-	}
-
-	/**
-	 * @return the charset
-	 */
-	public String getCharset() {
-		return charset;
-	}
-
-	/**
-	 * @param charset the charset to set
-	 */
-	public void setCharset(String charset) {
-		this.charset = charset;
-	}
-
-	/** 
-	 * @return
-	 * @author: tanyaowu
-	 */
-	@Override
-	public String logstr() {
-		String str = "\r\n请求ID_" + getId() + "\r\n" + getHeaderString();
-		if (null != getBodyString()) {
-			str += getBodyString();
-		}
-		return str;
-	}
-
-	public Node getRemote() {
-		return remote;
-	}
-
-	public void setRemote(Node remote) {
-		this.remote = remote;
+	public HttpSession getHttpSession() {
+		return httpSession;
 	}
 
 	/**
@@ -303,36 +192,77 @@ public class HttpRequest extends HttpPacket {
 				isAjax = false;
 			}
 		}
-		
+
 		return isAjax;
 	}
 
 	/**
-	 * @param isAjax the isAjax to set
+	 * @return the params
 	 */
-	public void setIsAjax(Boolean isAjax) {
-		this.isAjax = isAjax;
+	public Map<String, Object[]> getParams() {
+		return params;
+	}
+
+	public Node getRemote() {
+		return remote;
 	}
 
 	/**
-	 * @return the httpSession
+	 * @return the firstLine
 	 */
-	public HttpSession getHttpSession() {
-		return httpSession;
+	public RequestLine getRequestLine() {
+		return requestLine;
 	}
 
 	/**
-	 * @param httpSession the httpSession to set
+	 * @return
+	 * @author tanyaowu
 	 */
-	public void setHttpSession(HttpSession httpSession) {
-		this.httpSession = httpSession;
+	@Override
+	public String logstr() {
+		String str = "\r\n请求ID_" + getId() + "\r\n" + getHeaderString();
+		if (null != getBodyString()) {
+			str += getBodyString();
+		}
+		return str;
+	}
+
+	public void parseCookie() {
+		String cookieline = headers.get(HttpConst.RequestHeaderKey.Cookie);
+		if (StringUtils.isNotBlank(cookieline)) {
+			cookies = new ArrayList<>();
+			cookieMap = new HashMap<>();
+			Map<String, String> _cookiemap = Cookie.getEqualMap(cookieline);
+			List<Map<String, String>> cookieListMap = new ArrayList<>();
+			for (Entry<String, String> cookieMapEntry : _cookiemap.entrySet()) {
+				HashMap<String, String> cookieOneMap = new HashMap<>();
+				cookieOneMap.put(cookieMapEntry.getKey(), cookieMapEntry.getValue());
+				cookieListMap.add(cookieOneMap);
+
+				Cookie cookie = Cookie.buildCookie(cookieOneMap);
+				cookies.add(cookie);
+				cookieMap.put(cookie.getName(), cookie);
+				//				log.error("{}, 收到cookie:{}", channelContext, cookie.toString());
+			}
+		}
+	}
+
+	public void setBody(byte[] body) {
+		this.body = body;
 	}
 
 	/**
-	 * @return the channelContext
+	 * @param bodyFormat the bodyFormat to set
 	 */
-	public ChannelContext getChannelContext() {
-		return channelContext;
+	public void setBodyFormat(RequestBodyFormat bodyFormat) {
+		this.bodyFormat = bodyFormat;
+	}
+
+	/**
+	 * @param bodyString the bodyString to set
+	 */
+	public void setBodyString(String bodyString) {
+		this.bodyString = bodyString;
 	}
 
 	/**
@@ -343,10 +273,50 @@ public class HttpRequest extends HttpPacket {
 	}
 
 	/**
-	 * @return the httpConfig
+	 * @param charset the charset to set
 	 */
-	public HttpConfig getHttpConfig() {
-		return httpConfig;
+	public void setCharset(String charset) {
+		this.charset = charset;
+	}
+
+	/**
+	 * @param bodyLength the bodyLength to set
+	 */
+	public void setContentLength(int contentLength) {
+		this.contentLength = contentLength;
+	}
+
+	/**
+	 * @param cookieMap the cookieMap to set
+	 */
+	public void setCookieMap(Map<String, Cookie> cookieMap) {
+		this.cookieMap = cookieMap;
+	}
+
+	/**
+	 * @param cookies the cookies to set
+	 */
+	public void setCookies(List<Cookie> cookies) {
+		this.cookies = cookies;
+	}
+
+	/**
+	 * 设置好header后，会把cookie等头部信息也设置好
+	 * @param headers the headers to set
+	 * @param channelContext
+	 */
+	@Override
+	public void setHeaders(Map<String, String> headers) {
+		this.headers = headers;
+		if (headers != null) {
+			parseCookie();
+		}
+
+		//		String Sec_WebSocket_Key = headers.get(HttpConst.RequestHeaderKey.Sec_WebSocket_Key);
+		//		if (StringUtils.isNoneBlank(Sec_WebSocket_Key)) {
+		//			ImSessionContext httpSession = channelContext.getAttribute();
+		//			httpSession.setWebsocket(true);
+		//		}
 	}
 
 	/**
@@ -354,6 +324,38 @@ public class HttpRequest extends HttpPacket {
 	 */
 	public void setHttpConfig(HttpConfig httpConfig) {
 		this.httpConfig = httpConfig;
+	}
+
+	/**
+	 * @param httpSession the httpSession to set
+	 */
+	public void setHttpSession(HttpSession httpSession) {
+		this.httpSession = httpSession;
+	}
+
+	/**
+	 * @param isAjax the isAjax to set
+	 */
+	public void setIsAjax(Boolean isAjax) {
+		this.isAjax = isAjax;
+	}
+
+	/**
+	 * @param params the params to set
+	 */
+	public void setParams(Map<String, Object[]> params) {
+		this.params = params;
+	}
+
+	public void setRemote(Node remote) {
+		this.remote = remote;
+	}
+
+	/**
+	 * @param requestLine the requestLine to set
+	 */
+	public void setRequestLine(RequestLine requestLine) {
+		this.requestLine = requestLine;
 	}
 
 	//	/**

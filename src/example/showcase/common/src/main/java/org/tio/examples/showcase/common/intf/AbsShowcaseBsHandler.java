@@ -9,22 +9,20 @@ import org.tio.examples.showcase.common.packets.BaseBody;
 import org.tio.json.Json;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月27日 下午9:56:16
  */
 public abstract class AbsShowcaseBsHandler<T extends BaseBody> implements ShowcaseBsHandlerIntf {
 	private static Logger log = LoggerFactory.getLogger(AbsShowcaseBsHandler.class);
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
 	public AbsShowcaseBsHandler() {
 	}
 
 	public abstract Class<T> bodyClass();
-
-	public abstract Object handler(ShowcasePacket packet, T bsBody, ChannelContext channelContext) throws Exception;
 
 	@Override
 	public Object handler(ShowcasePacket packet, ChannelContext channelContext) throws Exception {
@@ -37,5 +35,7 @@ public abstract class AbsShowcaseBsHandler<T extends BaseBody> implements Showca
 
 		return handler(packet, bsBody, channelContext);
 	}
+
+	public abstract Object handler(ShowcasePacket packet, T bsBody, ChannelContext channelContext) throws Exception;
 
 }

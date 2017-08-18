@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.tio.utils.SystemTimer;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年4月1日 下午2:17:35
  */
 public class ChannelStat {
@@ -75,59 +75,10 @@ public class ChannelStat {
 	private AtomicLong receivedPackets = new AtomicLong();
 
 	/**
-	 * @return the timeLatestReceivedMsg
+	 * @return the decodeFailCount
 	 */
-	public long getLatestTimeOfReceivedPacket() {
-		return latestTimeOfReceivedPacket;
-	}
-
-	/**
-	 * @param timeLatestReceivedMsg the timeLatestReceivedMsg to set
-	 */
-	public void setLatestTimeOfReceivedPacket(long latestTimeOfReceivedPacket) {
-		this.latestTimeOfReceivedPacket = latestTimeOfReceivedPacket;
-	}
-
-	/**
-	 * @return the timeLatestSentMsg
-	 */
-	public long getLatestTimeOfSentPacket() {
-		return latestTimeOfSentPacket;
-	}
-
-	/**
-	 * @param timeLatestSentMsg the timeLatestSentMsg to set
-	 */
-	public void setLatestTimeOfSentPacket(long latestTimeOfSentPacket) {
-		this.latestTimeOfSentPacket = latestTimeOfSentPacket;
-	}
-
-	/**
-	 * @return the countSentByte
-	 */
-	public AtomicLong getSentBytes() {
-		return sentBytes;
-	}
-
-	/**
-	 * @param countSentByte the countSentByte to set
-	 */
-	public void setSentBytes(AtomicLong sentBytes) {
-		this.sentBytes = sentBytes;
-	}
-
-	/**
-	 * @return the countSentPacket
-	 */
-	public AtomicLong getSentPackets() {
-		return sentPackets;
-	}
-
-	/**
-	 * @param countSentPacket the countSentPacket to set
-	 */
-	public void setSentPackets(AtomicLong sentPackets) {
-		this.sentPackets = sentPackets;
+	public int getDecodeFailCount() {
+		return decodeFailCount;
 	}
 
 	/**
@@ -138,13 +89,6 @@ public class ChannelStat {
 	}
 
 	/**
-	 * @param countHandledByte the countHandledByte to set
-	 */
-	public void setHandledBytes(AtomicLong countHandledByte) {
-		this.handledBytes = countHandledByte;
-	}
-
-	/**
 	 * @return the countHandledPacket
 	 */
 	public AtomicLong getHandledPackets() {
@@ -152,10 +96,17 @@ public class ChannelStat {
 	}
 
 	/**
-	 * @param countHandledPacket the countHandledPacket to set
+	 * @return the timeLatestReceivedMsg
 	 */
-	public void setHandledPackets(AtomicLong handledPackets) {
-		this.handledPackets = handledPackets;
+	public long getLatestTimeOfReceivedPacket() {
+		return latestTimeOfReceivedPacket;
+	}
+
+	/**
+	 * @return the timeLatestSentMsg
+	 */
+	public long getLatestTimeOfSentPacket() {
+		return latestTimeOfSentPacket;
 	}
 
 	/**
@@ -166,13 +117,6 @@ public class ChannelStat {
 	}
 
 	/**
-	 * @param countReceivedByte the countReceivedByte to set
-	 */
-	public void setReceivedBytes(AtomicLong receivedBytes) {
-		this.receivedBytes = receivedBytes;
-	}
-
-	/**
 	 * @return the countReceivedPacket
 	 */
 	public AtomicLong getReceivedPackets() {
@@ -180,10 +124,17 @@ public class ChannelStat {
 	}
 
 	/**
-	 * @param countReceivedPacket the countReceivedPacket to set
+	 * @return the countSentByte
 	 */
-	public void setReceivedPackets(AtomicLong receivedPackets) {
-		this.receivedPackets = receivedPackets;
+	public AtomicLong getSentBytes() {
+		return sentBytes;
+	}
+
+	/**
+	 * @return the countSentPacket
+	 */
+	public AtomicLong getSentPackets() {
+		return sentPackets;
 	}
 
 	/**
@@ -191,27 +142,6 @@ public class ChannelStat {
 	 */
 	public long getTimeClosed() {
 		return timeClosed;
-	}
-
-	/**
-	 * @param timeClosed the timeClosed to set
-	 */
-	public void setTimeClosed(long timeClosed) {
-		this.timeClosed = timeClosed;
-	}
-
-	/**
-	 * @return the timeInReconnQueue
-	 */
-	public long getTimeInReconnQueue() {
-		return timeInReconnQueue;
-	}
-
-	/**
-	 * @param timeInReconnQueue the timeInReconnQueue to set
-	 */
-	public void setTimeInReconnQueue(long timeInReconnQueue) {
-		this.timeInReconnQueue = timeInReconnQueue;
 	}
 
 	/**
@@ -229,17 +159,10 @@ public class ChannelStat {
 	}
 
 	/**
-	 * @param timeFirstConnected the timeFirstConnected to set
+	 * @return the timeInReconnQueue
 	 */
-	public void setTimeFirstConnected(Long timeFirstConnected) {
-		this.timeFirstConnected = timeFirstConnected;
-	}
-
-	/**
-	 * @return the decodeFailCount
-	 */
-	public int getDecodeFailCount() {
-		return decodeFailCount;
+	public long getTimeInReconnQueue() {
+		return timeInReconnQueue;
 	}
 
 	/**
@@ -247,6 +170,83 @@ public class ChannelStat {
 	 */
 	public void setDecodeFailCount(int decodeFailCount) {
 		this.decodeFailCount = decodeFailCount;
+	}
+
+	/**
+	 * @param countHandledByte the countHandledByte to set
+	 */
+	public void setHandledBytes(AtomicLong countHandledByte) {
+		this.handledBytes = countHandledByte;
+	}
+
+	/**
+	 * @param countHandledPacket the countHandledPacket to set
+	 */
+	public void setHandledPackets(AtomicLong handledPackets) {
+		this.handledPackets = handledPackets;
+	}
+
+	/**
+	 * @param timeLatestReceivedMsg the timeLatestReceivedMsg to set
+	 */
+	public void setLatestTimeOfReceivedPacket(long latestTimeOfReceivedPacket) {
+		this.latestTimeOfReceivedPacket = latestTimeOfReceivedPacket;
+	}
+
+	/**
+	 * @param timeLatestSentMsg the timeLatestSentMsg to set
+	 */
+	public void setLatestTimeOfSentPacket(long latestTimeOfSentPacket) {
+		this.latestTimeOfSentPacket = latestTimeOfSentPacket;
+	}
+
+	/**
+	 * @param countReceivedByte the countReceivedByte to set
+	 */
+	public void setReceivedBytes(AtomicLong receivedBytes) {
+		this.receivedBytes = receivedBytes;
+	}
+
+	/**
+	 * @param countReceivedPacket the countReceivedPacket to set
+	 */
+	public void setReceivedPackets(AtomicLong receivedPackets) {
+		this.receivedPackets = receivedPackets;
+	}
+
+	/**
+	 * @param countSentByte the countSentByte to set
+	 */
+	public void setSentBytes(AtomicLong sentBytes) {
+		this.sentBytes = sentBytes;
+	}
+
+	/**
+	 * @param countSentPacket the countSentPacket to set
+	 */
+	public void setSentPackets(AtomicLong sentPackets) {
+		this.sentPackets = sentPackets;
+	}
+
+	/**
+	 * @param timeClosed the timeClosed to set
+	 */
+	public void setTimeClosed(long timeClosed) {
+		this.timeClosed = timeClosed;
+	}
+
+	/**
+	 * @param timeFirstConnected the timeFirstConnected to set
+	 */
+	public void setTimeFirstConnected(Long timeFirstConnected) {
+		this.timeFirstConnected = timeFirstConnected;
+	}
+
+	/**
+	 * @param timeInReconnQueue the timeInReconnQueue to set
+	 */
+	public void setTimeInReconnQueue(long timeInReconnQueue) {
+		this.timeInReconnQueue = timeInReconnQueue;
 	}
 
 }

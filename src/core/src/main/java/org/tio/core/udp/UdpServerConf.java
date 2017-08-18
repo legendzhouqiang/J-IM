@@ -4,11 +4,19 @@ import org.tio.core.Node;
 import org.tio.core.udp.intf.UdpHandler;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月5日 下午3:53:04
  */
 public class UdpServerConf extends UdpConf {
 	//	private static Logger log = LoggerFactory.getLogger(UdpServerConf.class);
+
+	/**
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
 
 	private UdpHandler udpHandler;
 
@@ -20,27 +28,19 @@ public class UdpServerConf extends UdpConf {
 		this.setServerNode(new Node(null, port));
 	}
 
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
+	public int getReadBufferSize() {
+		return readBufferSize;
 	}
 
 	public UdpHandler getUdpHandler() {
 		return udpHandler;
 	}
 
-	public void setUdpHandler(UdpHandler udpHandler) {
-		this.udpHandler = udpHandler;
-	}
-
-	public int getReadBufferSize() {
-		return readBufferSize;
-	}
-
 	public void setReadBufferSize(int readBufferSize) {
 		this.readBufferSize = readBufferSize;
+	}
+
+	public void setUdpHandler(UdpHandler udpHandler) {
+		this.udpHandler = udpHandler;
 	}
 }

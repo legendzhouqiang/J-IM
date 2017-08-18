@@ -8,38 +8,38 @@ import org.tio.http.common.session.id.ISessionIdGenerator;
 import com.xiaoleilu.hutool.util.RandomUtil;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月15日 上午10:53:39
  */
 public class UUIDSessionIdGenerator implements ISessionIdGenerator {
 	private static Logger log = LoggerFactory.getLogger(UUIDSessionIdGenerator.class);
-	
+
 	public final static UUIDSessionIdGenerator instance = new UUIDSessionIdGenerator();
 
 	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	private UUIDSessionIdGenerator() {
-	}
-
-	/** 
-	 * @return
-	 * @author: tanyaowu
-	 */
-	@Override
-	public String sessionId(HttpConfig httpConfig) {
-		return RandomUtil.randomUUID().replace("-", "");
-	}
-
-	/**
 	 * @param args
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
 		UUIDSessionIdGenerator uuidSessionIdGenerator = new UUIDSessionIdGenerator();
 		String xx = uuidSessionIdGenerator.sessionId(null);
 		System.out.println(xx);
 
+	}
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	private UUIDSessionIdGenerator() {
+	}
+
+	/**
+	 * @return
+	 * @author tanyaowu
+	 */
+	@Override
+	public String sessionId(HttpConfig httpConfig) {
+		return RandomUtil.randomUUID().replace("-", "");
 	}
 }

@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年5月10日 下午12:01:18
  */
 public class Page<T> implements Serializable {
@@ -16,13 +16,17 @@ public class Page<T> implements Serializable {
 	private Integer pageSize; //每页记录数
 	private Integer recordCount; //总条数
 
+	public Page() {
+
+	}
+
 	/**
-	 * 
+	 *
 	 * @param pageData
 	 * @param pageIndex
 	 * @param pageSize
 	 * @param recordCount
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public Page(List<T> pageData, Integer pageIndex, Integer pageSize, Integer recordCount) {
 		this.pageData = pageData;
@@ -31,22 +35,11 @@ public class Page<T> implements Serializable {
 		this.recordCount = recordCount;
 	}
 
-	public Page() {
-
-	}
-
 	/**
 	 * @return the pageData
 	 */
 	public List<T> getPageData() {
 		return pageData;
-	}
-
-	/**
-	 * @param pageData the pageData to set
-	 */
-	public void setPageData(List<T> pageData) {
-		this.pageData = pageData;
 	}
 
 	public int getPageIndex() {
@@ -59,6 +52,13 @@ public class Page<T> implements Serializable {
 
 	public int getRecordCount() {
 		return recordCount;
+	}
+
+	/**
+	 * @param pageData the pageData to set
+	 */
+	public void setPageData(List<T> pageData) {
+		this.pageData = pageData;
 	}
 
 }

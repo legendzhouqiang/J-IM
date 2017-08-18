@@ -7,12 +7,14 @@ import org.tio.examples.helloworld.common.HelloAbsAioHandler;
 import org.tio.examples.helloworld.common.HelloPacket;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class HelloClientAioHandler extends HelloAbsAioHandler implements ClientAioHandler {
-	/** 
+	private static HelloPacket heartbeatPacket = new HelloPacket();
+
+	/**
 	 * 处理消息
 	 */
 	@Override
@@ -27,9 +29,7 @@ public class HelloClientAioHandler extends HelloAbsAioHandler implements ClientA
 		return;
 	}
 
-	private static HelloPacket heartbeatPacket = new HelloPacket();
-
-	/** 
+	/**
 	 * 此方法如果返回null，框架层面则不会发心跳；如果返回非null，框架层面会定时发本方法返回的消息包
 	 */
 	@Override

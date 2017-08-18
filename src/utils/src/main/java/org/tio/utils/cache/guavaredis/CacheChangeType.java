@@ -3,8 +3,8 @@ package org.tio.utils.cache.guavaredis;
 import java.util.Objects;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年8月12日 下午9:33:02
  */
 public enum CacheChangeType {
@@ -12,12 +12,6 @@ public enum CacheChangeType {
 	UPDATE(2), //key级别清空本地缓存
 	PUT(3), //key级别清空本地缓存
 	CLEAR(4); //cacheName级别清空本地缓存
-
-	Integer value;
-
-	private CacheChangeType(Integer value) {
-		this.value = value;
-	}
 
 	public static CacheChangeType from(Integer method) {
 		CacheChangeType[] values = CacheChangeType.values();
@@ -27,5 +21,11 @@ public enum CacheChangeType {
 			}
 		}
 		return null;
+	}
+
+	Integer value;
+
+	private CacheChangeType(Integer value) {
+		this.value = value;
 	}
 }
