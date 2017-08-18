@@ -25,4 +25,17 @@ public interface CoreConstant {
 
     /** unknown_address_ip_seq for close connection */
     AtomicInteger unknown_address_port_seq = new AtomicInteger();
+
+    /** 默认接收buffer的大小 */
+    int default_receive_buf_size = 32 * 1024;
+
+    /** 默认发送buffer的大小 */
+    int default_send_buf_size = 32 * 1024;
+
+    /** 默认重用地址 */
+    boolean default_reuse_addr = true;
+
+    /** 默认保持连接 */
+    boolean default_keep_alive = true;
+
 }

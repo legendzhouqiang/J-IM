@@ -29,4 +29,8 @@ public abstract class ChannelContext {
     protected boolean isRemoved = false;
 
     protected ChannelStat stat = new ChannelStat();
+
+    protected String ip = null;
+
+    protected Integer port = null;
 }

@@ -1,8 +1,10 @@
 package org.tio.server;
 
 import org.tio.common.ChannelContext;
+import org.tio.common.Node;
 
 import java.nio.channels.AsynchronousServerSocketChannel;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Copyright (c) for darkidiot
@@ -12,8 +14,10 @@ import java.nio.channels.AsynchronousServerSocketChannel;
  */
 public class ServerChannelContext extends ChannelContext{
 
-    private AsynchronousServerSocketChannel AsynchronousServerSocketChannel;
+    private AsynchronousServerSocketChannel asynchronousServerSocketChannel;
 
-    
+    private ConcurrentHashMap<Node,Void> clientNodes = new ConcurrentHashMap<>();
+
+    private Node serverNode = null;
 
 }
