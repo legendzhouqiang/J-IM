@@ -16,7 +16,7 @@ public interface Packet extends Serializable {
     /** 包头总长 */
     int headerSize = 7;
 
-    /** 包类型 */
+    /** 第一位:1 reply :消息是否需要返回 0:不需要;1:需要,剩余7位包类型 */
     byte packetType();
 
     byte setPacketType(byte packetType);
@@ -25,6 +25,7 @@ public interface Packet extends Serializable {
     byte reserved();
 
     void setReserved(byte reserved);
+
 
     /** 可选区长度 */
     byte optionalLength();
