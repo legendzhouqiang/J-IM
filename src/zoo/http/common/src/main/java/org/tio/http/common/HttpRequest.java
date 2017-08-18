@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.tio.core.ChannelContext;
 import org.tio.core.Node;
 import org.tio.http.common.HttpConst.RequestBodyFormat;
 import org.tio.http.common.session.HttpSession;
@@ -38,6 +39,8 @@ public class HttpRequest extends HttpPacket {
 	private HttpSession httpSession;
 	private Node remote = null;
 	//	private HttpSession httpSession = null;
+	private ChannelContext channelContext;
+	private HttpConfig httpConfig;
 
 	/**
 	 * 
@@ -323,6 +326,34 @@ public class HttpRequest extends HttpPacket {
 	 */
 	public void setHttpSession(HttpSession httpSession) {
 		this.httpSession = httpSession;
+	}
+
+	/**
+	 * @return the channelContext
+	 */
+	public ChannelContext getChannelContext() {
+		return channelContext;
+	}
+
+	/**
+	 * @param channelContext the channelContext to set
+	 */
+	public void setChannelContext(ChannelContext channelContext) {
+		this.channelContext = channelContext;
+	}
+
+	/**
+	 * @return the httpConfig
+	 */
+	public HttpConfig getHttpConfig() {
+		return httpConfig;
+	}
+
+	/**
+	 * @param httpConfig the httpConfig to set
+	 */
+	public void setHttpConfig(HttpConfig httpConfig) {
+		this.httpConfig = httpConfig;
 	}
 
 	//	/**

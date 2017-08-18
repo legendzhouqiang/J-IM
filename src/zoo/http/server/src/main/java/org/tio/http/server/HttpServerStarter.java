@@ -5,6 +5,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.http.common.GroupContextKey;
 import org.tio.http.common.HttpUuid;
 import org.tio.http.common.session.id.impl.UUIDSessionIdGenerator;
 import org.tio.http.server.handler.DefaultHttpRequestHandler;
@@ -60,6 +61,7 @@ public class HttpServerStarter {
 		serverGroupContext = new ServerGroupContext(httpServerAioHandler, httpServerAioListener, tioExecutor, groupExecutor);
 		serverGroupContext.setHeartbeatTimeout(1000 * 10);
 		serverGroupContext.setShortConnection(true);
+		serverGroupContext.setAttribute(GroupContextKey.HTTP_SERVER_CONFIG, httpConfig);
 
 		aioServer = new AioServer(serverGroupContext);
 

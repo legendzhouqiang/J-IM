@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,11 +20,12 @@ import org.tio.core.task.HandlerRunnable;
 import org.tio.core.task.SendRunnable;
 import org.tio.json.Json;
 import org.tio.utils.lock.MapWithLock;
+import org.tio.utils.prop.MapWithLockPropSupport;
 
 import com.xiaoleilu.hutool.date.DatePattern;
 import com.xiaoleilu.hutool.date.DateTime;
 
-public abstract class ChannelContext {
+public abstract class ChannelContext extends MapWithLockPropSupport {
 	private static Logger log = LoggerFactory.getLogger(ChannelContext.class);
 
 	private static final String DEFAULT_ATTUBITE_KEY = "t-io-d-a-k";
@@ -103,35 +103,9 @@ public abstract class ChannelContext {
 	 */
 	public abstract Node createClientNode(AsynchronousSocketChannel asynchronousSocketChannel) throws IOException;
 
-	private void initProps() {
-		if (props == null) {
-			synchronized (this) {
-				if (props == null) {
-					props = new MapWithLock<String, Object>(new HashMap<String, Object>());
-				}
-			}
-		}
-	}
+	
 
-	/**
-	 * 
-	 * @param key
-	 * @param value
-	 * @author: tanyaowu
-	 */
-	public void setAttribute(String key, Object value) {
-		initProps();
-		Lock lock = props.getLock().writeLock();
-		Map<String, Object> m = props.getObj();
-		try {
-			lock.lock();
-			m.put(key, value);
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
-	}
+	
 
 	/**
 	 * 设置默认属性
@@ -142,57 +116,18 @@ public abstract class ChannelContext {
 		setAttribute(DEFAULT_ATTUBITE_KEY, value);
 	}
 
-	/**
-	 * 
-	 * @param key
-	 * @return
-	 * @author: tanyaowu
-	 */
-	public Object getAttribute(String key) {
-		initProps();
-		Map<String, Object> m = props.getObj();
-		Object ret = m.get(key);
-		return ret;
-
-		//		Lock lock = props.getLock().readLock();
-		//		Map<String, Object> m = props.getObj();
-		//		try {
-		//			lock.lock();
-		//			Object ret = m.get(key);
-		//			return ret;
-		//		} catch (Exception e) {
-		//			throw e;
-		//		} finally {
-		//			lock.unlock();
-		//		}
-	}
+	
 
 	public Object getAttribute() {
 		return getAttribute(DEFAULT_ATTUBITE_KEY);
 	}
 
-	public MapWithLock<String, Object> getAttributes() {
-		initProps();
-		return props;
-	}
+//	public MapWithLock<String, Object> getAttributes() {
+//		initProps();
+//		return props;
+//	}
 
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public void clearAttribute() {
-		initProps();
-		Lock lock = props.getLock().writeLock();
-		Map<String, Object> m = props.getObj();
-		try {
-			lock.lock();
-			m.clear();
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
-	}
+	
 
 	@Override
 	public String toString() {

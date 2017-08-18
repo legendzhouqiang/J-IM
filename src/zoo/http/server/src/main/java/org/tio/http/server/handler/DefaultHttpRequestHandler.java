@@ -295,7 +295,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					long lastModified = fileCache.getLastModified();
 					log.info("从缓存获取:[{}], {}", path, bodyBytes.length);
 
-					ret = Resps.try304(httpRequest, lastModified, httpConfig);
+					ret = Resps.try304(httpRequest, lastModified);
 					if (ret != null) {
 						ret.addHeader(HttpConst.ResponseHeaderKey.tio_from_cache, "true");
 
@@ -319,7 +319,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					}
 
 					if (file.exists()) {
-						ret = Resps.file(httpRequest, file, httpConfig);
+						ret = Resps.file(httpRequest, file);
 						ret.setStaticRes(true);
 
 						if (contentCache != null) {
@@ -399,10 +399,10 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		String root = httpConfig.getRoot();
 		File file = new File(root, file404);
 		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(httpRequest, file404 + "?initpath=" + requestLine.getPathAndQuery(), httpConfig);
+			HttpResponse ret = Resps.redirect(httpRequest, file404 + "?initpath=" + requestLine.getPathAndQuery());
 			return ret;
 		} else {
-			HttpResponse ret = Resps.html(httpRequest, "404", httpConfig);
+			HttpResponse ret = Resps.html(httpRequest, "404");
 			return ret;
 		}
 	}
@@ -413,10 +413,10 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		String root = httpConfig.getRoot();
 		File file = new File(root, file500);
 		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(httpRequest, file500 + "?initpath=" + requestLine.getPathAndQuery(), httpConfig);
+			HttpResponse ret = Resps.redirect(httpRequest, file500 + "?initpath=" + requestLine.getPathAndQuery());
 			return ret;
 		} else {
-			HttpResponse ret = Resps.html(httpRequest, "500", httpConfig);
+			HttpResponse ret = Resps.html(httpRequest, "500");
 			return ret;
 		}
 	}

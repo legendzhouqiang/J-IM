@@ -10,6 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpConst;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
@@ -43,8 +44,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse html(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_HTML_HTML.getType() + "; charset=" + charset, httpConfig);
+	public static HttpResponse html(HttpRequest request, String bodyString, String charset) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_HTML_HTML.getType() + "; charset=" + charset);
 		return ret;
 	}
 
@@ -56,8 +57,9 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse html(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
-		return html(request, bodyString, httpConfig.getCharset(), httpConfig);
+	public static HttpResponse html(HttpRequest request, String bodyString) {
+		HttpConfig httpConfig = HttpServerUtils.getHttpConfig(request);
+		return html(request, bodyString, httpConfig.getCharset());
 	}
 
 	/**
@@ -69,16 +71,16 @@ public class Resps {
 	 * @throws IOException
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse file(HttpRequest request, File fileOnServer, HttpServerConfig httpConfig) throws IOException {
+	public static HttpResponse file(HttpRequest request, File fileOnServer) throws IOException {
 		Date lastModified = FileUtil.lastModifiedTime(fileOnServer);
-		HttpResponse ret = try304(request, lastModified.getTime(), httpConfig);
+		HttpResponse ret = try304(request, lastModified.getTime());
 		if (ret != null) {
 			return ret;
 		}
 
 		byte[] bodyBytes = FileUtil.readBytes(fileOnServer);
 		String filename = fileOnServer.getName();
-		ret = file(request, bodyBytes, filename, httpConfig);
+		ret = file(request, bodyBytes, filename);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified, lastModified.getTime() + "");
 		return ret;
 	}
@@ -91,7 +93,7 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse try304(HttpRequest request, long lastModifiedOnServer, HttpServerConfig httpConfig) {
+	public static HttpResponse try304(HttpRequest request, long lastModifiedOnServer) {
 		String If_Modified_Since = request.getHeader(HttpConst.RequestHeaderKey.If_Modified_Since);//If-Modified-Since
 		if (StringUtils.isNoneBlank(If_Modified_Since)) {
 			Long If_Modified_Since_Date = null;
@@ -99,7 +101,7 @@ public class Resps {
 				If_Modified_Since_Date = Long.parseLong(If_Modified_Since);
 
 				if (lastModifiedOnServer <= If_Modified_Since_Date) {
-					HttpResponse ret = new HttpResponse(request, httpConfig);
+					HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
 					ret.setStatus(HttpResponseStatus.C304);
 					return ret;
 				}
@@ -121,7 +123,7 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse file(HttpRequest request, byte[] bodyBytes, String filename, HttpServerConfig httpConfig) {
+	public static HttpResponse file(HttpRequest request, byte[] bodyBytes, String filename) {
 		String contentType = null;
 		String extension = FilenameUtils.getExtension(filename);
 		if (StringUtils.isNoneBlank(extension)) {
@@ -132,7 +134,7 @@ public class Resps {
 				contentType = "application/octet-stream";
 			}
 		}
-		return fileWithContentType(request, bodyBytes, contentType, httpConfig);
+		return fileWithContentType(request, bodyBytes, contentType);
 	}
 
 	/**
@@ -144,8 +146,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse fileWithContentType(HttpRequest request, byte[] bodyBytes, String contentType, HttpServerConfig httpConfig) {
-		HttpResponse ret = new HttpResponse(request, httpConfig);
+	public static HttpResponse fileWithContentType(HttpRequest request, byte[] bodyBytes, String contentType) {
+		HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
 		ret.setBodyAndGzip(bodyBytes, request);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Content_Type, contentType);
 		return ret;
@@ -175,15 +177,15 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse json(HttpRequest request, Object body, String charset, HttpServerConfig httpConfig) {
+	public static HttpResponse json(HttpRequest request, Object body, String charset) {
 		HttpResponse ret = null;
 		if (body == null) {
-			ret = string(request, "", charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset, httpConfig);
+			ret = string(request, "", charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
 		} else {
 			if (body.getClass() == String.class) {
-				ret = string(request, (String)body, charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset, httpConfig);
+				ret = string(request, (String)body, charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
 			} else {
-				ret = string(request, Json.toJson(body), charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset, httpConfig);
+				ret = string(request, Json.toJson(body), charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
 			}
 		}
 		
@@ -198,8 +200,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse json(HttpRequest request, Object body, HttpServerConfig httpConfig) {
-		return json(request, body, httpConfig.getCharset(), httpConfig);
+	public static HttpResponse json(HttpRequest request, Object body) {
+		return json(request, body, HttpServerUtils.getHttpConfig(request).getCharset());
 	}
 
 	/**
@@ -211,8 +213,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse css(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_CSS_CSS.getType() + "; charset=" + charset, httpConfig);
+	public static HttpResponse css(HttpRequest request, String bodyString, String charset) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_CSS_CSS.getType() + "; charset=" + charset);
 		return ret;
 	}
 
@@ -224,8 +226,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse css(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
-		return css(request, bodyString, httpConfig.getCharset(), httpConfig);
+	public static HttpResponse css(HttpRequest request, String bodyString) {
+		return css(request, bodyString, HttpServerUtils.getHttpConfig(request).getCharset());
 	}
 
 	/**
@@ -237,8 +239,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse js(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.APPLICATION_JAVASCRIPT_JS.getType() + "; charset=" + charset, httpConfig);
+	public static HttpResponse js(HttpRequest request, String bodyString, String charset) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.APPLICATION_JAVASCRIPT_JS.getType() + "; charset=" + charset);
 		return ret;
 	}
 
@@ -250,8 +252,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse js(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
-		return js(request, bodyString, httpConfig.getCharset(), httpConfig);
+	public static HttpResponse js(HttpRequest request, String bodyString) {
+		return js(request, bodyString, HttpServerUtils.getHttpConfig(request).getCharset());
 	}
 
 	/**
@@ -263,8 +265,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse txt(HttpRequest request, String bodyString, String charset, HttpServerConfig httpConfig) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_TXT.getType() + "; charset=" + charset, httpConfig);
+	public static HttpResponse txt(HttpRequest request, String bodyString, String charset) {
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_TXT.getType() + "; charset=" + charset);
 		return ret;
 	}
 
@@ -276,8 +278,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse txt(HttpRequest request, String bodyString, HttpServerConfig httpConfig) {
-		return txt(request, bodyString, httpConfig.getCharset(), httpConfig);
+	public static HttpResponse txt(HttpRequest request, String bodyString) {
+		return txt(request, bodyString, HttpServerUtils.getHttpConfig(request).getCharset());
 	}
 
 	/**
@@ -290,8 +292,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse string(HttpRequest request, String bodyString, String charset, String Content_Type, HttpServerConfig httpConfig) {
-		HttpResponse ret = new HttpResponse(request, httpConfig);
+	public static HttpResponse string(HttpRequest request, String bodyString, String charset, String Content_Type) {
+		HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
 		if (bodyString != null) {
 			try {
 				ret.setBodyAndGzip(bodyString.getBytes(charset), request);
@@ -312,8 +314,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse string(HttpRequest request, String bodyString, String Content_Type, HttpServerConfig httpConfig) {
-		return string(request, bodyString, httpConfig.getCharset(), Content_Type, httpConfig);
+	public static HttpResponse string(HttpRequest request, String bodyString, String Content_Type) {
+		return string(request, bodyString, HttpServerUtils.getHttpConfig(request).getCharset(), Content_Type);
 	}
 
 	/**
@@ -323,8 +325,8 @@ public class Resps {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public static HttpResponse redirect(HttpRequest request, String path, HttpServerConfig httpConfig) {
-		HttpResponse ret = new HttpResponse(request, httpConfig);
+	public static HttpResponse redirect(HttpRequest request, String path) {
+		HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
 		ret.setStatus(HttpResponseStatus.C302);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Location, path);
 		return ret;

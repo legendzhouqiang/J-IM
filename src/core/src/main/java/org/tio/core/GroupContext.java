@@ -22,10 +22,11 @@ import org.tio.core.maintain.Ids;
 import org.tio.core.maintain.IpBlacklist;
 import org.tio.core.maintain.Users;
 import org.tio.core.stat.GroupStat;
+import org.tio.utils.prop.MapWithLockPropSupport;
 import org.tio.utils.thread.pool.DefaultThreadFactory;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
-public abstract class GroupContext {
+public abstract class GroupContext extends MapWithLockPropSupport {
 	static Logger log = LoggerFactory.getLogger(GroupContext.class);
 
 	private static int CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;

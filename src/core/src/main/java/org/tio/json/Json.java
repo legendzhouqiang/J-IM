@@ -24,6 +24,11 @@ public abstract class Json {
 		mapping.put(java.sql.Timestamp.class, new SimpleDateFormatSerializer("yyyy-MM-dd HH:mm:ss"));
 		mapping.put(java.sql.Time.class, new SimpleDateFormatSerializer("HH:mm:ss"));
 	}
+	
+	public static SerializeConfig addFilter(Class<?> clazz, SerializeFilter filter) {
+		mapping.addFilter(clazz, filter);
+		return mapping;
+	}
 
 	public static <T> T toBean(String jsonString, Class<T> tt) {
 		try {

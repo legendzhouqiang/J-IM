@@ -103,6 +103,8 @@ public class HttpRequestDecoder {
 		}
 
 		HttpRequest httpRequest = new HttpRequest(channelContext.getClientNode());
+		httpRequest.setChannelContext(channelContext);
+		httpRequest.setHttpConfig((HttpConfig)channelContext.getGroupContext().getAttribute(GroupContextKey.HTTP_SERVER_CONFIG));
 		httpRequest.setHeaderString(headerSb.toString());
 		httpRequest.setRequestLine(firstLine);
 		httpRequest.setHeaders(headers);
