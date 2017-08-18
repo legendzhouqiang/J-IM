@@ -6,5 +6,11 @@ package org.tio.client;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public class TioClent {
+public class TioClient {
+
+    private ClientChannelContext channel;
+
+    public void connect(String ip, int port) {
+        return;
+    }
 }

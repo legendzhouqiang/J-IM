@@ -3,6 +3,8 @@ package org.tio.common;
 import lombok.Data;
 import org.tio.runnable.SynRunnable;
 
+import java.nio.channels.AsynchronousChannelGroup;
+
 /**
  * Copyright (c) for 谭耀武
  * Date:2017/8/10
@@ -33,4 +35,8 @@ public abstract class ChannelContext {
     protected String ip = null;
 
     protected Integer port = null;
+
+    protected GroupContext groupContext;
+
+    protected AsynchronousChannelGroup channelGroup;
 }

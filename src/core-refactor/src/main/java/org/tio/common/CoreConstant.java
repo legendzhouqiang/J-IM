@@ -38,4 +38,7 @@ public interface CoreConstant {
     /** 默认保持连接 */
     boolean default_keep_alive = true;
 
+    /** Disable the Nagle algorithm. */
+    boolean default_tcp_no_delay = true;
+
 }

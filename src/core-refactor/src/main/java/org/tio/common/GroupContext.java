@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.ByteOrder;
+import java.nio.channels.AsynchronousChannelGroup;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -44,6 +45,8 @@ public abstract class GroupContext {
 
     /** The group executor. */
     protected ThreadPoolExecutor groupExecutor = null;
+
+    protected GroupContext groupContext;
 
     /** 等待关闭 */
     private boolean waittingStop = false;
