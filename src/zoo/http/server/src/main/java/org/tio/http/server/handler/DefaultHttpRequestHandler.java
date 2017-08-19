@@ -290,9 +290,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 						ret = Resps.file(request, file);
 						ret.setStaticRes(true);
 
-						if (contentCache != null) {
+						if (contentCache != null && request.getIsSupportGzip()) {
 							if (ret.getBody() != null && ret.getStatus() == HttpResponseStatus.C200) {
-
 								String contentType = ret.getHeader(HttpConst.ResponseHeaderKey.Content_Type);
 								String contentEncoding = ret.getHeader(HttpConst.ResponseHeaderKey.Content_Encoding);
 								String lastModified = ret.getHeader(HttpConst.ResponseHeaderKey.Last_Modified);

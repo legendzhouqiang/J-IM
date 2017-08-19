@@ -16,7 +16,6 @@ import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.MimeType;
-import org.tio.http.common.HttpConfig;
 import org.tio.json.Json;
 
 import com.xiaoleilu.hutool.io.FileUtil;

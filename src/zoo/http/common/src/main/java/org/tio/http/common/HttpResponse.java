@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ZipUtil;
 
 /**
@@ -14,7 +15,7 @@ import com.xiaoleilu.hutool.util.ZipUtil;
  *
  */
 public class HttpResponse extends HttpPacket {
-	//	private static Logger log = LoggerFactory.getLogger(HttpResponse.class);
+	private static Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
 	private static final long serialVersionUID = -3512681144230291786L;
 
@@ -118,21 +119,17 @@ public class HttpResponse extends HttpPacket {
 	}
 
 	private void gzip(HttpRequest request) {
-		//Accept-Encoding
-		//		检查浏览器是否支持gzip
-		String Accept_Encoding = request.getHeaders().get(HttpConst.RequestHeaderKey.Accept_Encoding);
-		if (StringUtils.isNoneBlank(Accept_Encoding)) {
-			String[] ss = StringUtils.split(Accept_Encoding, ",");
-			if (ArrayUtil.contains(ss, "gzip")) {
-				byte[] bs = this.getBody();
-				if (bs.length >= 600) {
-					byte[] bs2 = ZipUtil.gzip(bs);
-					if (bs2.length < bs.length) {
-						this.body = bs2;
-						this.addHeader(HttpConst.ResponseHeaderKey.Content_Encoding, "gzip");
-					}
+		if (request.getIsSupportGzip()) {
+			byte[] bs = this.getBody();
+			if (bs.length >= 600) {
+				byte[] bs2 = ZipUtil.gzip(bs);
+				if (bs2.length < bs.length) {
+					this.body = bs2;
+					this.addHeader(HttpConst.ResponseHeaderKey.Content_Encoding, "gzip");
 				}
 			}
+		} else {
+			log.info("{} 竟然不支持gzip, {}", request.getChannelContext(), request.getHeader(HttpConst.RequestHeaderKey.User_Agent));
 		}
 	}
 

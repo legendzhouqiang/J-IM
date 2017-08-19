@@ -12,6 +12,8 @@ import org.tio.core.Node;
 import org.tio.http.common.HttpConst.RequestBodyFormat;
 import org.tio.http.common.session.HttpSession;
 
+import com.xiaoleilu.hutool.util.ArrayUtil;
+
 /**
  *
  * @author tanyaowu
@@ -47,6 +49,7 @@ public class HttpRequest extends HttpPacket {
 	private RequestBodyFormat bodyFormat;
 	private String charset = HttpConst.CHARSET_NAME;
 	private Boolean isAjax = null;
+	private Boolean isSupportGzip = null;
 	private HttpSession httpSession;
 	private Node remote = null;
 	//	private HttpSession httpSession = null;
@@ -356,6 +359,34 @@ public class HttpRequest extends HttpPacket {
 	 */
 	public void setRequestLine(RequestLine requestLine) {
 		this.requestLine = requestLine;
+	}
+
+	/**
+	 * @return the isSupportGzip
+	 */
+	public Boolean getIsSupportGzip() {
+		if (isSupportGzip == null) {
+			String Accept_Encoding = getHeader(HttpConst.RequestHeaderKey.Accept_Encoding);
+			if (StringUtils.isNoneBlank(Accept_Encoding)) {
+				String[] ss = StringUtils.split(Accept_Encoding, ",");
+				if (ArrayUtil.contains(ss, "gzip")) {
+					isSupportGzip = true;
+				} else {
+					isSupportGzip = false;
+				}
+			} else {
+				isSupportGzip = true;
+			}
+		}
+		return isSupportGzip;
+	}
+
+
+	/**
+	 * @param isSupportGzip the isSupportGzip to set
+	 */
+	public void setIsSupportGzip(Boolean isSupportGzip) {
+		this.isSupportGzip = isSupportGzip;
 	}
 
 	//	/**
