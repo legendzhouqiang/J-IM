@@ -26,7 +26,6 @@ public class ClientChannelContext extends ChannelContext {
         channelGroup = AsynchronousChannelGroup.withThreadPool(groupContext.getGroupExecutor());
         long start = SystemTimer.currentTimeMillis();
         this.asynchronousSocketChannel = AsynchronousSocketChannel.open(channelGroup);
-        ;
         long end = SystemTimer.currentTimeMillis();
         long interval = end - start;
         if (interval > 100) {
@@ -38,11 +37,10 @@ public class ClientChannelContext extends ChannelContext {
         asynchronousSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, CoreConstant.default_keep_alive);
 
         InetSocketAddress addr;
-
         if (ip != null && port != null) {
-            if () {
-
-            }
+//            if () {
+//
+//            }
         }
 
     }
