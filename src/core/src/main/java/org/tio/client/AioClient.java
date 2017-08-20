@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioHandler;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
-import org.tio.core.ChannelStat;
 import org.tio.core.Node;
 import org.tio.core.intf.Packet;
+import org.tio.core.stat.ChannelStat;
 import org.tio.utils.SystemTimer;
 import org.tio.utils.lock.SetWithLock;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
@@ -347,9 +347,9 @@ public class AioClient {
 							}
 
 							ChannelStat stat = channelContext.getStat();
-							long timeLatestReceivedMsg = stat.getLatestTimeOfReceivedPacket();
-							long timeLatestSentMsg = stat.getLatestTimeOfSentPacket();
-							long compareTime = Math.max(timeLatestReceivedMsg, timeLatestSentMsg);
+							long latestTimeOfReceivedByte = stat.getLatestTimeOfReceivedByte();
+							long latestTimeOfSentPacket = stat.getLatestTimeOfSentPacket();
+							long compareTime = Math.max(latestTimeOfReceivedByte, latestTimeOfSentPacket);
 							long interval = currtime - compareTime;
 							if (interval >= heartbeatTimeout / 2) {
 								Packet packet = aioHandler.heartbeatPacket();

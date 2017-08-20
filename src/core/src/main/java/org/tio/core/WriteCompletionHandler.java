@@ -11,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.WriteCompletionHandler.WriteCompletionVo;
 import org.tio.core.intf.Packet;
 import org.tio.core.intf.PacketWithMeta;
+import org.tio.core.stat.ChannelStat;
 import org.tio.core.stat.GroupStat;
+import org.tio.utils.SystemTimer;
 
 /**
  *
@@ -84,7 +86,9 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 			log.info("{} {}/{} has sent", channelContext, byteBuffer.position(), byteBuffer.capacity());
 			AsynchronousSocketChannel asynchronousSocketChannel = channelContext.getAsynchronousSocketChannel();
 			asynchronousSocketChannel.write(byteBuffer, writeCompletionVo, this);
+			channelContext.getStat().setLatestTimeOfSentByte(SystemTimer.currentTimeMillis());
 		} else {
+			channelContext.getStat().setLatestTimeOfSentPacket(SystemTimer.currentTimeMillis());
 			handle(result, null, writeCompletionVo);
 		}
 

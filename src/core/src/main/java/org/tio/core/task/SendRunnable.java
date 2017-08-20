@@ -17,7 +17,6 @@ import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.Packet;
 import org.tio.core.intf.PacketWithMeta;
 import org.tio.core.utils.AioUtils;
-import org.tio.utils.SystemTimer;
 import org.tio.utils.thread.pool.AbstractQueueRunnable;
 
 /**
@@ -188,8 +187,6 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 
 		WriteCompletionVo writeCompletionVo = new WriteCompletionVo(byteBuffer, packets);
 		asynchronousSocketChannel.write(byteBuffer, writeCompletionVo, writeCompletionHandler);
-
-		channelContext.getStat().setLatestTimeOfSentPacket(SystemTimer.currentTimeMillis());
 	}
 
 	/**

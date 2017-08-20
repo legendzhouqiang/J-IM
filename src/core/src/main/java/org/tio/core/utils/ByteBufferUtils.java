@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.tio.core.exception.LengthOverflowException;
 
 public class ByteBufferUtils {
 	/**
@@ -11,7 +12,7 @@ public class ByteBufferUtils {
 	 * @param byteBuffer1
 	 * @param byteBuffer2
 	 * @return
-	 * @author tanyaowu
+	 * @author: tanyaowu
 	 */
 	public static ByteBuffer composite(ByteBuffer byteBuffer1, ByteBuffer byteBuffer2) {
 		int capacity = byteBuffer1.limit() - byteBuffer1.position() + byteBuffer2.limit() - byteBuffer2.position();
@@ -36,7 +37,7 @@ public class ByteBufferUtils {
 	 * @param endindex
 	 * @return
 	 *
-	 * @author tanyaowu
+	 * @author: tanyaowu
 	 *
 	 */
 	public static ByteBuffer copy(ByteBuffer src, int startindex, int endindex) {
@@ -47,11 +48,33 @@ public class ByteBufferUtils {
 		return newByteBuffer;
 	}
 
-	public static int lineEnd(ByteBuffer buffer) {
+	/**
+	 *
+	 * @param buffer
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static int lineEnd(ByteBuffer buffer) throws LengthOverflowException {
+		return lineEnd(buffer, Integer.MAX_VALUE);
+	}
+
+	/**
+	 *
+	 * @param buffer
+	 * @param maxlength
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static int lineEnd(ByteBuffer buffer, int maxlength) throws LengthOverflowException {
 		boolean canEnd = false;
 		//		int startPosition = buffer.position();
+		int count = 0;
 		while (buffer.hasRemaining()) {
 			byte b = buffer.get();
+			count++;
+			if (count > maxlength) {
+				throw new LengthOverflowException("maxlength is " + maxlength);
+			}
 			if (b == '\r') {
 				canEnd = true;
 			} else if (b == '\n') {
@@ -70,10 +93,29 @@ public class ByteBufferUtils {
 		return ab;
 	}
 
-	public static String readLine(ByteBuffer buffer, String charset) {
+	/**
+	 *
+	 * @param buffer
+	 * @param charset
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static String readLine(ByteBuffer buffer, String charset) throws LengthOverflowException {
+		return readLine(buffer, charset, Integer.MAX_VALUE);
+	}
+
+	/**
+	 *
+	 * @param buffer
+	 * @param charset
+	 * @param maxlength
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static String readLine(ByteBuffer buffer, String charset, Integer maxlength) throws LengthOverflowException {
 		//		boolean canEnd = false;
 		int startPosition = buffer.position();
-		int endPosition = lineEnd(buffer);
+		int endPosition = lineEnd(buffer, maxlength);
 
 		if (endPosition > startPosition) {
 			byte[] bs = new byte[endPosition - startPosition];

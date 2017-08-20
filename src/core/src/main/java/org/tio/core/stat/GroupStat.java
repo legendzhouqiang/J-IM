@@ -2,7 +2,8 @@ package org.tio.core.stat;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class GroupStat {
+public class GroupStat implements java.io.Serializable  {
+	private static final long serialVersionUID = -6988655941470121164L;
 	/**
 	 * 关闭了多少连接
 	 */

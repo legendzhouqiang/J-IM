@@ -130,7 +130,7 @@ public class HttpServerStarter {
 		this.httpServerAioHandler = new HttpServerAioHandler(httpConfig, requestHandler);
 		httpServerAioListener = new HttpServerAioListener();
 		serverGroupContext = new ServerGroupContext(httpServerAioHandler, httpServerAioListener, tioExecutor, groupExecutor);
-		serverGroupContext.setHeartbeatTimeout(1000 * 10);
+		serverGroupContext.setHeartbeatTimeout(1000 * 20);
 		serverGroupContext.setShortConnection(true);
 		serverGroupContext.setAttribute(GroupContextKey.HTTP_SERVER_CONFIG, httpConfig);
 

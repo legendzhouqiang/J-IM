@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.task.DecodeRunnable;
 import org.tio.core.utils.AioUtils;
+import org.tio.utils.SystemTimer;
 
 /**
  *
@@ -37,6 +38,8 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 	public void completed(Integer result, ByteBuffer byteBuffer) {
 		//		GroupContext groupContext = channelContext.getGroupContext();
 		if (result > 0) {
+			channelContext.getStat().setLatestTimeOfReceivedByte(SystemTimer.currentTimeMillis());
+
 			if (channelContext.isTraceClient()) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("p_r_buf_len", result);
