@@ -26,57 +26,6 @@ import org.tio.utils.thread.ThreadUtils;
  */
 public abstract class Aio {
 
-	public static class IpBlacklist {
-		/**
-		 * 把ip添加到黑名单
-		 * @param groupContext
-		 * @param ip
-		 * @author tanyaowu
-		 */
-		public static void add(GroupContext groupContext, String ip) {
-			groupContext.ipBlacklist.add(groupContext, ip);
-		}
-
-		/**
-		 * 清空黑名单
-		 * @param groupContext
-		 * @author tanyaowu
-		 */
-		public static void clear(GroupContext groupContext) {
-			groupContext.ipBlacklist.clear();
-		}
-
-		/**
-		 * 获取ip黑名单列表
-		 * @param groupContext
-		 * @return
-		 * @author tanyaowu
-		 */
-		public static Set<String> getAll(GroupContext groupContext) {
-			return groupContext.ipBlacklist.getCopy();
-		}
-
-		/**
-		 * 是否在黑名单中
-		 * @param groupContext
-		 * @param ip
-		 * @return
-		 * @author tanyaowu
-		 */
-		public static boolean isInBlacklist(GroupContext groupContext, String ip) {
-			return groupContext.ipBlacklist.isInBlacklist(ip);
-		}
-
-		/**
-		 * 把ip从黑名单中删除
-		 * @param groupContext
-		 * @param ip
-		 * @author tanyaowu
-		 */
-		public static void remove(GroupContext groupContext, String ip) {
-			groupContext.ipBlacklist.remove(ip);
-		}
-	}
 
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(Aio.class);
