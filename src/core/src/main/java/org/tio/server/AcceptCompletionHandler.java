@@ -14,8 +14,8 @@ import org.tio.server.intf.ServerAioListener;
 import org.tio.utils.SystemTimer;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月4日 上午9:27:45
  */
 public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, AioServer> {
@@ -26,10 +26,10 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 	}
 
 	/**
-	 * 
+	 *
 	 * @param asynchronousSocketChannel
 	 * @param aioServer
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void completed(AsynchronousSocketChannel asynchronousSocketChannel, AioServer aioServer) {
@@ -76,10 +76,10 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 	}
 
 	/**
-	 * 
+	 *
 	 * @param exc
 	 * @param aioServer
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void failed(Throwable exc, AioServer aioServer) {

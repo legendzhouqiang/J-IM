@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.ObjectSerializer;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -25,8 +26,13 @@ public abstract class Json {
 		mapping.put(java.sql.Time.class, new SimpleDateFormatSerializer("HH:mm:ss"));
 	}
 
-	public static SerializeConfig addFilter(Class<?> clazz, SerializeFilter filter) {
+	public static SerializeConfig put(Class<?> clazz, SerializeFilter filter) {
 		mapping.addFilter(clazz, filter);
+		return mapping;
+	}
+	
+	public static SerializeConfig put(Class<?> clazz, ObjectSerializer serializer) {
+		mapping.put(clazz, serializer);
 		return mapping;
 	}
 
