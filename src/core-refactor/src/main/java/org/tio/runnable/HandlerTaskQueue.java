@@ -7,7 +7,6 @@ import org.tio.common.Packet;
  * Copyright (c) for darkidiot
  * Date:2017/8/21
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
- * School: CUIT
  * Desc:
  */
 public class HandlerTaskQueue extends AbstractTaskQueue<Packet> {
