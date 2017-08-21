@@ -3,10 +3,13 @@ package org.tio.client;
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.ChannelContext;
 import org.tio.common.CoreConstant;
+import org.tio.common.Node;
 import org.tio.common.SystemTimer;
+import org.tio.util.StringUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -22,6 +25,9 @@ public class ClientChannelContext extends ChannelContext {
 
     private AsynchronousSocketChannel asynchronousSocketChannel;
 
+    private Node server;
+
+
     public ClientChannelContext() throws IOException {
         channelGroup = AsynchronousChannelGroup.withThreadPool(groupContext.getGroupExecutor());
         long start = SystemTimer.currentTimeMillis();
@@ -36,12 +42,22 @@ public class ClientChannelContext extends ChannelContext {
         asynchronousSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, CoreConstant.default_reuse_addr);
         asynchronousSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, CoreConstant.default_keep_alive);
 
-        InetSocketAddress addr;
         if (ip != null && port != null) {
-//            if () {
-//
-//            }
+            if (StringUtil.isIp(getIp()) && port > 0) {
+                asynchronousSocketChannel.bind(new InetSocketAddress(ip, port));
+                log.info("sock bind local address [{}:{}].", ip, port);
+            }
+            asynchronousSocketChannel.bind(new InetSocketAddress(0));
+            SocketAddress localAddress = asynchronousSocketChannel.getLocalAddress();
+            log.info("sock bind local address port [] port{}", port);
         }
+        if (server != null) {
+            if (server.getIp() != null) {
+
+            }
+
+        }
+
 
     }
 }

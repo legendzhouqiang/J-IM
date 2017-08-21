@@ -55,4 +55,11 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable {
     public void clearMsgQueue() {
         msgQueue.clear();
     }
+
+    @Override
+    public void run() {
+        if (msgQueue.size() != 0) {
+            runTask();
+        }
+    }
 }

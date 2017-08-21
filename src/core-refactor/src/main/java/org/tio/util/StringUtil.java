@@ -21,14 +21,11 @@ public final class StringUtil {
         Matcher matcher = IP_PATTERN.matcher(ipStr);
         boolean b = matcher.find();
         String matchStr = matcher.group(0);
+        System.out.println(matchStr);
+        System.out.println(b);
         if (b && matchStr.length() == ipStr.length()) {
             return true;
         }
         return false;
-    }
-
-    public static void main(String[] args) {
-        String ip = "10.10.10.256";
-        boolean ip1 = isIp(ip);
     }
 }
