@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Author: <a href="tywo45@163.com">谭耀武</a>
  * Desc: 同步运行任务接口
  */
-public interface SynRunnable extends Runnable {
+public interface SynRunnable<T> extends Runnable {
 
     /**
      * 获取同步任务锁
@@ -31,7 +31,7 @@ public interface SynRunnable extends Runnable {
     /**
      * 实质任务payload
      */
-    void runTask();
+    void runTask(T t);
 
     /**
      * 任务队列名称

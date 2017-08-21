@@ -1,7 +1,10 @@
 package org.tio.common;
 
 import lombok.Data;
-import org.tio.runnable.SynRunnable;
+import org.tio.runnable.DecodeTaskQueue;
+import org.tio.runnable.EncodeTaskQueue;
+import org.tio.runnable.HandlerTaskQueue;
+import org.tio.runnable.SendTaskQueue;
 
 import java.nio.channels.AsynchronousChannelGroup;
 
@@ -14,13 +17,13 @@ import java.nio.channels.AsynchronousChannelGroup;
 @Data
 public abstract class ChannelContext {
 
-    protected SynRunnable decodeRunnable = null;
+    protected DecodeTaskQueue decodeRunnable = null;
 
-    protected SynRunnable handlerRunnable = null;
+    protected HandlerTaskQueue handlerRunnable = null;
 
-    protected SynRunnable sendRunnable = null;
+    protected SendTaskQueue sendRunnable = null;
 
-    protected SynRunnable encodeRunnable = null;
+    protected EncodeTaskQueue encodeRunnable = null;
 
     protected boolean waitingClose = false;
 

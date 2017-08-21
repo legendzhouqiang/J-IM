@@ -3,7 +3,7 @@ package org.tio.runnable;
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.CoreConstant;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 
 /**
@@ -13,12 +13,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Desc: 抽象任务队列类
  */
 @Slf4j
-public abstract class AbstractSynTaskQueue<T> implements SynRunnable {
+public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T> {
 
     /**
      * 任务队列
      */
-    private ConcurrentLinkedQueue<T> msgQueue = new ConcurrentLinkedQueue<T>();
+//    protected ConcurrentLinkedQueue<T> msgQueue = new ConcurrentLinkedQueue<>();
+    protected LinkedBlockingDeque<T> msgQueue = new LinkedBlockingDeque<>();
 
     /**
      * 加入任务队列
@@ -31,7 +32,7 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable {
             log.debug("taskQueue[{}] has been canceled.", getName());
             return false;
         }
-        boolean flag = msgQueue.add(t);
+        boolean flag = msgQueue.offer(t);
         int size = msgQueue.size();
         if (size > CoreConstant.defaultMaxMsgQueueSize) {
             log.warn("taskQueue[{}] is overflow the defaultMaxSize[{}], and the current size of taskQueue[{}] is {}.",
@@ -58,8 +59,15 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable {
 
     @Override
     public void run() {
-        if (msgQueue.size() != 0) {
-            runTask();
+        try {
+            do {
+                T task = msgQueue.take();
+                runTask(task);
+            } while (true);
+        } catch (InterruptedException e) {
+            if (isCanceled()) {
+                log.info("task queue has been canceled, the rest of task size:{}", msgQueue.size());
+            }
         }
     }
 }

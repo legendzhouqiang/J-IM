@@ -1,7 +1,9 @@
 package org.tio.runnable;
 
+import org.tio.common.ChannelContext;
+import org.tio.common.Packet;
+
 import java.nio.ByteBuffer;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Copyright (c) for darkidiot
@@ -9,38 +11,20 @@ import java.util.concurrent.locks.ReentrantLock;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public class DecodeTaskQueue extends AbstractSynTaskQueue<ByteBuffer> {
+public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
-    private volatile boolean isCancel = false;
+    private ChannelContext context;
 
-    private ReentrantLock lock = new ReentrantLock();
-
-    private String name;
-
-    @Override
-    public ReentrantLock runningLock() {
-        return lock;
+    public DecodeTaskQueue(ChannelContext context) {
+        this.context = context;
     }
 
     @Override
-    public boolean isCanceled() {
-        return isCancel;
+    public void runTask(ByteBuffer byteBuffer) {
+
+        boolean flag = msgQueue.offerFirst(byteBuffer);
+
+        Packet p = null;
+        context.getHandlerRunnable().addMsg(p);
     }
-
-    @Override
-    public void setCanceled(boolean cancelFlag) {
-        this.isCancel = cancelFlag
-    }
-
-    @Override
-    public void runTask() {
-
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-
 }
