@@ -15,7 +15,7 @@ public class ByteBufferUtils {
 	 */
 	public static ByteBuffer composite(ByteBuffer byteBuffer1, ByteBuffer byteBuffer2) {
 		int capacity = (byteBuffer1.limit() - byteBuffer1.position()) + (byteBuffer2.limit() - byteBuffer2.position());
-		ByteBuffer ret = ByteBuffer.allocate(capacity);
+		ByteBuffer ret = ByteBuffer.allocateDirect(capacity);
 
 		ret.put(byteBuffer1);
 		ret.put(byteBuffer2);

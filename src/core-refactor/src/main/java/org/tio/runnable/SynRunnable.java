@@ -31,7 +31,7 @@ public interface SynRunnable<T> extends Runnable {
     /**
      * 实质任务payload
      */
-    void runTask(T t);
+    void runTask(T t) throws InterruptedException;
 
     /**
      * 任务队列名称

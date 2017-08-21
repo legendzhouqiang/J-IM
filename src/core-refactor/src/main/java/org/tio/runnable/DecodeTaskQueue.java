@@ -1,5 +1,6 @@
 package org.tio.runnable;
 
+import org.tio.common.AbstractPacket;
 import org.tio.common.ChannelContext;
 import org.tio.common.Packet;
 
@@ -20,19 +21,86 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
     }
 
     @Override
-    public void runTask(ByteBuffer byteBuffer) {
+    public void runTask(ByteBuffer byteBuffer) throws InterruptedException {
 
-        short magic = byteBuffer.getShort();
-        while (Packet.magic != magic) {
-            magic = byteBuffer.getShort();
+        Packet packet = new AbstractPacket();
+
+        while (byteBuffer.remaining() > 1) {
+            short magic = byteBuffer.getShort();
+            if (Packet.magic == magic) {
+                break;
+            }
         }
 
+        while (!byteBuffer.hasRemaining()) {
+            byteBuffer = mergeByteBuffer(byteBuffer);
+        }
         byte packetType = byteBuffer.get();
+        packet.setPacketType(packetType);
 
+        while (!byteBuffer.hasRemaining()) {
+            byteBuffer = mergeByteBuffer(byteBuffer);
+        }
+        byte reserved = byteBuffer.get();
+        packet.setReserved(reserved);
 
-        boolean flag = msgQueue.offerFirst(byteBuffer);
+        while (!byteBuffer.hasRemaining()) {
+            byteBuffer = mergeByteBuffer(byteBuffer);
+        }
+        byte optLen = byteBuffer.get();
+        packet.setOptionalLength(optLen);
 
-        Packet p = null;
-        context.getHandlerRunnable().addMsg(p);
+        while (!(byteBuffer.remaining() > 2)) {
+            byteBuffer = mergeByteBuffer(byteBuffer);
+        }
+        short bodyLen = byteBuffer.get();
+        packet.setBodyLength(bodyLen);
+
+        while (!byteBuffer.hasRemaining()) {
+            byteBuffer = mergeByteBuffer(byteBuffer);
+        }
+        byte checkSum = byteBuffer.get();
+        packet.setOptionalLength(checkSum);
+
+        while (!(byteBuffer.remaining() > optLen)) {
+            byteBuffer = mergeByteBuffer(byteBuffer);
+        }
+        byte[] optData = new byte[optLen];
+        byteBuffer.get(optData, 0, optLen);
+        packet.setOptional(optData);
+
+        while (!(byteBuffer.remaining() > 2)) {
+            byteBuffer = mergeByteBuffer(byteBuffer);
+        }
+        short packetSeq = byteBuffer.getShort();
+        packet.setPacketSeq(packetSeq);
+
+        while (!(byteBuffer.remaining() > bodyLen - 2)) {
+            byteBuffer = mergeByteBuffer(byteBuffer);
+        }
+        byte[] bodyData = new byte[bodyLen - 2];
+        byteBuffer.get(optData, 0, bodyLen - 2);
+        packet.setBody(bodyData);
+
+        if (byteBuffer.hasRemaining()) {
+            boolean flag = msgQueue.offerFirst(byteBuffer);
+        }
+
+        // TODO: 2017/8/21 校验校验和
+        if (context.isUse_checksum()) {
+
+        }
+        context.getHandlerRunnable().addMsg(packet);
+    }
+
+    private ByteBuffer mergeByteBuffer(ByteBuffer byteBuffer) throws InterruptedException {
+        int remaining = byteBuffer.remaining();
+        ByteBuffer nextBuffer = msgQueue.take();
+        int capacity = remaining + nextBuffer.capacity();
+        ByteBuffer newByteBuffer = ByteBuffer.allocateDirect(capacity);
+        newByteBuffer.put(byteBuffer.slice());
+        newByteBuffer.put(nextBuffer);
+        newByteBuffer.flip();
+        return newByteBuffer;
     }
 }

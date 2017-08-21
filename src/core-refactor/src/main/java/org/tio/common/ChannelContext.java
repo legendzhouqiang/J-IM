@@ -25,6 +25,8 @@ public abstract class ChannelContext {
 
     protected EncodeTaskQueue encodeRunnable = null;
 
+    protected boolean use_checksum = false;
+
     protected boolean waitingClose = false;
 
     protected boolean isClosed = false;

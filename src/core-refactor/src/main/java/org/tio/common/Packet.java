@@ -19,28 +19,28 @@ public interface Packet extends Serializable {
     /** 第一位:1 reply :消息是否需要返回 0:不需要;1:需要,剩余7位包类型 */
     byte packetType();
 
-    byte setPacketType(byte packetType);
+    Packet setPacketType(byte packetType);
 
     /** 保留字段 */
     byte reserved();
 
-    void setReserved(byte reserved);
+    Packet setReserved(byte reserved);
 
 
     /** 可选区长度 */
     byte optionalLength();
 
-    void setOptionalLength(byte optionalLength);
+    Packet setOptionalLength(byte optionalLength);
 
     /** 数据区长度 */
     short bodyLength();
 
-    void setBodyLength(short bodyLength);
+    Packet setBodyLength(short bodyLength);
 
     /** 数据校验 */
     byte checkSum();
 
-    byte setCheckSum(byte checkSum);
+    Packet setCheckSum(byte checkSum);
 
     /** 数据包头 */
     byte[] header();
@@ -48,15 +48,15 @@ public interface Packet extends Serializable {
     /** 可选区数据 */
     byte[] optional();
 
-    void setOptional(byte[] optional);
+    Packet setOptional(byte[] optional);
 
     /** 包序列 */
     short packetSeq();
 
-    void setPacketSeq(short count);
+    Packet setPacketSeq(short count);
 
     /** 数据区数据 */
     byte[] body();
 
-    void setBody(byte[] body);
+    Packet setBody(byte[] body);
 }
