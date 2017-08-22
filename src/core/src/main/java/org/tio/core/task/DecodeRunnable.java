@@ -97,7 +97,8 @@ public class DecodeRunnable implements Runnable {
 		try {
 			label_2: while (true) {
 				int initPosition = byteBuffer.position();
-				Packet packet = channelContext.getGroupContext().getAioHandler().decode(byteBuffer, channelContext);
+				GroupContext groupContext = channelContext.getGroupContext();
+				Packet packet = groupContext.getAioHandler().decode(byteBuffer, channelContext);
 
 				if (packet == null)// 数据不够，解不了码
 				{

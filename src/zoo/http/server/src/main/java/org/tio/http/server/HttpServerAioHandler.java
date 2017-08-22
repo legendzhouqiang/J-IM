@@ -12,7 +12,7 @@ import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpRequestDecoder;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseEncoder;
-import org.tio.http.server.handler.IHttpRequestHandler;
+import org.tio.http.common.handler.IHttpRequestHandler;
 import org.tio.server.intf.ServerAioHandler;
 
 /**
@@ -112,7 +112,7 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	@Override
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
 		HttpRequest request = (HttpRequest) packet;
-		HttpResponse httpResponse = requestHandler.handler(request, request.getRequestLine(), channelContext);
+		HttpResponse httpResponse = requestHandler.handler(request, request.getRequestLine());
 		Aio.send(channelContext, httpResponse);
 	}
 

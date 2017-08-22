@@ -41,7 +41,6 @@ public class Groups {
 	 * @author tanyaowu
 	 */
 	public void bind(String groupid, ChannelContext channelContext) {
-
 		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;

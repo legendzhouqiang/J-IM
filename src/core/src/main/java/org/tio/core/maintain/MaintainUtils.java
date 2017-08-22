@@ -19,14 +19,17 @@ public class MaintainUtils {
 	 */
 	public static void removeFromMaintain(ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
-		if (groupContext.isShortConnection()) {
-			return;
-		}
+		
+		groupContext.connections.remove(channelContext);
+		groupContext.connecteds.remove(channelContext);
+		groupContext.closeds.remove(channelContext);
+		
+//		if (groupContext.isShortConnection()) {
+//			return;
+//		}
 
 		try {
-			groupContext.connections.remove(channelContext);
-			groupContext.connecteds.remove(channelContext);
-			groupContext.closeds.remove(channelContext);
+			
 			groupContext.ids.unbind(channelContext);
 			if (StringUtils.isNotBlank(channelContext.getUserid())) {
 				try {

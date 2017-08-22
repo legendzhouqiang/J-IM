@@ -133,7 +133,7 @@ public class CloseRunnable implements Runnable {
 					if (isRemove) {
 						MaintainUtils.removeFromMaintain(channelContext);
 					} else {
-						if (!groupContext.isShortConnection()) {
+//						if (!groupContext.isShortConnection()) {
 							groupContext.closeds.add(channelContext);
 							groupContext.connecteds.remove(channelContext);
 
@@ -150,7 +150,7 @@ public class CloseRunnable implements Runnable {
 							} catch (Throwable e) {
 								log.error(e.toString(), e);
 							}
-						}
+//						}
 					}
 
 					try {

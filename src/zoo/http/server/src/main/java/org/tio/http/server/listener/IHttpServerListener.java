@@ -21,7 +21,7 @@ public interface IHttpServerListener {
 	 * @throws Exception
 	 * @author tanyaowu
 	 */
-	public void doAfterHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws Exception;
+	public void doAfterHandler(HttpRequest packet, RequestLine requestLine, HttpResponse httpResponse) throws Exception;
 
 	/**
 	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)前会先调用这个方法<br>
@@ -34,6 +34,6 @@ public interface IHttpServerListener {
 	 * @throws Exception
 	 * @author tanyaowu
 	 */
-	public HttpResponse doBeforeHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponseFromCache) throws Exception;
+	public HttpResponse doBeforeHandler(HttpRequest packet, RequestLine requestLine, HttpResponse httpResponseFromCache) throws Exception;
 
 }

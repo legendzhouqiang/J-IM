@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.tio.http.common.GroupContextKey;
 import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpUuid;
+import org.tio.http.common.handler.IHttpRequestHandler;
 import org.tio.http.common.session.id.impl.UUIDSessionIdGenerator;
 import org.tio.http.server.handler.DefaultHttpRequestHandler;
-import org.tio.http.server.handler.IHttpRequestHandler;
 import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
 import org.tio.server.AioServer;
@@ -92,6 +92,13 @@ public class HttpServerStarter {
 		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
 	}
 
+	/**
+	 * @return the httpConfig
+	 */
+	public HttpConfig getHttpConfig() {
+		return httpConfig;
+	}
+
 	public IHttpRequestHandler getHttpRequestHandler() {
 		return requestHandler;
 	}
@@ -111,13 +118,6 @@ public class HttpServerStarter {
 	}
 
 	/**
-	 * @return the httpConfig
-	 */
-	public HttpConfig getHttpConfig() {
-		return httpConfig;
-	}
-
-	/**
 	 * @return the serverGroupContext
 	 */
 	public ServerGroupContext getServerGroupContext() {
@@ -127,12 +127,14 @@ public class HttpServerStarter {
 	private void init(HttpConfig httpConfig, IHttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		this.httpConfig = httpConfig;
 		this.requestHandler = requestHandler;
+		httpConfig.setHttpRequestHandler(this.requestHandler);
 		this.httpServerAioHandler = new HttpServerAioHandler(httpConfig, requestHandler);
 		httpServerAioListener = new HttpServerAioListener();
 		serverGroupContext = new ServerGroupContext(httpServerAioHandler, httpServerAioListener, tioExecutor, groupExecutor);
 		serverGroupContext.setHeartbeatTimeout(1000 * 20);
 		serverGroupContext.setShortConnection(true);
 		serverGroupContext.setAttribute(GroupContextKey.HTTP_SERVER_CONFIG, httpConfig);
+		serverGroupContext.setName("Tio Http Server");
 
 		aioServer = new AioServer(serverGroupContext);
 

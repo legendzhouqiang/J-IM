@@ -17,6 +17,7 @@ public interface AioHandler {
 
 	/**
 	 * 根据ByteBuffer解码成业务需要的Packet对象.
+	 * 如果收到的数据不全，导致解码失败，请返回null，在下次消息来时框架层会自动续上前面的收到的数据
 	 *
 	 * @param buffer the buffer
 	 * @return the t

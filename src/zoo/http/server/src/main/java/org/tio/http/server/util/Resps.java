@@ -315,7 +315,7 @@ public class Resps {
 		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_TXT.getType() + "; charset=" + charset);
 		return ret;
 	}
-	
+
 	/**
 	 *
 	 * @author tanyaowu

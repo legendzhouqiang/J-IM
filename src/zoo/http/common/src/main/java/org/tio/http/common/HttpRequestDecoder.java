@@ -327,34 +327,43 @@ public class HttpRequestDecoder {
 	 * 2017年2月23日 下午1:37:51
 	 *
 	 */
-	public static RequestLine parseRequestLine(String line) {
-		int index1 = line.indexOf(' ');
-		String _method = StringUtils.upperCase(line.substring(0, index1));
-		Method method = Method.from(_method);
-		int index2 = line.indexOf(' ', index1 + 1);
-		String pathAndQuerystr = line.substring(index1 + 1, index2); // "/user/get?name=999"
-		String path = null; //"/user/get"
-		String queryStr = null;
-		int indexOfQuestionmark = pathAndQuerystr.indexOf("?");
-		if (indexOfQuestionmark != -1) {
-			queryStr = StringUtils.substring(pathAndQuerystr, indexOfQuestionmark + 1);
-			path = StringUtils.substring(pathAndQuerystr, 0, indexOfQuestionmark);
-		} else {
-			path = pathAndQuerystr;
-			queryStr = "";
+	public static RequestLine parseRequestLine(String line) throws AioDecodeException {
+		try {
+			int index1 = line.indexOf(' ');
+			String _method = StringUtils.upperCase(line.substring(0, index1));
+			Method method = Method.from(_method);
+			int index2 = line.indexOf(' ', index1 + 1);
+			String pathAndQuerystr = line.substring(index1 + 1, index2); // "/user/get?name=999"
+			String path = null; //"/user/get"
+			String queryStr = null;
+			int indexOfQuestionmark = pathAndQuerystr.indexOf("?");
+			if (indexOfQuestionmark != -1) {
+				queryStr = StringUtils.substring(pathAndQuerystr, indexOfQuestionmark + 1);
+				path = StringUtils.substring(pathAndQuerystr, 0, indexOfQuestionmark);
+			} else {
+				path = pathAndQuerystr;
+				queryStr = "";
+			}
+
+			String protocolVersion = line.substring(index2 + 1);
+			String[] pv = StringUtils.split(protocolVersion, "/");
+			String protocol = pv[0];
+			String version = pv[1];
+
+			RequestLine requestLine = new RequestLine();
+			requestLine.setMethod(method);
+			requestLine.setPath(path);
+			requestLine.setPathAndQuery(pathAndQuerystr);
+			requestLine.setQuery(queryStr);
+			requestLine.setVersion(version);
+			requestLine.setProtocol(protocol);
+			requestLine.setLine(line);
+
+			return requestLine;
+		} catch (Exception e) {
+			log.error(e.toString(), e);
+			throw new AioDecodeException(e);
 		}
-
-		String version = line.substring(index2 + 1);
-
-		RequestLine requestLine = new RequestLine();
-		requestLine.setMethod(method);
-		requestLine.setPath(path);
-		requestLine.setPathAndQuery(pathAndQuerystr);
-		requestLine.setQuery(queryStr);
-		requestLine.setVersion(version);
-		requestLine.setLine(line);
-
-		return requestLine;
 	}
 
 	/**

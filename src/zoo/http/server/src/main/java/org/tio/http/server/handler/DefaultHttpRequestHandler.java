@@ -14,13 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
 import org.tio.http.common.Cookie;
+import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpConst;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.RequestLine;
+import org.tio.http.common.handler.IHttpRequestHandler;
 import org.tio.http.common.session.HttpSession;
-import org.tio.http.common.HttpConfig;
 import org.tio.http.server.listener.IHttpServerListener;
 import org.tio.http.server.mvc.Routes;
 import org.tio.http.server.util.ClassUtils;
@@ -71,6 +72,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 	private IHttpServerListener httpServerListener;
 
+	private GuavaCache staticResCache;
+
 	/**
 	 *
 	 * @param httpConfig
@@ -81,16 +84,16 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 		if (httpConfig.getMaxLiveTimeOfStaticRes() > 0) {
 			//			GuavaCache.register(STATIC_RES_CACHENAME, (long) httpConfig.getMaxLiveTimeOfStaticRes(), null);
-			GuavaCache.register(STATIC_RES_CONTENT_CACHENAME, (long) httpConfig.getMaxLiveTimeOfStaticRes(), null);
+			staticResCache = GuavaCache.register(STATIC_RES_CONTENT_CACHENAME, (long) httpConfig.getMaxLiveTimeOfStaticRes(), null);
 		}
 
 		//		Integer concurrencyLevel = 8;
-		//		Long expireAfterWrite = null;
-		//		Long expireAfterAccess = httpConfig.getSessionTimeout();
+		//		Long timeToLiveSeconds = null;
+		//		Long timeToIdleSeconds = httpConfig.getSessionTimeout();
 		//		Integer initialCapacity = 10;
 		//		Integer maximumSize = 100000000;
 		//		boolean recordStats = false;
-		//		loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats);
+		//		loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, timeToLiveSeconds, timeToIdleSeconds, initialCapacity, maximumSize, recordStats);
 	}
 
 	//	private static String randomCookieValue() {
@@ -135,11 +138,18 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		return sessionCookie;
 	}
 
+	/**
+	 * @return the staticResCache
+	 */
+	public GuavaCache getStaticResCache() {
+		return staticResCache;
+	}
+
 	@Override
-	public HttpResponse handler(HttpRequest request, RequestLine requestLine, ChannelContext channelContext) throws Exception {
+	public HttpResponse handler(HttpRequest request, RequestLine requestLine) throws Exception {
 		HttpResponse ret = null;
 		try {
-			processCookieBeforeHandler(request, requestLine, channelContext);
+			processCookieBeforeHandler(request, requestLine);
 			HttpSession httpSession = request.getHttpSession();//(HttpSession) channelContext.getAttribute();
 
 			//			GuavaCache guavaCache = GuavaCache.getCache(STATIC_RES_CACHENAME);
@@ -149,7 +159,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			//			}
 
 			if (httpServerListener != null) {
-				ret = httpServerListener.doBeforeHandler(request, requestLine, channelContext, ret);
+				ret = httpServerListener.doBeforeHandler(request, requestLine, ret);
 				if (ret != null) {
 					return ret;
 				}
@@ -180,12 +190,12 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 						try {
 							if (paramType.isAssignableFrom(HttpRequest.class)) {
 								paramValues[i] = request;
+							} else if (paramType == HttpSession.class) {
+								paramValues[i] = httpSession;
 							} else if (paramType.isAssignableFrom(HttpConfig.class)) {
 								paramValues[i] = httpConfig;
 							} else if (paramType.isAssignableFrom(ChannelContext.class)) {
-								paramValues[i] = channelContext;
-							} else if (paramType == HttpSession.class) {
-								paramValues[i] = httpSession;
+								paramValues[i] = request.getChannelContext();
 							} else {
 								if (params != null) {
 									if (ClassUtils.isSimpleTypeOrArray(paramType)) {
@@ -319,18 +329,18 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 				}
 			}
 
-			ret = resp404(request, requestLine, channelContext);//Resps.html(request, "404--并没有找到你想要的内容", httpConfig.getCharset());
+			ret = resp404(request, requestLine);//Resps.html(request, "404--并没有找到你想要的内容", httpConfig.getCharset());
 			return ret;
 		} catch (Exception e) {
 			logError(request, requestLine, e);
-			ret = resp500(request, requestLine, channelContext, e);//Resps.html(request, "500--服务器出了点故障", httpConfig.getCharset());
+			ret = resp500(request, requestLine, e);//Resps.html(request, "500--服务器出了点故障", httpConfig.getCharset());
 			return ret;
 		} finally {
 			if (ret != null) {
 				try {
-					processCookieAfterHandler(request, requestLine, channelContext, ret);
+					processCookieAfterHandler(request, requestLine, ret);
 					if (httpServerListener != null) {
-						httpServerListener.doAfterHandler(request, requestLine, channelContext, ret);
+						httpServerListener.doAfterHandler(request, requestLine, ret);
 					}
 				} catch (Exception e) {
 					logError(request, requestLine, e);
@@ -360,7 +370,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 	}
 
-	private void processCookieAfterHandler(HttpRequest request, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws ExecutionException {
+	private void processCookieAfterHandler(HttpRequest request, RequestLine requestLine, HttpResponse httpResponse) throws ExecutionException {
 		HttpSession httpSession = request.getHttpSession();//(HttpSession) channelContext.getAttribute();//.getHttpSession();//not null
 		Cookie cookie = getSessionCookie(request, httpConfig);
 		String sessionId = null;
@@ -376,7 +386,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			cookie = new Cookie(domain, name, sessionId, maxAge);
 			httpResponse.addCookie(cookie);
 			httpConfig.getSessionStore().put(sessionId, httpSession);
-			log.info("{} 创建会话Cookie, {}", channelContext, cookie);
+			log.info("{} 创建会话Cookie, {}", request.getChannelContext(), cookie);
 		} else {
 			sessionId = cookie.getValue();
 			HttpSession httpSession1 = (HttpSession) httpConfig.getSessionStore().get(sessionId);
@@ -396,7 +406,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		}
 	}
 
-	private void processCookieBeforeHandler(HttpRequest request, RequestLine requestLine, ChannelContext channelContext) throws ExecutionException {
+	private void processCookieBeforeHandler(HttpRequest request, RequestLine requestLine) throws ExecutionException {
 		Cookie cookie = getSessionCookie(request, httpConfig);
 		HttpSession httpSession = null;
 		if (cookie == null) {
@@ -406,7 +416,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			String sessionId = cookie.getValue();
 			httpSession = (HttpSession) httpConfig.getSessionStore().get(sessionId);
 			if (httpSession == null) {
-				log.info("{} session【{}】超时", channelContext, sessionId);
+				log.info("{} session【{}】超时", request.getChannelContext(), sessionId);
 				httpSession = createSession();
 			}
 		}
@@ -414,12 +424,12 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	}
 
 	@Override
-	public HttpResponse resp404(HttpRequest request, RequestLine requestLine, ChannelContext channelContext) {
+	public HttpResponse resp404(HttpRequest request, RequestLine requestLine) {
 		String file404 = httpConfig.getPage404();
 		String root = httpConfig.getRoot();
 		File file = new File(root, file404);
 		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(request, file404 + "?initpath=" + requestLine.getPathAndQuery());
+			HttpResponse ret = Resps.redirect(request, file404 + "?tio_initpath=" + requestLine.getPathAndQuery());
 			return ret;
 		} else {
 			HttpResponse ret = Resps.html(request, "404");
@@ -428,12 +438,12 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	}
 
 	@Override
-	public HttpResponse resp500(HttpRequest request, RequestLine requestLine, ChannelContext channelContext, Throwable throwable) {
+	public HttpResponse resp500(HttpRequest request, RequestLine requestLine, Throwable throwable) {
 		String file500 = httpConfig.getPage500();
 		String root = httpConfig.getRoot();
 		File file = new File(root, file500);
 		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(request, file500 + "?initpath=" + requestLine.getPathAndQuery());
+			HttpResponse ret = Resps.redirect(request, file500 + "?tio_initpath=" + requestLine.getPathAndQuery());
 			return ret;
 		} else {
 			HttpResponse ret = Resps.html(request, "500");
@@ -450,6 +460,20 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 	public void setHttpServerListener(IHttpServerListener httpServerListener) {
 		this.httpServerListener = httpServerListener;
+	}
+
+	/**
+	 * @param staticResCache the staticResCache to set
+	 */
+	public void setStaticResCache(GuavaCache staticResCache) {
+		this.staticResCache = staticResCache;
+	}
+
+	@Override
+	public void clearStaticResCache(HttpRequest request) {
+		if (staticResCache != null) {
+			staticResCache.clear();
+		}
 	}
 
 }

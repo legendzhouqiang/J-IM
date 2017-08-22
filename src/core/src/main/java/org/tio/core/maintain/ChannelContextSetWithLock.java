@@ -20,9 +20,9 @@ public class ChannelContextSetWithLock {
 
 	public void add(ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
-		if (groupContext.isShortConnection()) {
-			return;
-		}
+//		if (groupContext.isShortConnection()) {
+//			return;
+//		}
 
 		Lock lock = setWithLock.getLock().writeLock();
 
@@ -43,9 +43,9 @@ public class ChannelContextSetWithLock {
 
 	public boolean remove(ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
-		if (groupContext.isShortConnection()) {
-			return true;
-		}
+//		if (groupContext.isShortConnection()) {
+//			return true;
+//		}
 
 		Lock lock = setWithLock.getLock().writeLock();
 

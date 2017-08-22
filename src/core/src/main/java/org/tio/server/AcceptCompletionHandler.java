@@ -1,5 +1,6 @@
 package org.tio.server;
 
+import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -51,6 +52,8 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			channelContext.getStat().setTimeFirstConnected(SystemTimer.currentTimeMillis());
 			channelContext.getIpStat().getActivatedCount().incrementAndGet();
 			channelContext.traceClient(ChannelAction.CONNECT, null, null);
+			
+			serverGroupContext.connecteds.add(channelContext);
 			try {
 				serverAioListener.onAfterConnected(channelContext, true, false);
 			} catch (Exception e) {

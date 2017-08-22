@@ -16,7 +16,7 @@ public class HttpServerUtils {
 	private static Logger log = LoggerFactory.getLogger(HttpServerUtils.class);
 
 	/**
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 * @author tanyaowu

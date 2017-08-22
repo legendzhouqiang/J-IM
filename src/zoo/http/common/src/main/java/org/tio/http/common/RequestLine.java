@@ -9,6 +9,7 @@ public class RequestLine {
 	private String path; //譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是/user/get
 	private String query; //譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是name=tan&id=789
 	private String pathAndQuery;
+	private String protocol;
 	private String version;
 	private String line;
 
@@ -88,5 +89,19 @@ public class RequestLine {
 	 */
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	/**
+	 * @return the protocol
+	 */
+	public String getProtocol() {
+		return protocol;
+	}
+
+	/**
+	 * @param protocol the protocol to set
+	 */
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 }

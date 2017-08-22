@@ -59,10 +59,24 @@ public class HttpResponse extends HttpPacket {
 		this.request = request;
 
 		String Connection = StringUtils.lowerCase(request.getHeader(HttpConst.RequestHeaderKey.Connection));
-		if (StringUtils.equals(Connection, HttpConst.RequestHeaderValue.Connection.keep_alive)) {
-			addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.keep_alive);
-			addHeader(HttpConst.ResponseHeaderKey.Keep_Alive, "timeout=10, max=20");
+		RequestLine requestLine = request.getRequestLine();
+		String version = requestLine.getVersion();
+		if ("1.0".equals(version)) {
+			if (StringUtils.equals(Connection, HttpConst.RequestHeaderValue.Connection.keep_alive)) {
+				addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.keep_alive);
+				addHeader(HttpConst.ResponseHeaderKey.Keep_Alive, "timeout=10, max=20");
+			} else {
+				addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.close);
+			}
+		} else {
+			if (StringUtils.equals(Connection, HttpConst.RequestHeaderValue.Connection.close)) {
+				addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.close);
+			} else {
+				addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.keep_alive);
+				addHeader(HttpConst.ResponseHeaderKey.Keep_Alive, "timeout=10, max=20");
+			}
 		}
+		
 
 		if (httpConfig != null) {
 			addHeader(HttpConst.ResponseHeaderKey.Server, httpConfig.getServerInfo());

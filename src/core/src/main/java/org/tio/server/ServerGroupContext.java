@@ -108,9 +108,18 @@ public class ServerGroupContext extends GroupContext {
 									groups = objwithlock.getObj().size();
 								}
 
-								log.info("{}, [{}]:[{}]: 当前连接个数:{}, 群组(g):{}, 共接受连接:{}, 一共关闭过的连接个数:{}, 已接收消息:({}p)({}b), 已处理消息:{}p, 已发送消息:({}p)({}b)", ServerGroupContext.this.name, SystemTimer.currentTimeMillis(),
-										id, set.size(), groups, serverGroupStat.getAccepted().get(), serverGroupStat.getClosed().get(), serverGroupStat.getReceivedPacket().get(),
-										serverGroupStat.getReceivedBytes().get(), serverGroupStat.getHandledPacket().get(), serverGroupStat.getSentPacket().get(),
+								log.info("{}, [{}]:[{}]: 当前连接个数:{}, 群组(g):{}, 共接受连接:{}, 一共关闭过的连接个数:{}, 已接收消息:({}p)({}b), 已处理消息:{}p, 已发送消息:({}p)({}b)", 
+										ServerGroupContext.this.name, 
+										SystemTimer.currentTimeMillis(),
+										id, 
+										set.size(), 
+										groups, 
+										serverGroupStat.getAccepted().get(), 
+										serverGroupStat.getClosed().get(), 
+										serverGroupStat.getReceivedPacket().get(),
+										serverGroupStat.getReceivedBytes().get(), 
+										serverGroupStat.getHandledPacket().get(), 
+										serverGroupStat.getSentPacket().get(),
 										serverGroupStat.getSentBytes().get());
 							}
 

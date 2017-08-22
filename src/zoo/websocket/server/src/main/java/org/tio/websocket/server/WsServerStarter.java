@@ -42,6 +42,13 @@ public class WsServerStarter {
 	}
 
 	/**
+	 * @return the wsServerConfig
+	 */
+	public WsServerConfig getHttpConfig() {
+		return wsServerConfig;
+	}
+
+	/**
 	 * @return the wsMsgHandler
 	 */
 	public IWsMsgHandler getHttpRequestHandler() {
@@ -60,13 +67,6 @@ public class WsServerStarter {
 	 */
 	public WsServerAioListener getHttpServerAioListener() {
 		return wsServerAioListener;
-	}
-
-	/**
-	 * @return the wsServerConfig
-	 */
-	public WsServerConfig getHttpConfig() {
-		return wsServerConfig;
 	}
 
 	/**
@@ -96,6 +96,7 @@ public class WsServerStarter {
 		wsServerAioListener = new WsServerAioListener();
 		serverGroupContext = new ServerGroupContext(wsServerAioHandler, wsServerAioListener, tioExecutor, groupExecutor);
 		serverGroupContext.setHeartbeatTimeout(0);
+		serverGroupContext.setName("Tio Websocket Server");
 
 		aioServer = new AioServer(serverGroupContext);
 

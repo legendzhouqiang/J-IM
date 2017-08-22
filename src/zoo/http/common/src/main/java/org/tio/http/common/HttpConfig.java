@@ -1,5 +1,6 @@
 package org.tio.http.common;
 
+import org.tio.http.common.handler.IHttpRequestHandler;
 import org.tio.http.common.session.id.ISessionIdGenerator;
 import org.tio.utils.cache.ICache;
 
@@ -56,7 +57,7 @@ public class HttpConfig {
 
 	/**
 	 * 存放HttpSession对象的cacheName
-	
+
 	 */
 	private String sessionCacheName = SESSION_CACHE_NAME;
 
@@ -79,6 +80,8 @@ public class HttpConfig {
 	private String page500 = "/500.html";
 
 	private ISessionIdGenerator sessionIdGenerator;
+	
+	private IHttpRequestHandler httpRequestHandler;
 
 	/**
 	 * 示例：
@@ -252,5 +255,19 @@ public class HttpConfig {
 	public void setSessionStore(ICache sessionStore) {
 		this.sessionStore = sessionStore;
 		//		this.httpSessionManager = HttpSessionManager.getInstance(sessionStore);
+	}
+
+	/**
+	 * @return the httpRequestHandler
+	 */
+	public IHttpRequestHandler getHttpRequestHandler() {
+		return httpRequestHandler;
+	}
+
+	/**
+	 * @param httpRequestHandler the httpRequestHandler to set
+	 */
+	public void setHttpRequestHandler(IHttpRequestHandler httpRequestHandler) {
+		this.httpRequestHandler = httpRequestHandler;
 	}
 }
