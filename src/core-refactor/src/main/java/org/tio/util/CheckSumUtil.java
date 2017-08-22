@@ -18,13 +18,15 @@ public class CheckSumUtil {
      * @param msg
      * @return
      */
-    public static byte calcCheckSum(byte[] msg) {
+    public static byte calcCheckSum(byte[][] msg) {
 
         /** 逐Byte添加位数和 */
         long mSum = 0;
-        for (byte byteMsg : msg) {
-            long mNum = ((long) byteMsg >= 0) ? (long) byteMsg : ((long) byteMsg + 256);
-            mSum += mNum;
+        for (byte[] msgByteArr : msg) {
+            for (byte byteMsg : msgByteArr) {
+                long mNum = ((long) byteMsg >= 0) ? (long) byteMsg : ((long) byteMsg + 256);
+                mSum += mNum;
+            }
         }
         /** end of for (int liv_Count = 0; liv_Count < length; liv_Count++) */
 
@@ -33,14 +35,17 @@ public class CheckSumUtil {
 
     /**
      * 检查校验和
+     *
      * @param msg
      * @return
      */
-    public static boolean judgeCheckSum(byte[] msg) {
+    public static boolean judgeCheckSum(byte[][] msg) {
         long mSum = 0;
-        for (byte byteMsg : msg) {
-            long mNum = ((long) byteMsg >= 0) ? (long) byteMsg : ((long) byteMsg + 256);
-            mSum += mNum;
+        for (byte[] msgByteArr : msg) {
+            for (byte byteMsg : msgByteArr) {
+                long mNum = ((long) byteMsg >= 0) ? (long) byteMsg : ((long) byteMsg + 256);
+                mSum += mNum;
+            }
         }
         return mSum == 0;
     }

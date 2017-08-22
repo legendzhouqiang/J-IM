@@ -82,21 +82,21 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
             byteBuffer = mergeByteBuffer(byteBuffer);
         }
         byte[] bodyData = new byte[bodyLen - 2];
-        byteBuffer.get(optData, 0, bodyLen - 2);
+        byteBuffer.get(bodyData, 0, bodyLen - 2);
         packet.setBody(bodyData);
 
         if (byteBuffer.hasRemaining()) {
-            boolean flag = msgQueue.offerFirst(byteBuffer);
+            boolean flag = msgQueue.offerFirst(byteBuffer.slice());
             if (!flag) {
                 log.warn("");
             }
         }
-
-        byte[] msg = new byte[Packet.headerSize+optLen+bodyLen];
-
         // TODO: 2017/8/21 校验校验和
         if (context.isUse_checksum()) {
-            if (CheckSumUtil.judgeCheckSum(msg)) {
+            byte[][] bytes = {
+                    packet.header(), optData, new byte[]{(byte) (packetSeq >> 8), (byte) packetSeq}, bodyData
+            };
+            if (CheckSumUtil.judgeCheckSum(bytes)) {
                 context.getHandlerRunnable().addMsg(packet);
             } else {
                 log.warn("");
