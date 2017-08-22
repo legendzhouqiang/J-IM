@@ -73,7 +73,9 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 
 			groupContext.getGroupStat().getHandledPacket().incrementAndGet();
 			groupContext.getGroupStat().getHandledBytes().addAndGet(packet.getByteCount());
-
+			
+			channelContext.getIpStat().getHandledPackets().incrementAndGet();
+			channelContext.getIpStat().getHandledBytes().addAndGet(packet.getByteCount());
 		}
 
 		//		return ret;

@@ -101,42 +101,34 @@ public class ServerGroupContext extends GroupContext {
 						try {
 							readLock.unlock();
 
-							//							if (log.isWarnEnabled())
-							//							{
-							//								int groups = 0;
-							//								ObjWithLock<Set<ChannelContext>> objwithlock = ServerGroupContext.this.getGroups().clients("g");
-							//								if (objwithlock != null)
-							//								{
-							//									groups = objwithlock.getObj().size();
-							//								}
-							//
-							//								log.warn("[{}]:[{}]: 当前连接个数:{}, 群组(g):{}, 共接受连接:{}, 一共关闭过的连接个数:{}, 已接收消息:({}p)({}b), 已处理消息:{}p, 已发送消息:({}p)({}b)", SystemTimer.currentTimeMillis(), id,
-							//										set.size(), groups, serverGroupStat.getAccepted().get(), serverGroupStat.getClosed().get(), serverGroupStat.getReceivedPacket().get(),
-							//										serverGroupStat.getReceivedBytes().get(), serverGroupStat.getHandledPacket().get(), serverGroupStat.getSentPacket().get(),
-							//										serverGroupStat.getSentBytes().get());
-							//							}
-							//
-							//							//打印各集合信息
-							//							if (log.isWarnEnabled())
-							//							{
-							//								log.warn("clientNodes:{},connections:{},connecteds:{},closeds:{},groups:[channelmap:{}, groupmap:{}],users:{},syns:{}",
-							//										ServerGroupContext.this.clientNodes.getMap().getObj().size(),
-							//										ServerGroupContext.this.connections.getSetWithLock().getObj().size(),
-							//										ServerGroupContext.this.connecteds.getSetWithLock().getObj().size(),
-							//										ServerGroupContext.this.closeds.getSetWithLock().getObj().size(),
-							//										ServerGroupContext.this.groups.getChannelmap().getObj().size(), ServerGroupContext.this.groups.getGroupmap().getObj().size(),
-							//										ServerGroupContext.this.users.getMap().getObj().size(),
-							//										ServerGroupContext.this.waitingResps.getMap().getObj().size()
-							//										);
-							//							}
-							//
-							//							if (log.isInfoEnabled())
-							//							{
-							//								long end = SystemTimer.currentTimeMillis();
-							//								long iv1 = start1 - start;
-							//								long iv = end - start1;
-							//								log.info("检查心跳, 共{}个连接, 取锁耗时{}ms, 循环耗时{}ms, 心跳超时时间:{}ms", count, iv1, iv, heartbeatTimeout);
-							//							}
+							if (log.isInfoEnabled()) {
+								int groups = 0;
+								ObjWithLock<Set<ChannelContext>> objwithlock = ServerGroupContext.this.groups.clients(ServerGroupContext.this, "g");
+								if (objwithlock != null) {
+									groups = objwithlock.getObj().size();
+								}
+
+								log.info("{}, [{}]:[{}]: 当前连接个数:{}, 群组(g):{}, 共接受连接:{}, 一共关闭过的连接个数:{}, 已接收消息:({}p)({}b), 已处理消息:{}p, 已发送消息:({}p)({}b)", ServerGroupContext.this.name, SystemTimer.currentTimeMillis(),
+										id, set.size(), groups, serverGroupStat.getAccepted().get(), serverGroupStat.getClosed().get(), serverGroupStat.getReceivedPacket().get(),
+										serverGroupStat.getReceivedBytes().get(), serverGroupStat.getHandledPacket().get(), serverGroupStat.getSentPacket().get(),
+										serverGroupStat.getSentBytes().get());
+							}
+
+							//打印各集合信息
+							if (log.isInfoEnabled()) {
+								log.info("{}, clientNodes:{},connections:{},connecteds:{},closeds:{},groups:[channelmap:{}, groupmap:{}],users:{},syns:{}",ServerGroupContext.this.name,
+										ServerGroupContext.this.clientNodes.getMap().getObj().size(), ServerGroupContext.this.connections.getSetWithLock().getObj().size(),
+										ServerGroupContext.this.connecteds.getSetWithLock().getObj().size(), ServerGroupContext.this.closeds.getSetWithLock().getObj().size(),
+										ServerGroupContext.this.groups.getChannelmap().getObj().size(), ServerGroupContext.this.groups.getGroupmap().getObj().size(),
+										ServerGroupContext.this.users.getMap().getObj().size(), ServerGroupContext.this.waitingResps.getMap().getObj().size());
+							}
+
+							if (log.isInfoEnabled()) {
+								long end = SystemTimer.currentTimeMillis();
+								long iv1 = start1 - start;
+								long iv = end - start1;
+								log.info("{}, 检查心跳, 共{}个连接, 取锁耗时{}ms, 循环耗时{}ms, 心跳超时时间:{}ms", ServerGroupContext.this.name, count, iv1, iv, heartbeatTimeout);
+							}
 							Thread.sleep(heartbeatTimeout);
 						} catch (Exception e) {
 							log.error("", e);
@@ -214,4 +206,5 @@ public class ServerGroupContext extends GroupContext {
 	public ServerGroupStat getServerGroupStat() {
 		return serverGroupStat;
 	}
+
 }

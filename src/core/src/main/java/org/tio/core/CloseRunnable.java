@@ -129,6 +129,7 @@ public class CloseRunnable implements Runnable {
 				log.info("{} 准备关闭连接, isNeedRemove:{}, {}", channelContext, isRemove, remark);
 
 				try {
+					channelContext.getIpStat().getActivatedCount().decrementAndGet();
 					if (isRemove) {
 						MaintainUtils.removeFromMaintain(channelContext);
 					} else {

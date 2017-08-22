@@ -132,6 +132,9 @@ public class DecodeRunnable implements Runnable {
 
 					channelContext.getStat().getReceivedPackets().incrementAndGet();
 					channelContext.getStat().getReceivedBytes().addAndGet(len);
+					
+					channelContext.getIpStat().getReceivedPackets().incrementAndGet();
+					channelContext.getIpStat().getReceivedBytes().addAndGet(len);
 
 					channelContext.traceClient(ChannelAction.RECEIVED, packet, null);
 
@@ -164,8 +167,12 @@ public class DecodeRunnable implements Runnable {
 				}
 			}
 		} catch (AioDecodeException e) {
-			log.error(channelContext.toString() + "解码异常", e);
+//			log.error(channelContext.toString() + "解码异常", e);
 			Aio.close(channelContext, e, "解码异常:" + e.getMessage());
+			int errorCount = channelContext.getIpStat().getDecodeErrorCount().incrementAndGet();
+			if (errorCount > 10) {
+				
+			}
 			return;
 		}
 	}

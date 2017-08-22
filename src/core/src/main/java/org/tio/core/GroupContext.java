@@ -20,6 +20,7 @@ import org.tio.core.maintain.ClientNodes;
 import org.tio.core.maintain.Groups;
 import org.tio.core.maintain.Ids;
 import org.tio.core.maintain.IpBlacklist;
+import org.tio.core.maintain.Ips;
 import org.tio.core.maintain.Users;
 import org.tio.core.stat.GroupStat;
 import org.tio.utils.prop.MapWithLockPropSupport;
@@ -87,11 +88,12 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	public final Groups groups = new Groups();
 	public final Users users = new Users();
 	public final Ids ids = new Ids();
+	public Ips ips = null;
 
 	/**
 	 * ip黑名单
 	 */
-	public final IpBlacklist ipBlacklist = new IpBlacklist();
+	public IpBlacklist ipBlacklist = null;//new IpBlacklist();
 
 	public final ChannelContextMapWithLock waitingResps = new ChannelContextMapWithLock();
 
@@ -101,8 +103,17 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	private boolean isEncodeCareWithChannelContext = true;
 
 	protected String id;
+	
+	/**
+	 * 解码异常多少次就把ip拉黑
+	 */
+	protected int maxDecodeErrorCountForIp = 10;
+
+	protected String name;
 
 	private boolean isStopped = false;
+
+	
 
 	public GroupContext() {
 		this(null, null);
@@ -111,7 +122,8 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	public GroupContext(SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		super();
 		this.id = ID_ATOMIC.incrementAndGet() + "";
-
+		this.ipBlacklist = new IpBlacklist(id);
+		this.ips = new Ips(this.id);
 		this.tioExecutor = tioExecutor;
 		if (this.tioExecutor == null) {
 			LinkedBlockingQueue<Runnable> tioQueue = new LinkedBlockingQueue<>();
@@ -202,6 +214,10 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	 */
 	public String getId() {
 		return id;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -302,6 +318,10 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	 */
 	public void setHeartbeatTimeout(long heartbeatTimeout) {
 		this.heartbeatTimeout = heartbeatTimeout;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**

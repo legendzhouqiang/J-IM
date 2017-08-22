@@ -22,30 +22,30 @@ public class GuavaUtils {
 	/**
 	 *
 	 * @param concurrencyLevel
-	 * @param expireAfterWrite 设置写缓存后过期时间（单位：秒）
-	 * @param expireAfterAccess 设置读缓存后过期时间（单位：秒）
+	 * @param timeToLiveSeconds 设置写缓存后过期时间（单位：秒）
+	 * @param timeToIdleSeconds 设置读缓存后过期时间（单位：秒）
 	 * @param initialCapacity
 	 * @param maximumSize
 	 * @param recordStats
 	 * @return
 	 */
-	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long expireAfterWrite, Long expireAfterAccess, Integer initialCapacity,
+	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long timeToLiveSeconds, Long timeToIdleSeconds, Integer initialCapacity,
 			Integer maximumSize, boolean recordStats) {
-		return createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats, null);
+		return createLoadingCache(concurrencyLevel, timeToLiveSeconds, timeToIdleSeconds, initialCapacity, maximumSize, recordStats, null);
 	}
 
 	/**
 	 *
 	 * @param concurrencyLevel
-	 * @param expireAfterWrite 设置写缓存后过期时间（单位：秒）
-	 * @param expireAfterAccess 设置读缓存后过期时间（单位：秒）
+	 * @param timeToLiveSeconds 设置写缓存后过期时间（单位：秒）
+	 * @param timeToIdleSeconds 设置读缓存后过期时间（单位：秒）
 	 * @param initialCapacity
 	 * @param maximumSize
 	 * @param recordStats
 	 * @param removalListener
 	 * @return
 	 */
-	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long expireAfterWrite, Long expireAfterAccess, Integer initialCapacity,
+	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long timeToLiveSeconds, Long timeToIdleSeconds, Integer initialCapacity,
 			Integer maximumSize, boolean recordStats, RemovalListener<K, V> removalListener) {
 
 		if (removalListener == null) {
@@ -61,13 +61,13 @@ public class GuavaUtils {
 
 		//设置并发级别为8，并发级别是指可以同时写缓存的线程数
 		cacheBuilder.concurrencyLevel(concurrencyLevel);
-		if (expireAfterWrite != null && expireAfterWrite > 0) {
+		if (timeToLiveSeconds != null && timeToLiveSeconds > 0) {
 			//设置写缓存后8秒钟过期
-			cacheBuilder.expireAfterWrite(expireAfterWrite, TimeUnit.SECONDS);
+			cacheBuilder.expireAfterWrite(timeToLiveSeconds, TimeUnit.SECONDS);
 		}
-		if (expireAfterAccess != null && expireAfterAccess > 0) {
+		if (timeToIdleSeconds != null && timeToIdleSeconds > 0) {
 			//设置访问缓存后8秒钟过期
-			cacheBuilder.expireAfterAccess(expireAfterAccess, TimeUnit.SECONDS);
+			cacheBuilder.expireAfterAccess(timeToIdleSeconds, TimeUnit.SECONDS);
 		}
 
 		//设置缓存容器的初始容量为10
@@ -104,12 +104,13 @@ public class GuavaUtils {
 
 	public static void main(String[] args) throws Exception {
 		Integer concurrencyLevel = 8;
-		Long expireAfterWrite = 1L;
-		Long expireAfterAccess = null;
+		Long timeToLiveSeconds = 1L;
+		Long timeToIdleSeconds = null;
 		Integer initialCapacity = 10;
 		Integer maximumSize = 1000;
 		boolean recordStats = false;
-		LoadingCache<String, Object> loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity, maximumSize, recordStats);
+		LoadingCache<String, Object> loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, timeToLiveSeconds, timeToIdleSeconds, initialCapacity, maximumSize,
+				recordStats);
 
 		loadingCache.put("1", "1");
 		Object o = loadingCache.get("1");

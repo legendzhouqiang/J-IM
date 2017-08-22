@@ -319,6 +319,30 @@ public abstract class Aio {
 	public static void remove(ChannelContext channelContext, String remark) {
 		remove(channelContext, null, remark);
 	}
+	
+	/**
+	 * 删除client ip为指定值的所有连接
+	 * @param groupContext
+	 * @param ip
+	 * @param remark
+	 * @author: tanyaowu
+	 */
+	public static void remove(GroupContext groupContext, String ip, String remark) {
+		SetWithLock<ChannelContext> setWithLock = Aio.getAllChannelContexts(groupContext);
+		Lock lock2 = setWithLock.getLock().readLock();
+		try {
+			lock2.lock();
+			Set<ChannelContext> set = setWithLock.getObj();
+			for (ChannelContext channelContext : set) {
+				String clientIp = channelContext.getClientNode().getIp();
+				if (StringUtils.equals(clientIp, ip)) {
+					Aio.remove(channelContext, remark);
+				}
+			}
+		} finally {
+			lock2.unlock();
+		}
+	}
 
 	/**
 	 * 和close方法一样，只不过不再进行重连等维护性的操作

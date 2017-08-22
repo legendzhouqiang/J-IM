@@ -29,7 +29,7 @@ public class RedisCache implements ICache {
 	public static RedisCache getCache(String cacheName) {
 		RedisCache redisCache = map.get(cacheName);
 		if (redisCache == null) {
-			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(redisson, cacheName, expireAfterWrite, expireAfterAccess)", cacheName, RedisCache.class.getSimpleName());
+			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(redisson, cacheName, timeToLiveSeconds, timeToIdleSeconds)", cacheName, RedisCache.class.getSimpleName());
 		}
 		return redisCache;
 	}
@@ -42,14 +42,14 @@ public class RedisCache implements ICache {
 	}
 
 	/**
-	 * expireAfterWrite和expireAfterAccess不允许同时为null
+	 * timeToLiveSeconds和timeToIdleSeconds不允许同时为null
 	 * @param cacheName
-	 * @param expireAfterWrite
-	 * @param expireAfterAccess
+	 * @param timeToLiveSeconds
+	 * @param timeToIdleSeconds
 	 * @return
 	 * @author tanyaowu
 	 */
-	public static RedisCache register(RedissonClient redisson, String cacheName, Long expireAfterWrite, Long expireAfterAccess) {
+	public static RedisCache register(RedissonClient redisson, String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds) {
 		RedisTask.start();
 
 		RedisCache redisCache = map.get(cacheName);
@@ -57,7 +57,7 @@ public class RedisCache implements ICache {
 			synchronized (RedisCache.class) {
 				redisCache = map.get(cacheName);
 				if (redisCache == null) {
-					redisCache = new RedisCache(redisson, cacheName, expireAfterWrite, expireAfterAccess);
+					redisCache = new RedisCache(redisson, cacheName, timeToLiveSeconds, timeToIdleSeconds);
 					map.put(cacheName, redisCache);
 				}
 			}
@@ -69,18 +69,18 @@ public class RedisCache implements ICache {
 
 	private String cacheName = null;
 
-	private Long expireAfterWrite = null;
+	private Long timeToLiveSeconds = null;
 
-	private Long expireAfterAccess = null;
+	private Long timeToIdleSeconds = null;
 
 	private Long timeout = null;
 
-	private RedisCache(RedissonClient redisson, String cacheName, Long expireAfterWrite, Long expireAfterAccess) {
+	private RedisCache(RedissonClient redisson, String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds) {
 		this.redisson = redisson;
 		this.cacheName = cacheName;
-		this.expireAfterWrite = expireAfterWrite;
-		this.expireAfterAccess = expireAfterAccess;
-		this.timeout = this.expireAfterWrite == null ? this.expireAfterAccess : this.expireAfterWrite;
+		this.timeToLiveSeconds = timeToLiveSeconds;
+		this.timeToIdleSeconds = timeToIdleSeconds;
+		this.timeout = this.timeToLiveSeconds == null ? this.timeToIdleSeconds : this.timeToLiveSeconds;
 
 	}
 
@@ -94,7 +94,7 @@ public class RedisCache implements ICache {
 	public Serializable get(String key) {
 		RBucket<Serializable> bucket = getBucket(key);
 		Serializable ret = bucket.get();
-		if (expireAfterAccess != null) {
+		if (timeToIdleSeconds != null) {
 			//			bucket.expire(timeout, TimeUnit.SECONDS);
 			RedisTask.add(cacheName, key, timeout);
 		}
@@ -111,20 +111,20 @@ public class RedisCache implements ICache {
 		return cacheName;
 	}
 
-	public Long getExpireAfterAccess() {
-		return expireAfterAccess;
-	}
-
-	public Long getExpireAfterWrite() {
-		return expireAfterWrite;
-	}
-
 	public RedissonClient getRedisson() {
 		return redisson;
 	}
 
 	public Long getTimeout() {
 		return timeout;
+	}
+
+	public Long getTimeToIdleSeconds() {
+		return timeToIdleSeconds;
+	}
+
+	public Long getTimeToLiveSeconds() {
+		return timeToLiveSeconds;
 	}
 
 	@Override

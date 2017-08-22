@@ -9,19 +9,28 @@ import com.alibaba.fastjson.serializer.ObjectSerializer;
 import com.jfinal.plugin.activerecord.Record;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月20日 上午8:49:05
  */
 public class JfinalRecordSerializer implements ObjectSerializer {
 	public static final JfinalRecordSerializer instance = new JfinalRecordSerializer();
+
 	/**
-	 * 
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
+
+	/**
+	 *
 	 * @author tanyaowu
 	 */
 	public JfinalRecordSerializer() {
 	}
 
-	/** 
+	/**
 	 * @param serializer
 	 * @param object
 	 * @param fieldName
@@ -41,13 +50,5 @@ public class JfinalRecordSerializer implements ObjectSerializer {
 
 		Map<String, Object> map = record.getColumns();
 		serializer.write(map);
-	}
-
-	/**
-	 * @param args
-	 * @author tanyaowu
-	 */
-	public static void main(String[] args) {
-
 	}
 }

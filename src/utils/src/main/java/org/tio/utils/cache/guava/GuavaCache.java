@@ -12,6 +12,7 @@ import org.tio.utils.GuavaUtils;
 import org.tio.utils.cache.ICache;
 
 import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
 
 /**
  *
@@ -26,20 +27,25 @@ public class GuavaCache implements ICache {
 	public static GuavaCache getCache(String cacheName) {
 		GuavaCache guavaCache = map.get(cacheName);
 		if (guavaCache == null) {
-			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, expireAfterWrite, expireAfterAccess)", cacheName, GuavaCache.class.getSimpleName());
+			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, timeToLiveSeconds, timeToIdleSeconds)", cacheName, GuavaCache.class.getSimpleName());
 		}
 		return guavaCache;
 	}
 
 	/**
-	 * expireAfterWrite和expireAfterAccess不允许同时为null
+	 * timeToLiveSeconds和timeToIdleSeconds不允许同时为null
 	 * @param cacheName
-	 * @param expireAfterWrite
-	 * @param expireAfterAccess
+	 * @param timeToLiveSeconds
+	 * @param timeToIdleSeconds
 	 * @return
 	 * @author tanyaowu
 	 */
-	public static GuavaCache register(String cacheName, Long expireAfterWrite, Long expireAfterAccess) {
+	public static GuavaCache register(String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds) {
+		GuavaCache guavaCache = register(cacheName, timeToLiveSeconds, timeToIdleSeconds, null);
+		return guavaCache;
+	}
+
+	public static GuavaCache register(String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds, RemovalListener<String, Serializable> removalListener) {
 		GuavaCache guavaCache = map.get(cacheName);
 		if (guavaCache == null) {
 			synchronized (GuavaCache.class) {
@@ -49,8 +55,8 @@ public class GuavaCache implements ICache {
 					Integer initialCapacity = 10;
 					Integer maximumSize = 1000000000;
 					boolean recordStats = false;
-					LoadingCache<String, Serializable> loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, expireAfterWrite, expireAfterAccess, initialCapacity,
-							maximumSize, recordStats);
+					LoadingCache<String, Serializable> loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, timeToLiveSeconds, timeToIdleSeconds, initialCapacity,
+							maximumSize, recordStats, removalListener);
 					guavaCache = new GuavaCache(loadingCache);
 					map.put(cacheName, guavaCache);
 				}
@@ -58,6 +64,8 @@ public class GuavaCache implements ICache {
 		}
 		return guavaCache;
 	}
+
+	//
 
 	private LoadingCache<String, Serializable> loadingCache = null;
 
@@ -89,5 +97,23 @@ public class GuavaCache implements ICache {
 	@Override
 	public void remove(String key) {
 		loadingCache.invalidate(key);
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public ConcurrentMap<String, Serializable> asMap() {
+		return loadingCache.asMap();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public long size() {
+		return loadingCache.size();
 	}
 }

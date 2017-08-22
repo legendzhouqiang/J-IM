@@ -49,6 +49,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			channelContext.setServerNode(aioServer.getServerNode());
 			ServerAioListener serverAioListener = serverGroupContext.getServerAioListener();
 			channelContext.getStat().setTimeFirstConnected(SystemTimer.currentTimeMillis());
+			channelContext.getIpStat().getActivatedCount().incrementAndGet();
 			channelContext.traceClient(ChannelAction.CONNECT, null, null);
 			try {
 				serverAioListener.onAfterConnected(channelContext, true, false);

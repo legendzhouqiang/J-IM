@@ -127,6 +127,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 		if (isSentSuccess) {
 			groupStat.getSentBytes().addAndGet(result);
 			channelStat.getSentBytes().addAndGet(result);
+			channelContext.getIpStat().getSentBytes().addAndGet(result);
 		}
 
 		int packetCount = 0;
@@ -138,6 +139,8 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 				if (isSentSuccess) {
 					groupStat.getSentPacket().incrementAndGet();
 					channelStat.getSentPackets().incrementAndGet();
+					channelContext.getIpStat().getSentPackets().incrementAndGet();
+
 				}
 				handleOne(result, throwable, attachment, isSentSuccess);
 			} else {
@@ -146,6 +149,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 					packetCount = ps.size();
 					groupStat.getSentPacket().addAndGet(packetCount);
 					channelStat.getSentPackets().addAndGet(packetCount);
+					channelContext.getIpStat().getSentPackets().addAndGet(packetCount);
 				}
 
 				for (Object obj : ps) {

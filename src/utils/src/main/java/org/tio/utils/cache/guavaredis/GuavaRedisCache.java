@@ -34,7 +34,7 @@ public class GuavaRedisCache implements ICache {
 	public static GuavaRedisCache getCache(String cacheName) {
 		GuavaRedisCache guavaRedisCache = map.get(cacheName);
 		if (guavaRedisCache == null) {
-			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, expireAfterWrite, expireAfterAccess)", cacheName, GuavaRedisCache.class.getSimpleName());
+			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, timeToLiveSeconds, timeToIdleSeconds)", cacheName, GuavaRedisCache.class.getSimpleName());
 		}
 		return guavaRedisCache;
 	}
@@ -82,7 +82,7 @@ public class GuavaRedisCache implements ICache {
 
 	}
 
-	public static GuavaRedisCache register(RedissonClient redisson, String cacheName, Long expireAfterWrite, Long expireAfterAccess) {
+	public static GuavaRedisCache register(RedissonClient redisson, String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds) {
 		init(redisson);
 
 		GuavaRedisCache guavaRedisCache = map.get(cacheName);
@@ -90,8 +90,8 @@ public class GuavaRedisCache implements ICache {
 			synchronized (GuavaRedisCache.class) {
 				guavaRedisCache = map.get(cacheName);
 				if (guavaRedisCache == null) {
-					RedisCache redisCache = RedisCache.register(redisson, cacheName, expireAfterWrite, expireAfterAccess);
-					GuavaCache guavaCache = GuavaCache.register(cacheName, expireAfterWrite, expireAfterAccess);
+					RedisCache redisCache = RedisCache.register(redisson, cacheName, timeToLiveSeconds, timeToIdleSeconds);
+					GuavaCache guavaCache = GuavaCache.register(cacheName, timeToLiveSeconds, timeToIdleSeconds);
 
 					guavaRedisCache = new GuavaRedisCache(cacheName, guavaCache, redisCache);
 					map.put(cacheName, guavaRedisCache);
@@ -153,9 +153,9 @@ public class GuavaRedisCache implements ICache {
 				guavaCache.put(key, ret);
 			}
 		} else {
-			Long expireAfterAccess = redisCache.getExpireAfterAccess();
-			if (expireAfterAccess != null) {
-				RedisTask.add(cacheName, key, expireAfterAccess);
+			Long timeToIdleSeconds = redisCache.getTimeToIdleSeconds();
+			if (timeToIdleSeconds != null) {
+				RedisTask.add(cacheName, key, timeToIdleSeconds);
 			}
 		}
 		return ret;
