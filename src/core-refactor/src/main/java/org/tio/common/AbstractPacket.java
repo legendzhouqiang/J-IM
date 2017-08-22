@@ -4,7 +4,6 @@ package org.tio.common;
  * Copyright (c) for darkidiot
  * Date:2017/8/21
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
- * School: CUIT
  * Desc:
  */
 public class AbstractPacket implements Packet {
@@ -33,6 +32,17 @@ public class AbstractPacket implements Packet {
     @Override
     public Packet setPacketType(byte packetType) {
         this.type = packetType;
+        return this;
+    }
+
+    @Override
+    public boolean needReply() {
+        return (type & 0x80) == 0x80;
+    }
+
+    @Override
+    public Packet setNeedReplay() {
+        type &= 0x80;
         return this;
     }
 

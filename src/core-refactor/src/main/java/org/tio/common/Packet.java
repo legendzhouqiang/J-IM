@@ -21,6 +21,10 @@ public interface Packet extends Serializable {
 
     Packet setPacketType(byte packetType);
 
+    boolean needReply();
+
+    Packet setNeedReplay();
+
     /** 保留字段 */
     byte reserved();
 
