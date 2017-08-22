@@ -1,8 +1,10 @@
 package org.tio.runnable;
 
+import lombok.extern.slf4j.Slf4j;
 import org.tio.common.AbstractPacket;
 import org.tio.common.ChannelContext;
 import org.tio.common.Packet;
+import org.tio.util.CheckSumUtil;
 
 import java.nio.ByteBuffer;
 
@@ -12,6 +14,7 @@ import java.nio.ByteBuffer;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:  t-io解码器
  */
+@Slf4j
 public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
     private ChannelContext context;
@@ -84,13 +87,21 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
         if (byteBuffer.hasRemaining()) {
             boolean flag = msgQueue.offerFirst(byteBuffer);
+            if (!flag) {
+                log.warn("");
+            }
         }
+
+        byte[] msg = new byte[Packet.headerSize+optLen+bodyLen];
 
         // TODO: 2017/8/21 校验校验和
         if (context.isUse_checksum()) {
-
+            if (CheckSumUtil.judgeCheckSum(msg)) {
+                context.getHandlerRunnable().addMsg(packet);
+            } else {
+                log.warn("");
+            }
         }
-        context.getHandlerRunnable().addMsg(packet);
     }
 
     private ByteBuffer mergeByteBuffer(ByteBuffer byteBuffer) throws InterruptedException {
