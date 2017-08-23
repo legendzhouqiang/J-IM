@@ -1,9 +1,10 @@
 package org.tio.runnable;
 
 import org.tio.common.ChannelContext;
-import org.tio.common.Packet;
+import org.tio.handler.WriteCompletionHandler;
 
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousSocketChannel;
 
 /**
  * Copyright (c) for darkidiot
@@ -21,6 +22,7 @@ public class SendTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
     @Override
     public void runTask(ByteBuffer byteBuffer) {
-
+        AsynchronousSocketChannel channel = context.getAsynchronousSocketChannel();
+        channel.write(byteBuffer, new Object(), new WriteCompletionHandler());
     }
 }

@@ -23,7 +23,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 @Slf4j
 public class ClientChannelContext extends ChannelContext {
 
-    private AsynchronousSocketChannel asynchronousSocketChannel;
+
 
     private Node server;
 
