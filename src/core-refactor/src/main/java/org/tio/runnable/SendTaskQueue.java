@@ -3,13 +3,15 @@ package org.tio.runnable;
 import org.tio.common.ChannelContext;
 import org.tio.common.Packet;
 
+import java.nio.ByteBuffer;
+
 /**
  * Copyright (c) for darkidiot
  * Date:2017/8/21
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
- * Desc:
+ * Desc: t-io
  */
-public class SendTaskQueue extends AbstractTaskQueue<Packet> {
+public class SendTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
     private ChannelContext context;
 
@@ -18,7 +20,7 @@ public class SendTaskQueue extends AbstractTaskQueue<Packet> {
     }
 
     @Override
-    public void runTask(Packet packet) {
+    public void runTask(ByteBuffer byteBuffer) {
 
     }
 }

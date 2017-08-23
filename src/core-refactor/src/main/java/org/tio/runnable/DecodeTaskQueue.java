@@ -88,10 +88,9 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
         if (byteBuffer.hasRemaining()) {
             boolean flag = msgQueue.offerFirst(byteBuffer.slice());
             if (!flag) {
-                log.warn("");
+                log.warn("put the left ByteBuffer into msgQueue failed.");
             }
         }
-        // TODO: 2017/8/21 校验校验和
         if (context.isUse_checksum()) {
             byte[][] bytes = {
                     packet.header(), optData, new byte[]{(byte) (packetSeq >> 8), (byte) packetSeq}, bodyData
@@ -99,7 +98,7 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
             if (CheckSumUtil.judgeCheckSum(bytes)) {
                 context.getHandlerRunnable().addMsg(packet);
             } else {
-                log.warn("");
+                log.warn("validate checkSum failed, and the packet[{}] will be discard.", packet);
             }
         }
     }

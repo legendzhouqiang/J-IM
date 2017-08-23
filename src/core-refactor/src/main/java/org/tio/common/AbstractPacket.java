@@ -1,11 +1,14 @@
 package org.tio.common;
 
+import lombok.ToString;
+
 /**
  * Copyright (c) for darkidiot
  * Date:2017/8/21
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
+@ToString
 public class AbstractPacket implements Packet {
 
     protected byte type;
