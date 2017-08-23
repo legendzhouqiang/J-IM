@@ -1,0 +1,102 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+
+t-io 2.0.0发布，法网天眼诞生
+
+
+
+<ul>
+    <li>
+	
+		<h2>
+			 <strong>回顾t-io 1.x版本</strong>
+		</h2>
+		<ul>
+			<li>2017年4月1号，t-io正式上传至码云，最初让大家记住的可能是那个每秒可收发500万条聊天消息的性能数据吧，测试代码仍然完整地保留在1.6.9的分支版，欢迎随时考证</li>
+			<li>2017年5月1号左右，t-io在码云上的star破千，截止目前star已经超过2100，pull量达到10000多，download量达到6000多，这一串监控数据估计@红薯 家是全的，如果不全，请马上使用t-io2.0.0----法网天眼</li>
+			<li>2017年6月6号，@openSeLi 同学发布<a href="https://my.oschina.net/u/2369298/blog/915435" target="_blank">t-io 30W长连接并发压力测试报告</a></li>
+			
+			
+			<li>2017年9月1号左右，小超同学提前用tio 2.0.0完成的各种协议的tio-im开源</li>
+			<li>根据平时QQ及社区的咨询，t-io生产项目的案例数估计在100左右(官网只收集存储了部分热心用户的案例，很多用户是不反馈或者是怕反馈的，就像我们在大量使用fastjson，但并不是每个人都会反馈案例到温少那)，涉及游戏、物联网、IM聊天、数据采集、实时监控等领域</li>
+			
+		</ul>
+	
+	</li>
+	
+	<li>
+        <h2>
+            <strong>2.0.0更新说明</strong>
+        </h2>
+        <ul>
+            <li>
+                1.x用户大量吐槽的那3个泛型，已经全部拿掉，就感觉是丢了一个大包袱
+            </li>
+            <li>
+                内置强大的监控功能----架构师眼中的法网天眼。所有socket级别的访问或攻击一目了然，为应用层防止大流量攻击和慢攻击提供极佳的数据参考，架构师的最爱！
+				<img src="https://git.oschina.net/tywo45/t-io/raw/master/docs/monitor/1.png">
+            </li>
+            <li>
+                分离出tio-utils项目，用于日常开发
+				<ul>
+					<li>
+						内置简洁易用的二级缓存框架
+					</li>
+					<li>
+						内置layui分页适配对象，用于把数据转成layui table需要的格式
+					</li>
+					<li>
+						内置JFinal的record的json转换器，传送门：<a href="https://my.oschina.net/talenttan/blog/1517514" target="_blank">正确Json化JFinal的Record</a>
+					</li>
+				</ul>
+            </li>
+			<li>
+                t-io生态之httpserver
+				<ul>
+					<li>
+						内置简洁省心的httpsession，支持本地session存储、分布式session存储、两级缓存session存储
+					</li>
+					<li>
+						tio-mvc使用简化，通过httprequest即可获取socket级别的上下文
+					</li>
+					<li>
+						静态资源缓存及清空
+					</li>
+					<li>
+						文件上传功能支持(暂时不适合超大文件，或文件密集型的应用)
+					</li>
+				</ul>
+            </li>
+			<li>
+                t-io生态之websocket
+				<ul>
+					<li>
+						使用更简洁，简洁程度，请参考官网提供的例子：<a href="https://git.oschina.net/tywo45/t-io/tree/master/src/zoo/websocket/demo/websocketserver-1" target="_blank">tio websocketserver demo</a>
+					</li>
+					<li>
+						没什么更多好说的了，还是看例子，真的很简单
+					</li>
+				</ul>
+            </li>
+            
+        </ul>
+    </li>
+    <li>
+        <h2>
+            <strong>最新maven坐标</strong>
+        </h2>
+        <li><h3>tio-core</h3> 
+            <div style="font-size:18px;color:#63d1c3;background-color:#204f5d;padding:10px;border:1px solid #999;margin:10px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-core&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0.v20170806-RELEASE&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </li>
+
+        
+    </li>
+</ul>
