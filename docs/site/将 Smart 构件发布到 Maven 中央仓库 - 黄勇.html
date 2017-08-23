@@ -473,7 +473,7 @@
 
     gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 82DC852E
 
-实际上就是从 key server 上通过公钥 ID 来接收公钥，此外，也可以到 sks-keyservers.net 上通过公钥 ID 去查询。
+实际上就是从 key remote 上通过公钥 ID 来接收公钥，此外，也可以到 sks-keyservers.net 上通过公钥 ID 去查询。
 
 ## 第五步：修改 Maven 配置文件 ##
 
@@ -487,18 +487,18 @@
         ...
 
         &lt;servers&gt;
-            &lt;server&gt;
+            &lt;remote&gt;
                 &lt;id&gt;oss&lt;/id&gt;
                 &lt;username&gt;用户名&lt;/username&gt;
                 &lt;password&gt;密码&lt;/password&gt;
-            &lt;/server&gt;
+            &lt;/remote&gt;
         &lt;/servers&gt;
 
         ...
 
     &lt;/settings&gt;
 
-使用自己注册的 Sonatype 账号的用户名与密码来配置以上 server 信息。
+使用自己注册的 Sonatype 账号的用户名与密码来配置以上 remote 信息。
 
 ### 2. pom.xml ###
 
@@ -599,7 +599,7 @@
 
     &lt;/project&gt;
 
-注意：以上 pom.xml 必须包括：name、description、url、licenses、developers、scm 等基本信息，此外，使用了 Maven 的 profile 功能，只有在 release 的时候，创建源码包、创建文档包、使用 GPG 进行数字签名。此外，snapshotRepository 与 repository 中的 id 一定要与 setting.xml 中 server 的 id 保持一致。
+注意：以上 pom.xml 必须包括：name、description、url、licenses、developers、scm 等基本信息，此外，使用了 Maven 的 profile 功能，只有在 release 的时候，创建源码包、创建文档包、使用 GPG 进行数字签名。此外，snapshotRepository 与 repository 中的 id 一定要与 setting.xml 中 remote 的 id 保持一致。
 
 ## 第六步：上传构件到 OSS 中 ##
 
@@ -724,7 +724,7 @@ sub   <span class="hljs-number"><span class="hljs-number"><span class="hljs-numb
 </code></pre><p>此后，可使用本地的私钥来对上传构件进行数字签名，而下载该构件的用户可通过上传的公钥来验证签名，也就是说，大家可以验证这个构件是否由本人上传的，因为有可能该构件被坏人给篡改了。</p>
 <h3 id="h3_8">5. 查询公钥是否发布成功</h3>
 <pre class="hljs nginx"><code class="hljs nginx"><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-attribute">gpg</span></span></span></span> --keyserver hkp://pool.sks-keyservers.net --recv-keys 82DC852E
-</code></pre><p>实际上就是从 key server 上通过公钥 ID 来接收公钥，此外，也可以到 sks-keyservers.net 上通过公钥 ID 去查询。</p>
+</code></pre><p>实际上就是从 key remote 上通过公钥 ID 来接收公钥，此外，也可以到 sks-keyservers.net 上通过公钥 ID 去查询。</p>
 <h2 id="h2_9">第五步：修改 Maven 配置文件</h2>
 <p>需要修改的 Maven 配置文件包括：setting.xml（全局级别）与 pom.xml（项目级别）。</p>
 <h3 id="h3_10">1. setting.xml</h3>
@@ -734,17 +734,17 @@ sub   <span class="hljs-number"><span class="hljs-number"><span class="hljs-numb
     ...
 
     <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">servers</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
-        <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">server</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
+        <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">remote</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
             <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">id</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>oss<span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;/</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">id</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
             <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">username</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>用户名<span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;/</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">username</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
             <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">password</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>密码<span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;/</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">password</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
-        <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;/</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">server</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
+        <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;/</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">remote</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
     <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;/</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">servers</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
 
     ...
 
 <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;/</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">settings</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
-</code></pre><p>使用自己注册的 Sonatype 账号的用户名与密码来配置以上 server 信息。</p>
+</code></pre><p>使用自己注册的 Sonatype 账号的用户名与密码来配置以上 remote 信息。</p>
 <h3 id="h3_11">2. pom.xml</h3>
 <pre class="hljs xml"><code class="hljs xml"><span class="hljs-comment"><span class="hljs-comment"><span class="hljs-comment"><span class="hljs-comment">&lt;!-- lang: xml --&gt;</span></span></span></span>
 <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">project</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
@@ -842,7 +842,7 @@ sub   <span class="hljs-number"><span class="hljs-number"><span class="hljs-numb
     ...
 
 <span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&lt;/</span></span></span><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">project</span></span></span></span></span></span></span><span class="hljs-tag"><span class="hljs-tag"><span class="hljs-tag">&gt;</span></span></span></span>
-</code></pre><p>注意：以上 pom.xml 必须包括：name、description、url、licenses、developers、scm 等基本信息，此外，使用了 Maven 的 profile 功能，只有在 release 的时候，创建源码包、创建文档包、使用 GPG 进行数字签名。此外，snapshotRepository 与 repository 中的 id 一定要与 setting.xml 中 server 的 id 保持一致。</p>
+</code></pre><p>注意：以上 pom.xml 必须包括：name、description、url、licenses、developers、scm 等基本信息，此外，使用了 Maven 的 profile 功能，只有在 release 的时候，创建源码包、创建文档包、使用 GPG 进行数字签名。此外，snapshotRepository 与 repository 中的 id 一定要与 setting.xml 中 remote 的 id 保持一致。</p>
 <h2 id="h2_12">第六步：上传构件到 OSS 中</h2>
 <pre class="hljs nginx"><code class="hljs nginx"><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-attribute">mvn</span></span></span></span> clean deploy -P release
 </code></pre><p>当执行以上 Maven 命令时，会自动弹出一个对话框，需要输入上面提到的 Passphase，它就是通过 GPG 密钥对的密码，只有自己才知道。随后会看到大量的 upload 信息，而且速度比较慢，经常会 timeout，需要反复尝试。</p>

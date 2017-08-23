@@ -121,7 +121,7 @@ public class UdpServer {
 	}
 
 	private void startHandler() {
-		Thread thread = new Thread(udpHandlerRunnable, "tio-udp-server-handler");
+		Thread thread = new Thread(udpHandlerRunnable, "tio-udp-remote-handler");
 		thread.setDaemon(false);
 		thread.start();
 	}
@@ -130,7 +130,7 @@ public class UdpServer {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				String startLog = "started tio udp server: " + udpServerConf.getServerNode();
+				String startLog = "started tio udp remote: " + udpServerConf.getServerNode();
 				if (log.isInfoEnabled()) {
 					log.info(startLog);
 				} else {
@@ -158,7 +158,7 @@ public class UdpServer {
 			}
 		};
 
-		Thread thread = new Thread(runnable, "tio-udp-server-listen");
+		Thread thread = new Thread(runnable, "tio-udp-remote-listen");
 		thread.setDaemon(false);
 		thread.start();
 	}

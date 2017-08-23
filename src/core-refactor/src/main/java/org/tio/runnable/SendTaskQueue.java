@@ -1,6 +1,6 @@
 package org.tio.runnable;
 
-import org.tio.common.ChannelContext;
+import org.tio.client.ClientChannelContext;
 import org.tio.handler.WriteCompletionHandler;
 
 import java.nio.ByteBuffer;
@@ -14,15 +14,15 @@ import java.nio.channels.AsynchronousSocketChannel;
  */
 public class SendTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
-    private ChannelContext context;
+    private ClientChannelContext clientContext;
 
-    public SendTaskQueue(ChannelContext context) {
-        this.context = context;
+    public SendTaskQueue(ClientChannelContext context) {
+        this.clientContext = context;
     }
 
     @Override
     public void runTask(ByteBuffer byteBuffer) {
-        AsynchronousSocketChannel channel = context.getAsynchronousSocketChannel();
+        AsynchronousSocketChannel channel = clientContext.getAsynchronousSocketChannel();
         channel.write(byteBuffer, new Object(), new WriteCompletionHandler());
     }
 }

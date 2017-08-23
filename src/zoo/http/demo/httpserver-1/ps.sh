@@ -1,1 +1,1 @@
-ps -ef | grep org.tio.http.server
+ps -ef | grep org.tio.http.remote

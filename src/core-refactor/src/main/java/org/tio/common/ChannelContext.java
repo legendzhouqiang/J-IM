@@ -45,6 +45,4 @@ public abstract class ChannelContext {
     protected GroupContext groupContext;
 
     protected AsynchronousChannelGroup channelGroup;
-
-    protected AsynchronousSocketChannel asynchronousSocketChannel;
 }

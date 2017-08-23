@@ -3,7 +3,7 @@ call mvn clean install
 cd ..\..
 
 
-cd .\src\example\im\server
+cd .\src\example\im\remote
 call dir
 call installAndCopy.bat
 cd ..\..\..\..
@@ -14,7 +14,7 @@ cd ..\..\..\..
 
 
 
-cd .\src\example\im-simple\server
+cd .\src\example\im-simple\remote
 call dir
 call installAndCopy.bat
 cd ..\..\..\..
@@ -25,7 +25,7 @@ cd ..\..\..\..
 
 
 
-cd .\src\example\showcase\server
+cd .\src\example\showcase\remote
 call installAndCopy.bat
 cd ..\..\..\..
 
@@ -35,7 +35,7 @@ cd ..\..\..\..
 
 
 
-cd .\src\example\helloworld\server
+cd .\src\example\helloworld\remote
 call installAndCopy.bat
 cd ..\..\..\..
 

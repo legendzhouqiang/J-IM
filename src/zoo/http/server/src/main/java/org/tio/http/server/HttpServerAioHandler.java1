@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.tio.http.server;
+package org.tio.http.remote;
 
 import org.tio.core.ChannelContext;
 import org.tio.http.common.HttpPacket;
@@ -9,7 +9,7 @@ import org.tio.http.common.HttpSessionContext;
 import org.tio.http.common.http.HttpRequestPacket;
 import org.tio.http.common.http.HttpResponsePacket;
 import org.tio.http.common.http.RequestLine;
-import org.tio.http.server.handler.AbstractHttpServerAioHandler;
+import org.tio.http.remote.handler.AbstractHttpServerAioHandler;
 
 /**
  * 版本: [1.0]

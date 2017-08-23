@@ -46,7 +46,7 @@ public class _Generator {
 		org.tio.http.server.demo1.init.JfinalInit.init();
 
 		// model 所使用的包名 (MappingKit 默认使用的包名)
-		String modelPackageName = "org.tio.http.server.demo1.model";
+		String modelPackageName = "org.tio.http.remote.demo1.model";
 
 		// base model 所使用的包名
 		String baseModelPackageName = modelPackageName + ".base";

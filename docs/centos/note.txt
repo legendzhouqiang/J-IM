@@ -41,7 +41,7 @@ iptable配置
 		yum localinstall mysql-community-common-5.7.18-1.el6.x86_64.rpm
 		yum localinstall mysql-community-libs-5.7.18-1.el6.x86_64.rpm
 		yum localinstall mysql-community-client-5.7.18-1.el6.x86_64.rpm
-		yum localinstall mysql-community-server-5.7.18-1.el6.x86_64.rpm
+		yum localinstall mysql-community-remote-5.7.18-1.el6.x86_64.rpm
 
 	#查看版本
 		mysql -V

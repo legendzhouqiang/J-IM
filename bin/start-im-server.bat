@@ -1,2 +1,2 @@
-cd ..\dist\examples\im\server\
+cd ..\dist\examples\im\remote\
 call startup.bat

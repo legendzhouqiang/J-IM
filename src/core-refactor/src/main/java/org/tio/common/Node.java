@@ -13,7 +13,7 @@ public class Node {
     @Getter
     private String ip;
     @Getter
-    private int port;
+    private Integer port;
 
     public Node(String ip, int port) {
         String trimIp = ip == null ? "" : ip.trim();
@@ -36,7 +36,7 @@ public class Node {
         }
         if (obj instanceof Node) {
             Node other = (Node) obj;
-            return ip.equals(other.getIp()) && port == other.getPort();
+            return this.ip.equals(other.getIp()) && this.port.equals(other.getPort());
         }
         return false;
     }

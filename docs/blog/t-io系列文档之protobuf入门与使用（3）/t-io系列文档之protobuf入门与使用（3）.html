@@ -1,175 +1,175 @@
-ÌâÍâ»°£¬±¾À´ÔÚÐ´bytebufferÏà¹ØÖªÊ¶µãµÄ£¬<a href="https://my.oschina.net/u/257950" target="_blank">ÌìÅîÐ¡Öí</a>ÎÊÁË¸öprotobufµÄÎÊÌâ£¬¶ø<a href="https://www.oschina.net/p/t-io" target="_blank">t-io</a>µÄÀý×ÓÖÐ¸ÕºÃÒ²ÓÃµ½ÁËprotobuf£¬ÓÚÊÇ¾ÍÏÈ°ÑprotobufµÄÖªÊ¶Ð´ÁËÒ»ÏÂ¡£
+ï¿½ï¿½ï¿½â»°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´bytebufferï¿½ï¿½ï¿½ÖªÊ¶ï¿½ï¿½Ä£ï¿½<a href="https://my.oschina.net/u/257950" target="_blank">ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½</a>ï¿½ï¿½ï¿½Ë¸ï¿½protobufï¿½ï¿½ï¿½ï¿½ï¿½â£¬ï¿½ï¿½<a href="https://www.oschina.net/p/t-io" target="_blank">t-io</a>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸Õºï¿½Ò²ï¿½Ãµï¿½ï¿½ï¿½protobufï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½È°ï¿½protobufï¿½ï¿½ÖªÊ¶Ð´ï¿½ï¿½Ò»ï¿½Â¡ï¿½
 
 <ol>
 	<li>
-	<h2><strong>ÎªºÎ¶øÐ´</strong></h2>
-	Ä¿Ç°ÎªÖ¹£¨2017-04-23£©ÎªÖ¹£¬protobufÊÇ±¾ÈË±È½ÏÍÆ³çµÄÒ»ÖÖÏûÏ¢¸ñÊ½£¬Ô­ÒòÈçÏÂ
+	<h2><strong>Îªï¿½Î¶ï¿½Ð´</strong></h2>
+	Ä¿Ç°ÎªÖ¹ï¿½ï¿½2017-04-23ï¿½ï¿½ÎªÖ¹ï¿½ï¿½protobufï¿½Ç±ï¿½ï¿½Ë±È½ï¿½ï¿½Æ³ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Ê½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	<ol>
-		<li>Ìå»ýÐ¡£¬Í¬ÑùµÄ¶ÔÏó±àÂëºó£¬ÆäÌå»ýÔ¼ÎªjsonµÄ1/8</li>
-		<li>±àÂë½âÂëËÙ¶È¿ì£¬Õâ¸öÃ»Ê²Ã´ºÃËµµÄ£¬Ë­²»Ï²»¶ËÙ¶È¿ìµÄ¶«Î÷ÄØ£¿</li>
-		<li>"¿çÓïÑÔ"£ºÎÒÃÇÖ»ÐèÒªÐ´Ò»·Ýxxx.proto£¬¼´¿ÉÒÔÓÃ¹¤¾ßÉú³Éjava¡¢python¡¢c++µÈÓïÑÔ¶ÔÓ¦µÄ´úÂë</li>
+		<li>ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼Îªjsonï¿½ï¿½1/8</li>
+		<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È¿ì£¬ï¿½ï¿½ï¿½Ã»Ê²Ã´ï¿½ï¿½Ëµï¿½Ä£ï¿½Ë­ï¿½ï¿½Ï²ï¿½ï¿½ï¿½Ù¶È¿ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½Ø£ï¿½</li>
+		<li>"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ÒªÐ´Ò»ï¿½ï¿½xxx.protoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½javaï¿½ï¿½pythonï¿½ï¿½c++ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½Ó¦ï¿½Ä´ï¿½ï¿½ï¿½</li>
 	</ol>
-	¶ø<a href="https://www.oschina.net/p/t-io" target="_blank">t-io</a>Ìá¹©µÄ¼¸¸ö°¸ÀýÖÐ£¬Ò²ÓÐÓÃµ½protobufµÄ£¬ËùÒÔÔÚ´ËÕûÀíÒ»ÏÂprotobufµÄÏà¹Ø×ÊÁÏ
+	ï¿½ï¿½<a href="https://www.oschina.net/p/t-io" target="_blank">t-io</a>ï¿½á¹©ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½Ò²ï¿½ï¿½ï¿½Ãµï¿½protobufï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½protobufï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	
 	</li>
 	
 	
 	<li>
-		<h2><strong>ÏÈÈÏÊ¶Ò»ÏÂprotoÔ´ÎÄ¼þ</strong></h2>
-		ÕâÀï¾Í·ÅÒ»¸ö<a href="https://www.oschina.net/p/t-io" target="_blank">t-io</a>Ìá¹©µÄimÀý×ÓËùÓÃµ½µÄÔ´ÎÄ¼þ°É£¬Éú²ú¼¶±ðµÄÀý×Ó¡£¿¼ÂÇµ½Õâ¸öÀý×Ó±È½ÏÈ«£¬ÎÒ¾Í²»Ò»Ò»½éÉÜÁË£¬Ô´ÎÄ¼þÃû½Ð<a href="https://git.oschina.net/tywo45/t-io/raw/master/src/example/im/common/src/main/protobuf/chat.proto" target="_blank">chat.proto</a>
-		¡£
+		<h2><strong>ï¿½ï¿½ï¿½ï¿½Ê¶Ò»ï¿½ï¿½protoÔ´ï¿½Ä¼ï¿½</strong></h2>
+		ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ò»ï¿½ï¿½<a href="https://www.oschina.net/p/t-io" target="_blank">t-io</a>ï¿½á¹©ï¿½ï¿½imï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½Ô´ï¿½Ä¼ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó±È½ï¿½È«ï¿½ï¿½ï¿½Ò¾Í²ï¿½Ò»Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½Ô´ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½<a href="https://git.oschina.net/tywo45/t-io/raw/master/src/example/im/common/src/main/protobuf/chat.proto" target="_blank">chat.proto</a>
+		ï¿½ï¿½
 <pre>
 <code class="language-python">syntax = "proto3";
 package org.tio.examples.im.common.packets;
 
-option java_package = "org.tio.examples.im.common.packets";  //ÉèÖÃjava¶ÔÓ¦µÄpackage
-option java_multiple_files = true;                           //½¨ÒéÉèÖÃÎªtrue£¬ÕâÑù»áÃ¿¸ö¶ÔÏó·ÅÔÚÒ»¸öÎÄ¼þÖÐ£¬·ñÔòËùÓÐ¶ÔÏó¶¼ÔÚÒ»¸öjavaÎÄ¼þÖÐ
+option java_package = "org.tio.examples.im.common.packets";  //ï¿½ï¿½ï¿½ï¿½javaï¿½ï¿½Ó¦ï¿½ï¿½package
+option java_multiple_files = true;                           //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªtrueï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½javaï¿½Ä¼ï¿½ï¿½ï¿½
 
-//ÀàÐÍ
+//ï¿½ï¿½ï¿½ï¿½
 enum DeviceType {
 	DEVICE_TYPE_UNKNOW = 0;
 	DEVICE_TYPE_PC = 1;             //PC
-	DEVICE_TYPE_ANDROID = 2;        //°²×¿
+	DEVICE_TYPE_ANDROID = 2;        //ï¿½ï¿½×¿
 	DEVICE_TYPE_IOS = 3;            //IOS
 }
 
 enum Command {
 	COMMAND_UNKNOW = 0;
-	COMMAND_HANDSHAKE_REQ = 1; //ÎÕÊÖÇëÇó£¬º¬httpµÄwebsocketÎÕÊÖÇëÇó
-	COMMAND_HANDSHAKE_RESP = 2; //ÎÕÊÖÏìÓ¦£¬º¬httpµÄwebsocketÎÕÊÖÏìÓ¦
-	COMMAND_AUTH_REQ = 3; //¼øÈ¨ÇëÇó
-	COMMAND_AUTH_RESP = 4; // ¼øÈ¨ÏìÓ¦
-	COMMAND_JOIN_GROUP_REQ = 5; //ÉêÇë½øÈëÈº×é
-	COMMAND_JOIN_GROUP_RESP = 6; //ÉêÇë½øÈëÈº×éÏìÓ¦
-	COMMAND_JOIN_GROUP_NOTIFY_RESP = 7; //½øÈë·¿¼äÍ¨Öª
-	COMMAND_CHAT_REQ = 8; //ÁÄÌìÇëÇó
-	COMMAND_CHAT_RESP = 9; //ÁÄÌìÏìÓ¦
-	COMMAND_START_SHOW_REQ = 10; //¿ª²¥ÇëÇó
-	COMMAND_START_SHOW_RESP = 11; //¿ª²¥ÏìÓ¦
-	COMMAND_END_SHOW_REQ = 12; //Í£²¥ÇëÇó
-	COMMAND_END_SHOW_NOTIFY_RESP = 13; //Í£²¥Í¨Öª
-	COMMAND_HEARTBEAT_REQ = 14; //ÐÄÌøÇëÇó
-	COMMAND_CLOSE_REQ = 15; //¹Ø±ÕÇëÇó
+	COMMAND_HANDSHAKE_REQ = 1; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬ºï¿½httpï¿½ï¿½websocketï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	COMMAND_HANDSHAKE_RESP = 2; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½httpï¿½ï¿½websocketï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦
+	COMMAND_AUTH_REQ = 3; //ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
+	COMMAND_AUTH_RESP = 4; // ï¿½ï¿½È¨ï¿½ï¿½Ó¦
+	COMMAND_JOIN_GROUP_REQ = 5; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½
+	COMMAND_JOIN_GROUP_RESP = 6; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½Ó¦
+	COMMAND_JOIN_GROUP_NOTIFY_RESP = 7; //ï¿½ï¿½ï¿½ë·¿ï¿½ï¿½Í¨Öª
+	COMMAND_CHAT_REQ = 8; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	COMMAND_CHAT_RESP = 9; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦
+	COMMAND_START_SHOW_REQ = 10; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	COMMAND_START_SHOW_RESP = 11; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦
+	COMMAND_END_SHOW_REQ = 12; //Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	COMMAND_END_SHOW_NOTIFY_RESP = 13; //Í£ï¿½ï¿½Í¨Öª
+	COMMAND_HEARTBEAT_REQ = 14; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	COMMAND_CLOSE_REQ = 15; //ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
 /**
- * ¼øÈ¨ÇëÇó
+ * ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 message AuthReqBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
-	string deviceId = 2;// device id(ÊÖ»úÉè±¸id)
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	string deviceId = 2;// device id(ï¿½Ö»ï¿½ï¿½è±¸id)
 	string token = 3;
-	DeviceType deviceType = 4;//clienttype¿Í»§¶ËÀàÐÍ1-pc 2-android 3-ios
-	string cid = 5;//ÇþµÀºÅ
-	string appVersion = 6;//app°æ±¾ºÅ
-	string deviceInfo = 7;//ÊÖ»úÐÍºÅÐÅÏ¢£¬Æ©Èç»ªÎªÄ³ÐÍºÅ
-	int64 seq = 8;//ÐòÁÐºÅ
- 	string sign = 9;//Ç©Ãû
+	DeviceType deviceType = 4;//clienttypeï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1-pc 2-android 3-ios
+	string cid = 5;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	string appVersion = 6;//appï¿½æ±¾ï¿½ï¿½
+	string deviceInfo = 7;//ï¿½Ö»ï¿½ï¿½Íºï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Æ©ï¿½ç»ªÎªÄ³ï¿½Íºï¿½
+	int64 seq = 8;//ï¿½ï¿½ï¿½Ðºï¿½
+ 	string sign = 9;//Ç©ï¿½ï¿½
 }
 
 /**
- * ¼øÈ¨ÏìÓ¦
+ * ï¿½ï¿½È¨ï¿½ï¿½Ó¦
  */
 message AuthRespBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 }
 
 /**
- * ¼ÓÈëÈº×éÇëÇó
+ * ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 message JoinReqBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 	string group = 2;
 }
 
 
 /**
- * ¼ÓÈëÈº×éÉêÇëµÄ½á¹û
+ * ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä½ï¿½ï¿½
  */
 enum JoinGroupResult {
-	JOIN_GROUP_RESULT_UNKNOW = 0;//²»ÔÊÐí½øÈë£¬Ô­ÒòÎªÆäËü
-	JOIN_GROUP_RESULT_OK = 1;//ÔÊÐí½øÈë
-	JOIN_GROUP_RESULT_NOT_EXIST = 2;//×é²»´æÔÚ
-	JOIN_GROUP_RESULT_GROUP_FULL = 3;//×éÂú
-	JOIN_GROUP_RESULT_IN_BACKLIST = 4;//ÔÚºÚÃûµ¥ÖÐ
-	JOIN_GROUP_RESULT_TAKEOUTED = 5;//±»Ìß
+	JOIN_GROUP_RESULT_UNKNOW = 0;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬Ô­ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
+	JOIN_GROUP_RESULT_OK = 1;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	JOIN_GROUP_RESULT_NOT_EXIST = 2;//ï¿½é²»ï¿½ï¿½ï¿½ï¿½
+	JOIN_GROUP_RESULT_GROUP_FULL = 3;//ï¿½ï¿½ï¿½ï¿½
+	JOIN_GROUP_RESULT_IN_BACKLIST = 4;//ï¿½Úºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	JOIN_GROUP_RESULT_TAKEOUTED = 5;//ï¿½ï¿½ï¿½ï¿½
 }
 
 /**
- * ¼ÓÈëÈº×éÏìÓ¦
+ * ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½Ó¦
  */
 message JoinRespBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 	JoinGroupResult result = 2;
 	string group = 3;
 }
 
 /**
- * ÁÄÌìÀàÐÍ
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 enum ChatType {
 	CHAT_TYPE_UNKNOW = 0;//Î´Öª
-	CHAT_TYPE_PUBLIC = 1;//¹«ÁÄ
-	CHAT_TYPE_PRIVATE = 2;//Ë½ÁÄ
+	CHAT_TYPE_PUBLIC = 1;//ï¿½ï¿½ï¿½ï¿½
+	CHAT_TYPE_PRIVATE = 2;//Ë½ï¿½ï¿½
 }
 /**
- * ÁÄÌìÇëÇó
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 message ChatReqBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
-	ChatType type = 2; //ÁÄÌìÀàÐÍ
-	string text = 3; //ÁÄÌìÄÚÈÝ
-	string group = 4; //Ä¿±ê×éid
-	int32 toId = 5; //Ä¿±êÓÃ»§id£¬
-	string toNick = 6; //Ä¿±êÓÃ»§nick
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	ChatType type = 2; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	string text = 3; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	string group = 4; //Ä¿ï¿½ï¿½ï¿½ï¿½id
+	int32 toId = 5; //Ä¿ï¿½ï¿½ï¿½Ã»ï¿½idï¿½ï¿½
+	string toNick = 6; //Ä¿ï¿½ï¿½ï¿½Ã»ï¿½nick
 }
 
 /**
- * ÁÄÌìÏìÓ¦
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦
  */
 message ChatRespBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
-	ChatType type = 2; //ÁÄÌìÀàÐÍ
-	string text = 3; //ÁÄÌìÄÚÈÝ
-	int32 fromId = 4; //·¢ËÍÁÄÌìÏûÏ¢µÄÓÃ»§id
-	string fromNick = 5; //·¢ËÍÁÄÌìÏûÏ¢µÄÓÃ»§nick
-	int32 toId = 6; //Ä¿±êÓÃ»§id
-	string toNick = 7; //Ä¿±êÓÃ»§nick
-	string group = 8; //Ä¿±ê×éid
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	ChatType type = 2; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	string text = 3; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	int32 fromId = 4; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Ã»ï¿½id
+	string fromNick = 5; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Ã»ï¿½nick
+	int32 toId = 6; //Ä¿ï¿½ï¿½ï¿½Ã»ï¿½id
+	string toNick = 7; //Ä¿ï¿½ï¿½ï¿½Ã»ï¿½nick
+	string group = 8; //Ä¿ï¿½ï¿½ï¿½ï¿½id
 }
 
 
 /**
- * ¿ªÊ¼Ö±²¥ÇëÇó
+ * ï¿½ï¿½Ê¼Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 message BeginToLiveReqBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 }
 
 /**
- * ¿ªÊ¼Ö±²¥ÏìÓ¦
+ * ï¿½ï¿½Ê¼Ö±ï¿½ï¿½ï¿½ï¿½Ó¦
  */
 message BeginToLiveRespBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
-	int64 liveid = 2;       //±¾´ÎÖ±²¥id
-	string rtmppublishurl = 3;  //rtmpÍÆÁ÷µØÖ·
-	string rtmpliveurl = 4;  //rtmp²¥·ÅµØÖ·
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	int64 liveid = 2;       //ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½id
+	string rtmppublishurl = 3;  //rtmpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+	string rtmpliveurl = 4;  //rtmpï¿½ï¿½ï¿½Åµï¿½Ö·
 }
 
 /**
- * ½áÊøÖ±²¥ÇëÇó
+ * ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 message EndLiveReqBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 }
 
 /**
- * ½áÊøÖ±²¥ÏìÓ¦
+ * ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½Ó¦
  */
 message EndLiveRespBody {
-	int64 time = 1;//ÏûÏ¢·¢ËÍÊ±¼ä
-	int64 liveid = 2;       //±¾´ÎÖ±²¥id
+	int64 time = 1;//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	int64 liveid = 2;       //ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½id
 }
 
 </code></pre>
@@ -181,23 +181,23 @@ message EndLiveRespBody {
 	
 	
 	<li>
-	<h2><strong>ÓÃ¹¤¾ß°ÑprotoÔ´ÎÄ¼þ±ä³ÉÎÒÃÇÐèÒªµÄ´úÂë</strong></h2>
+	<h2><strong>ï¿½Ã¹ï¿½ï¿½ß°ï¿½protoÔ´ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä´ï¿½ï¿½ï¿½</strong></h2>
 	<ol>
-		<li><h3><strong>ÏÂÔØ²¢°²×°¹¤¾ß</strong></h3>
-		¹È¸èÌá¹©µÄ¹¤¾ßprotoc.exe£¬¿ÉÒÔ°ÑprotoÔ´ÎÄ¼þÉú³Éjava¡¢c++¡¢pythonµÈÓïÑÔËù¶ÔÓ¦µÄ´úÂë£¬Õâ¸ö¹¤¾ßÔÚ<a href="https://github.com/google/protobuf" target="_blank">https://github.com/google/protobufo</a>ÖÐ¿ÉÒÔÕÒµ½£¬Èç¹ûÔÚÕâÃ»ÕÒµ½£¬ÎªÁË´ó¼ÒµÄ·½±ã£¬×÷ÕßÒÑ¾­ÉÏ´«ÖÁt-ioµÄ¹¤³Ì£¬Çëµã»÷<a href="https://git.oschina.net/tywo45/t-io" target="_blank">https://git.oschina.net/tywo45/t-io</a>£¬È»ºóÕÒµ½docs/toolsÄ¿Â¼£¬ÀïÃæÓÐprotoc.exeÎÄ¼þ¡£ÏÂÔØºó£¬°Ñprotoc.exeËùÒÔÄ¿Â¼Ìí¼Óµ½ÄãµÄpath¡£
+		<li><h3><strong>ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½</strong></h3>
+		ï¿½È¸ï¿½ï¿½á¹©ï¿½Ä¹ï¿½ï¿½ï¿½protoc.exeï¿½ï¿½ï¿½ï¿½ï¿½Ô°ï¿½protoÔ´ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½javaï¿½ï¿½c++ï¿½ï¿½pythonï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ä´ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<a href="https://github.com/google/protobuf" target="_blank">https://github.com/google/protobufo</a>ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Òµï¿½ï¿½ï¿½Îªï¿½Ë´ï¿½ÒµÄ·ï¿½ï¿½ã£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½Ï´ï¿½ï¿½ï¿½t-ioï¿½Ä¹ï¿½ï¿½Ì£ï¿½ï¿½ï¿½ï¿½ï¿½<a href="https://git.oschina.net/tywo45/t-io" target="_blank">https://git.oschina.net/tywo45/t-io</a>ï¿½ï¿½È»ï¿½ï¿½ï¿½Òµï¿½docs/toolsÄ¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½protoc.exeï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øºó£¬°ï¿½protoc.exeï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½pathï¿½ï¿½
 		</li>
 		
-		<li><h3><strong>Ö´ÐÐÃüÁîÉú³É´úÂë</strong></h3>
+		<li><h3><strong>Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É´ï¿½ï¿½ï¿½</strong></h3>
 		<pre><code class="language-bash">md .\src\c
 md .\src\java
 
 protoc.exe --cpp_out=.\src\c chat.proto
 protoc.exe --java_out=.\src\java chat.proto</code></pre>
-		<a href="https://www.oschina.net/p/t-io" target="_blank">t-io</a>Ìá¹©ÁËÏÖ³ÉµÄ½Å±¾£¬Î»ÖÃÔÚ<a href="https://git.oschina.net/tywo45/t-io" target="_blank">https://git.oschina.net/tywo45/t-io</a>µÄ"src/example/im/common/src/main/protobuf"Ä¿Â¼£¬´ó¼Ò¿ÉÒÔÖ±½ÓÔËÐÐÄÇ¸ögenerate.bat½Å±¾£¬¿´¿´Éú³ÉµÄ´úÂë³¤Ê²Ã´Ñù£¬ÕâÑù¿ÉÒÔÐÎ³É¸ÐÐÔÈÏÊ¶¡£²»¹ý£¬ÎÒÃÇÒ»°ãÊÇ²»»á¹ØÐÄÕâ¸öÉú³ÉµÄ´úÂëµÄÏ¸½ÚµÄ£¬ÎÒÃÇÖ»¹Ø×¢¼¸¸ö·½·¨£¬¿´ºóÃæµÄ±àÂëÊ¾ÀýºÍ½âÂëÊ¾Àý¡£
+		<a href="https://www.oschina.net/p/t-io" target="_blank">t-io</a>ï¿½á¹©ï¿½ï¿½ï¿½Ö³ÉµÄ½Å±ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½<a href="https://git.oschina.net/tywo45/t-io" target="_blank">https://git.oschina.net/tywo45/t-io</a>ï¿½ï¿½"src/example/im/common/src/main/protobuf"Ä¿Â¼ï¿½ï¿½ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½generate.batï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉµÄ´ï¿½ï¿½ë³¤Ê²Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î³É¸ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ç²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉµÄ´ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ÚµÄ£ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Í½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 		</li>
 
-		<li><h3><strong>°ÑÉú³ÉµÄ´úÂë¸´ÖÆµ½ÄãµÄ¹¤³ÌÄ¿Â¼</strong></h3>
-			ÂÔ£¬Çë×ÔÐÐ¸´ÖÆ
+		<li><h3><strong>ï¿½ï¿½ï¿½ï¿½ï¿½ÉµÄ´ï¿½ï¿½ë¸´ï¿½Æµï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½Ä¿Â¼</strong></h3>
+			ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½
 		</li>
 	</ol>
 	
@@ -207,11 +207,11 @@ protoc.exe --java_out=.\src\java chat.proto</code></pre>
 	
 	
 	<li>
-	<h2><strong>protobufÔÚt-ioÖÐµÄÔËÓÃ</strong></h2>
+	<h2><strong>protobufï¿½ï¿½t-ioï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½</strong></h2>
 	
 	<ol>
-		<li><h3><strong>ÒýÈëÏà¹Øjar</strong></h3>
-			javaÖÐÒªÓÃprotobuf£¬Ê×ÏÈÐèÒªÒýÈëÏà¹ØµÄjar£¬mavenµÄpom×ø±êÈçÏÂ
+		<li><h3><strong>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½jar</strong></h3>
+			javaï¿½ï¿½Òªï¿½ï¿½protobufï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½jarï¿½ï¿½mavenï¿½ï¿½pomï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	<pre>
 <code class="language-xml">&lt;dependency&gt;
 	&lt;groupId&gt;com.google.protobuf&lt;/groupId&gt;
@@ -220,8 +220,8 @@ protoc.exe --java_out=.\src\java chat.proto</code></pre>
 &lt;/dependency&gt;</code></pre>
 		</li>
 
-		<li><h3><strong>±àÂëÊ¾Àý</strong></h3>
-			±àÂëÊÇ´Ójava×ª»»Îªbyte[]£¬¼ûÏÂÀý
+		<li><h3><strong>ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½</strong></h3>
+			ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½java×ªï¿½ï¿½Îªbyte[]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			<pre>
 <code class="language-java">ChatRespBody.Builder builder = ChatRespBody.newBuilder();
 builder.setType(chatReqBody.getType());
@@ -234,14 +234,14 @@ builder.setGroup(toGroup);
 builder.setTime(SystemTimer.currentTimeMillis());
 ChatRespBody chatRespBody = builder.build();
 byte[] bodybyte = chatRespBody.toByteArray();</code></pre>
-´úÂëÔÚ:org.tio.examples.im.server.handler.ChatReqHandler.handler(ImPacket, ChannelContext)ÖÐ
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:org.tio.examples.im.remote.handler.ChatReqHandler.handler(ImPacket, ChannelContext)ï¿½ï¿½
 
 		</li>
-		<li><h3><strong>½âÂëÊ¾Àý</strong></h3>
-			½âÂëÊÇ´Óbyte[]×ª»»Îªjava¶ÔÏó£¬¼ûÏÂÀý
+		<li><h3><strong>ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½</strong></h3>
+			ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½byte[]×ªï¿½ï¿½Îªjavaï¿½ï¿½ï¿½ó£¬¼ï¿½ï¿½ï¿½ï¿½ï¿½
 			<pre>
 <code class="language-java">ChatReqBody chatReqBody = ChatReqBody.parseFrom(packet.getBody());</code></pre>
-´úÂëÔÚ:org.tio.examples.im.server.handler.ChatReqHandler.handler(ImPacket, ChannelContext)ÖÐ
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:org.tio.examples.im.remote.handler.ChatReqHandler.handler(ImPacket, ChannelContext)ï¿½ï¿½
 		</li>
 	</ol>
 
@@ -251,16 +251,16 @@ byte[] bodybyte = chatRespBody.toByteArray();</code></pre>
 	
 	
 	<li>
-	<h2><strong>À©Õ¹ÖªÊ¶</strong></h2>
+	<h2><strong>ï¿½ï¿½Õ¹ÖªÊ¶</strong></h2>
 
 		<ol>
-			<li><h3><strong>protobufÓëjsonÏà»¥×ª»»</strong></h3>
-			¾ßÌåÇë²Î¿¼<a href="https://github.com/bivas/protobuf-java-format" target="_blank">https://github.com/bivas/protobuf-java-format</a>
+			<li><h3><strong>protobufï¿½ï¿½jsonï¿½à»¥×ªï¿½ï¿½</strong></h3>
+			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¿ï¿½<a href="https://github.com/bivas/protobuf-java-format" target="_blank">https://github.com/bivas/protobuf-java-format</a>
 			
 
 			<ol>
 				<li>
-					ÒýÈëjar
+					ï¿½ï¿½ï¿½ï¿½jar
 					<pre>
 <code class="language-xml">&lt;dependency&gt;
 	&lt;groupId&gt;com.googlecode.protobuf-java-format&lt;/groupId&gt;
@@ -270,7 +270,7 @@ byte[] bodybyte = chatRespBody.toByteArray();</code></pre>
 				</li>
 
 				<li>
-					´Óprotobuf×ªjson
+					ï¿½ï¿½protobuf×ªjson
 					<pre>
 <code class="language-java">Message someProto = SomeProto.getDefaultInstance();
 JsonFormat jsonFormat = new JsonFormat();
@@ -279,7 +279,7 @@ String asJson = jsonFormat.printToString(someProto);</code></pre>
 				</li>
 
 				<li>
-					´Ójson×ªprotobuf
+					ï¿½ï¿½json×ªprotobuf
 					<pre>
 <code class="language-java">Message.Builder builder = SomeProto.newBuilder();
 String asJson = "{\"name\":\"tan\"}";

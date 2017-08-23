@@ -1,15 +1,16 @@
 package org.tio.client;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.ChannelContext;
 import org.tio.common.CoreConstant;
 import org.tio.common.Node;
 import org.tio.common.SystemTimer;
+import org.tio.handler.ConnectionCompletionHandler;
 import org.tio.util.StringUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -21,14 +22,22 @@ import java.nio.channels.AsynchronousSocketChannel;
  * Desc: 客服端
  */
 @Slf4j
+@Data
 public class ClientChannelContext extends ChannelContext {
 
+    protected AsynchronousSocketChannel asynchronousSocketChannel;
 
-
-    private Node server;
-
+    private Node remote;
 
     public ClientChannelContext() throws IOException {
+        connect();
+    }
+
+    public ClientChannelContext(AsynchronousSocketChannel asynchronousSocketChannel) {
+        this.asynchronousSocketChannel = asynchronousSocketChannel;
+    }
+
+    private void connect() throws IOException {
         channelGroup = AsynchronousChannelGroup.withThreadPool(groupContext.getGroupExecutor());
         long start = SystemTimer.currentTimeMillis();
         this.asynchronousSocketChannel = AsynchronousSocketChannel.open(channelGroup);
@@ -41,23 +50,23 @@ public class ClientChannelContext extends ChannelContext {
         asynchronousSocketChannel.setOption(StandardSocketOptions.TCP_NODELAY, CoreConstant.default_tcp_no_delay);
         asynchronousSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, CoreConstant.default_reuse_addr);
         asynchronousSocketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, CoreConstant.default_keep_alive);
-
+        asynchronousSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, CoreConstant.default_receive_buf_size);
+        asynchronousSocketChannel.setOption(StandardSocketOptions.SO_SNDBUF, CoreConstant.default_send_buf_size);
         if (ip != null && port != null) {
             if (StringUtil.isIp(getIp()) && port > 0) {
                 asynchronousSocketChannel.bind(new InetSocketAddress(ip, port));
                 log.info("sock bind local address [{}:{}].", ip, port);
             }
             asynchronousSocketChannel.bind(new InetSocketAddress(0));
-            SocketAddress localAddress = asynchronousSocketChannel.getLocalAddress();
-            log.info("sock bind local address port [] port{}", port);
+            InetSocketAddress localAddress = (InetSocketAddress) asynchronousSocketChannel.getLocalAddress();
+            log.info("sock bind local address [{}:{}].", localAddress.getHostName(), localAddress.getPort());
         }
-        if (server != null) {
-            if (server.getIp() != null) {
+        if (remote != null) {
+            if (remote.getIp() != null && remote.getPort() != null) {
+                InetSocketAddress remoteSocketAddress = new InetSocketAddress(remote.getIp(), remote.getPort());
+                asynchronousSocketChannel.connect(remoteSocketAddress, remoteSocketAddress, new ConnectionCompletionHandler());
 
             }
-
         }
-
-
     }
 }

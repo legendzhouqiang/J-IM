@@ -3,7 +3,7 @@
 # 变量声明
 #######################################
 EXAMPLE_NAME=im
-END=server
+END=remote
 MAIN_CLASS=ImServerStarter
 APP_ENTRY=org.tio.examples.${EXAMPLE_NAME}.${END}.${MAIN_CLASS}
 #echo ${APP_ENTRY}

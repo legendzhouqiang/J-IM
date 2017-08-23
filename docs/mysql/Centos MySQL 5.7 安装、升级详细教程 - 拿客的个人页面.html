@@ -466,7 +466,7 @@ Resolving Dependencies
 --&gt; Processing Dependency: libmysqlclient.so.16(libmysqlclient_16) for package: 2:postfix-2.6.6-6.el6_7.1.i686
 --&gt; Processing Dependency: libmysqlclient.so.16(libmysqlclient_16) for package: perl-DBD-MySQL-4.013-3.el6.i686
 --&gt; Processing Dependency: mysql-libs for package: 2:postfix-2.6.6-6.el6_7.1.i686
----&gt; Package mysql-server.i686 0:5.1.73-7.el6 will be erased
+---&gt; Package mysql-remote.i686 0:5.1.73-7.el6 will be erased
 --&gt; Running transaction check
 ---&gt; Package perl-DBD-MySQL.i686 0:4.013-3.el6 will be erased
 ---&gt; Package postfix.i686 2:2.6.6-6.el6_7.1 will be erased
@@ -494,7 +494,7 @@ Dependencies Resolved
 Removing:
  mysql                                       i686                               5.1.73-7.el6                                  @base                                                              2.3 M
  mysql-libs                                  i686                               5.1.73-7.el6                                  @base                                                              3.9 M
- mysql-server                                i686                               5.1.73-7.el6                                  @base                                                               24 M
+ mysql-remote                                i686                               5.1.73-7.el6                                  @base                                                               24 M
 Removing for dependencies:
  cronie                                      i686                               1.4.4-16.el6_8.2                              @updates                                                           169 k
  cronie-anacron                              i686                               1.4.4-16.el6_8.2                              @updates                                                            38 k
@@ -515,7 +515,7 @@ Running rpm_check_debug
 Running Transaction Test
 Transaction Test Succeeded
 Running Transaction
-  Erasing    : mysql-server-5.1.73-7.el6.i686                                                                                                                                                     1/10 
+  Erasing    : mysql-remote-5.1.73-7.el6.i686                                                                                                                                                     1/10
 warning: /var/log/mysqld.log saved as /var/log/mysqld.log.rpmsave
   Erasing    : redhat-lsb-core-4.0-7.el6.centos.i686                                                                                                                                              2/10 
 /var/tmp/rpm-tmp.Y5QGjy: line 1: lsb_release: command not found
@@ -529,7 +529,7 @@ warning: /var/log/mysqld.log saved as /var/log/mysqld.log.rpmsave
   Erasing    : mysql-libs-5.1.73-7.el6.i686                                                                                                                                                      10/10 
   Verifying  : redhat-lsb-core-4.0-7.el6.centos.i686                                                                                                                                              1/10 
   Verifying  : perl-DBD-MySQL-4.013-3.el6.i686                                                                                                                                                    2/10 
-  Verifying  : mysql-server-5.1.73-7.el6.i686                                                                                                                                                     3/10 
+  Verifying  : mysql-remote-5.1.73-7.el6.i686                                                                                                                                                     3/10
   Verifying  : crontabs-1.10-33.el6.noarch                                                                                                                                                        4/10 
   Verifying  : sysstat-9.0.4-31.el6.i686                                                                                                                                                          5/10 
   Verifying  : cronie-anacron-1.4.4-16.el6_8.2.i686                                                                                                                                               6/10 
@@ -539,7 +539,7 @@ warning: /var/log/mysqld.log saved as /var/log/mysqld.log.rpmsave
   Verifying  : 2:postfix-2.6.6-6.el6_7.1.i686                                                                                                                                                    10/10 
 
 Removed:
-  mysql.i686 0:5.1.73-7.el6                                     mysql-libs.i686 0:5.1.73-7.el6                                     mysql-server.i686 0:5.1.73-7.el6                                    
+  mysql.i686 0:5.1.73-7.el6                                     mysql-libs.i686 0:5.1.73-7.el6                                     mysql-remote.i686 0:5.1.73-7.el6
 
 Dependency Removed:
   cronie.i686 0:1.4.4-16.el6_8.2              cronie-anacron.i686 0:1.4.4-16.el6_8.2     crontabs.noarch 0:1.10-33.el6     perl-DBD-MySQL.i686 0:4.013-3.el6     postfix.i686 2:2.6.6-6.el6_7.1    
@@ -598,7 +598,7 @@ mysql-community-common-5.7.17-1.el6.i686.rpm
 mysql-community-test-5.7.17-1.el6.i686.rpm
 mysql-community-embedded-5.7.17-1.el6.i686.rpm
 mysql-community-libs-5.7.17-1.el6.i686.rpm
-mysql-community-server-5.7.17-1.el6.i686.rpm
+mysql-community-remote-5.7.17-1.el6.i686.rpm
 ```
 
 安装及配置
@@ -719,14 +719,14 @@ Installed:
   mysql-community-client.i686 0:5.7.17-1.el6                                                                                                                                                           
 
 Complete!
-[root@coderknock ~]# yum localinstall mysql-community-server-5.7.17-1.el6.i686.rpm 
+[root@coderknock ~]# yum localinstall mysql-community-remote-5.7.17-1.el6.i686.rpm
 Loaded plugins: security
 Setting up Local Package Process
-Examining mysql-community-server-5.7.17-1.el6.i686.rpm: mysql-community-server-5.7.17-1.el6.i686
-Marking mysql-community-server-5.7.17-1.el6.i686.rpm to be installed
+Examining mysql-community-remote-5.7.17-1.el6.i686.rpm: mysql-community-remote-5.7.17-1.el6.i686
+Marking mysql-community-remote-5.7.17-1.el6.i686.rpm to be installed
 Resolving Dependencies
 --&gt; Running transaction check
----&gt; Package mysql-community-server.i686 0:5.7.17-1.el6 will be installed
+---&gt; Package mysql-community-remote.i686 0:5.7.17-1.el6 will be installed
 --&gt; Finished Dependency Resolution
 
 Dependencies Resolved
@@ -735,7 +735,7 @@ Dependencies Resolved
  Package                                           Arch                            Version                                  Repository                                                            Size
 =======================================================================================================================================================================================================
 Installing:
- mysql-community-server                            i686                            5.7.17-1.el6                             /mysql-community-server-5.7.17-1.el6.i686                            695 M
+ mysql-community-remote                            i686                            5.7.17-1.el6                             /mysql-community-remote-5.7.17-1.el6.i686                            695 M
 
 Transaction Summary
 =======================================================================================================================================================================================================
@@ -749,11 +749,11 @@ Running rpm_check_debug
 Running Transaction Test
 Transaction Test Succeeded
 Running Transaction
-  Installing : mysql-community-server-5.7.17-1.el6.i686                                                                                                                                            1/1 
-  Verifying  : mysql-community-server-5.7.17-1.el6.i686                                                                                                                                            1/1 
+  Installing : mysql-community-remote-5.7.17-1.el6.i686                                                                                                                                            1/1
+  Verifying  : mysql-community-remote-5.7.17-1.el6.i686                                                                                                                                            1/1
 
 Installed:
-  mysql-community-server.i686 0:5.7.17-1.el6                                                                                                                                                           
+  mysql-community-remote.i686 0:5.7.17-1.el6
 
 Complete!
 ```
@@ -784,7 +784,7 @@ Starting mysqld:                                           [FAILED]
 
 如果遇到错误如下：
 ```shell
-2017-01-06T14:53:08.889803Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2017-01-06T14:53:08.889803Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp remote option (see documentation for more details).
 2017-01-06T14:53:08.892190Z 0 [ERROR] --initialize specified but the data directory has files in it. Aborting.
 2017-01-06T14:53:08.892475Z 0 [ERROR] Aborting
 ```
@@ -873,7 +873,7 @@ mysql&gt; ALTER USER 'root'@'%' IDENTIFIED BY '你的密码';
 如果遇到`ERROR 1819 (HY000): Your password does not satisfy the current policy requirements`说明你的密码太简单，需要设置复杂点的密码，有大小写字母、有数字、有标点基本上就可以通过。
 *注意，如果你没有修改过 root 用户的Host或者修改为非 % 的字符，需要对上面的语句进行对应的修改，例如： ALTER USER 'root'@'localhost' IDENTIFIED BY '你的密码'*    
 
-如果遇到`ERROR 1290 (HY000): The MySQL server is running with the --skip-grant-tables option so it cannot execute this statement` 则需要退出安全模式，正常启动MySQL后登陆再进行以上操作：
+如果遇到`ERROR 1290 (HY000): The MySQL remote is running with the --skip-grant-tables option so it cannot execute this statement` 则需要退出安全模式，正常启动MySQL后登陆再进行以上操作：
 
 ```shell
 mysql&gt; quit
@@ -916,7 +916,7 @@ Resolving Dependencies
 </span></span>-<span class="ruby"><span class="ruby">-&gt; Processing </span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">Dependency:</span></span></span><span class="ruby"> libmysqlclient.so.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">16</span></span></span><span class="ruby">(libmysqlclient_16) </span><span class="hljs-keyword"><span class="ruby"><span class="hljs-keyword">for</span></span></span><span class="ruby"> </span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">package:</span></span></span><span class="ruby"> </span><span class="hljs-number"><span class="ruby"><span class="hljs-number">2</span></span></span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">:postfix-</span></span></span><span class="hljs-number"><span class="ruby"><span class="hljs-number">2.6</span></span></span><span class="ruby">.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">6</span></span></span><span class="ruby">-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">6</span></span></span><span class="ruby">.el6_7.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">1</span></span></span><span class="ruby">.i686
 </span></span>-<span class="ruby"><span class="ruby">-&gt; Processing </span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">Dependency:</span></span></span><span class="ruby"> libmysqlclient.so.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">16</span></span></span><span class="ruby">(libmysqlclient_16) </span><span class="hljs-keyword"><span class="ruby"><span class="hljs-keyword">for</span></span></span><span class="ruby"> </span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">package:</span></span></span><span class="ruby"> perl-DBD-MySQL-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">4.013</span></span></span><span class="ruby">-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">3</span></span></span><span class="ruby">.el6.i686
 </span></span>-<span class="ruby"><span class="ruby">-&gt; Processing </span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">Dependency:</span></span></span><span class="ruby"> mysql-libs </span><span class="hljs-keyword"><span class="ruby"><span class="hljs-keyword">for</span></span></span><span class="ruby"> </span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">package:</span></span></span><span class="ruby"> </span><span class="hljs-number"><span class="ruby"><span class="hljs-number">2</span></span></span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">:postfix-</span></span></span><span class="hljs-number"><span class="ruby"><span class="hljs-number">2.6</span></span></span><span class="ruby">.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">6</span></span></span><span class="ruby">-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">6</span></span></span><span class="ruby">.el6_7.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">1</span></span></span><span class="ruby">.i686
-</span></span>-<span class="ruby"><span class="ruby">--&gt; Package mysql-server.i686 </span><span class="hljs-number"><span class="ruby"><span class="hljs-number">0</span></span></span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">:</span></span></span><span class="hljs-number"><span class="ruby"><span class="hljs-number">5.1</span></span></span><span class="ruby">.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">73</span></span></span><span class="ruby">-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">7</span></span></span><span class="ruby">.el6 will be erased
+</span></span>-<span class="ruby"><span class="ruby">--&gt; Package mysql-remote.i686 </span><span class="hljs-number"><span class="ruby"><span class="hljs-number">0</span></span></span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">:</span></span></span><span class="hljs-number"><span class="ruby"><span class="hljs-number">5.1</span></span></span><span class="ruby">.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">73</span></span></span><span class="ruby">-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">7</span></span></span><span class="ruby">.el6 will be erased
 </span></span>-<span class="ruby"><span class="ruby">-&gt; Running transaction check
 </span></span>-<span class="ruby"><span class="ruby">--&gt; Package perl-DBD-MySQL.i686 </span><span class="hljs-number"><span class="ruby"><span class="hljs-number">0</span></span></span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">:</span></span></span><span class="hljs-number"><span class="ruby"><span class="hljs-number">4.013</span></span></span><span class="ruby">-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">3</span></span></span><span class="ruby">.el6 will be erased
 </span></span>-<span class="ruby"><span class="ruby">--&gt; Package postfix.i686 </span><span class="hljs-number"><span class="ruby"><span class="hljs-number">2</span></span></span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">:</span></span></span><span class="hljs-number"><span class="ruby"><span class="hljs-number">2.6</span></span></span><span class="ruby">.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">6</span></span></span><span class="ruby">-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">6</span></span></span><span class="ruby">.el6_7.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">1</span></span></span><span class="ruby"> will be erased
@@ -944,7 +944,7 @@ Dependencies Resolved
 </span></span>Removing:
  mysql                                       i686                               5.1.73-7.el6                                  @base                                                              2.3 M
  mysql-libs                                  i686                               5.1.73-7.el6                                  @base                                                              3.9 M
- mysql-server                                i686                               5.1.73-7.el6                                  @base                                                               24 M
+ mysql-remote                                i686                               5.1.73-7.el6                                  @base                                                               24 M
 Removing for dependencies:
  cronie                                      i686                               1.4.4-16.el6_8.2                              @updates                                                           169 k
  cronie-anacron                              i686                               1.4.4-16.el6_8.2                              @updates                                                            38 k
@@ -965,7 +965,7 @@ Running rpm_check_debug
 Running Transaction Test
 Transaction Test Succeeded
 Running Transaction
-  Erasing    : mysql-server-5.1.73-7.el6.i686                                                                                                                                                     1/10 
+  Erasing    : mysql-remote-5.1.73-7.el6.i686                                                                                                                                                     1/10
 warning: /var/log/mysqld.log saved as /var/log/mysqld.log.rpmsave
   Erasing    : redhat-lsb-core-4.0-7.el6.centos.i686                                                                                                                                              2/10 
 <span class="hljs-comment"><span class="hljs-comment">/var/tmp/rpm-tmp.Y5QGjy: line 1: lsb_release: command not found</span></span>
@@ -979,7 +979,7 @@ warning: /var/log/mysqld.log saved as /var/log/mysqld.log.rpmsave
   Erasing    : mysql-libs-5.1.73-7.el6.i686                                                                                                                                                      10/10 
   Verifying  : redhat-lsb-core-4.0-7.el6.centos.i686                                                                                                                                              1/10 
   Verifying  : perl-DBD-MySQL-4.013-3.el6.i686                                                                                                                                                    2/10 
-  Verifying  : mysql-server-5.1.73-7.el6.i686                                                                                                                                                     3/10 
+  Verifying  : mysql-remote-5.1.73-7.el6.i686                                                                                                                                                     3/10
   Verifying  : crontabs-1.10-33.el6.noarch                                                                                                                                                        4/10 
   Verifying  : sysstat-9.0.4-31.el6.i686                                                                                                                                                          5/10 
   Verifying  : cronie-anacron-1.4.4-16.el6_8.2.i686                                                                                                                                               6/10 
@@ -989,7 +989,7 @@ warning: /var/log/mysqld.log saved as /var/log/mysqld.log.rpmsave
   Verifying  : 2:postfix-2.6.6-6.el6_7.1.i686                                                                                                                                                    10/10 
 
 Removed:
-  mysql.i686 0:5.1.73-7.el6                                     mysql-libs.i686 0:5.1.73-7.el6                                     mysql-server.i686 0:5.1.73-7.el6                                    
+  mysql.i686 0:5.1.73-7.el6                                     mysql-libs.i686 0:5.1.73-7.el6                                     mysql-remote.i686 0:5.1.73-7.el6
 
 Dependency Removed:
   cronie.i686 0:1.4.4-16.el6_8.2              cronie-anacron.i686 0:1.4.4-16.el6_8.2     crontabs.noarch 0:1.10-33.el6     perl-DBD-MySQL.i686 0:4.013-3.el6     postfix.i686 2:2.6.6-6.el6_7.1    
@@ -1034,7 +1034,7 @@ Complete!
 <span class="hljs-selector-tag"><span class="hljs-selector-tag">mysql-community-test-5</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.7</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.17-1</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.el6</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.i686</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.rpm</span></span>
 <span class="hljs-selector-tag"><span class="hljs-selector-tag">mysql-community-embedded-5</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.7</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.17-1</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.el6</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.i686</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.rpm</span></span>
 <span class="hljs-selector-tag"><span class="hljs-selector-tag">mysql-community-libs-5</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.7</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.17-1</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.el6</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.i686</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.rpm</span></span>
-<span class="hljs-selector-tag"><span class="hljs-selector-tag">mysql-community-server-5</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.7</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.17-1</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.el6</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.i686</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.rpm</span></span>
+<span class="hljs-selector-tag"><span class="hljs-selector-tag">mysql-community-remote-5</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.7</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.17-1</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.el6</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.i686</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.rpm</span></span>
 </code></pre>
 <h2 id="h2_8">安装及配置</h2>
 <h6 id="h6_9">安装 rpm 【有依赖关系，请按下面的步骤安装，搜索 [root<a href="https://my.oschina.net/coderknock">@coderknock</a> ~]# 可跳过安装日志直接查看相关命令】</h6>
@@ -1150,14 +1150,14 @@ Installed:
   mysql-community-client.i686 0:5.7.17-1.el6                                                                                                                                                           
 
 Complete!
-[root@coderknock ~]# yum localinstall mysql-community-server-5.7.17-1.el6.i686.rpm 
+[root@coderknock ~]# yum localinstall mysql-community-remote-5.7.17-1.el6.i686.rpm
 Loaded plugins: security
 Setting up Local Package Process
-Examining mysql-community-server-5.7.17-1.el6.i686.rpm: mysql-community-server-5.7.17-1.el6.i686
-Marking mysql-community-server-5.7.17-1.el6.i686.rpm to be installed
+Examining mysql-community-remote-5.7.17-1.el6.i686.rpm: mysql-community-remote-5.7.17-1.el6.i686
+Marking mysql-community-remote-5.7.17-1.el6.i686.rpm to be installed
 Resolving Dependencies
 -<span class="ruby"><span class="ruby">-&gt; Running transaction check
-</span></span>-<span class="ruby"><span class="ruby">--&gt; Package mysql-community-server.i686 </span><span class="hljs-number"><span class="ruby"><span class="hljs-number">0</span></span></span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">:</span></span></span><span class="hljs-number"><span class="ruby"><span class="hljs-number">5.7</span></span></span><span class="ruby">.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">17</span></span></span><span class="ruby">-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">1</span></span></span><span class="ruby">.el6 will be installed
+</span></span>-<span class="ruby"><span class="ruby">--&gt; Package mysql-community-remote.i686 </span><span class="hljs-number"><span class="ruby"><span class="hljs-number">0</span></span></span><span class="hljs-symbol"><span class="ruby"><span class="hljs-symbol">:</span></span></span><span class="hljs-number"><span class="ruby"><span class="hljs-number">5.7</span></span></span><span class="ruby">.</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">17</span></span></span><span class="ruby">-</span><span class="hljs-number"><span class="ruby"><span class="hljs-number">1</span></span></span><span class="ruby">.el6 will be installed
 </span></span>-<span class="ruby"><span class="ruby">-&gt; Finished Dependency Resolution
 </span></span>
 Dependencies Resolved
@@ -1166,7 +1166,7 @@ Dependencies Resolved
 </span></span> Package                                           Arch                            Version                                  Repository                                                            Size
 =<span class="ruby"><span class="ruby">======================================================================================================================================================================================================
 </span></span>Installing:
- mysql-community-server                            i686                            5.7.17-1.el6                             /mysql-community-server-5.7.17-1.el6.i686                            695 M
+ mysql-community-remote                            i686                            5.7.17-1.el6                             /mysql-community-remote-5.7.17-1.el6.i686                            695 M
 
 Transaction Summary
 =<span class="ruby"><span class="ruby">======================================================================================================================================================================================================
@@ -1180,11 +1180,11 @@ Running rpm_check_debug
 Running Transaction Test
 Transaction Test Succeeded
 Running Transaction
-  Installing : mysql-community-server-5.7.17-1.el6.i686                                                                                                                                            1/1 
-  Verifying  : mysql-community-server-5.7.17-1.el6.i686                                                                                                                                            1/1 
+  Installing : mysql-community-remote-5.7.17-1.el6.i686                                                                                                                                            1/1
+  Verifying  : mysql-community-remote-5.7.17-1.el6.i686                                                                                                                                            1/1
 
 Installed:
-  mysql-community-server.i686 0:5.7.17-1.el6                                                                                                                                                           
+  mysql-community-remote.i686 0:5.7.17-1.el6
 
 Complete!
 </code></pre>
@@ -1203,7 +1203,7 @@ Complete!
 <pre class="hljs elixir"><code class="lang-shell hljs">[root<span class="hljs-variable"><span class="hljs-variable">@coderknock</span></span> ~]<span class="hljs-comment"><span class="hljs-comment"># mysqld --initialize</span></span>
 </code></pre>
 <p>如果遇到错误如下：</p>
-<pre class="hljs css"><code class="lang-shell hljs">2017<span class="hljs-selector-tag"><span class="hljs-selector-tag">-01-06T14</span></span><span class="hljs-selector-pseudo"><span class="hljs-selector-pseudo">:53</span></span><span class="hljs-selector-pseudo"><span class="hljs-selector-pseudo">:08.889803Z</span></span> 0 <span class="hljs-selector-attr"><span class="hljs-selector-attr">[Warning]</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">TIMESTAMP</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">with</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">implicit</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">DEFAULT</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">value</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">is</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">deprecated</span></span>. <span class="hljs-selector-tag"><span class="hljs-selector-tag">Please</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">use</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">--explicit_defaults_for_timestamp</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">server</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">option</span></span> (<span class="hljs-selector-tag"><span class="hljs-selector-tag">see</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">documentation</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">for</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">more</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">details</span></span>).
+<pre class="hljs css"><code class="lang-shell hljs">2017<span class="hljs-selector-tag"><span class="hljs-selector-tag">-01-06T14</span></span><span class="hljs-selector-pseudo"><span class="hljs-selector-pseudo">:53</span></span><span class="hljs-selector-pseudo"><span class="hljs-selector-pseudo">:08.889803Z</span></span> 0 <span class="hljs-selector-attr"><span class="hljs-selector-attr">[Warning]</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">TIMESTAMP</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">with</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">implicit</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">DEFAULT</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">value</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">is</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">deprecated</span></span>. <span class="hljs-selector-tag"><span class="hljs-selector-tag">Please</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">use</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">--explicit_defaults_for_timestamp</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">remote</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">option</span></span> (<span class="hljs-selector-tag"><span class="hljs-selector-tag">see</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">documentation</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">for</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">more</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">details</span></span>).
 2017<span class="hljs-selector-tag"><span class="hljs-selector-tag">-01-06T14</span></span><span class="hljs-selector-pseudo"><span class="hljs-selector-pseudo">:53</span></span><span class="hljs-selector-pseudo"><span class="hljs-selector-pseudo">:08.892190Z</span></span> 0 <span class="hljs-selector-attr"><span class="hljs-selector-attr">[ERROR]</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">--initialize</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">specified</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">but</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">the</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">data</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">directory</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">has</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">files</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">in</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">it</span></span>. <span class="hljs-selector-tag"><span class="hljs-selector-tag">Aborting</span></span>.
 2017<span class="hljs-selector-tag"><span class="hljs-selector-tag">-01-06T14</span></span><span class="hljs-selector-pseudo"><span class="hljs-selector-pseudo">:53</span></span><span class="hljs-selector-pseudo"><span class="hljs-selector-pseudo">:08.892475Z</span></span> 0 <span class="hljs-selector-attr"><span class="hljs-selector-attr">[ERROR]</span></span> <span class="hljs-selector-tag"><span class="hljs-selector-tag">Aborting</span></span>
 </code></pre>
@@ -1271,7 +1271,7 @@ ERROR <span class="hljs-number"><span class="hljs-number">1820</span></span> (HY
 </code></pre>
 <p>如果遇到<code>ERROR 1819 (HY000): Your password does not satisfy the current policy requirements</code>说明你的密码太简单，需要设置复杂点的密码，有大小写字母、有数字、有标点基本上就可以通过。
 <em>注意，如果你没有修改过 root 用户的Host或者修改为非 % 的字符，需要对上面的语句进行对应的修改，例如： ALTER USER 'root'@'localhost' IDENTIFIED BY '你的密码'</em>    </p>
-<p>如果遇到<code>ERROR 1290 (HY000): The MySQL server is running with the --skip-grant-tables option so it cannot execute this statement</code> 则需要退出安全模式，正常启动MySQL后登陆再进行以上操作：</p>
+<p>如果遇到<code>ERROR 1290 (HY000): The MySQL remote is running with the --skip-grant-tables option so it cannot execute this statement</code> 则需要退出安全模式，正常启动MySQL后登陆再进行以上操作：</p>
 <pre class="hljs perl"><code class="lang-shell hljs">mysql&gt; quit
 [root@coderknock ~]<span class="hljs-comment"><span class="hljs-comment"># ps -ef|grep mysql</span></span>
 root     <span class="hljs-number"><span class="hljs-number">14208</span></span> <span class="hljs-number"><span class="hljs-number">12686</span></span>  <span class="hljs-number"><span class="hljs-number">0</span></span> <span class="hljs-number"><span class="hljs-number">23</span></span>:<span class="hljs-number"><span class="hljs-number">02</span></span> pts/<span class="hljs-number"><span class="hljs-number">0</span></span>    <span class="hljs-number"><span class="hljs-number">00</span></span>:<span class="hljs-number"><span class="hljs-number">00</span></span>:<span class="hljs-number"><span class="hljs-number">00</span></span> /bin/sh /usr/bin/mysqld_safe --user=mysql --skip-grant-tables --skip-networking

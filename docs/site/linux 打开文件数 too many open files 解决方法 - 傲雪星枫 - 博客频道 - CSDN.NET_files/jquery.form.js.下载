@@ -534,7 +534,7 @@ $.fn.ajaxSubmit = function(options) {
                 timeoutHandle = setTimeout(function() { timedOut = true; cb(CLIENT_TIMEOUT_ABORT); }, s.timeout);
             }
 
-            // look for server aborts
+            // look for remote aborts
             function checkState() {
                 try {
                     var state = getDoc(io).readyState;
@@ -631,8 +631,8 @@ $.fn.ajaxSubmit = function(options) {
                 return;
             }
             else if (e == SERVER_ABORT && xhr) {
-                xhr.abort('server abort');
-                deferred.reject(xhr, 'error', 'server abort');
+                xhr.abort('remote abort');
+                deferred.reject(xhr, 'error', 'remote abort');
                 return;
             }
 
@@ -665,7 +665,7 @@ $.fn.ajaxSubmit = function(options) {
                         setTimeout(cb, 250);
                         return;
                     }
-                    // let this fall through because server response could be an empty document
+                    // let this fall through because remote response could be an empty document
                     //log('Could not access iframe DOM after mutiple tries.');
                     //throw 'DOMException: not available';
                 }

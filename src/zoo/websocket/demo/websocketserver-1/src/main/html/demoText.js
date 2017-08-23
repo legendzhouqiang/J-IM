@@ -8,7 +8,7 @@ function initWs() {
 
     };
     ws.onopen = function (event) {
-        ws.send("hello tio server");
+        ws.send("hello tio remote");
     };
     ws.onerror = function (event) {
 

@@ -1,2 +1,2 @@
-cd ..\dist\zoo\tio-http-server\
+cd ..\dist\zoo\tio-http-remote\
 call startup.bat

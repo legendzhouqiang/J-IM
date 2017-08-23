@@ -9,11 +9,6 @@ package org.tio.common;
 public interface TioLinkListener {
 
     /**
-     * @param channelContext
-     */
-    void onBeforeConnect(ChannelContext channelContext) throws Exception;
-
-    /**
      * 建链后触发本方法，注：建链不一定成功，需要关注参数isConnected
      *
      * @param channelContext

@@ -22,13 +22,13 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
     @Override
     public void completed(AsynchronousSocketChannel channel, Object attachment) {
         try {
-            channel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+            channel.setOption(StandardSocketOptions.SO_REUSEADDR, CoreConstant.default_reuse_addr);
+            channel.setOption(StandardSocketOptions.SO_KEEPALIVE, CoreConstant.default_keep_alive);
             channel.setOption(StandardSocketOptions.SO_RCVBUF, CoreConstant.default_receive_buf_size);
             channel.setOption(StandardSocketOptions.SO_SNDBUF, CoreConstant.default_send_buf_size);
-            channel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
             ByteBuffer buffer = ByteBuffer.allocateDirect(CoreConstant.default_receive_buf_size);
             buffer.clear();
-            channel.read(buffer, buffer, new ReadCompletionHandler());
+            channel.read(buffer, new Object(), new ReadCompletionHandler());
         } catch (IOException e) {
             log.error(Throwables.getStackTraceAsString(e));
         }

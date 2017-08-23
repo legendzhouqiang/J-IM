@@ -12,10 +12,10 @@ import java.nio.channels.CompletionHandler;
  * Desc:
  */
 @Data
-public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuffer> {
+public class ReadCompletionHandler implements CompletionHandler<Integer, Object> {
 
     @Override
-    public void completed(Integer result, ByteBuffer attachment) {
+    public void completed(Integer result, Object attachment) {
         if (result > 0) {
 
         } else {
@@ -24,7 +24,7 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
     }
 
     @Override
-    public void failed(Throwable exc, ByteBuffer attachment) {
+    public void failed(Throwable exc, Object attachment) {
 
     }
 }
