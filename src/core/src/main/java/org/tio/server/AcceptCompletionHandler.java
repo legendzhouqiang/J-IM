@@ -1,5 +1,6 @@
 package org.tio.server;
 
+import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -10,12 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelAction;
 import org.tio.core.ReadCompletionHandler;
-import org.tio.core.utils.SystemTimer;
 import org.tio.server.intf.ServerAioListener;
+import org.tio.utils.SystemTimer;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月4日 上午9:27:45
  */
 public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, AioServer> {
@@ -26,10 +27,10 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 	}
 
 	/**
-	 * 
+	 *
 	 * @param asynchronousSocketChannel
 	 * @param aioServer
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void completed(AsynchronousSocketChannel asynchronousSocketChannel, AioServer aioServer) {
@@ -49,7 +50,10 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			channelContext.setServerNode(aioServer.getServerNode());
 			ServerAioListener serverAioListener = serverGroupContext.getServerAioListener();
 			channelContext.getStat().setTimeFirstConnected(SystemTimer.currentTimeMillis());
+			channelContext.getIpStat().getActivatedCount().incrementAndGet();
 			channelContext.traceClient(ChannelAction.CONNECT, null, null);
+			
+			serverGroupContext.connecteds.add(channelContext);
 			try {
 				serverAioListener.onAfterConnected(channelContext, true, false);
 			} catch (Exception e) {
@@ -76,10 +80,10 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 	}
 
 	/**
-	 * 
+	 *
 	 * @param exc
 	 * @param aioServer
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void failed(Throwable exc, AioServer aioServer) {

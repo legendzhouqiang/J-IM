@@ -10,8 +10,8 @@ import org.tio.core.intf.AioListener;
 import org.tio.core.stat.GroupStat;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月1日 上午9:31:31
  */
 public class ClientGroupContext extends GroupContext {
@@ -29,18 +29,18 @@ public class ClientGroupContext extends GroupContext {
 	 * 不重连
 	 * @param aioHandler
 	 * @param aioListener
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public ClientGroupContext(ClientAioHandler aioHandler, ClientAioListener aioListener) {
 		this(aioHandler, aioListener, null);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aioHandler
 	 * @param aioListener
 	 * @param reconnConf 不需要自动重连就传null
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public ClientGroupContext(ClientAioHandler aioHandler, ClientAioListener aioListener, ReconnConf reconnConf) {
 		super();
@@ -52,14 +52,29 @@ public class ClientGroupContext extends GroupContext {
 	}
 
 	/**
-	 * @param clientGroupStat the clientGroupStat to set
+	 * @see org.tio.core.GroupContext#getAioHandler()
+	 *
+	 * @return
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:33:46
+	 *
 	 */
-	public void setClientGroupStat(ClientGroupStat clientGroupStat) {
-		this.clientGroupStat = clientGroupStat;
+	@Override
+	public AioHandler getAioHandler() {
+		return this.getClientAioHandler();
 	}
 
-	public ClientGroupStat getClientGroupStat() {
-		return clientGroupStat;
+	/**
+	 * @see org.tio.core.GroupContext#getAioListener()
+	 *
+	 * @return
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:33:46
+	 *
+	 */
+	@Override
+	public AioListener getAioListener() {
+		return this.getClientAioListener();
 	}
 
 	/**
@@ -70,17 +85,41 @@ public class ClientGroupContext extends GroupContext {
 	}
 
 	/**
-	 * @param clientAioHandler the clientAioHandler to set
-	 */
-	public void setClientAioHandler(ClientAioHandler clientAioHandler) {
-		this.clientAioHandler = clientAioHandler;
-	}
-
-	/**
 	 * @return the clientAioListener
 	 */
 	public ClientAioListener getClientAioListener() {
 		return clientAioListener;
+	}
+
+	public ClientGroupStat getClientGroupStat() {
+		return clientGroupStat;
+	}
+
+	/**
+	 * @return the connectionCompletionHandler
+	 */
+	public ConnectionCompletionHandler getConnectionCompletionHandler() {
+		return connectionCompletionHandler;
+	}
+
+	/**
+	 * @see org.tio.core.GroupContext#getGroupStat()
+	 *
+	 * @return
+	 * @author tanyaowu
+	 * 2016年12月20日 上午11:33:46
+	 *
+	 */
+	@Override
+	public GroupStat getGroupStat() {
+		return this.getClientGroupStat();
+	}
+
+	/**
+	 * @param clientAioHandler the clientAioHandler to set
+	 */
+	public void setClientAioHandler(ClientAioHandler clientAioHandler) {
+		this.clientAioHandler = clientAioHandler;
 	}
 
 	/**
@@ -93,57 +132,11 @@ public class ClientGroupContext extends GroupContext {
 		}
 	}
 
-	/** 
-	 * @see org.tio.core.GroupContext#getAioHandler()
-	 * 
-	 * @return
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:33:46
-	 * 
-	 */
-	@Override
-	public AioHandler getAioHandler() {
-		return this.getClientAioHandler();
-	}
-
-	/** 
-	 * @see org.tio.core.GroupContext#getGroupStat()
-	 * 
-	 * @return
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:33:46
-	 * 
-	 */
-	@Override
-	public GroupStat getGroupStat() {
-		return this.getClientGroupStat();
-	}
-
-	/** 
-	 * @see org.tio.core.GroupContext#getAioListener()
-	 * 
-	 * @return
-	 * @author: tanyaowu
-	 * 2016年12月20日 上午11:33:46
-	 * 
-	 */
-	@Override
-	public AioListener getAioListener() {
-		return this.getClientAioListener();
-	}
-
 	/**
-	 * @param reconnConf the reconnConf to set
+	 * @param clientGroupStat the clientGroupStat to set
 	 */
-	public void setReconnConf(ReconnConf reconnConf) {
-		this.reconnConf = reconnConf;
-	}
-
-	/**
-	 * @return the connectionCompletionHandler
-	 */
-	public ConnectionCompletionHandler getConnectionCompletionHandler() {
-		return connectionCompletionHandler;
+	public void setClientGroupStat(ClientGroupStat clientGroupStat) {
+		this.clientGroupStat = clientGroupStat;
 	}
 
 	/**
@@ -151,6 +144,13 @@ public class ClientGroupContext extends GroupContext {
 	 */
 	public void setConnectionCompletionHandler(ConnectionCompletionHandler connectionCompletionHandler) {
 		this.connectionCompletionHandler = connectionCompletionHandler;
+	}
+
+	/**
+	 * @param reconnConf the reconnConf to set
+	 */
+	public void setReconnConf(ReconnConf reconnConf) {
+		this.reconnConf = reconnConf;
 	}
 
 }

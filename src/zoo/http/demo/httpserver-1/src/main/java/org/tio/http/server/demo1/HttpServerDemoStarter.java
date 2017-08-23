@@ -19,31 +19,30 @@ import com.jfinal.kit.PropKit;
  * ab -c 200 -n 200000 -k http://127.0.0.1:9527/test/abtest
  * ab -c 300 -n 200000 -k http://127.0.0.1:9527/test/abtest
  * ab -c 400 -n 200000 -k http://127.0.0.1:9527/test/abtest
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年6月28日 下午5:34:04
  */
 public class HttpServerDemoStarter {
 	private static Logger log = LoggerFactory.getLogger(HttpServerDemoStarter.class);
-	
-//	public static Config conf = ConfigFactory.load("app.properties");
-	
 
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public HttpServerDemoStarter() {
-	}
+	//	public static Config conf = ConfigFactory.load("app.properties");
 
 	/**
 	 * @param args
-	 * @author: tanyaowu
-	 * @throws IOException 
+	 * @author tanyaowu
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws Exception {
 		PropKit.use("app.properties");
-		
+
 		JfinalInit.init();
 		HttpServerInit.init();
+	}
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public HttpServerDemoStarter() {
 	}
 }

@@ -4,18 +4,19 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.tio.core.exception.LengthOverflowException;
 
 public class ByteBufferUtils {
 	/**
-	 * 
+	 *
 	 * @param byteBuffer1
 	 * @param byteBuffer2
 	 * @return
 	 * @author: tanyaowu
 	 */
 	public static ByteBuffer composite(ByteBuffer byteBuffer1, ByteBuffer byteBuffer2) {
-		int capacity = (byteBuffer1.limit() - byteBuffer1.position()) + (byteBuffer2.limit() - byteBuffer2.position());
-		ByteBuffer ret = ByteBuffer.allocateDirect(capacity);
+		int capacity = byteBuffer1.limit() - byteBuffer1.position() + byteBuffer2.limit() - byteBuffer2.position();
+		ByteBuffer ret = ByteBuffer.allocate(capacity);
 
 		ret.put(byteBuffer1);
 		ret.put(byteBuffer2);
@@ -25,55 +26,15 @@ public class ByteBufferUtils {
 		return ret;
 	}
 
-	public static String readLine(ByteBuffer buffer, String charset) {
-//		boolean canEnd = false;
-		int startPosition = buffer.position();
-		int endPosition = lineEnd(buffer);
-		
-		if(endPosition > startPosition) {
-			byte[] bs = new byte[endPosition - startPosition];
-			System.arraycopy(buffer.array(), startPosition, bs, 0, bs.length);
-			if (StringUtils.isNoneBlank(charset)) {
-				try {
-					return new String(bs, charset);
-				} catch (UnsupportedEncodingException e) {
-					throw new RuntimeException(e);
-				} 
-			} else {
-				return new String(bs);
-			}
-			
-		} else if (endPosition == -1) {
-			return null;
-		} else if (endPosition == startPosition) {
-			return "";
-		}
-		return null;
-	}
-	
-	
-	public static int lineEnd(ByteBuffer buffer) {
-		boolean canEnd = false;
-//		int startPosition = buffer.position();
-		while(buffer.hasRemaining()) {
-			byte b = buffer.get();
-			if (b == '\r') {
-				canEnd = true;
-			} else if (b == '\n'){
-				if (canEnd) {
-					int endPosition = buffer.position();
-					return endPosition - 2;
-				}
-			}
-		}
-		return -1;
+	public static void copy(ByteBuffer src, int srcStartindex, ByteBuffer dest, int destStartIndex, int length) {
+		System.arraycopy(src.array(), srcStartindex, dest.array(), destStartIndex, length);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @param startindex 从0开始
-	 * @param endindex 
+	 * @param endindex
 	 * @return
 	 *
 	 * @author: tanyaowu
@@ -87,8 +48,99 @@ public class ByteBufferUtils {
 		return newByteBuffer;
 	}
 
-	public static void copy(ByteBuffer src, int srcStartindex, ByteBuffer dest, int destStartIndex, int length) {
-		System.arraycopy(src.array(), srcStartindex, dest.array(), destStartIndex, length);
+	/**
+	 *
+	 * @param buffer
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static int lineEnd(ByteBuffer buffer) throws LengthOverflowException {
+		return lineEnd(buffer, Integer.MAX_VALUE);
+	}
+
+	/**
+	 *
+	 * @param buffer
+	 * @param maxlength
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static int lineEnd(ByteBuffer buffer, int maxlength) throws LengthOverflowException {
+		boolean canEnd = false;
+		//		int startPosition = buffer.position();
+		int count = 0;
+		while (buffer.hasRemaining()) {
+			byte b = buffer.get();
+			count++;
+			if (count > maxlength) {
+				throw new LengthOverflowException("maxlength is " + maxlength);
+			}
+			if (b == '\r') {
+				canEnd = true;
+			} else if (b == '\n') {
+				if (canEnd) {
+					int endPosition = buffer.position();
+					return endPosition - 2;
+				}
+			}
+		}
+		return -1;
+	}
+
+	public static byte[] readBytes(ByteBuffer buffer, int length) {
+		byte[] ab = new byte[length];
+		buffer.get(ab);
+		return ab;
+	}
+
+	/**
+	 *
+	 * @param buffer
+	 * @param charset
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static String readLine(ByteBuffer buffer, String charset) throws LengthOverflowException {
+		return readLine(buffer, charset, Integer.MAX_VALUE);
+	}
+
+	/**
+	 *
+	 * @param buffer
+	 * @param charset
+	 * @param maxlength
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static String readLine(ByteBuffer buffer, String charset, Integer maxlength) throws LengthOverflowException {
+		//		boolean canEnd = false;
+		int startPosition = buffer.position();
+		int endPosition = lineEnd(buffer, maxlength);
+
+		if (endPosition > startPosition) {
+			byte[] bs = new byte[endPosition - startPosition];
+			System.arraycopy(buffer.array(), startPosition, bs, 0, bs.length);
+			if (StringUtils.isNoneBlank(charset)) {
+				try {
+					return new String(bs, charset);
+				} catch (UnsupportedEncodingException e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+				return new String(bs);
+			}
+
+		} else if (endPosition == -1) {
+			return null;
+		} else if (endPosition == startPosition) {
+			return "";
+		}
+		return null;
+	}
+
+	public static int readUB1(ByteBuffer buffer) {
+		int ret = buffer.get() & 0xff;
+		return ret;
 	}
 
 	public static int readUB2(ByteBuffer buffer) {
@@ -100,11 +152,6 @@ public class ByteBufferUtils {
 	public static int readUB2WithBigEdian(ByteBuffer buffer) {
 		int ret = (buffer.get() & 0xff) << 8;
 		ret |= buffer.get() & 0xff;
-		return ret;
-	}
-
-	public static int readUB1(ByteBuffer buffer) {
-		int ret = buffer.get() & 0xff;
 		return ret;
 	}
 
@@ -123,12 +170,6 @@ public class ByteBufferUtils {
 		ret |= buffer.get() & 0xff;
 
 		return ret;
-	}
-
-	public static byte[] readBytes(ByteBuffer buffer, int length) {
-		byte[] ab = new byte[length];
-		buffer.get(ab);
-		return ab;
 	}
 
 	public static final void writeUB2(ByteBuffer buffer, int i) {

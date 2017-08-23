@@ -8,12 +8,12 @@ import org.tio.examples.helloworld.common.HelloPacket;
 import org.tio.server.intf.ServerAioHandler;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class HelloServerAioHandler extends HelloAbsAioHandler implements ServerAioHandler {
-	/** 
+	/**
 	 * 处理消息
 	 */
 	@Override

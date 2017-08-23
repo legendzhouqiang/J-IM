@@ -6,22 +6,10 @@ import org.tio.http.common.HttpResponse;
 import org.tio.http.common.RequestLine;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月25日 下午2:16:06
  */
 public interface IHttpServerListener {
-
-	/**
-	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)前会先调用这个方法<br>
-	 * 如果返回了HttpResponsePacket对象，则后续都不再执行，表示调用栈就此结束<br>
-	 * @param packet
-	 * @param requestLine
-	 * @param channelContext
-	 * @return
-	 * @throws Exception
-	 * @author: tanyaowu
-	 */
-	public HttpResponse doBeforeHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext) throws Exception;
 
 	/**
 	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)后会调用此方法，业务层可以统一在这里给HttpResponsePacket作一些修饰
@@ -31,8 +19,21 @@ public interface IHttpServerListener {
 	 * @param httpResponse
 	 * @return
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
-	public void doAfterHandler(HttpRequest packet, RequestLine requestLine, ChannelContext channelContext, HttpResponse httpResponse) throws Exception;
+	public void doAfterHandler(HttpRequest packet, RequestLine requestLine, HttpResponse httpResponse) throws Exception;
+
+	/**
+	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)前会先调用这个方法<br>
+	 * 如果返回了HttpResponsePacket对象，则后续都不再执行，表示调用栈就此结束<br>
+	 * @param packet
+	 * @param requestLine
+	 * @param channelContext
+	 * @param httpResponseFromCache 从缓存中获取到的HttpResponse对象
+	 * @return
+	 * @throws Exception
+	 * @author tanyaowu
+	 */
+	public HttpResponse doBeforeHandler(HttpRequest packet, RequestLine requestLine, HttpResponse httpResponseFromCache) throws Exception;
 
 }

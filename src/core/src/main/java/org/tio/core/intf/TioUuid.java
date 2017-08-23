@@ -1,15 +1,15 @@
 package org.tio.core.intf;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年6月5日 上午10:22:52
  */
 public interface TioUuid {
 
 	/**
-	 * 
+	 *
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	String uuid();
 

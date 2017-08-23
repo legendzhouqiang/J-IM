@@ -9,36 +9,36 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.udp.UdpConf;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年7月5日 下午5:54:13
  */
 public class UdpSendRunnable implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(UdpSendRunnable.class);
+
+	/**
+	 * @param args
+	 * @author tanyaowu
+	 */
+	public static void main(String[] args) {
+
+	}
 
 	private LinkedBlockingQueue<DatagramPacket> queue;
 
 	private UdpConf udpConf;
 
 	private boolean isStopped = false;
-	
+
 	private DatagramSocket datagramSocket;
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
 	public UdpSendRunnable(LinkedBlockingQueue<DatagramPacket> queue, UdpConf udpConf, DatagramSocket datagramSocket) {
 		this.queue = queue;
 		this.udpConf = udpConf;
 		this.datagramSocket = datagramSocket;
-	}
-
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
 	}
 
 	@Override

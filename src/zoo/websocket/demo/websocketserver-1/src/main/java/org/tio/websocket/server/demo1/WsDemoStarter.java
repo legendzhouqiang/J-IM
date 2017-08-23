@@ -7,35 +7,35 @@ import org.slf4j.LoggerFactory;
 import org.tio.websocket.server.WsServerStarter;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年6月28日 下午5:34:04
  */
 public class WsDemoStarter {
 	private static Logger log = LoggerFactory.getLogger(WsDemoStarter.class);
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 * @param args
+	 * @author tanyaowu
+	 * @throws IOException
 	 */
-	public WsDemoStarter() {
+	public static void main(String[] args) throws IOException {
+		WsDemoStarter appStarter = new WsDemoStarter();
+		appStarter.start(9321, new WsDemoMsgHandler());
 	}
 
 	WsServerStarter wsServerStarter;
 	WsDemoMsgHandler wsMsgHandler;
 
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public WsDemoStarter() {
+	}
+
 	public void start(int port, WsDemoMsgHandler wsMsgHandler) throws IOException {
 		this.wsMsgHandler = wsMsgHandler;
 		wsServerStarter = new WsServerStarter();
 		wsServerStarter.start(port, wsMsgHandler);
-	}
-
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 * @throws IOException 
-	 */
-	public static void main(String[] args) throws IOException {
-		WsDemoStarter appStarter = new WsDemoStarter();
-		appStarter.start(9321, new WsDemoMsgHandler());
 	}
 }

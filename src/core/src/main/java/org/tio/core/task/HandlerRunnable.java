@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.tio.core.task;
 
@@ -13,32 +13,32 @@ import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.intf.Packet;
 import org.tio.core.maintain.ChannelContextMapWithLock;
-import org.tio.core.threadpool.AbstractQueueRunnable;
+import org.tio.utils.thread.pool.AbstractQueueRunnable;
 
 /**
- * 
+ *
  * @author 谭耀武
  * 2012-08-09
- * 
+ *
  */
 public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 	private static final Logger log = LoggerFactory.getLogger(HandlerRunnable.class);
 
 	private ChannelContext channelContext = null;
 
+	private AtomicLong synFailCount = new AtomicLong();
+
 	public HandlerRunnable(ChannelContext channelContext, Executor executor) {
 		super(executor);
 		this.channelContext = channelContext;
 	}
-
-	private AtomicLong synFailCount = new AtomicLong();
 
 	/**
 	 * 处理packet
 	 * @param packet
 	 * @return
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public void handler(Packet packet) {
 		//		int ret = 0;
@@ -73,23 +73,20 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 
 			groupContext.getGroupStat().getHandledPacket().incrementAndGet();
 			groupContext.getGroupStat().getHandledBytes().addAndGet(packet.getByteCount());
-
+			
+			channelContext.getIpStat().getHandledPackets().incrementAndGet();
+			channelContext.getIpStat().getHandledBytes().addAndGet(packet.getByteCount());
 		}
 
 		//		return ret;
 	}
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + ":" + channelContext.toString();
-	}
-
-	/** 
-	 * @see org.tio.core.threadpool.intf.SynRunnableIntf#runTask()
-	 * 
-	 * @author: tanyaowu
+	/**
+	 * @see org.tio.core.threadpool.intf.ISynRunnable#runTask()
+	 *
+	 * @author tanyaowu
 	 * 2016年12月5日 下午3:02:49
-	 * 
+	 *
 	 */
 	@Override
 	public void runTask() {
@@ -97,5 +94,10 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 		while ((packet = msgQueue.poll()) != null) {
 			handler(packet);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + ":" + channelContext.toString();
 	}
 }

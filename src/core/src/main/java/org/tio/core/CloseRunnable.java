@@ -11,7 +11,7 @@ import org.tio.client.ClientChannelContext;
 import org.tio.client.ReconnConf;
 import org.tio.core.intf.AioListener;
 import org.tio.core.maintain.MaintainUtils;
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.SystemTimer;
 
 public class CloseRunnable implements Runnable {
 
@@ -23,11 +23,11 @@ public class CloseRunnable implements Runnable {
 	private boolean isNeedRemove;
 
 	/**
-	 * 
 	 *
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 * 2017年3月1日 下午1:52:12
-	 * 
+	 *
 	 */
 	public CloseRunnable(ChannelContext channelContext, Throwable throwable, String remark, boolean isNeedRemove) {
 		this.channelContext = channelContext;
@@ -36,12 +36,12 @@ public class CloseRunnable implements Runnable {
 		this.isNeedRemove = isNeedRemove;
 	}
 
-	/** 
+	/**
 	 * @see java.lang.Runnable#run()
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 * 2017年3月1日 下午1:54:34
-	 * 
+	 *
 	 */
 	@Override
 	public void run() {
@@ -129,10 +129,11 @@ public class CloseRunnable implements Runnable {
 				log.info("{} 准备关闭连接, isNeedRemove:{}, {}", channelContext, isRemove, remark);
 
 				try {
+					channelContext.getIpStat().getActivatedCount().decrementAndGet();
 					if (isRemove) {
 						MaintainUtils.removeFromMaintain(channelContext);
 					} else {
-						if (!groupContext.isShortConnection()) {
+//						if (!groupContext.isShortConnection()) {
 							groupContext.closeds.add(channelContext);
 							groupContext.connecteds.remove(channelContext);
 
@@ -149,7 +150,7 @@ public class CloseRunnable implements Runnable {
 							} catch (Throwable e) {
 								log.error(e.toString(), e);
 							}
-						}
+//						}
 					}
 
 					try {
@@ -169,7 +170,7 @@ public class CloseRunnable implements Runnable {
 				} catch (Throwable e) {
 					log.error(e.toString(), e);
 				} finally {
-					if (!isRemove && channelContext.isClosed() && (isClientChannelContext)) //不删除且没有连接上，则加到重连队列中
+					if (!isRemove && channelContext.isClosed() && isClientChannelContext) //不删除且没有连接上，则加到重连队列中
 					{
 						ClientChannelContext clientChannelContext = (ClientChannelContext) channelContext;
 						ReconnConf.put(clientChannelContext);

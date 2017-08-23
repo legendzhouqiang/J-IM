@@ -14,19 +14,22 @@ public class MaintainUtils {
 	 * 彻底删除，不再维护
 	 * @param channelContext
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 *
 	 */
-	public static  void removeFromMaintain(ChannelContext channelContext) {
+	public static void removeFromMaintain(ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
-		if (groupContext.isShortConnection()) {
-			return;
-		}
 		
+		groupContext.connections.remove(channelContext);
+		groupContext.connecteds.remove(channelContext);
+		groupContext.closeds.remove(channelContext);
+		
+//		if (groupContext.isShortConnection()) {
+//			return;
+//		}
+
 		try {
-			groupContext.connections.remove(channelContext);
-			groupContext.connecteds.remove(channelContext);
-			groupContext.closeds.remove(channelContext);
+			
 			groupContext.ids.unbind(channelContext);
 			if (StringUtils.isNotBlank(channelContext.getUserid())) {
 				try {

@@ -4,54 +4,86 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ZipUtil;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class HttpResponse extends HttpPacket {
-//	private static Logger log = LoggerFactory.getLogger(HttpResponse.class);
+	private static Logger log = LoggerFactory.getLogger(HttpResponse.class);
 
-	private HttpResponseStatus status = HttpResponseStatus.C200;
-	
-	private HttpRequest httpRequest = null;
-
-	
-	private List<Cookie> cookies = null;
-	//	private int contentLength;
-//	private byte[] bodyBytes;
-	private String charset = HttpConst.CHARSET_NAME;
-	/**
-	 * @author: tanyaowu
-	 * 2017年2月22日 下午4:14:40
-	 */
-	public HttpResponse(HttpRequest httpRequest) {
-		this.httpRequest = httpRequest;
-		
-		String Connection = StringUtils.lowerCase(httpRequest.getHeader(HttpConst.RequestHeaderKey.Connection));
-		if (StringUtils.equals(Connection, HttpConst.RequestHeaderValue.Connection.keep_alive)) {
-			addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.keep_alive);
-			addHeader(HttpConst.ResponseHeaderKey.Keep_Alive, "timeout=10, max=20");
-		}
-		
-		addHeader(HttpConst.ResponseHeaderKey.Server, HttpConst.SERVER_INFO);
-//		String xx = DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis());
-//		addHeader(HttpConst.ResponseHeaderKey.Date, DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis()));
-//		addHeader(HttpConst.ResponseHeaderKey.Date, new Date().toGMTString());
-	}
+	private static final long serialVersionUID = -3512681144230291786L;
 
 	/**
 	 * @param args
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2017年2月22日 下午4:14:40
-	 * 
+	 *
 	 */
 	public static void main(String[] args) {
+	}
+
+	private HttpResponseStatus status = HttpResponseStatus.C200;
+
+	/**
+	 * 是否是静态资源
+	 * true: 静态资源
+	 */
+	private boolean isStaticRes = false;
+
+	private HttpRequest request = null;
+	private List<Cookie> cookies = null;
+
+	//	private int contentLength;
+	//	private byte[] bodyBytes;
+	private String charset = HttpConst.CHARSET_NAME;
+
+	/**
+	 * 已经编码好的byte[]
+	 */
+	private byte[] encodedBytes = null;
+
+	/**
+	 *
+	 * @param request
+	 * @param httpConfig 可以为null
+	 * @author tanyaowu
+	 */
+	public HttpResponse(HttpRequest request, HttpConfig httpConfig) {
+		this.request = request;
+
+		String Connection = StringUtils.lowerCase(request.getHeader(HttpConst.RequestHeaderKey.Connection));
+		RequestLine requestLine = request.getRequestLine();
+		String version = requestLine.getVersion();
+		if ("1.0".equals(version)) {
+			if (StringUtils.equals(Connection, HttpConst.RequestHeaderValue.Connection.keep_alive)) {
+				addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.keep_alive);
+				addHeader(HttpConst.ResponseHeaderKey.Keep_Alive, "timeout=10, max=20");
+			} else {
+				addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.close);
+			}
+		} else {
+			if (StringUtils.equals(Connection, HttpConst.RequestHeaderValue.Connection.close)) {
+				addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.close);
+			} else {
+				addHeader(HttpConst.ResponseHeaderKey.Connection, HttpConst.ResponseHeaderValue.Connection.keep_alive);
+				addHeader(HttpConst.ResponseHeaderKey.Keep_Alive, "timeout=10, max=20");
+			}
+		}
+		
+
+		if (httpConfig != null) {
+			addHeader(HttpConst.ResponseHeaderKey.Server, httpConfig.getServerInfo());
+		}
+		//		String xx = DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis());
+		//		addHeader(HttpConst.ResponseHeaderKey.Date, DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis()));
+		//		addHeader(HttpConst.ResponseHeaderKey.Date, new Date().toGMTString());
 	}
 
 	public boolean addCookie(Cookie cookie) {
@@ -64,94 +96,13 @@ public class HttpResponse extends HttpPacket {
 		}
 		return cookies.add(cookie);
 	}
-	
-	/**
-	 * @param body the body to set
-	 */
-	public void setBody(byte[] body, HttpRequest httpRequest) {
-		this.body = body;
-		if (body != null) {
-			gzip(httpRequest);
-		}
-	}
-	
-	private void gzip(HttpRequest httpRequest) {
-		//Accept-Encoding
-		//		检查浏览器是否支持gzip
-		String Accept_Encoding = httpRequest.getHeaders().get(HttpConst.RequestHeaderKey.Accept_Encoding);
-		if (StringUtils.isNoneBlank(Accept_Encoding)) {
-			String[] ss = StringUtils.split(Accept_Encoding, ",");
-			if (ArrayUtil.contains(ss, "gzip")) {
-				byte[] bs = this.getBody();
-				if (bs.length >= 600) {
-					byte[] bs2 = ZipUtil.gzip(bs);
-					if (bs2.length < bs.length) {
-						this.body = bs2;
-						this.addHeader(HttpConst.ResponseHeaderKey.Content_Encoding, "gzip");
-					}
-				}
-			}
-		}
-	}
 
 	/**
-	 * 
-	 * @param key
-	 * @param value
-	 * @author: tanyaowu
+	 * @return the charset
 	 */
-	//	public void removeCookie(Cookie cookie) {
-	//		if (cookies == null) {
-	//			return;
-	//		}
-	//		return cookies.add(cookie);
-	//	}
-
-	
-
-	//	/**
-	//	 * @return the bodyLength
-	//	 */
-	//	public int getContentLength()
-	//	{
-	//		return contentLength;
-	//	}
-	//
-	//	/**
-	//	 * @param bodyLength the bodyLength to set
-	//	 */
-	//	public void setContentLength(int contentLength)
-	//	{
-	//		this.contentLength = contentLength;
-	//	}
-
-	/**
-	 * @return the status
-	 */
-	public HttpResponseStatus getStatus() {
-		return status;
+	public String getCharset() {
+		return charset;
 	}
-
-	/**
-	 * @param status the status to set
-	 */
-	public void setStatus(HttpResponseStatus status) {
-		this.status = status;
-	}
-
-//	/**
-//	 * @return the bodyBytes
-//	 */
-//	public byte[] getBodyBytes() {
-//		return bodyBytes;
-//	}
-//
-//	/**
-//	 * @param bodyBytes the bodyBytes to set
-//	 */
-//	public void setBody(byte[] bodyBytes) {
-//		this.bodyBytes = bodyBytes;
-//	}
 
 	/**
 	 * @return the cookies
@@ -161,17 +112,72 @@ public class HttpResponse extends HttpPacket {
 	}
 
 	/**
-	 * @param cookies the cookies to set
+	 * @return the encodedBytes
 	 */
-	public void setCookies(List<Cookie> cookies) {
-		this.cookies = cookies;
+	public byte[] getEncodedBytes() {
+		return encodedBytes;
 	}
 
 	/**
-	 * @return the charset
+	 * @return the request
 	 */
-	public String getCharset() {
-		return charset;
+	public HttpRequest getHttpRequestPacket() {
+		return request;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public HttpResponseStatus getStatus() {
+		return status;
+	}
+
+	private void gzip(HttpRequest request) {
+		if (request.getIsSupportGzip()) {
+			byte[] bs = this.getBody();
+			if (bs.length >= 600) {
+				byte[] bs2 = ZipUtil.gzip(bs);
+				if (bs2.length < bs.length) {
+					this.body = bs2;
+					this.addHeader(HttpConst.ResponseHeaderKey.Content_Encoding, "gzip");
+				}
+			}
+		} else {
+			log.info("{} 竟然不支持gzip, {}", request.getChannelContext(), request.getHeader(HttpConst.RequestHeaderKey.User_Agent));
+		}
+	}
+
+	/**
+	 * @return the isStaticRes
+	 */
+	public boolean isStaticRes() {
+		return isStaticRes;
+	}
+
+	@Override
+	public String logstr() {
+		String str = null;
+		if (request != null) {
+			str = "\r\n响应: 请求ID_" + request.getId() + "  " + request.getRequestLine().getPathAndQuery();
+			str += "\r\n" + this.getHeaderString();
+		} else {
+			str = "\r\n响应\r\n" + status.getHeaderText();
+		}
+		return str;
+	}
+
+	public void setBody(byte[] body, HttpRequest request) {
+		this.body = body;
+	}
+
+	/**
+	 * @param body the body to set
+	 */
+	public void setBodyAndGzip(byte[] body, HttpRequest request) {
+		this.body = body;
+		if (body != null) {
+			gzip(request);
+		}
 	}
 
 	/**
@@ -182,29 +188,37 @@ public class HttpResponse extends HttpPacket {
 	}
 
 	/**
-	 * @return the httpRequest
+	 * @param cookies the cookies to set
 	 */
-	public HttpRequest getHttpRequestPacket() {
-		return httpRequest;
+	public void setCookies(List<Cookie> cookies) {
+		this.cookies = cookies;
 	}
 
 	/**
-	 * @param httpRequest the httpRequest to set
+	 * @param encodedBytes the encodedBytes to set
 	 */
-	public void setHttpRequestPacket(HttpRequest httpRequest) {
-		this.httpRequest = httpRequest;
-	}
-	
-	@Override
-	public String logstr() {
-		String str = null;
-		if (httpRequest != null) {
-			str = "\r\n响应: 请求ID_" + httpRequest.getId();			
-			str += "\r\n" + this.getHeaderString();
-		} else {
-			str = "\r\n响应\r\n" + status.getHeaderText();
-		}
-		return str;
+	public void setEncodedBytes(byte[] encodedBytes) {
+		this.encodedBytes = encodedBytes;
 	}
 
+	/**
+	 * @param request the request to set
+	 */
+	public void setHttpRequestPacket(HttpRequest request) {
+		this.request = request;
+	}
+
+	/**
+	 * @param isStaticRes the isStaticRes to set
+	 */
+	public void setStaticRes(boolean isStaticRes) {
+		this.isStaticRes = isStaticRes;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(HttpResponseStatus status) {
+		this.status = status;
+	}
 }

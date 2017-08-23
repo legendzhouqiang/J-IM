@@ -22,4 +22,3 @@ public class _MappingKit {
 		arp.addMapping("user_osc", "id", UserOsc.class);
 	}
 }
-

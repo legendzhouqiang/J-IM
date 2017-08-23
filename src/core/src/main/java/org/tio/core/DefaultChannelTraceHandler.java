@@ -14,7 +14,7 @@ import com.xiaoleilu.hutool.date.DatePattern;
 import com.xiaoleilu.hutool.date.DateTime;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年4月16日 下午6:45:21
  */
 public class DefaultChannelTraceHandler implements ChannelTraceHandler {
@@ -23,18 +23,18 @@ public class DefaultChannelTraceHandler implements ChannelTraceHandler {
 	private Logger clientTraceLog = LoggerFactory.getLogger("tio-client-trace-log");
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
 	public DefaultChannelTraceHandler() {
 	}
 
-	/** 
+	/**
 	 * @param channelContext
 	 * @param channelAction
 	 * @param packet
 	 * @param extmsg
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void traceChannel(ChannelContext channelContext, ChannelAction channelAction, Packet packet, Map<String, Object> extmsg) {

@@ -7,17 +7,27 @@ import org.tio.http.common.HttpResponse;
 import org.tio.monitor.RateLimiterWrap;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
-public class WsSessionContext
-{
+public class WsSessionContext {
+	/**
+	 * @param args
+	 *
+	 * @author tanyaowu
+	 * 2017年2月21日 上午10:27:54
+	 *
+	 */
+	public static void main(String[] args) {
+
+	}
+
 	/**
 	 * 消息请求频率控制器
 	 */
 	private RateLimiterWrap requestRateLimiter = null;
-	
+
 	/**
 	 * 是否已经握过手
 	 */
@@ -27,88 +37,26 @@ public class WsSessionContext
 	 * websocket 握手请求包
 	 */
 	private HttpRequest handshakeRequestPacket = null;
-	
+
 	/**
 	 * websocket 握手响应包
 	 */
 	private HttpResponse handshakeResponsePacket = null;
 
 	private String token = null;
-	
-	
+
 	//websocket 协议用到的，有时候数据包是分几个到的，注意那个fin字段，本im暂时不支持
 	private List<byte[]> lastParts = null;
-	
-	
+
 	/**
-	 * 
 	 *
-	 * @author: tanyaowu
-	 * 2017年2月21日 上午10:27:54
-	 * 
-	 */
-	public WsSessionContext()
-	{
-		
-	}
-
-	/**
-	 * @param args
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2017年2月21日 上午10:27:54
-	 * 
+	 *
 	 */
-	public static void main(String[] args)
-	{
-		
-	}
+	public WsSessionContext() {
 
-
-	/**
-	 * @return the isHandshaked
-	 */
-	public boolean isHandshaked()
-	{
-		return isHandshaked;
-	}
-
-	/**
-	 * @param isHandshaked the isHandshaked to set
-	 */
-	public void setHandshaked(boolean isHandshaked)
-	{
-		this.isHandshaked = isHandshaked;
-	}
-
-	/**
-	 * @return the token
-	 */
-	public String getToken()
-	{
-		return token;
-	}
-
-	/**
-	 * @param token the token to set
-	 */
-	public void setToken(String token)
-	{
-		this.token = token;
-	}
-
-	/**
-	 * @return the lastPart
-	 */
-	public List<byte[]> getLastParts() {
-		return lastParts;
-	}
-
-	/**
-	 * @param lastParts the lastPart to set
-	 */
-	public void setLastParts(List<byte[]> lastParts) {
-		this.lastParts = lastParts;
 	}
 
 	/**
@@ -119,10 +67,17 @@ public class WsSessionContext
 	}
 
 	/**
-	 * @param httpHandshakePacket the httpHandshakePacket to set
+	 * @return the handshakeResponsePacket
 	 */
-	public void setHandshakeRequestPacket(HttpRequest handshakeRequestPacket) {
-		this.handshakeRequestPacket = handshakeRequestPacket;
+	public HttpResponse getHandshakeResponsePacket() {
+		return handshakeResponsePacket;
+	}
+
+	/**
+	 * @return the lastPart
+	 */
+	public List<byte[]> getLastParts() {
+		return lastParts;
 	}
 
 	/**
@@ -133,17 +88,31 @@ public class WsSessionContext
 	}
 
 	/**
-	 * @param requestRateLimiter the requestRateLimiter to set
+	 * @return the token
 	 */
-	public void setRequestRateLimiter(RateLimiterWrap requestRateLimiter) {
-		this.requestRateLimiter = requestRateLimiter;
+	public String getToken() {
+		return token;
 	}
 
 	/**
-	 * @return the handshakeResponsePacket
+	 * @return the isHandshaked
 	 */
-	public HttpResponse getHandshakeResponsePacket() {
-		return handshakeResponsePacket;
+	public boolean isHandshaked() {
+		return isHandshaked;
+	}
+
+	/**
+	 * @param isHandshaked the isHandshaked to set
+	 */
+	public void setHandshaked(boolean isHandshaked) {
+		this.isHandshaked = isHandshaked;
+	}
+
+	/**
+	 * @param httpHandshakePacket the httpHandshakePacket to set
+	 */
+	public void setHandshakeRequestPacket(HttpRequest handshakeRequestPacket) {
+		this.handshakeRequestPacket = handshakeRequestPacket;
 	}
 
 	/**
@@ -153,6 +122,25 @@ public class WsSessionContext
 		this.handshakeResponsePacket = handshakeResponsePacket;
 	}
 
+	/**
+	 * @param lastParts the lastPart to set
+	 */
+	public void setLastParts(List<byte[]> lastParts) {
+		this.lastParts = lastParts;
+	}
 
-	
+	/**
+	 * @param requestRateLimiter the requestRateLimiter to set
+	 */
+	public void setRequestRateLimiter(RateLimiterWrap requestRateLimiter) {
+		this.requestRateLimiter = requestRateLimiter;
+	}
+
+	/**
+	 * @param token the token to set
+	 */
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 }

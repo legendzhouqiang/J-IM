@@ -7,5 +7,7 @@ import org.tio.http.server.demo1.model.base.BaseBlog;
  */
 @SuppressWarnings("serial")
 public class Blog extends BaseBlog<Blog> {
-	
+
+	private static final long serialVersionUID = 4286093082174483265L;
+
 }

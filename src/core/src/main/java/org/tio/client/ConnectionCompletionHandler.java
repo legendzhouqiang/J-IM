@@ -9,21 +9,21 @@ import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioListener;
 import org.tio.core.Node;
 import org.tio.core.ReadCompletionHandler;
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.SystemTimer;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月1日 上午9:32:10
  */
 public class ConnectionCompletionHandler implements CompletionHandler<Void, ConnectionCompletionVo> {
 	private static Logger log = LoggerFactory.getLogger(ConnectionCompletionHandler.class);
 
 	/**
-	 * 
+	 *
 	 * @param result
 	 * @param attachment
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void completed(Void result, ConnectionCompletionVo attachment) {
@@ -31,10 +31,10 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 	}
 
 	/**
-	 * 
+	 *
 	 * @param throwable
 	 * @param attachment
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
 	public void failed(Throwable throwable, ConnectionCompletionVo attachment) {
@@ -42,11 +42,11 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 	}
 
 	/**
-	 * 
+	 *
 	 * @param result
 	 * @param attachment
 	 * @param throwable
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	private void handler(Void result, ConnectionCompletionVo attachment, Throwable throwable) {
 		ClientChannelContext channelContext = attachment.getChannelContext();

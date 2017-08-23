@@ -9,7 +9,17 @@
 
 ### [http://t-io.org](http://t-io.org "t-io官网")
 
-####  **常见应用场景**
+## **t-io各组件全景图**
+
+[![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/tio-parent.png)](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/tio-parent.png)
+
+##  t-io常用api全景图
+
+
+[![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/t-io-api.png)](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/t-io-api.png)
+
+
+##  **常见应用场景**
     
 - IM（官方提供了im例子，含web端）
 - 实时监控
@@ -19,7 +29,7 @@
 - 物联网（已有很多案例）
 - 其它实时通讯类型的场景，不一一列举
 
-####  **用t-io做的[web im](http://t-io.org/webim/)**
+##  **用t-io做的[web im](http://t-io.org/webim/)**
 
 - [演示地址](http://t-io.org/webim/)（1M带宽，请勿压测，谢谢！）
 
@@ -59,13 +69,7 @@
 - **一行代码拥有自动重连功能**
 - **各项消息统计等功能，全部一键内置搞定，省却各种烦恼**
 
-###  鸟瞰t-io
 
----
-
-[![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/t-io-api.png)](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/t-io-api.png)
-
----
 
 
 ## **各种传送门**

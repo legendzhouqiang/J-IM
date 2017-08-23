@@ -6,23 +6,23 @@ import java.util.concurrent.locks.Lock;
 
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
-import org.tio.core.SetWithLock;
+import org.tio.utils.lock.SetWithLock;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月1日 上午9:35:09
  */
 public class ChannelContextSetWithLock {
 
 	/** remoteAndChannelContext key: "ip:port" value: ChannelContext. */
-	private SetWithLock<ChannelContext> setWithLock = new SetWithLock<ChannelContext>(new HashSet<ChannelContext>());
+	private SetWithLock<ChannelContext> setWithLock = new SetWithLock<>(new HashSet<ChannelContext>());
 
 	public void add(ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
-		if (groupContext.isShortConnection()) {
-			return;
-		}
+//		if (groupContext.isShortConnection()) {
+//			return;
+//		}
 
 		Lock lock = setWithLock.getLock().writeLock();
 
@@ -37,11 +37,15 @@ public class ChannelContextSetWithLock {
 		}
 	}
 
+	public SetWithLock<ChannelContext> getSetWithLock() {
+		return setWithLock;
+	}
+
 	public boolean remove(ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
-		if (groupContext.isShortConnection()) {
-			return true;
-		}
+//		if (groupContext.isShortConnection()) {
+//			return true;
+//		}
 
 		Lock lock = setWithLock.getLock().writeLock();
 
@@ -69,10 +73,6 @@ public class ChannelContextSetWithLock {
 		} finally {
 			lock.unlock();
 		}
-	}
-
-	public SetWithLock<ChannelContext> getSetWithLock() {
-		return setWithLock;
 	}
 
 }

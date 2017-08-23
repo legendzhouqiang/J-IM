@@ -13,54 +13,50 @@ import org.tio.examples.showcase.common.packets.P2PRespBody;
 import org.tio.json.Json;
 
 /**
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月27日 下午9:51:28
  */
-public class P2PReqHandler extends AbsShowcaseBsHandler<P2PReqBody>
-{
+public class P2PReqHandler extends AbsShowcaseBsHandler<P2PReqBody> {
 	private static Logger log = LoggerFactory.getLogger(P2PReqHandler.class);
 
 	/**
-	 * 
-	 * @author: tanyaowu
+	 * @param args
+	 * @author tanyaowu
 	 */
-	public P2PReqHandler()
-	{
+	public static void main(String[] args) {
+
 	}
 
 	/**
-	 * @param args
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 */
-	public static void main(String[] args)
-	{
-
+	public P2PReqHandler() {
 	}
-	/** 
+
+	/**
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
-	public Class<P2PReqBody> bodyClass()
-	{
+	public Class<P2PReqBody> bodyClass() {
 		return P2PReqBody.class;
 	}
 
-	/** 
+	/**
 	 * @param packet
 	 * @param bsBody
 	 * @param channelContext
 	 * @return
 	 * @throws Exception
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	@Override
-	public Object handler(ShowcasePacket packet, P2PReqBody bsBody, ChannelContext channelContext) throws Exception
-	{
+	public Object handler(ShowcasePacket packet, P2PReqBody bsBody, ChannelContext channelContext) throws Exception {
 		log.info("收到点对点请求消息:{}", Json.toJson(bsBody));
-		
-		ShowcaseSessionContext showcaseSessionContext = (ShowcaseSessionContext)channelContext.getAttribute();
-		
+
+		ShowcaseSessionContext showcaseSessionContext = (ShowcaseSessionContext) channelContext.getAttribute();
+
 		P2PRespBody p2pRespBody = new P2PRespBody();
 		p2pRespBody.setFromUserid(showcaseSessionContext.getUserid());
 		p2pRespBody.setText(bsBody.getText());
@@ -69,8 +65,7 @@ public class P2PReqHandler extends AbsShowcaseBsHandler<P2PReqBody>
 		respPacket.setType(Type.P2P_RESP);
 		respPacket.setBody(Json.toJson(p2pRespBody).getBytes(ShowcasePacket.CHARSET));
 		Aio.sendToUser(channelContext.getGroupContext(), bsBody.getToUserid(), respPacket);
-		
-		
+
 		return null;
 	}
 }

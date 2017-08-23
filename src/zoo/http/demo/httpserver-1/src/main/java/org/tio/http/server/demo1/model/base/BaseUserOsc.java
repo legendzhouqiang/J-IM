@@ -9,44 +9,46 @@ import com.jfinal.plugin.activerecord.Model;
 @SuppressWarnings("serial")
 public abstract class BaseUserOsc<M extends BaseUserOsc<M>> extends Model<M> implements IBean {
 
-	public void setId(java.lang.Integer id) {
-		set("id", id);
+	private static final long serialVersionUID = 7995046067570049982L;
+
+	public java.util.Date getCreatetime() {
+		return get("createtime");
 	}
 
 	public java.lang.Integer getId() {
 		return get("id");
 	}
 
-	public void setUserid(java.lang.Integer userid) {
-		set("userid", userid);
-	}
-
-	public java.lang.Integer getUserid() {
-		return get("userid");
-	}
-
-	public void setOscid(java.lang.String oscid) {
-		set("oscid", oscid);
-	}
-
 	public java.lang.String getOscid() {
 		return get("oscid");
-	}
-
-	public void setOscnick(java.lang.String oscnick) {
-		set("oscnick", oscnick);
 	}
 
 	public java.lang.String getOscnick() {
 		return get("oscnick");
 	}
 
+	public java.lang.Integer getUserid() {
+		return get("userid");
+	}
+
 	public void setCreatetime(java.util.Date createtime) {
 		set("createtime", createtime);
 	}
 
-	public java.util.Date getCreatetime() {
-		return get("createtime");
+	public void setId(java.lang.Integer id) {
+		set("id", id);
+	}
+
+	public void setOscid(java.lang.String oscid) {
+		set("oscid", oscid);
+	}
+
+	public void setOscnick(java.lang.String oscnick) {
+		set("oscnick", oscnick);
+	}
+
+	public void setUserid(java.lang.Integer userid) {
+		set("userid", userid);
 	}
 
 }

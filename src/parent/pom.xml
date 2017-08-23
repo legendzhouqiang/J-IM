@@ -27,13 +27,10 @@
 	</scm>
 
 	<modules>
+		<module>../utils</module>
 		<module>../core</module>
-
-
-		<module>../example/parent</module>
-
 		<module>../zoo/parent</module>
-
+		<module>../example/parent</module>
 	</modules>
 
 	<properties>
@@ -41,6 +38,8 @@
 		<tio-http.version>0.0.1-tio-http</tio-http.version>
 		<tio-websocket.version>0.0.1-tio-websocket</tio-websocket.version>
 		<tio-im.version>0.0.1-tio-im</tio-im.version>
+		<tio-utils.version>2.0.0.v20170806-RELEASE</tio-utils.version>
+
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -62,7 +61,7 @@
 		<commons-compress.version>1.14</commons-compress.version>
 		<fastjson.version>1.2.35</fastjson.version>
 		<testng.version>6.11</testng.version>
-		<hutool.version>3.0.9</hutool.version>
+		<hutool.version>3.1.0</hutool.version>
 
 		<protobuf-java.version>3.3.1</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
@@ -96,6 +95,11 @@
 		<dependencies>
 			<dependency>
 				<groupId>org.t-io</groupId>
+				<artifactId>tio-utils</artifactId>
+				<version>${tio-utils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.t-io</groupId>
 				<artifactId>tio-core</artifactId>
 				<version>${tio-core.version}</version>
 			</dependency>
@@ -121,7 +125,7 @@
 				<artifactId>tio-http-server</artifactId>
 				<version>${tio-http.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.t-io</groupId>
 				<artifactId>tio-im-common</artifactId>
@@ -130,6 +134,11 @@
 			<dependency>
 				<groupId>org.t-io</groupId>
 				<artifactId>tio-im-server</artifactId>
+				<version>${tio-im.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.t-io</groupId>
+				<artifactId>tio-im-client</artifactId>
 				<version>${tio-im.version}</version>
 			</dependency>
 

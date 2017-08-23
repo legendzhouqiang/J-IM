@@ -4,11 +4,14 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月1日 上午9:34:59
  */
-public class Packet {
+public class Packet implements java.io.Serializable {
+
+	private static final long serialVersionUID = 5275372187150637318L;
+
 	private static final AtomicLong ID_ATOMICLONG = new AtomicLong();
 
 	private Long id = ID_ATOMICLONG.incrementAndGet();
@@ -32,35 +35,10 @@ public class Packet {
 	private ByteBuffer preEncodedByteBuffer = null;
 
 	/**
-	 * @return the synSeq
+	 * @return the byteCount
 	 */
-	public Integer getSynSeq() {
-		return synSeq;
-	}
-
-	/**
-	 * @param synSeq the synSeq to set
-	 */
-	public void setSynSeq(Integer synSeq) {
-		this.synSeq = synSeq;
-	}
-
-	/**
-	 * @return the preEncodedByteBuffer
-	 */
-	public ByteBuffer getPreEncodedByteBuffer() {
-		return preEncodedByteBuffer;
-	}
-
-	/**
-	 * @param preEncodedByteBuffer the preEncodedByteBuffer to set
-	 */
-	public void setPreEncodedByteBuffer(ByteBuffer preEncodedByteBuffer) {
-		this.preEncodedByteBuffer = preEncodedByteBuffer;
-	}
-
-	public String logstr() {
-		return "";
+	public int getByteCount() {
+		return byteCount;
 	}
 
 	/**
@@ -71,10 +49,17 @@ public class Packet {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @return the packetListener
 	 */
-	public void setId(Long id) {
-		this.id = id;
+	public PacketListener getPacketListener() {
+		return packetListener;
+	}
+
+	/**
+	 * @return the preEncodedByteBuffer
+	 */
+	public ByteBuffer getPreEncodedByteBuffer() {
+		return preEncodedByteBuffer;
 	}
 
 	/**
@@ -85,24 +70,10 @@ public class Packet {
 	}
 
 	/**
-	 * @param respId the respId to set
+	 * @return the synSeq
 	 */
-	public void setRespId(Long respId) {
-		this.respId = respId;
-	}
-
-	/**
-	 * @return the packetListener
-	 */
-	public PacketListener getPacketListener() {
-		return packetListener;
-	}
-
-	/**
-	 * @param packetListener the packetListener to set
-	 */
-	public void setPacketListener(PacketListener packetListener) {
-		this.packetListener = packetListener;
+	public Integer getSynSeq() {
+		return synSeq;
 	}
 
 	/**
@@ -110,6 +81,10 @@ public class Packet {
 	 */
 	public boolean isBlockSend() {
 		return isBlockSend;
+	}
+
+	public String logstr() {
+		return "";
 	}
 
 	/**
@@ -120,17 +95,45 @@ public class Packet {
 	}
 
 	/**
-	 * @return the byteCount
-	 */
-	public int getByteCount() {
-		return byteCount;
-	}
-
-	/**
 	 * @param byteCount the byteCount to set
 	 */
 	public void setByteCount(int byteCount) {
 		this.byteCount = byteCount;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @param packetListener the packetListener to set
+	 */
+	public void setPacketListener(PacketListener packetListener) {
+		this.packetListener = packetListener;
+	}
+
+	/**
+	 * @param preEncodedByteBuffer the preEncodedByteBuffer to set
+	 */
+	public void setPreEncodedByteBuffer(ByteBuffer preEncodedByteBuffer) {
+		this.preEncodedByteBuffer = preEncodedByteBuffer;
+	}
+
+	/**
+	 * @param respId the respId to set
+	 */
+	public void setRespId(Long respId) {
+		this.respId = respId;
+	}
+
+	/**
+	 * @param synSeq the synSeq to set
+	 */
+	public void setSynSeq(Integer synSeq) {
+		this.synSeq = synSeq;
 	}
 
 }

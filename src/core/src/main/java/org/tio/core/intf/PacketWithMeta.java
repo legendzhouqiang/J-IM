@@ -3,8 +3,8 @@ package org.tio.core.intf;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月1日 上午9:34:59
  */
 public class PacketWithMeta {
@@ -13,10 +13,10 @@ public class PacketWithMeta {
 	private CountDownLatch countDownLatch = null;
 
 	/**
-	 * 
+	 *
 	 * @param packet
 	 * @param countDownLatch
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public PacketWithMeta(Packet packet, CountDownLatch countDownLatch) {
 		super();
@@ -28,10 +28,10 @@ public class PacketWithMeta {
 	}
 
 	/**
-	 * @return the packet
+	 * @return the countDownLatch
 	 */
-	public Packet getPacket() {
-		return packet;
+	public java.util.concurrent.CountDownLatch getCountDownLatch() {
+		return countDownLatch;
 	}
 
 	/**
@@ -42,17 +42,17 @@ public class PacketWithMeta {
 	}
 
 	/**
+	 * @return the packet
+	 */
+	public Packet getPacket() {
+		return packet;
+	}
+
+	/**
 	 * @param isSentSuccess the isSentSuccess to set
 	 */
 	public void setIsSentSuccess(Boolean isSentSuccess) {
 		this.isSentSuccess = isSentSuccess;
-	}
-
-	/**
-	 * @return the countDownLatch
-	 */
-	public java.util.concurrent.CountDownLatch getCountDownLatch() {
-		return countDownLatch;
 	}
 
 }

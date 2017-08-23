@@ -9,76 +9,78 @@ import com.jfinal.plugin.activerecord.Model;
 @SuppressWarnings("serial")
 public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implements IBean {
 
-	public void setId(java.lang.Integer id) {
-		set("id", id);
-	}
-
-	public java.lang.Integer getId() {
-		return get("id");
-	}
-
-	public void setLoginname(java.lang.String loginname) {
-		set("loginname", loginname);
-	}
-
-	public java.lang.String getLoginname() {
-		return get("loginname");
-	}
-
-	public void setPwd(java.lang.String pwd) {
-		set("pwd", pwd);
-	}
-
-	public java.lang.String getPwd() {
-		return get("pwd");
-	}
-
-	public void setSalt(java.lang.String salt) {
-		set("salt", salt);
-	}
-
-	public java.lang.String getSalt() {
-		return get("salt");
-	}
-
-	public void setNick(java.lang.String nick) {
-		set("nick", nick);
-	}
-
-	public java.lang.String getNick() {
-		return get("nick");
-	}
-
-	public void setAvatar(java.lang.String avatar) {
-		set("avatar", avatar);
-	}
+	private static final long serialVersionUID = -5967132586596290127L;
 
 	public java.lang.String getAvatar() {
 		return get("avatar");
-	}
-
-	public void setIp(java.lang.String ip) {
-		set("ip", ip);
-	}
-
-	public java.lang.String getIp() {
-		return get("ip");
-	}
-
-	public void setCreatetime(java.util.Date createtime) {
-		set("createtime", createtime);
 	}
 
 	public java.util.Date getCreatetime() {
 		return get("createtime");
 	}
 
-	public void setStatus(java.lang.Integer status) {
-		set("status", status);
+	public java.lang.Integer getId() {
+		return get("id");
+	}
+
+	public java.lang.String getIp() {
+		return get("ip");
+	}
+
+	public java.lang.String getLoginname() {
+		return get("loginname");
+	}
+
+	public java.lang.String getNick() {
+		return get("nick");
+	}
+
+	public java.lang.String getPwd() {
+		return get("pwd");
+	}
+
+	public java.lang.String getSalt() {
+		return get("salt");
 	}
 
 	public java.lang.Integer getStatus() {
 		return get("status");
+	}
+
+	public void setAvatar(java.lang.String avatar) {
+		set("avatar", avatar);
+	}
+
+	public void setCreatetime(java.util.Date createtime) {
+		set("createtime", createtime);
+	}
+
+	public void setId(java.lang.Integer id) {
+		set("id", id);
+	}
+
+	public void setIp(java.lang.String ip) {
+		set("ip", ip);
+	}
+
+	public void setLoginname(java.lang.String loginname) {
+		set("loginname", loginname);
+	}
+
+	public void setNick(java.lang.String nick) {
+		set("nick", nick);
+	}
+
+	public void setPwd(java.lang.String pwd) {
+		set("pwd", pwd);
+	}
+
+	public void setSalt(java.lang.String salt) {
+		set("salt", salt);
+	}
+
+	public void setStatus(java.lang.Integer status) {
+		set("status", status);
 	}
 
 }

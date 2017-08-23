@@ -7,5 +7,7 @@ import org.tio.http.server.demo1.model.base.BaseUser;
  */
 @SuppressWarnings("serial")
 public class User extends BaseUser<User> {
-	
+
+	private static final long serialVersionUID = 7038736722168521022L;
+
 }

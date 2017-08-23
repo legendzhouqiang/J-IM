@@ -16,13 +16,12 @@ import org.tio.core.WriteCompletionHandler.WriteCompletionVo;
 import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.Packet;
 import org.tio.core.intf.PacketWithMeta;
-import org.tio.core.threadpool.AbstractQueueRunnable;
 import org.tio.core.utils.AioUtils;
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.thread.pool.AbstractQueueRunnable;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  * 2017年4月4日 上午9:19:18
  */
 public class SendRunnable extends AbstractQueueRunnable<Object> {
@@ -32,14 +31,27 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 	private ChannelContext channelContext = null;
 
 	/**
-	 * 
+	 *
 	 * @param channelContext
 	 * @param executor
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
 	public SendRunnable(ChannelContext channelContext, Executor executor) {
 		super(executor);
 		this.channelContext = channelContext;
+	}
+
+	/**
+	 *
+	 */
+	@Override
+	public boolean addMsg(Object obj) {
+		if (this.isCanceled()) {
+			log.error("{}, 任务已经取消，{}添加到发送队列失败", channelContext, obj);
+			return false;
+		}
+
+		return msgQueue.add(obj);
 	}
 
 	/**
@@ -57,90 +69,14 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 		}
 	}
 
-	/**
-	 * 
-	 * @param obj Packet or PacketWithMeta
-	 * @author: tanyaowu
-	 */
-	public void sendPacket(Object obj) {
-		Packet packet = null;
-		PacketWithMeta packetWithMeta = null;
-
-		boolean isPacket = obj instanceof Packet;
-		if (isPacket) {
-			packet =  (Packet)obj;
+	private ByteBuffer getByteBuffer(Packet packet, GroupContext groupContext, AioHandler aioHandler) {
+		ByteBuffer byteBuffer = packet.getPreEncodedByteBuffer();
+		if (byteBuffer != null) {
+			byteBuffer = byteBuffer.duplicate();
 		} else {
-			packetWithMeta = (PacketWithMeta) obj;
-			packet = packetWithMeta.getPacket();
+			byteBuffer = aioHandler.encode(packet, groupContext, channelContext);
 		}
-
-		channelContext.traceClient(ChannelAction.BEFORE_SEND, packet, null);
-		GroupContext groupContext = channelContext.getGroupContext();
-		ByteBuffer byteBuffer = getByteBuffer(packet, groupContext, groupContext.getAioHandler());
-		int packetCount = 1;
-
-		if (isPacket) {
-			sendByteBuffer(byteBuffer, packetCount, packet);
-		} else {
-			sendByteBuffer(byteBuffer, packetCount, packetWithMeta);
-		}
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public boolean addMsg(Object obj) {
-		if (this.isCanceled()) {
-			log.error("{}, 任务已经取消，{}添加到发送队列失败", channelContext, obj);
-			return false;
-		}
-
-		return msgQueue.add(obj);
-	}
-
-	/**
-	 * 
-	 * @param byteBuffer
-	 * @param packetCount
-	 * @param packets Packet or PacketWithMeta or List<PacketWithMeta> or List<Packet>
-	 * @author: tanyaowu
-	 */
-	public void sendByteBuffer(ByteBuffer byteBuffer, Integer packetCount, Object packets) {
-		if (byteBuffer == null) {
-			log.error("{},byteBuffer is null", channelContext);
-			return;
-		}
-
-		if (!AioUtils.checkBeforeIO(channelContext)) {
-			return;
-		}
-
-		byteBuffer.flip();
-		AsynchronousSocketChannel asynchronousSocketChannel = channelContext.getAsynchronousSocketChannel();
-		WriteCompletionHandler writeCompletionHandler = channelContext.getWriteCompletionHandler();
-		try {
-			//			long start = SystemTimer.currentTimeMillis();
-			writeCompletionHandler.getWriteSemaphore().acquire();
-			//			long end = SystemTimer.currentTimeMillis();
-			//			long iv = end - start;
-			//			if (iv > 100) {
-			//				//log.error("{} 等发送锁耗时:{} ms", channelContext, iv);
-			//			}
-
-		} catch (InterruptedException e) {
-			log.error(e.toString(), e);
-		}
-		
-		WriteCompletionVo writeCompletionVo = new WriteCompletionVo(byteBuffer, packets);
-		asynchronousSocketChannel.write(byteBuffer, writeCompletionVo, writeCompletionHandler);
-
-		channelContext.getStat().setLatestTimeOfSentPacket(SystemTimer.currentTimeMillis());
-	}
-
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + ":" + channelContext.toString();
+		return byteBuffer;
 	}
 
 	@Override
@@ -170,7 +106,7 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 				if ((obj = msgQueue.poll()) != null) {
 					boolean isPacket = obj instanceof Packet;
 					if (isPacket) {
-						p =  (Packet)obj;
+						p = (Packet) obj;
 						packets.add(p);
 					} else {
 						packetWithMeta = (PacketWithMeta) obj;
@@ -205,7 +141,7 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 			if ((obj = msgQueue.poll()) != null) {
 				boolean isPacket = obj instanceof Packet;
 				if (isPacket) {
-					p =  (Packet)obj;
+					p = (Packet) obj;
 					sendPacket(p);
 				} else {
 					packetWithMeta = (PacketWithMeta) obj;
@@ -216,14 +152,75 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 		}
 	}
 
-	private ByteBuffer getByteBuffer(Packet packet, GroupContext groupContext, AioHandler aioHandler) {
-		ByteBuffer byteBuffer = packet.getPreEncodedByteBuffer();
-		if (byteBuffer != null) {
-			byteBuffer = byteBuffer.duplicate();
-		} else {
-			byteBuffer = aioHandler.encode(packet, groupContext, channelContext);
+	/**
+	 *
+	 * @param byteBuffer
+	 * @param packetCount
+	 * @param packets Packet or PacketWithMeta or List<PacketWithMeta> or List<Packet>
+	 * @author tanyaowu
+	 */
+	public void sendByteBuffer(ByteBuffer byteBuffer, Integer packetCount, Object packets) {
+		if (byteBuffer == null) {
+			log.error("{},byteBuffer is null", channelContext);
+			return;
 		}
-		return byteBuffer;
+
+		if (!AioUtils.checkBeforeIO(channelContext)) {
+			return;
+		}
+
+		byteBuffer.flip();
+		AsynchronousSocketChannel asynchronousSocketChannel = channelContext.getAsynchronousSocketChannel();
+		WriteCompletionHandler writeCompletionHandler = channelContext.getWriteCompletionHandler();
+		try {
+			//			long start = SystemTimer.currentTimeMillis();
+			writeCompletionHandler.getWriteSemaphore().acquire();
+			//			long end = SystemTimer.currentTimeMillis();
+			//			long iv = end - start;
+			//			if (iv > 100) {
+			//				//log.error("{} 等发送锁耗时:{} ms", channelContext, iv);
+			//			}
+
+		} catch (InterruptedException e) {
+			log.error(e.toString(), e);
+		}
+
+		WriteCompletionVo writeCompletionVo = new WriteCompletionVo(byteBuffer, packets);
+		asynchronousSocketChannel.write(byteBuffer, writeCompletionVo, writeCompletionHandler);
+	}
+
+	/**
+	 *
+	 * @param obj Packet or PacketWithMeta
+	 * @author tanyaowu
+	 */
+	public void sendPacket(Object obj) {
+		Packet packet = null;
+		PacketWithMeta packetWithMeta = null;
+
+		boolean isPacket = obj instanceof Packet;
+		if (isPacket) {
+			packet = (Packet) obj;
+		} else {
+			packetWithMeta = (PacketWithMeta) obj;
+			packet = packetWithMeta.getPacket();
+		}
+
+		channelContext.traceClient(ChannelAction.BEFORE_SEND, packet, null);
+		GroupContext groupContext = channelContext.getGroupContext();
+		ByteBuffer byteBuffer = getByteBuffer(packet, groupContext, groupContext.getAioHandler());
+		int packetCount = 1;
+
+		if (isPacket) {
+			sendByteBuffer(byteBuffer, packetCount, packet);
+		} else {
+			sendByteBuffer(byteBuffer, packetCount, packetWithMeta);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + ":" + channelContext.toString();
 	}
 
 }

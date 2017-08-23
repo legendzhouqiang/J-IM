@@ -14,93 +14,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 部分代码参考了: https://github.com/helyho/Voovan
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年5月29日 上午7:45:58
  */
 public class Cookie {
 	private static Logger log = LoggerFactory.getLogger(Cookie.class);
-
-	
-	private String domain = null;
-	private String path = null;
-	private Long maxAge = null;
-	private String expires = null;
-	private boolean secure = false;
-	private boolean httpOnly = false;
-
-	private String name;
-	private String value;
-
-	public String getDomain() {
-		return domain;
-	}
-
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	public Long getMaxAge() {
-		return maxAge;
-	}
-
-	public void setMaxAge(Long maxAge) {
-		this.maxAge = maxAge;
-	}
-
-	public String getExpires() {
-		return expires;
-	}
-
-	public void setExpires(String expires) {
-		this.expires = expires;
-	}
-
-	public boolean isSecure() {
-		return secure;
-	}
-
-	public void setSecure(boolean secure) {
-		this.secure = secure;
-	}
-
-	public boolean isHttpOnly() {
-		return httpOnly;
-	}
-
-	public void setHttpOnly(boolean httpOnly) {
-		this.httpOnly = httpOnly;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	@Override
-	public String toString() {
-		return (this.name != null || this.value != null ? (this.name + "=" + this.value) : "") + (this.domain != null ? ("; domain=" + this.domain) : "")
-				+ (this.maxAge != null ? ("; max-age=" + this.maxAge) : "") + (this.path != null ? ("; path=" + this.path) : " ") + (this.httpOnly ? "; httponly; " : "")
-				+ (this.secure ? "; secure" : "");
-	}
 
 	/**
 	 * 通过 Map 构建一个 Cookie 对象
@@ -142,32 +60,8 @@ public class Cookie {
 		return cookie;
 	}
 
-	/**
-	 * 创建一个 Cookie
-	 * @param domain	cookie的受控域
-	 * @param name		名称
-	 * @param value		值
-	 * @param maxAge	失效时间,单位秒
-	 * @return Cookie 对象
-	 */
-	public Cookie (String domain, String name, String value, Long maxAge) {
-		setName(name);
-		setValue(value);
-		setPath("/");
-		setDomain(domain);
-		setMaxAge(maxAge);
-		setHttpOnly(false);
-	}
-
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public Cookie() {
-	}
-
 	public static Map<String, String> getEqualMap(String cookieline) {
-		Map<String, String> equalMap = new HashMap<String, String>();
+		Map<String, String> equalMap = new HashMap<>();
 		String[] searchedStrings = searchByRegex(cookieline, "([^ ;,]+=[^ ;,]+)");
 		for (String groupString : searchedStrings) {
 			//这里不用 split 的原因是有可能等号后的值字符串中出现等号
@@ -192,7 +86,7 @@ public class Cookie {
 			return null;
 		}
 
-		Map<Integer, Pattern> regexPattern = new HashMap<Integer, Pattern>();
+		Map<Integer, Pattern> regexPattern = new HashMap<>();
 
 		Pattern pattern = null;
 		if (regexPattern.containsKey(regex.hashCode())) {
@@ -202,10 +96,118 @@ public class Cookie {
 			regexPattern.put(regex.hashCode(), pattern);
 		}
 		Matcher matcher = pattern.matcher(source);
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<String> result = new ArrayList<>();
 		while (matcher.find()) {
 			result.add(matcher.group());
 		}
 		return result.toArray(new String[0]);
+	}
+
+	private String domain = null;
+	private String path = null;
+	private Long maxAge = null;
+
+	private String expires = null;
+	private boolean secure = false;
+
+	private boolean httpOnly = false;
+
+	private String name;
+
+	private String value;
+
+	/**
+	 *
+	 * @author tanyaowu
+	 */
+	public Cookie() {
+	}
+
+	/**
+	 * 创建一个 Cookie
+	 * @param domain	cookie的受控域
+	 * @param name		名称
+	 * @param value		值
+	 * @param maxAge	失效时间,单位秒
+	 * @return Cookie 对象
+	 */
+	public Cookie(String domain, String name, String value, Long maxAge) {
+		setName(name);
+		setValue(value);
+		setPath("/");
+		setDomain(domain);
+		setMaxAge(maxAge);
+		setHttpOnly(false);
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public String getExpires() {
+		return expires;
+	}
+
+	public Long getMaxAge() {
+		return maxAge;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public boolean isHttpOnly() {
+		return httpOnly;
+	}
+
+	public boolean isSecure() {
+		return secure;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public void setExpires(String expires) {
+		this.expires = expires;
+	}
+
+	public void setHttpOnly(boolean httpOnly) {
+		this.httpOnly = httpOnly;
+	}
+
+	public void setMaxAge(Long maxAge) {
+		this.maxAge = maxAge;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setSecure(boolean secure) {
+		this.secure = secure;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return (this.name != null || this.value != null ? this.name + "=" + this.value : "") + (this.domain != null ? "; Domain=" + this.domain : "")
+				+ (this.maxAge != null ? "; Max-Age=" + this.maxAge : "") + (this.path != null ? "; Path=" + this.path : " ") + (this.httpOnly ? "; httponly; " : "")
+				+ (this.secure ? "; Secure" : "");
 	}
 }

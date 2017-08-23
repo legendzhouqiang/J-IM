@@ -12,55 +12,28 @@ import org.tio.core.PacketHandlerMode;
 import org.tio.core.exception.AioDecodeException;
 import org.tio.core.intf.AioListener;
 import org.tio.core.intf.Packet;
+import org.tio.core.stat.ChannelStat;
 import org.tio.core.utils.ByteBufferUtils;
-import org.tio.core.utils.SystemTimer;
+import org.tio.utils.SystemTimer;
 
 /**
  * 解码
- * 
+ *
  * @author 谭耀武
  * 2012-08-09
- * 
+ *
  */
 public class DecodeRunnable implements Runnable {
 	private static final Logger log = LoggerFactory.getLogger(DecodeRunnable.class);
 
-	private ChannelContext channelContext = null;
-
 	/**
-	 * 上一次解码剩下的数据
-	 */
-	private ByteBuffer lastByteBuffer = null;
-
-	/**
-	 * 新收到的数据
-	 */
-	private ByteBuffer newByteBuffer = null;
-
-	/**
-	 * 
-	 */
-	public DecodeRunnable(ChannelContext channelContext) {
-		this.channelContext = channelContext;
-	}
-
-	/**
-	 * 清空处理的队列消息
-	 */
-	public void clearMsgQueue() {
-		lastByteBuffer = null;
-		newByteBuffer = null;
-	}
-
-
-	/**
-	 * 
+	 *
 	 * @param channelContext
 	 * @param packet
 	 * @param byteCount
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
-	public static  void handler(ChannelContext channelContext, Packet packet, int byteCount) {
+	public static void handler(ChannelContext channelContext, Packet packet, int byteCount) {
 
 		GroupContext groupContext = channelContext.getGroupContext();
 		PacketHandlerMode packetHandlerMode = groupContext.getPacketHandlerMode();
@@ -75,17 +48,39 @@ public class DecodeRunnable implements Runnable {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + ":" + channelContext.toString();
+	private ChannelContext channelContext = null;
+
+	/**
+	 * 上一次解码剩下的数据
+	 */
+	private ByteBuffer lastByteBuffer = null;
+
+	/**
+	 * 新收到的数据
+	 */
+	private ByteBuffer newByteBuffer = null;
+
+	/**
+	 *
+	 */
+	public DecodeRunnable(ChannelContext channelContext) {
+		this.channelContext = channelContext;
 	}
 
-	/** 
+	/**
+	 * 清空处理的队列消息
+	 */
+	public void clearMsgQueue() {
+		lastByteBuffer = null;
+		newByteBuffer = null;
+	}
+
+	/**
 	 * @see java.lang.Runnable#run()
-	 * 
-	 * @author: tanyaowu
+	 *
+	 * @author tanyaowu
 	 * 2017年3月21日 下午4:26:39
-	 * 
+	 *
 	 */
 	@Override
 	public void run() {
@@ -102,19 +97,27 @@ public class DecodeRunnable implements Runnable {
 		try {
 			label_2: while (true) {
 				int initPosition = byteBuffer.position();
-				Packet packet = channelContext.getGroupContext().getAioHandler().decode(byteBuffer, channelContext);
+				GroupContext groupContext = channelContext.getGroupContext();
+				Packet packet = groupContext.getAioHandler().decode(byteBuffer, channelContext);
 
-				if (packet == null)// 数据不够，组不了包
+				if (packet == null)// 数据不够，解不了码
 				{
-					//					if (log.isDebugEnabled())
-					//					{
-					//						log.debug("{},数据不够，组不了包", channelContext.toString());
-					//					}
 					lastByteBuffer = ByteBufferUtils.copy(byteBuffer, initPosition, byteBuffer.limit());
+					ChannelStat channelStat = channelContext.getStat();
+					channelStat.setDecodeFailCount(channelStat.getDecodeFailCount() + 1);
+					int len = byteBuffer.capacity() - initPosition;
+					log.info("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节", channelContext, channelStat.getDecodeFailCount(), len);
+					if (channelStat.getDecodeFailCount() > 5) {
+						log.error("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节，请考虑要不要拉黑这个ip", channelContext, channelStat.getDecodeFailCount(), len);
+
+					}
 					return;
-				} else //组包成功
+				} else //解码成功
 				{
 					channelContext.getStat().setLatestTimeOfReceivedPacket(SystemTimer.currentTimeMillis());
+
+					ChannelStat channelStat = channelContext.getStat();
+					channelStat.setDecodeFailCount(0);
 
 					int afterDecodePosition = byteBuffer.position();
 					int len = afterDecodePosition - initPosition;
@@ -130,11 +133,14 @@ public class DecodeRunnable implements Runnable {
 
 					channelContext.getStat().getReceivedPackets().incrementAndGet();
 					channelContext.getStat().getReceivedBytes().addAndGet(len);
+					
+					channelContext.getIpStat().getReceivedPackets().incrementAndGet();
+					channelContext.getIpStat().getReceivedBytes().addAndGet(len);
 
 					channelContext.traceClient(ChannelAction.RECEIVED, packet, null);
 
 					packet.setByteCount(len);
-					
+
 					AioListener aioListener = channelContext.getGroupContext().getAioListener();
 					try {
 						if (log.isInfoEnabled()) {
@@ -162,8 +168,12 @@ public class DecodeRunnable implements Runnable {
 				}
 			}
 		} catch (AioDecodeException e) {
-			log.error(channelContext.toString() + "解码异常", e);
+//			log.error(channelContext.toString() + "解码异常", e);
 			Aio.close(channelContext, e, "解码异常:" + e.getMessage());
+			int errorCount = channelContext.getIpStat().getDecodeErrorCount().incrementAndGet();
+			if (errorCount > 10) {
+				
+			}
 			return;
 		}
 	}
@@ -173,6 +183,11 @@ public class DecodeRunnable implements Runnable {
 	 */
 	public void setNewByteBuffer(ByteBuffer newByteBuffer) {
 		this.newByteBuffer = newByteBuffer;
+	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + ":" + channelContext.toString();
 	}
 
 }

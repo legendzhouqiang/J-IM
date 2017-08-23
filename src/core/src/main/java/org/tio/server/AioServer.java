@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.Node;
 
 /**
- * 
- * @author tanyaowu 
+ *
+ * @author tanyaowu
  *
  */
 public class AioServer {
@@ -30,10 +30,10 @@ public class AioServer {
 	private boolean isWaitingStop = false;
 
 	/**
-	 * 
+	 *
 	 * @param serverGroupContext
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2017年1月2日 下午5:53:06
 	 *
 	 */
@@ -50,6 +50,13 @@ public class AioServer {
 	}
 
 	/**
+	 * @return the serverNode
+	 */
+	public Node getServerNode() {
+		return serverNode;
+	}
+
+	/**
 	 * @return the serverSocketChannel
 	 */
 	public AsynchronousServerSocketChannel getServerSocketChannel() {
@@ -57,10 +64,24 @@ public class AioServer {
 	}
 
 	/**
+	 * @return the isWaitingStop
+	 */
+	public boolean isWaitingStop() {
+		return isWaitingStop;
+	}
+
+	/**
 	 * @param serverGroupContext the serverGroupContext to set
 	 */
 	public void setServerGroupContext(ServerGroupContext serverGroupContext) {
 		this.serverGroupContext = serverGroupContext;
+	}
+
+	/**
+	 * @param isWaitingStop the isWaitingStop to set
+	 */
+	public void setWaitingStop(boolean isWaitingStop) {
+		this.isWaitingStop = isWaitingStop;
 	}
 
 	public void start(String serverIp, int serverPort) throws IOException {
@@ -93,7 +114,7 @@ public class AioServer {
 	 * 此方法生产环境中用不到，暂未测试
 	 * @return
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 * 2017年2月11日 上午8:04:04
 	 *
 	 */
@@ -123,27 +144,6 @@ public class AioServer {
 
 		log.info(this.serverNode + " stopped");
 		return ret;
-	}
-
-	/**
-	 * @return the serverNode
-	 */
-	public Node getServerNode() {
-		return serverNode;
-	}
-
-	/**
-	 * @return the isWaitingStop
-	 */
-	public boolean isWaitingStop() {
-		return isWaitingStop;
-	}
-
-	/**
-	 * @param isWaitingStop the isWaitingStop to set
-	 */
-	public void setWaitingStop(boolean isWaitingStop) {
-		this.isWaitingStop = isWaitingStop;
 	}
 
 	//	/**

@@ -5,89 +5,80 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 发送消息响应
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年3月25日 上午8:22:06
  */
-public class GroupMsgRespBody extends BaseBody
-{
+public class GroupMsgRespBody extends BaseBody {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(GroupMsgRespBody.class);
-	
-	//消息内容，必填
-	private String text;
-	
-	//消息是谁发的
-	private String fromUserid;
-	
-	//发消息到哪个组，可以为空
-	private String toGroup;
-	
-	//一般情况还需要带上发送消息的用户昵称等信息，showcase中略过
-	
-	/**
-	 * 
-	 * @author: tanyaowu
-	 */
-	public GroupMsgRespBody()
-	{
-		
-	}
 
 	/**
 	 * @param args
 	 *
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 
 	}
 
-	/**
-	 * @return the text
-	 */
-	public String getText()
-	{
-		return text;
-	}
+	//消息内容，必填
+	private String text;
+
+	//消息是谁发的
+	private String fromUserid;
+
+	//一般情况还需要带上发送消息的用户昵称等信息，showcase中略过
+
+	//发消息到哪个组，可以为空
+	private String toGroup;
 
 	/**
-	 * @param text the text to set
+	 *
+	 * @author tanyaowu
 	 */
-	public void setText(String text)
-	{
-		this.text = text;
+	public GroupMsgRespBody() {
+
 	}
 
 	/**
 	 * @return the fromUserid
 	 */
-	public String getFromUserid()
-	{
+	public String getFromUserid() {
 		return fromUserid;
 	}
 
 	/**
-	 * @param fromUserid the fromUserid to set
+	 * @return the text
 	 */
-	public void setFromUserid(String fromUserid)
-	{
-		this.fromUserid = fromUserid;
+	public String getText() {
+		return text;
 	}
 
 	/**
 	 * @return the toGroup
 	 */
-	public String getToGroup()
-	{
+	public String getToGroup() {
 		return toGroup;
+	}
+
+	/**
+	 * @param fromUserid the fromUserid to set
+	 */
+	public void setFromUserid(String fromUserid) {
+		this.fromUserid = fromUserid;
+	}
+
+	/**
+	 * @param text the text to set
+	 */
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	/**
 	 * @param toGroup the toGroup to set
 	 */
-	public void setToGroup(String toGroup)
-	{
+	public void setToGroup(String toGroup) {
 		this.toGroup = toGroup;
 	}
 }
