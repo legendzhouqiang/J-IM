@@ -39,6 +39,15 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 		//		GroupContext groupContext = channelContext.getGroupContext();
 		if (result > 0) {
 			channelContext.getStat().setLatestTimeOfReceivedByte(SystemTimer.currentTimeMillis());
+			
+			channelContext.getGroupContext().getGroupStat().getReceivedBytes().addAndGet(result);
+			channelContext.getStat().getReceivedBytes().addAndGet(result);
+			channelContext.getIpStat().getReceivedBytes().addAndGet(result);
+			
+			
+			channelContext.getGroupContext().getGroupStat().getReceivedTcps().incrementAndGet();
+			channelContext.getStat().getReceivedTcps().incrementAndGet();
+			channelContext.getIpStat().getReceivedTcps().incrementAndGet();
 
 			if (channelContext.isTraceClient()) {
 				Map<String, Object> map = new HashMap<>();

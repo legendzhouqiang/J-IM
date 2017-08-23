@@ -13,6 +13,7 @@ import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.AioListener;
 import org.tio.core.stat.ChannelStat;
 import org.tio.core.stat.GroupStat;
+import org.tio.json.Json;
 import org.tio.server.intf.ServerAioHandler;
 import org.tio.server.intf.ServerAioListener;
 import org.tio.utils.SystemTimer;
@@ -108,28 +109,53 @@ public class ServerGroupContext extends GroupContext {
 									groups = objwithlock.getObj().size();
 								}
 
-								log.info("{}, [{}]:[{}]: 当前连接个数:{}, 群组(g):{}, 共接受连接:{}, 一共关闭过的连接个数:{}, 已接收消息:({}p)({}b), 已处理消息:{}p, 已发送消息:({}p)({}b)", 
-										ServerGroupContext.this.name, 
-										SystemTimer.currentTimeMillis(),
-										id, 
+								log.info("{}, [{}]:[{}]"
+										+ "\r\n当前连接个数                                 {}"
+										+ "\r\n群组(g)                 {}"
+										+ "\r\n共接受连接                                      {}"
+										+ "\r\n一共关闭过的连接个数            {}"
+										+ "\r\n已接收消息                                   ({}p)({}b)"
+										+ "\r\n已处理消息                                     {}p"
+										+ "\r\n已发送消息                                      ({}p)({}b)"
+										+ "\r\n平均每次TCP包接收的字节数   {}"
+										+ "\r\n平均每次TCP包接收的业务包   {}", 
+										ServerGroupContext.this.name,  SystemTimer.currentTimeMillis(), id, 
 										set.size(), 
 										groups, 
 										serverGroupStat.getAccepted().get(), 
 										serverGroupStat.getClosed().get(), 
-										serverGroupStat.getReceivedPacket().get(),
+										serverGroupStat.getReceivedPackets().get(),
 										serverGroupStat.getReceivedBytes().get(), 
 										serverGroupStat.getHandledPacket().get(), 
 										serverGroupStat.getSentPacket().get(),
-										serverGroupStat.getSentBytes().get());
+										serverGroupStat.getSentBytes().get(),
+										serverGroupStat.getBytesPerTcpReceive(),
+										serverGroupStat.getPacketsPerTcpReceive());
 							}
 
 							//打印各集合信息
 							if (log.isInfoEnabled()) {
-								log.info("{}, clientNodes:{},connections:{},connecteds:{},closeds:{},groups:[channelmap:{}, groupmap:{}],users:{},syns:{}",ServerGroupContext.this.name,
-										ServerGroupContext.this.clientNodes.getMap().getObj().size(), ServerGroupContext.this.connections.getSetWithLock().getObj().size(),
-										ServerGroupContext.this.connecteds.getSetWithLock().getObj().size(), ServerGroupContext.this.closeds.getSetWithLock().getObj().size(),
-										ServerGroupContext.this.groups.getChannelmap().getObj().size(), ServerGroupContext.this.groups.getGroupmap().getObj().size(),
-										ServerGroupContext.this.users.getMap().getObj().size(), ServerGroupContext.this.waitingResps.getMap().getObj().size());
+								log.info("{}, "
+										+ "\r\nclientNodes:{}"
+										+ "\r\n所有连接:{}"
+										+ "\r\n目前连上的连接:{}"
+										+ "\r\n关闭的连接次数:{}"
+										+ "\r\n群组:[channelmap:{}, groupmap:{}]"
+										+ "\r\n绑定用户数:{}"
+										+ "\r\n等待同步消息响应:{}"
+										+ "\r\n正在被监控统计的ip数:{}"
+										+ "\r\n被拉黑的ip:{}",
+										ServerGroupContext.this.name,
+										ServerGroupContext.this.clientNodes.getMap().getObj().size(), 
+										ServerGroupContext.this.connections.getSetWithLock().getObj().size(),
+										ServerGroupContext.this.connecteds.getSetWithLock().getObj().size(), 
+										ServerGroupContext.this.closeds.getSetWithLock().getObj().size(),
+										ServerGroupContext.this.groups.getChannelmap().getObj().size(), 
+										ServerGroupContext.this.groups.getGroupmap().getObj().size(),
+										ServerGroupContext.this.users.getMap().getObj().size(), 
+										ServerGroupContext.this.waitingResps.getMap().getObj().size(),
+										ServerGroupContext.this.ips.size(),
+										Json.toJson(ServerGroupContext.this.ipBlacklist.getCopy()));
 							}
 
 							if (log.isInfoEnabled()) {

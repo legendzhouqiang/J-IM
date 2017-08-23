@@ -80,11 +80,38 @@ public class ChannelStat implements java.io.Serializable {
 	 * 本连接已接收的字节数
 	 */
 	private AtomicLong receivedBytes = new AtomicLong();
+	
+	/**
+	 * 本IP已接收了多少次TCP数据包
+	 */
+	private AtomicLong receivedTcps = new AtomicLong();
 
 	/**
 	 * 本连接已接收的packet数
 	 */
 	private AtomicLong receivedPackets = new AtomicLong();
+	
+	/**
+	 * 平均每次TCP接收到的字节数，这个可以用来监控慢攻击，配置PacketsPerTcpReceive定位慢攻击
+	 */
+	public double getBytesPerTcpReceive() {
+		if (receivedTcps.get() == 0) {
+			return 0;
+		}
+		double ret = (double)receivedBytes.get() / (double)receivedTcps.get();
+		return ret;
+	}
+	
+	/**
+	 * 平均每次TCP接收到的业务包数，这个可以用来监控慢攻击，此值越小越有攻击嫌疑
+	 */
+	public double getPacketsPerTcpReceive() {
+		if (receivedTcps.get() == 0) {
+			return 0;
+		}
+		double ret = (double)receivedPackets.get() / (double)receivedTcps.get();
+		return ret;
+	}
 
 	/**
 	 * @return the decodeFailCount
@@ -287,6 +314,20 @@ public class ChannelStat implements java.io.Serializable {
 	 */
 	public void setLatestTimeOfSentByte(long latestTimeOfSentByte) {
 		this.latestTimeOfSentByte = latestTimeOfSentByte;
+	}
+
+	/**
+	 * @return the receivedTcps
+	 */
+	public AtomicLong getReceivedTcps() {
+		return receivedTcps;
+	}
+
+	/**
+	 * @param receivedTcps the receivedTcps to set
+	 */
+	public void setReceivedTcps(AtomicLong receivedTcps) {
+		this.receivedTcps = receivedTcps;
 	}
 
 }

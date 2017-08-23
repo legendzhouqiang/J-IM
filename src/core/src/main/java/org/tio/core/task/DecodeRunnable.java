@@ -128,14 +128,9 @@ public class DecodeRunnable implements Runnable {
 					//						log.error(logstr);
 					//					}
 
-					channelContext.getGroupContext().getGroupStat().getReceivedPacket().incrementAndGet();
-					channelContext.getGroupContext().getGroupStat().getReceivedBytes().addAndGet(len);
-
+					channelContext.getGroupContext().getGroupStat().getReceivedPackets().incrementAndGet();
 					channelContext.getStat().getReceivedPackets().incrementAndGet();
-					channelContext.getStat().getReceivedBytes().addAndGet(len);
-					
 					channelContext.getIpStat().getReceivedPackets().incrementAndGet();
-					channelContext.getIpStat().getReceivedBytes().addAndGet(len);
 
 					channelContext.traceClient(ChannelAction.RECEIVED, packet, null);
 
