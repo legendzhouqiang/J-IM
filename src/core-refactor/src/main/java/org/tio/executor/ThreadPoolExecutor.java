@@ -2,7 +2,10 @@ package org.tio.executor;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Copyright (c) for 谭耀武
@@ -11,7 +14,7 @@ import java.util.concurrent.*;
  * Desc: 线程池-> {@link org.tio.runnable.SynRunnable}
  */
 @Slf4j
-public class SynThreadPoolExecutor extends ThreadPoolExecutor {
+public class ThreadPoolExecutor extends java.util.concurrent.ThreadPoolExecutor {
 
 
     /**
@@ -23,8 +26,8 @@ public class SynThreadPoolExecutor extends ThreadPoolExecutor {
      * @param name
      * @author: tanyaowu
      */
-    public SynThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime,
-                                 BlockingQueue<Runnable> runnableQueue, ThreadFactory threadFactory, String name) {
+    public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime,
+                              BlockingQueue<Runnable> runnableQueue, ThreadFactory threadFactory, String name) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, runnableQueue, threadFactory);
     }
 

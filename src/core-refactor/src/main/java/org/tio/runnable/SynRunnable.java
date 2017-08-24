@@ -1,7 +1,5 @@
 package org.tio.runnable;
 
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
  * Copyright (c) for 谭耀武
  * Date:2017/8/10
@@ -9,12 +7,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Desc: 同步运行任务接口
  */
 public interface SynRunnable<T> extends Runnable {
-
-    /**
-     * 获取同步任务锁
-     * @return
-     */
-    ReentrantLock runningLock();
 
     /**
      * 是否被取消

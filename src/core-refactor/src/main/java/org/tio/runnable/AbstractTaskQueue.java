@@ -1,5 +1,7 @@
 package org.tio.runnable;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -8,18 +10,12 @@ import java.util.concurrent.locks.ReentrantLock;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
+@Slf4j
 public abstract class AbstractTaskQueue<T> extends AbstractSynTaskQueue<T> {
 
     private boolean isCancel = false;
 
-    private ReentrantLock lock = new ReentrantLock();
-
     protected String name;
-
-    @Override
-    public ReentrantLock runningLock() {
-        return lock;
-    }
 
     @Override
     public boolean isCanceled() {
@@ -31,6 +27,9 @@ public abstract class AbstractTaskQueue<T> extends AbstractSynTaskQueue<T> {
         this.isCancel = cancelFlag;
         if (cancelFlag) {
             Thread.currentThread().interrupt();
+            log.info("TaskQueue[{}] has been interrupted, and left {} message has not been consumed.", getName(), msgQueue.size());
+            msgQueue.clear();
+            log.info("TaskQueue[{}]'s msgQueue has been clean up now.");
         }
     }
 

@@ -33,18 +33,15 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
             buffer.clear();
             ChannelContext context = new ClientChannelContext(channel);
             while (true) {
-                if (context.isClosed()) {
+                if (context.isWaitingClose() || context.isClosed()) {
                     break;
                 }
                 Object attachment1 = new Object();
                 channel.read(buffer, attachment1, new ReadCompletionHandler());
                 context.getDecodeRunnable().addMsg(buffer.slice());
-                attachment1.wait();
                 buffer.clear();
             }
-
-
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             log.error(Throwables.getStackTraceAsString(e));
         }
     }

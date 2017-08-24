@@ -29,7 +29,6 @@ public class EncodeTaskQueue extends AbstractTaskQueue<Packet> {
             byte checkSum = CheckSumUtil.calcCheckSum(bytes);
             packet.setCheckSum(checkSum);
         }
-
         ByteBuffer buffer = ByteBuffer.allocateDirect(packet.header().length + packet.optional().length + 2 + packet.body().length);
         buffer.put(packet.header());
         buffer.put(packet.optional());

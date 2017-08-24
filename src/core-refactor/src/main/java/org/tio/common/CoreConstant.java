@@ -35,7 +35,7 @@ public interface CoreConstant {
     /** 默认重用地址 */
     boolean default_reuse_addr = true;
 
-    /** 默认保持连接 */
+    /** 默认开启TCP自己心跳机制保持连接 */
     boolean default_keep_alive = true;
 
     /** Disable the Nagle algorithm. */

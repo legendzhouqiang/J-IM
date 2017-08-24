@@ -98,7 +98,7 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
             if (CheckSumUtil.judgeCheckSum(bytes)) {
                 context.getHandlerRunnable().addMsg(packet);
             } else {
-                log.warn("validate checkSum failed, and the packet[{}] will be discard.", packet);
+                log.warn("validate checkSum failed, and the packet[{}] will be discard.", packet.toString());
             }
         }
     }
