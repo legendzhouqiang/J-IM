@@ -34,9 +34,9 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T> {
         }
         boolean flag = msgQueue.offer(t);
         int size = msgQueue.size();
-        if (size > CoreConstant.defaultMaxMsgQueueSize) {
+        if (size > CoreConstant.default_max_msg_queue_size) {
             log.warn("taskQueue[{}] is overflow the defaultMaxSize[{}], and the current size of taskQueue[{}] is {}.",
-                    getName(), CoreConstant.defaultMaxMsgQueueSize, getName(), size);
+                    getName(), CoreConstant.default_max_msg_queue_size, getName(), size);
         }
         return flag;
     }

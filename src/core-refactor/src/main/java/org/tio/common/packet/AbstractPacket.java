@@ -1,4 +1,4 @@
-package org.tio.common;
+package org.tio.common.packet;
 
 import lombok.ToString;
 
@@ -9,7 +9,7 @@ import lombok.ToString;
  * Desc:
  */
 @ToString
-public class AbstractPacket implements Packet {
+public class AbstractPacket implements ReadPacket, WritePacket {
 
     protected byte type;
 
@@ -33,7 +33,7 @@ public class AbstractPacket implements Packet {
     }
 
     @Override
-    public Packet setPacketType(byte packetType) {
+    public WritePacket setPacketType(byte packetType) {
         this.type = packetType;
         return this;
     }
@@ -44,7 +44,7 @@ public class AbstractPacket implements Packet {
     }
 
     @Override
-    public Packet setNeedReplay() {
+    public WritePacket setNeedReplay() {
         type &= 0x80;
         return this;
     }
@@ -55,7 +55,7 @@ public class AbstractPacket implements Packet {
     }
 
     @Override
-    public Packet setReserved(byte reserved) {
+    public WritePacket setReserved(byte reserved) {
         this.reserved = reserved;
         return this;
     }
@@ -66,7 +66,7 @@ public class AbstractPacket implements Packet {
     }
 
     @Override
-    public Packet setOptionalLength(byte optionalLength) {
+    public WritePacket setOptionalLength(byte optionalLength) {
         this.optLen = optionalLength;
         return this;
     }
@@ -77,7 +77,7 @@ public class AbstractPacket implements Packet {
     }
 
     @Override
-    public Packet setBodyLength(short bodyLength) {
+    public WritePacket setBodyLength(short bodyLength) {
         this.bodyLen = bodyLength;
         return this;
     }
@@ -88,7 +88,7 @@ public class AbstractPacket implements Packet {
     }
 
     @Override
-    public Packet setCheckSum(byte checkSum) {
+    public WritePacket setCheckSum(byte checkSum) {
         this.checkSum = checkSum;
         return this;
     }
@@ -96,7 +96,7 @@ public class AbstractPacket implements Packet {
     @Override
     public byte[] header() {
         return new byte[]{
-                Packet.magic >> 8, (byte) Packet.magic, type, reserved, optLen, (byte) (this.bodyLen >> 8), (byte) bodyLen, checkSum
+                WritePacket.magic >> 8, (byte) WritePacket.magic, type, reserved, optLen, (byte) (this.bodyLen >> 8), (byte) bodyLen, checkSum
         };
     }
 
@@ -106,7 +106,7 @@ public class AbstractPacket implements Packet {
     }
 
     @Override
-    public Packet setOptional(byte[] optional) {
+    public WritePacket setOptional(byte[] optional) {
         this.optData = optional;
         return this;
     }
@@ -117,7 +117,7 @@ public class AbstractPacket implements Packet {
     }
 
     @Override
-    public Packet setPacketSeq(short count) {
+    public WritePacket setPacketSeq(short count) {
         this.packetSeq = count;
         return this;
     }
@@ -128,7 +128,7 @@ public class AbstractPacket implements Packet {
     }
 
     @Override
-    public Packet setBody(byte[] body) {
+    public WritePacket setBody(byte[] body) {
         this.body = body;
         return this;
     }

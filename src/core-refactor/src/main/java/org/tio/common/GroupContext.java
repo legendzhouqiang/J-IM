@@ -49,7 +49,7 @@ public abstract class GroupContext {
     protected GroupContext groupContext;
 
     /** 等待关闭 */
-    private boolean waittingStop = false;
+    private boolean waitingStop = false;
 
     /** 完成关闭 */
     private boolean isStopped = false;

@@ -1,9 +1,10 @@
 package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.AbstractPacket;
+import org.tio.common.CoreConstant;
+import org.tio.common.packet.AbstractPacket;
 import org.tio.common.ChannelContext;
-import org.tio.common.Packet;
+import org.tio.common.packet.SuperPacket;
 import org.tio.util.CheckSumUtil;
 
 import java.nio.ByteBuffer;
@@ -25,12 +26,11 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
     @Override
     public void runTask(ByteBuffer byteBuffer) throws InterruptedException {
-
-        Packet packet = new AbstractPacket();
+        AbstractPacket packet = new AbstractPacket();
 
         while (byteBuffer.remaining() > 1) {
             short magic = byteBuffer.getShort();
-            if (Packet.magic == magic) {
+            if (SuperPacket.magic == magic) {
                 break;
             }
         }

@@ -1,7 +1,7 @@
 package org.tio.runnable;
 
 import org.tio.common.ChannelContext;
-import org.tio.common.Packet;
+import org.tio.common.packet.SuperPacket;
 
 /**
  * Copyright (c) for darkidiot
@@ -9,7 +9,7 @@ import org.tio.common.Packet;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public class HandlerTaskQueue extends AbstractTaskQueue<Packet> {
+public class HandlerTaskQueue extends AbstractTaskQueue<SuperPacket> {
 
     private ChannelContext context;
 
@@ -18,7 +18,7 @@ public class HandlerTaskQueue extends AbstractTaskQueue<Packet> {
     }
 
     @Override
-    public void runTask(Packet packet) {
+    public void runTask(SuperPacket packet) {
 
     }
 }

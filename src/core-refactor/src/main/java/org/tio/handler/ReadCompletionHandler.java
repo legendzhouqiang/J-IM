@@ -1,6 +1,11 @@
 package org.tio.handler;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.tio.common.ChannelContext;
+import org.tio.common.ChannelStat;
+import org.tio.common.GroupStat;
+import org.tio.common.SystemTimer;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.CompletionHandler;
@@ -12,21 +17,24 @@ import java.nio.channels.CompletionHandler;
  * Desc:
  */
 @Data
-public class ReadCompletionHandler implements CompletionHandler<Integer, Object> {
+@Slf4j
+public class ReadCompletionHandler implements CompletionHandler<Integer, ChannelContext> {
 
     @Override
-    public void completed(Integer result, Object attachment) {
+    public void completed(Integer result, ChannelContext context) {
         if (result > 0) {
-
+            ChannelStat cStat = context.getStat();
+            cStat.setLatestTimeOfReceivedPacket(SystemTimer.currentTimeMillis());
+            cStat.getReceivedBytes().addAndGet(result);
+            GroupStat gStat = context.getGroupContext().getStatistics();
+            gStat.getReceivedBytes().addAndGet(result);
         } else {
 
         }
-        attachment.notify();
     }
 
     @Override
-    public void failed(Throwable exc, Object attachment) {
+    public void failed(Throwable exc, ChannelContext context) {
 
-        attachment.notify();
     }
 }
