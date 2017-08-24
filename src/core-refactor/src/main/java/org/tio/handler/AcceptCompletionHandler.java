@@ -2,6 +2,8 @@ package org.tio.handler;
 
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
+import org.tio.client.ClientChannelContext;
+import org.tio.common.ChannelContext;
 import org.tio.common.CoreConstant;
 
 import java.io.IOException;
@@ -19,6 +21,7 @@ import java.nio.channels.CompletionHandler;
 @Slf4j
 public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, Object> {
 
+
     @Override
     public void completed(AsynchronousSocketChannel channel, Object attachment) {
         try {
@@ -28,11 +31,22 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
             channel.setOption(StandardSocketOptions.SO_SNDBUF, CoreConstant.default_send_buf_size);
             ByteBuffer buffer = ByteBuffer.allocateDirect(CoreConstant.default_receive_buf_size);
             buffer.clear();
-            channel.read(buffer, new Object(), new ReadCompletionHandler());
-        } catch (IOException e) {
+            ChannelContext context = new ClientChannelContext(channel);
+            while (true) {
+                if (context.isClosed()) {
+                    break;
+                }
+                Object attachment1 = new Object();
+                channel.read(buffer, attachment1, new ReadCompletionHandler());
+                context.getDecodeRunnable().addMsg(buffer.slice());
+                attachment1.wait();
+                buffer.clear();
+            }
+
+
+        } catch (IOException | InterruptedException e) {
             log.error(Throwables.getStackTraceAsString(e));
         }
-
     }
 
     @Override

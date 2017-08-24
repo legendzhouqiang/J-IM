@@ -21,10 +21,12 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, Object>
         } else {
 
         }
+        attachment.notify();
     }
 
     @Override
     public void failed(Throwable exc, Object attachment) {
 
+        attachment.notify();
     }
 }

@@ -7,7 +7,6 @@ import org.tio.runnable.HandlerTaskQueue;
 import org.tio.runnable.SendTaskQueue;
 
 import java.nio.channels.AsynchronousChannelGroup;
-import java.nio.channels.AsynchronousSocketChannel;
 
 /**
  * Copyright (c) for 谭耀武

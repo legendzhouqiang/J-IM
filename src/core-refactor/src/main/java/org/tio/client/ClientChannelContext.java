@@ -33,8 +33,11 @@ public class ClientChannelContext extends ChannelContext {
         connect();
     }
 
-    public ClientChannelContext(AsynchronousSocketChannel asynchronousSocketChannel) {
+    public ClientChannelContext(AsynchronousSocketChannel asynchronousSocketChannel) throws IOException {
         this.asynchronousSocketChannel = asynchronousSocketChannel;
+        InetSocketAddress remoteAddress = (InetSocketAddress) asynchronousSocketChannel.getRemoteAddress();
+        log.info("sock bind local address [{}:{}].", remoteAddress.getHostName(), remoteAddress.getPort());
+        remote = new Node(remoteAddress.getHostName(), remoteAddress.getPort());
     }
 
     private void connect() throws IOException {
