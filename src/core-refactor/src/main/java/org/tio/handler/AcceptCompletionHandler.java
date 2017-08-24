@@ -21,19 +21,19 @@ import java.nio.channels.CompletionHandler;
  * Desc: 连接处理器
  */
 @Slf4j
-public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, ChannelContext> {
+public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, ClientChannelContext> {
 
 
     @Override
-    public void completed(AsynchronousSocketChannel channel, ChannelContext attachment) {
+    public void completed(AsynchronousSocketChannel channel, ClientChannelContext context) {
         try {
+            context.bind(channel);
             channel.setOption(StandardSocketOptions.SO_REUSEADDR, CoreConstant.default_reuse_addr);
             channel.setOption(StandardSocketOptions.SO_KEEPALIVE, CoreConstant.default_keep_alive);
             channel.setOption(StandardSocketOptions.SO_RCVBUF, CoreConstant.default_receive_buf_size);
             channel.setOption(StandardSocketOptions.SO_SNDBUF, CoreConstant.default_send_buf_size);
             ByteBuffer buffer = ByteBuffer.allocateDirect(CoreConstant.default_receive_buf_size);
             buffer.order(CoreConstant.byteOrder);
-            ChannelContext context = new ClientChannelContext(channel);
             while (true) {
                 if (context.isWaitingClose() || context.isClosed()) {
                     break;
@@ -48,7 +48,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
     }
 
     @Override
-    public void failed(Throwable exc, ChannelContext attachment) {
+    public void failed(Throwable exc, ClientChannelContext context) {
 
     }
 }

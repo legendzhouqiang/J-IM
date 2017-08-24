@@ -5,9 +5,6 @@ import org.tio.common.GroupContext;
 import org.tio.common.PacketHandlerMode;
 import org.tio.concurrent.SetWithLock;
 
-import java.io.IOException;
-import java.nio.channels.AsynchronousChannelGroup;
-
 /**
  * Copyright (c) for 谭耀武
  * Date:2017/8/10

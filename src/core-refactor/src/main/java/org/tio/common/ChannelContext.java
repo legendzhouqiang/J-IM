@@ -41,8 +41,6 @@ public abstract class ChannelContext {
 
     protected Integer port = null;
 
-    protected GroupContext groupContext;
-
     protected AsynchronousChannelGroup channelGroup;
 
     protected TioLinkListener linkListener;

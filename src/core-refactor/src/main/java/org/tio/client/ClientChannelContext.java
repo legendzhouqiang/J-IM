@@ -2,10 +2,7 @@ package org.tio.client;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.ChannelContext;
-import org.tio.common.CoreConstant;
-import org.tio.common.Node;
-import org.tio.common.SystemTimer;
+import org.tio.common.*;
 import org.tio.handler.ConnectionCompletionHandler;
 import org.tio.util.StringUtil;
 
@@ -25,22 +22,28 @@ import java.nio.channels.AsynchronousSocketChannel;
 @Data
 public class ClientChannelContext extends ChannelContext {
 
-    protected AsynchronousSocketChannel asynchronousSocketChannel;
+    private ClientGroupContext groupContext;
+
+    private AsynchronousSocketChannel asynchronousSocketChannel;
 
     private Node remote;
 
     public ClientChannelContext() throws IOException {
-        connect();
     }
 
     public ClientChannelContext(AsynchronousSocketChannel asynchronousSocketChannel) throws IOException {
+        this.bind(asynchronousSocketChannel);
+    }
+
+    public ClientChannelContext bind(AsynchronousSocketChannel asynchronousSocketChannel) throws IOException {
         this.asynchronousSocketChannel = asynchronousSocketChannel;
         InetSocketAddress remoteAddress = (InetSocketAddress) asynchronousSocketChannel.getRemoteAddress();
         log.info("sock bind local address [{}:{}].", remoteAddress.getHostName(), remoteAddress.getPort());
         remote = new Node(remoteAddress.getHostName(), remoteAddress.getPort());
+        return this;
     }
 
-    private void connect() throws IOException {
+    private ClientChannelContext connect() throws IOException {
         channelGroup = AsynchronousChannelGroup.withThreadPool(groupContext.getGroupExecutor());
         long start = SystemTimer.currentTimeMillis();
         this.asynchronousSocketChannel = AsynchronousSocketChannel.open(channelGroup);
@@ -71,5 +74,6 @@ public class ClientChannelContext extends ChannelContext {
 
             }
         }
+        return this;
     }
 }

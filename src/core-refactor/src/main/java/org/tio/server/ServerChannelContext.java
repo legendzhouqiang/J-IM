@@ -1,10 +1,9 @@
 package org.tio.server;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.ChannelContext;
-import org.tio.common.CoreConstant;
-import org.tio.common.Node;
-import org.tio.common.SystemTimer;
+import org.tio.client.ClientChannelContext;
+import org.tio.common.*;
+import org.tio.handler.AcceptCompletionHandler;
 import org.tio.util.StringUtil;
 
 import java.io.IOException;
@@ -22,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class ServerChannelContext extends ChannelContext {
+
+    private ServerGroupContext groupContext;
 
     private AsynchronousServerSocketChannel asynchronousServerSocketChannel;
 
@@ -51,6 +52,7 @@ public class ServerChannelContext extends ChannelContext {
             log.info("sock bind local address [{}:{}].", localAddress.getHostName(), localAddress.getPort());
         }
 
+        asynchronousServerSocketChannel.accept(new ClientChannelContext(),new AcceptCompletionHandler());
 
     }
 }

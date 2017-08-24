@@ -46,8 +46,6 @@ public abstract class GroupContext {
     /** The group executor. */
     protected ThreadPoolExecutor groupExecutor = null;
 
-    protected GroupContext groupContext;
-
     /** 等待关闭 */
     private boolean waitingStop = false;
 

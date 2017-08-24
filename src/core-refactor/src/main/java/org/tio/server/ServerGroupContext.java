@@ -16,9 +16,6 @@ public class ServerGroupContext extends GroupContext {
     /** 消息处理模式 */
     private PacketHandlerMode packetHandlerMode = PacketHandlerMode.QUEUE;
 
-    /** 分组监听器 */
-    private GroupListener groupListener = null;
-
     /** 已经连接的 */
     private SetWithLock<ChannelContext> connections;
 
