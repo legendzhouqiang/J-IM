@@ -143,7 +143,7 @@ public class ServerGroupContext extends GroupContext {
 										+ "\r\n群组:[channelmap:{}, groupmap:{}]"
 										+ "\r\n绑定用户数:{}"
 										+ "\r\n等待同步消息响应:{}"
-										+ "\r\n正在被监控统计的ip数:{}"
+//										+ "\r\n正在被监控统计的ip数:{}"
 										+ "\r\n被拉黑的ip:{}",
 										ServerGroupContext.this.name,
 										ServerGroupContext.this.clientNodes.getMap().getObj().size(), 
@@ -154,7 +154,7 @@ public class ServerGroupContext extends GroupContext {
 										ServerGroupContext.this.groups.getGroupmap().getObj().size(),
 										ServerGroupContext.this.users.getMap().getObj().size(), 
 										ServerGroupContext.this.waitingResps.getMap().getObj().size(),
-										ServerGroupContext.this.ips.size(),
+//										ServerGroupContext.this.ips.size(),
 										Json.toJson(ServerGroupContext.this.ipBlacklist.getCopy()));
 							}
 

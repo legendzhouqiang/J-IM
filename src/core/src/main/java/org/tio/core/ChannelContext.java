@@ -16,12 +16,10 @@ import org.slf4j.MDC;
 import org.tio.core.intf.Packet;
 import org.tio.core.intf.PacketWithMeta;
 import org.tio.core.stat.ChannelStat;
-import org.tio.core.stat.IpStat;
 import org.tio.core.task.DecodeRunnable;
 import org.tio.core.task.HandlerRunnable;
 import org.tio.core.task.SendRunnable;
 import org.tio.json.Json;
-import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.prop.MapWithLockPropSupport;
 
 import com.xiaoleilu.hutool.date.DatePattern;
@@ -40,7 +38,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	private boolean isTraceSynPacket = false;
 
-	private MapWithLock<String, Object> props = null;//
+	//	private MapWithLock<String, Object> props = null;//
 
 	private GroupContext groupContext = null;
 
@@ -63,7 +61,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	private boolean isRemoved = false;
 
-	private IpStat ipStat;
+//	private IpStat ipStat;
 
 	private ChannelStat stat = new ChannelStat();
 
@@ -188,9 +186,9 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		return id;
 	}
 
-	public IpStat getIpStat() {
-		return ipStat;
-	}
+//	public IpStat getIpStat() {
+//		return ipStat;
+//	}
 
 	/**
 	 * @return the readCompletionHandler
@@ -262,7 +260,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		this.setAsynchronousSocketChannel(asynchronousSocketChannel);
 		this.readCompletionHandler = new ReadCompletionHandler(this);
 		this.writeCompletionHandler = new WriteCompletionHandler(this);
-		this.ipStat = groupContext.ips.get(getClientNode().getIp());
+//		this.ipStat = groupContext.ips.get(getClientNode().getIp());
 	}
 
 	/**
@@ -432,9 +430,9 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		}
 	}
 
-	public void setIpStat(IpStat ipStat) {
-		this.ipStat = ipStat;
-	}
+//	public void setIpStat(IpStat ipStat) {
+//		this.ipStat = ipStat;
+//	}
 
 	/**
 	 * @param reConnCount the reConnCount to set

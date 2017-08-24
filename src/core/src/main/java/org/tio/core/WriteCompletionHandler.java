@@ -13,6 +13,8 @@ import org.tio.core.intf.Packet;
 import org.tio.core.intf.PacketWithMeta;
 import org.tio.core.stat.ChannelStat;
 import org.tio.core.stat.GroupStat;
+import org.tio.core.stat.IpStat;
+import org.tio.core.stat.IpStatType;
 import org.tio.utils.SystemTimer;
 
 /**
@@ -124,10 +126,27 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 		//		AioListener aioListener = groupContext.getAioListener();
 		boolean isSentSuccess = result > 0;
 
+		
+//		GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
+		
+		IpStatType[] ipStatTypes = IpStatType.values();
+		
+		
+		
 		if (isSentSuccess) {
 			groupStat.getSentBytes().addAndGet(result);
 			channelStat.getSentBytes().addAndGet(result);
-			channelContext.getIpStat().getSentBytes().addAndGet(result);
+//			channelContext.getIpStat().getSentBytes().addAndGet(result);
+			
+//			for (GuavaCache guavaCache : caches) {
+//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+//				ipStat.getSentBytes().addAndGet(result);
+//			}
+			for (IpStatType v : ipStatTypes) {
+				IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+				ipStat.getSentBytes().addAndGet(result);
+			}
+			
 		}
 
 		int packetCount = 0;
@@ -139,8 +158,17 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 				if (isSentSuccess) {
 					groupStat.getSentPacket().incrementAndGet();
 					channelStat.getSentPackets().incrementAndGet();
-					channelContext.getIpStat().getSentPackets().incrementAndGet();
+//					channelContext.getIpStat().getSentPackets().incrementAndGet();
 
+//					for (GuavaCache guavaCache : caches) {
+//						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+//						ipStat.getSentPackets().incrementAndGet();
+//					}
+					
+					for (IpStatType v : ipStatTypes) {
+						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+						ipStat.getSentPackets().incrementAndGet();
+					}
 				}
 				handleOne(result, throwable, attachment, isSentSuccess);
 			} else {
@@ -149,7 +177,17 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 					packetCount = ps.size();
 					groupStat.getSentPacket().addAndGet(packetCount);
 					channelStat.getSentPackets().addAndGet(packetCount);
-					channelContext.getIpStat().getSentPackets().addAndGet(packetCount);
+//					channelContext.getIpStat().getSentPackets().addAndGet(packetCount);
+					
+//					for (GuavaCache guavaCache : caches) {
+//						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+//						ipStat.getSentPackets().addAndGet(packetCount);
+//					}
+					
+					for (IpStatType v : ipStatTypes) {
+						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+						ipStat.getSentPackets().addAndGet(packetCount);
+					}
 				}
 
 				for (Object obj : ps) {

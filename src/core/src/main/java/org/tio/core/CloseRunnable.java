@@ -11,6 +11,8 @@ import org.tio.client.ClientChannelContext;
 import org.tio.client.ReconnConf;
 import org.tio.core.intf.AioListener;
 import org.tio.core.maintain.MaintainUtils;
+import org.tio.core.stat.IpStat;
+import org.tio.core.stat.IpStatType;
 import org.tio.utils.SystemTimer;
 
 public class CloseRunnable implements Runnable {
@@ -129,7 +131,21 @@ public class CloseRunnable implements Runnable {
 				log.info("{} 准备关闭连接, isNeedRemove:{}, {}", channelContext, isRemove, remark);
 
 				try {
-					channelContext.getIpStat().getActivatedCount().decrementAndGet();
+//					channelContext.getIpStat().getActivatedCount().decrementAndGet();
+					
+//					GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
+//					for (GuavaCache guavaCache : caches) {
+//						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+//						ipStat.getActivatedCount().decrementAndGet();
+//					}
+					
+					IpStatType[] ipStatTypes = IpStatType.values();
+					for (IpStatType v : ipStatTypes) {
+						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+						ipStat.getActivatedCount().decrementAndGet();
+					}
+					
+					
 					if (isRemove) {
 						MaintainUtils.removeFromMaintain(channelContext);
 					} else {

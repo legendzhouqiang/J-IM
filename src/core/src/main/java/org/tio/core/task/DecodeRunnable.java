@@ -13,6 +13,8 @@ import org.tio.core.exception.AioDecodeException;
 import org.tio.core.intf.AioListener;
 import org.tio.core.intf.Packet;
 import org.tio.core.stat.ChannelStat;
+import org.tio.core.stat.IpStat;
+import org.tio.core.stat.IpStatType;
 import org.tio.core.utils.ByteBufferUtils;
 import org.tio.utils.SystemTimer;
 
@@ -130,7 +132,19 @@ public class DecodeRunnable implements Runnable {
 
 					channelContext.getGroupContext().getGroupStat().getReceivedPackets().incrementAndGet();
 					channelContext.getStat().getReceivedPackets().incrementAndGet();
-					channelContext.getIpStat().getReceivedPackets().incrementAndGet();
+					//					channelContext.getIpStat().getReceivedPackets().incrementAndGet();
+
+//					GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
+//					for (GuavaCache guavaCache : caches) {
+//						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+//						ipStat.getReceivedPackets().incrementAndGet();
+//					}
+					
+					IpStatType[] ipStatTypes = IpStatType.values();
+					for (IpStatType v : ipStatTypes) {
+						IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
+						ipStat.getReceivedPackets().incrementAndGet();
+					}
 
 					channelContext.traceClient(ChannelAction.RECEIVED, packet, null);
 
@@ -163,12 +177,23 @@ public class DecodeRunnable implements Runnable {
 				}
 			}
 		} catch (AioDecodeException e) {
-//			log.error(channelContext.toString() + "解码异常", e);
+			//			log.error(channelContext.toString() + "解码异常", e);
 			Aio.close(channelContext, e, "解码异常:" + e.getMessage());
-			int errorCount = channelContext.getIpStat().getDecodeErrorCount().incrementAndGet();
-			if (errorCount > 10) {
-				
+			//			int errorCount = channelContext.getIpStat().getDecodeErrorCount().incrementAndGet();
+//			GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
+//			for (GuavaCache guavaCache : caches) {
+//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+//				ipStat.getDecodeErrorCount().incrementAndGet();
+//			}
+			
+			
+			IpStatType[] ipStatTypes = IpStatType.values();
+			for (IpStatType v : ipStatTypes) {
+				IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+				ipStat.getDecodeErrorCount().incrementAndGet();
 			}
+			
+			
 			return;
 		}
 	}

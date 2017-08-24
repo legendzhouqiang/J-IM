@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.core.stat.IpStat;
+import org.tio.core.stat.IpStatType;
 import org.tio.core.task.DecodeRunnable;
 import org.tio.core.utils.AioUtils;
 import org.tio.utils.SystemTimer;
@@ -39,15 +41,31 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 		//		GroupContext groupContext = channelContext.getGroupContext();
 		if (result > 0) {
 			channelContext.getStat().setLatestTimeOfReceivedByte(SystemTimer.currentTimeMillis());
+			GroupContext groupContext = channelContext.getGroupContext();
 			
-			channelContext.getGroupContext().getGroupStat().getReceivedBytes().addAndGet(result);
+			groupContext.getGroupStat().getReceivedBytes().addAndGet(result);
 			channelContext.getStat().getReceivedBytes().addAndGet(result);
-			channelContext.getIpStat().getReceivedBytes().addAndGet(result);
+//			channelContext.getIpStat().getReceivedBytes().addAndGet(result);
 			
 			
-			channelContext.getGroupContext().getGroupStat().getReceivedTcps().incrementAndGet();
+			groupContext.getGroupStat().getReceivedTcps().incrementAndGet();
 			channelContext.getStat().getReceivedTcps().incrementAndGet();
-			channelContext.getIpStat().getReceivedTcps().incrementAndGet();
+//			channelContext.getIpStat().getReceivedTcps().incrementAndGet();
+			
+			
+//			GuavaCache[] caches = groupContext.ips.getCaches();
+//			for (GuavaCache guavaCache : caches) {
+//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+//				ipStat.getReceivedBytes().addAndGet(result);
+//				ipStat.getReceivedTcps().incrementAndGet();
+//			}
+			IpStatType[] ipStatTypes = IpStatType.values();
+			for (IpStatType v : ipStatTypes) {
+				IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
+				ipStat.getReceivedBytes().addAndGet(result);
+				ipStat.getReceivedTcps().incrementAndGet();
+			}
+			
 
 			if (channelContext.isTraceClient()) {
 				Map<String, Object> map = new HashMap<>();

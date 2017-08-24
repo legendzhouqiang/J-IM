@@ -13,6 +13,8 @@ import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.intf.Packet;
 import org.tio.core.maintain.ChannelContextMapWithLock;
+import org.tio.core.stat.IpStat;
+import org.tio.core.stat.IpStatType;
 import org.tio.utils.thread.pool.AbstractQueueRunnable;
 
 /**
@@ -74,8 +76,23 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 			groupContext.getGroupStat().getHandledPacket().incrementAndGet();
 			groupContext.getGroupStat().getHandledBytes().addAndGet(packet.getByteCount());
 			
-			channelContext.getIpStat().getHandledPackets().incrementAndGet();
-			channelContext.getIpStat().getHandledBytes().addAndGet(packet.getByteCount());
+//			channelContext.getIpStat().getHandledPackets().incrementAndGet();
+//			channelContext.getIpStat().getHandledBytes().addAndGet(packet.getByteCount());
+			
+//			GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
+//			for (GuavaCache guavaCache : caches) {
+//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+//				ipStat.getHandledPackets().incrementAndGet();
+//				ipStat.getHandledBytes().addAndGet(packet.getByteCount());
+//			}
+			
+			IpStatType[] ipStatTypes = IpStatType.values();
+			for (IpStatType v : ipStatTypes) {
+				IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
+				ipStat.getHandledPackets().incrementAndGet();
+				ipStat.getHandledBytes().addAndGet(packet.getByteCount());
+
+			}
 		}
 
 		//		return ret;

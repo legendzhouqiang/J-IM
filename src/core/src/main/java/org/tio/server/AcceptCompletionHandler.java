@@ -6,13 +6,17 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelAction;
 import org.tio.core.ReadCompletionHandler;
+import org.tio.core.stat.IpStat;
+import org.tio.core.stat.IpStatType;
 import org.tio.server.intf.ServerAioListener;
 import org.tio.utils.SystemTimer;
+import org.tio.utils.cache.guava.GuavaCache;
 
 /**
  *
@@ -36,6 +40,21 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 	public void completed(AsynchronousSocketChannel asynchronousSocketChannel, AioServer aioServer) {
 		try {
 			ServerGroupContext serverGroupContext = aioServer.getServerGroupContext();
+			InetSocketAddress inetSocketAddress = (InetSocketAddress) asynchronousSocketChannel.getRemoteAddress();
+			String clientIp = inetSocketAddress.getHostString();
+//			serverGroupContext.ips.get(clientIp).getRequestCount().incrementAndGet();
+			
+//			GuavaCache[] caches = serverGroupContext.ips.getCaches();
+//			for (GuavaCache guavaCache : caches) {
+//				IpStat ipStat = (IpStat) guavaCache.get(clientIp);
+//				ipStat.getRequestCount().incrementAndGet();
+//			}
+			
+			IpStatType[] ipStatTypes = IpStatType.values();
+			for (IpStatType v : ipStatTypes) {
+				IpStat ipStat = (IpStat) serverGroupContext.ips.get(v, clientIp);
+				ipStat.getRequestCount().incrementAndGet();
+			}
 
 			ServerGroupStat serverGroupStat = serverGroupContext.getServerGroupStat();
 			serverGroupStat.getAccepted().incrementAndGet();
@@ -50,7 +69,18 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			channelContext.setServerNode(aioServer.getServerNode());
 			ServerAioListener serverAioListener = serverGroupContext.getServerAioListener();
 			channelContext.getStat().setTimeFirstConnected(SystemTimer.currentTimeMillis());
-			channelContext.getIpStat().getActivatedCount().incrementAndGet();
+			
+//			channelContext.getIpStat().getActivatedCount().incrementAndGet();
+//			for (GuavaCache guavaCache : caches) {
+//				IpStat ipStat = (IpStat) guavaCache.get(clientIp);
+//				ipStat.getActivatedCount().incrementAndGet();
+//			}
+			
+			for (IpStatType v : ipStatTypes) {
+				IpStat ipStat = (IpStat) serverGroupContext.ips.get(v, clientIp);
+				ipStat.getActivatedCount().incrementAndGet();
+			}
+			
 			channelContext.traceClient(ChannelAction.CONNECT, null, null);
 			
 			serverGroupContext.connecteds.add(channelContext);
