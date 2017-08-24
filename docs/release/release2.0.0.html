@@ -3,7 +3,7 @@
 </head>
 
 
-t-io 2.0.0发布，法网天眼诞生
+t-io 2.0.0发布----法网天眼第一版
 
 
 
@@ -35,14 +35,21 @@ t-io 2.0.0发布，法网天眼诞生
                 1.x用户大量吐槽的那3个泛型，已经全部拿掉，就感觉是丢了一个大包袱
             </li>
             <li>
-                内置强大的监控功能----架构师眼中的法网天眼。所有socket级别的访问或攻击一目了然，为应用层防止大流量攻击和慢攻击提供极佳的数据参考，架构师的最爱！
-				<img src="https://git.oschina.net/tywo45/t-io/raw/master/docs/monitor/1.png">
+                内置强大的监控功能----架构师眼中的<strong>法网天眼</strong>。最接近TCP层的数据监控让访问或攻击一目了然，为应用层防止大流量攻击和慢攻击提供极佳的数据参考，架构师的最爱！
+				<div><img src="https://git.oschina.net/tywo45/t-io/raw/master/docs/monitor/1.png"></div>
+				<div><img src="https://git.oschina.net/tywo45/t-io/raw/master/docs/monitor/2.png"></div>
             </li>
             <li>
                 分离出tio-utils项目，用于日常开发
 				<ul>
 					<li>
-						内置简洁易用的二级缓存框架
+						内置简洁易用的二级缓存框架，目前用在tio-httpserver中
+					</li>
+					<li>
+						tio-core大量使用的ObjWithLock也放这了
+					</li>
+					<li>
+						tio-core大量使用的同步安全线程池也放这了
 					</li>
 					<li>
 						内置layui分页适配对象，用于把数据转成layui table需要的格式
@@ -59,7 +66,7 @@ t-io 2.0.0发布，法网天眼诞生
 						内置简洁省心的httpsession，支持本地session存储、分布式session存储、两级缓存session存储
 					</li>
 					<li>
-						tio-mvc使用简化，通过httprequest即可获取socket级别的上下文
+						tio-mvc使用简化，通过httprequest即可获取ChannelContext，与tio-core无缝对接
 					</li>
 					<li>
 						静态资源缓存及清空
