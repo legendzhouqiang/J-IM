@@ -49,7 +49,7 @@
 <dependency>
     <groupId>org.t-io</groupId>
     <artifactId>tio-core</artifactId>
-    <version>1.7.2.v20170705-RELEASE</version>
+    <version>2.0.0.v20170824-RELEASE</version>
 </dependency>
 ```
 ## **t-io特点**
