@@ -58,6 +58,17 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 
 			ServerGroupStat serverGroupStat = serverGroupContext.getServerGroupStat();
 			serverGroupStat.getAccepted().incrementAndGet();
+			
+			
+//			channelContext.getIpStat().getActivatedCount().incrementAndGet();
+//			for (GuavaCache guavaCache : caches) {
+//				IpStat ipStat = (IpStat) guavaCache.get(clientIp);
+//				ipStat.getActivatedCount().incrementAndGet();
+//			}
+			for (IpStatType v : ipStatTypes) {
+				IpStat ipStat = (IpStat) serverGroupContext.ips.get(v, clientIp);
+				ipStat.getActivatedCount().incrementAndGet();
+			}
 
 			asynchronousSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 			asynchronousSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 32 * 1024);
@@ -69,17 +80,6 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			channelContext.setServerNode(aioServer.getServerNode());
 			ServerAioListener serverAioListener = serverGroupContext.getServerAioListener();
 			channelContext.getStat().setTimeFirstConnected(SystemTimer.currentTimeMillis());
-			
-//			channelContext.getIpStat().getActivatedCount().incrementAndGet();
-//			for (GuavaCache guavaCache : caches) {
-//				IpStat ipStat = (IpStat) guavaCache.get(clientIp);
-//				ipStat.getActivatedCount().incrementAndGet();
-//			}
-			
-			for (IpStatType v : ipStatTypes) {
-				IpStat ipStat = (IpStat) serverGroupContext.ips.get(v, clientIp);
-				ipStat.getActivatedCount().incrementAndGet();
-			}
 			
 			channelContext.traceClient(ChannelAction.CONNECT, null, null);
 			

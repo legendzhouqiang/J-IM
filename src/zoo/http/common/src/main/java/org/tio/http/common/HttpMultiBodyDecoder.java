@@ -10,7 +10,10 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.core.ChannelContext;
 import org.tio.core.exception.AioDecodeException;
+import org.tio.core.exception.LengthOverflowException;
+import org.tio.core.utils.ByteBufferUtils;
 import org.tio.http.common.utils.HttpParseUtils;
 import org.tio.utils.SystemTimer;
 
@@ -102,7 +105,11 @@ public class HttpMultiBodyDecoder {
 	//        return 0;
 	//    }
 
-	public static void decode(HttpRequest request, RequestLine firstLine, byte[] bodyBytes, String initboundary) throws AioDecodeException {
+	public static void decode(HttpRequest request, RequestLine firstLine, byte[] bodyBytes, String initboundary, ChannelContext channelContext) throws AioDecodeException {
+		if (StringUtils.isBlank(initboundary)) {
+			throw new AioDecodeException("boundary is null");
+		}
+
 		long start = SystemTimer.currentTimeMillis();
 
 		ByteBuffer buffer = ByteBuffer.wrap(bodyBytes);
@@ -117,7 +124,7 @@ public class HttpMultiBodyDecoder {
 		try {
 			label1: while (true) {
 				if (step == Step.BOUNDARY) {
-					String line = getLine(buffer, request.getCharset());
+					String line = ByteBufferUtils.readLine(buffer, request.getCharset(), HttpConfig.MAX_LENGTH_OF_BOUNDARY);
 					//                    int offset = HttpMultiBodyDecoder.processReadIndex(buffer);
 					if (boundary.equals(line)) {
 						step = Step.HEADER;
@@ -126,7 +133,7 @@ public class HttpMultiBodyDecoder {
 						//                        int ss = buffer.readerIndex() + 2 - offset;
 						break;
 					} else {
-						throw new AioDecodeException("line is:" + line + ", but need: " + boundary + "");
+						throw new AioDecodeException("line need:" + boundary + ", but is: " + line + "");
 					}
 				}
 
@@ -134,7 +141,7 @@ public class HttpMultiBodyDecoder {
 				if (step == Step.HEADER) {
 					List<String> lines = new ArrayList<>(2);
 					label2: while (true) {
-						String line = getLine(buffer, request.getCharset());
+						String line = ByteBufferUtils.readLine(buffer, request.getCharset(), HttpConfig.MAX_LENGTH_OF_MULTI_HEADER);
 						if ("".equals(line)) {
 							break label2;
 						} else {
@@ -142,12 +149,12 @@ public class HttpMultiBodyDecoder {
 						}
 					}
 
-					parseHeader(lines, multiBodyHeader);
+					parseHeader(lines, multiBodyHeader, channelContext);
 					step = Step.BODY;
 				}
 
 				if (step == Step.BODY) {
-					Step newParseStep = parseBody(multiBodyHeader, request, buffer, boundary, endBoundary);
+					Step newParseStep = parseBody(multiBodyHeader, request, buffer, boundary, endBoundary, channelContext);
 					step = newParseStep;
 
 					if (step == Step.END) {
@@ -156,8 +163,10 @@ public class HttpMultiBodyDecoder {
 				}
 
 			}
+		} catch (LengthOverflowException loe) {
+			throw new AioDecodeException(loe);
 		} catch (UnsupportedEncodingException e) {
-			log.error(e.getMessage(), e);
+			log.error(channelContext.toString(), e);
 		} finally {
 			long end = SystemTimer.currentTimeMillis();
 			long iv = end - start;
@@ -173,60 +182,64 @@ public class HttpMultiBodyDecoder {
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	public static String getLine(ByteBuffer buffer, String charset) throws UnsupportedEncodingException {
-		char lastByte = 0; // 上一个字节
-		int initPosition = buffer.position();
-
-		while (buffer.hasRemaining()) {
-			char b = (char) buffer.get();
-
-			if (b == '\n') {
-				if (lastByte == '\r') {
-					int startIndex = initPosition;
-					int endIndex = buffer.position() - 2;
-					int length = endIndex - startIndex;
-					byte[] dst = new byte[length];
-
-					System.arraycopy(buffer.array(), startIndex, dst, 0, length);
-					String line = new String(dst, charset);
-					return line;
-				}
-			}
-			lastByte = b;
-		}
-		return null;
-	}
+	//	public static String getLine(ByteBuffer buffer, String charset) throws UnsupportedEncodingException {
+	//		char lastByte = 0; // 上一个字节
+	//		int initPosition = buffer.position();
+	//
+	//		while (buffer.hasRemaining()) {
+	//			char b = (char) buffer.get();
+	//
+	//			if (b == '\n') {
+	//				if (lastByte == '\r') {
+	//					int startIndex = initPosition;
+	//					int endIndex = buffer.position() - 2;
+	//					int length = endIndex - startIndex;
+	//					byte[] dst = new byte[length];
+	//
+	//					System.arraycopy(buffer.array(), startIndex, dst, 0, length);
+	//					String line = new String(dst, charset);
+	//					return line;
+	//				}
+	//			}
+	//			lastByte = b;
+	//		}
+	//		return null;
+	//	}
 
 	/**
 	 * @param args
 	 * @throws UnsupportedEncodingException
+	 * @throws LengthOverflowException 
 	 */
-	public static void main(String[] args) throws UnsupportedEncodingException {
+	public static void main(String[] args) throws UnsupportedEncodingException, LengthOverflowException {
 		String testString = "hello\r\nddd\r\n";
 		ByteBuffer buffer = ByteBuffer.wrap(testString.getBytes());
 
-		String xString = getLine(buffer, "utf-8");
+		String xString = ByteBufferUtils.readLine(buffer, "utf-8");
 		System.out.println(xString);
-		xString = getLine(buffer, "utf-8");
+		xString = ByteBufferUtils.readLine(buffer, "utf-8");
 		System.out.println(xString);
 	}
 
 	/**
-	 *
+	 * 
 	 * @param header
 	 * @param request
 	 * @param buffer
 	 * @param boundary
 	 * @param endBoundary
+	 * @param channelContext
 	 * @return
 	 * @throws UnsupportedEncodingException
+	 * @throws LengthOverflowException
 	 * @author tanyaowu
 	 */
-	public static Step parseBody(Header header, HttpRequest request, ByteBuffer buffer, String boundary, String endBoundary) throws UnsupportedEncodingException {
+	public static Step parseBody(Header header, HttpRequest request, ByteBuffer buffer, String boundary, String endBoundary, ChannelContext channelContext)
+			throws UnsupportedEncodingException, LengthOverflowException {
 		int initPosition = buffer.position();
 
 		while (buffer.hasRemaining()) {
-			String line = getLine(buffer, request.getCharset());
+			String line = ByteBufferUtils.readLine(buffer, request.getCharset(), HttpConfig.MAX_LENGTH_OF_MULTI_BODY);
 			boolean isEndBoundary = endBoundary.equals(line);
 			boolean isBoundary = boundary.equals(line);
 			if (isBoundary || isEndBoundary) {
@@ -272,7 +285,7 @@ public class HttpMultiBodyDecoder {
 	 * @param header
 	 * @author tanyaowu
 	 */
-	public static void parseHeader(List<String> lines, Header header) throws AioDecodeException {
+	public static void parseHeader(List<String> lines, Header header, ChannelContext channelContext) throws AioDecodeException {
 		if (lines == null || lines.size() == 0) {
 			throw new AioDecodeException("multipart_form_data 格式不对，没有头部信息");
 		}
@@ -296,7 +309,7 @@ public class HttpMultiBodyDecoder {
 			header.setContentType(contentType);
 
 		} catch (Exception e) {
-			log.error(e.toString(), e);
+			log.error(channelContext.toString(), e);
 			throw new AioDecodeException(e.toString());
 		}
 

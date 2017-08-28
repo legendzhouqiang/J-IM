@@ -33,6 +33,21 @@ public class HttpConfig {
 	 * 默认的静态资源缓存时间，单位：秒
 	 */
 	public static final int MAX_LIVETIME_OF_STATICRES = 60 * 10;
+	
+	/**
+	 * 文件上传时，boundary值的最大长度
+	 */
+	public static final int MAX_LENGTH_OF_BOUNDARY = 256;
+	
+	/**
+	 * 文件上传时，头部的最大长度
+	 */
+	public static final int MAX_LENGTH_OF_MULTI_HEADER = 128;
+	
+	/**
+	 * 文件上传时，体的最大长度
+	 */
+	public static final int MAX_LENGTH_OF_MULTI_BODY = 1024 * 1024 * 20;
 
 	/**
 	 * @param args

@@ -11,16 +11,12 @@ import com.xiaoleilu.hutool.date.BetweenFormater.Level;
 
 /**
  * 这个是给服务器用的，主要用于监控IP情况，随时拉黑恶意攻击IP
- * @author tanyaowu 
+ * @author tanyaowu
  * 2017年8月20日 下午8:02:41
  */
 public class IpStat implements java.io.Serializable {
 
 	private static final long serialVersionUID = -6942731710053482089L;
-
-	public IpStat(String ip) {
-		this.ip = ip;
-	}
 
 	private Date start = new Date();
 
@@ -52,7 +48,7 @@ public class IpStat implements java.io.Serializable {
 	 * 本IP已发送的packet数
 	 */
 	private AtomicLong sentPackets = new AtomicLong();
-	
+
 	/**
 	 * 本IP已处理的字节数
 	 */
@@ -67,7 +63,7 @@ public class IpStat implements java.io.Serializable {
 	 * 本IP已接收的字节数
 	 */
 	private AtomicLong receivedBytes = new AtomicLong();
-	
+
 	/**
 	 * 本IP已接收了多少次TCP数据包
 	 */
@@ -78,6 +74,17 @@ public class IpStat implements java.io.Serializable {
 	 */
 	private AtomicLong receivedPackets = new AtomicLong();
 
+	public IpStat(String ip) {
+		this.ip = ip;
+	}
+
+	/**
+	 * @return the activatedCount
+	 */
+	public AtomicInteger getActivatedCount() {
+		return activatedCount;
+	}
+
 	/**
 	 * 平均每次TCP接收到的字节数，这个可以用来监控慢攻击，配置PacketsPerTcpReceive定位慢攻击
 	 */
@@ -85,18 +92,7 @@ public class IpStat implements java.io.Serializable {
 		if (receivedTcps.get() == 0) {
 			return 0;
 		}
-		double ret = (double)receivedBytes.get() / (double)receivedTcps.get();
-		return ret;
-	}
-	
-	/**
-	 * 平均每次TCP接收到的业务包数，这个可以用来监控慢攻击，此值越小越有攻击嫌疑
-	 */
-	public double getPacketsPerTcpReceive() {
-		if (receivedTcps.get() == 0) {
-			return 0;
-		}
-		double ret = (double)receivedPackets.get() / (double)receivedTcps.get();
+		double ret = (double) receivedBytes.get() / (double) receivedTcps.get();
 		return ret;
 	}
 
@@ -105,6 +101,20 @@ public class IpStat implements java.io.Serializable {
 	 */
 	public AtomicInteger getDecodeErrorCount() {
 		return decodeErrorCount;
+	}
+
+	public long getDuration() {
+		duration = SystemTimer.currentTimeMillis() - this.start.getTime();
+		return duration;
+	}
+
+	/**
+	 * @return the duration
+	 */
+	public String getFormatedDuration() {
+		duration = SystemTimer.currentTimeMillis() - this.start.getTime();
+		BetweenFormater betweenFormater = new BetweenFormater(duration, Level.MILLSECOND);
+		return betweenFormater.format();
 	}
 
 	/**
@@ -122,6 +132,24 @@ public class IpStat implements java.io.Serializable {
 	}
 
 	/**
+	 * @return the ip
+	 */
+	public String getIp() {
+		return ip;
+	}
+
+	/**
+	 * 平均每次TCP接收到的业务包数，这个可以用来监控慢攻击，此值越小越有攻击嫌疑
+	 */
+	public double getPacketsPerTcpReceive() {
+		if (receivedTcps.get() == 0) {
+			return 0;
+		}
+		double ret = (double) receivedPackets.get() / (double) receivedTcps.get();
+		return ret;
+	}
+
+	/**
 	 * @return the countReceivedByte
 	 */
 	public AtomicLong getReceivedBytes() {
@@ -133,6 +161,20 @@ public class IpStat implements java.io.Serializable {
 	 */
 	public AtomicLong getReceivedPackets() {
 		return receivedPackets;
+	}
+
+	/**
+	 * @return the receivedTcps
+	 */
+	public AtomicLong getReceivedTcps() {
+		return receivedTcps;
+	}
+
+	/**
+	 * @return the requestCount
+	 */
+	public AtomicInteger getRequestCount() {
+		return requestCount;
 	}
 
 	/**
@@ -150,116 +192,13 @@ public class IpStat implements java.io.Serializable {
 	}
 
 	/**
-	 * @param decodeErrorCount the decodeErrorCount to set
-	 */
-	public void setDecodeErrorCount(AtomicInteger decodeErrorCount) {
-		this.decodeErrorCount = decodeErrorCount;
-	}
-
-	/**
-	 * @param countHandledByte the countHandledByte to set
-	 */
-	public void setHandledBytes(AtomicLong countHandledByte) {
-		this.handledBytes = countHandledByte;
-	}
-
-	/**
-	 * @param countHandledPacket the countHandledPacket to set
-	 */
-	public void setHandledPackets(AtomicLong handledPackets) {
-		this.handledPackets = handledPackets;
-	}
-
-	/**
-	 * @param countReceivedByte the countReceivedByte to set
-	 */
-	public void setReceivedBytes(AtomicLong receivedBytes) {
-		this.receivedBytes = receivedBytes;
-	}
-
-	/**
-	 * @param countReceivedPacket the countReceivedPacket to set
-	 */
-	public void setReceivedPackets(AtomicLong receivedPackets) {
-		this.receivedPackets = receivedPackets;
-	}
-
-	/**
-	 * @param countSentByte the countSentByte to set
-	 */
-	public void setSentBytes(AtomicLong sentBytes) {
-		this.sentBytes = sentBytes;
-	}
-
-	/**
-	 * @param countSentPacket the countSentPacket to set
-	 */
-	public void setSentPackets(AtomicLong sentPackets) {
-		this.sentPackets = sentPackets;
-	}
-
-	/**
-	 * @return the requestCount
-	 */
-	public AtomicInteger getRequestCount() {
-		return requestCount;
-	}
-
-	/**
-	 * @param requestCount the requestCount to set
-	 */
-	public void setRequestCount(AtomicInteger requestCount) {
-		this.requestCount = requestCount;
-	}
-
-	/**
-	 * @return the activatedCount
-	 */
-	public AtomicInteger getActivatedCount() {
-		return activatedCount;
-	}
-
-	/**
-	 * @param activatedCount the activatedCount to set
-	 */
-	public void setActivatedCount(AtomicInteger activatedCount) {
-		this.activatedCount = activatedCount;
-	}
-
-	/**
 	 * @return the start
 	 */
 	public Date getStart() {
 		return start;
 	}
 
-	/**
-	 * @param start the start to set
-	 */
-	public void setStart(Date start) {
-		this.start = start;
-	}
-
-	/**
-	 * @return the duration
-	 */
-	public String getFormatedDuration() {
-		duration = SystemTimer.currentTimeMillis() - this.start.getTime();
-		BetweenFormater betweenFormater = new BetweenFormater(duration, Level.MILLSECOND);
-		return betweenFormater.format();
-	}
-
-	public long getDuration() {
-		duration = SystemTimer.currentTimeMillis() - this.start.getTime();
-		return duration;
-	}
-
-	/**
-	 * @return the ip
-	 */
-	public String getIp() {
-		return ip;
-	}
+	
 
 	/**
 	 * @param ip the ip to set
@@ -269,16 +208,9 @@ public class IpStat implements java.io.Serializable {
 	}
 
 	/**
-	 * @return the receivedTcps
+	 * @param start the start to set
 	 */
-	public AtomicLong getReceivedTcps() {
-		return receivedTcps;
-	}
-
-	/**
-	 * @param receivedTcps the receivedTcps to set
-	 */
-	public void setReceivedTcps(AtomicLong receivedTcps) {
-		this.receivedTcps = receivedTcps;
+	public void setStart(Date start) {
+		this.start = start;
 	}
 }
