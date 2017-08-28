@@ -30,5 +30,10 @@ public interface SynRunnable<T> extends Runnable {
      *
      * @return
      */
-    abstract String getName();
+    String getName();
+
+    /**
+     * 绅士关闭线程
+     */
+    void gentleShutdown();
 }

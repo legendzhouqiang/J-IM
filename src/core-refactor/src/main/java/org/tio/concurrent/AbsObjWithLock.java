@@ -7,12 +7,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Copyright (c) for darkidiot
  * Date:2017/8/16
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
- * School: CUIT
  * Desc:
  */
 public class AbsObjWithLock<T> implements ObjWithLock<T> {
 
-    protected ReentrantReadWriteLock lock;
+    protected ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     protected T obj;
 

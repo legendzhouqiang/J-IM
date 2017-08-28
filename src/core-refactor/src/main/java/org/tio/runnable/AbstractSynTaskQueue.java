@@ -21,6 +21,8 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T> {
 //    protected ConcurrentLinkedQueue<T> msgQueue = new ConcurrentLinkedQueue<>();
     protected LinkedBlockingDeque<T> msgQueue = new LinkedBlockingDeque<>();
 
+    protected Thread currentThread;
+
     /**
      * 加入任务队列
      *
@@ -59,6 +61,7 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T> {
 
     @Override
     public void run() {
+        currentThread =  Thread.currentThread();
         try {
             do {
                 T task = msgQueue.take();

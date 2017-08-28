@@ -1,8 +1,7 @@
 package org.tio.runnable;
 
+import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Copyright (c) for darkidiot
@@ -26,11 +25,25 @@ public abstract class AbstractTaskQueue<T> extends AbstractSynTaskQueue<T> {
     public void setCanceled(boolean cancelFlag) {
         this.isCancel = cancelFlag;
         if (cancelFlag) {
-            Thread.currentThread().interrupt();
+            currentThread.interrupt();
             log.info("TaskQueue[{}] has been interrupted, and left {} message has not been consumed.", getName(), msgQueue.size());
             msgQueue.clear();
             log.info("TaskQueue[{}]'s msgQueue has been clean up now.");
         }
+    }
+
+    @Override
+    public void gentleShutdown() {
+        this.isCancel = true;
+        while (true) {
+            if (msgQueue.size() == 0) break;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println(Throwables.getStackTraceAsString(e));
+            }
+        }
+        currentThread.interrupt();
     }
 
     @Override

@@ -46,6 +46,32 @@ public interface CoreConstant {
 
     /** Disable the Nagle algorithm. */
     boolean default_tcp_no_delay = true;
+
+    /** 默认任务队列默认轮询算法 */
+    RoundRobin default_robin_type = RoundRobin.round_robin;
+
+    enum RoundRobin{
+        round_robin,weight_round_robin;
+    }
+
+    enum SessionStatus {
+        establish,closing,closed,invalid;
+    }
+    enum ServerStatus {
+        /** 初始状态 */
+        Init,
+        /** 启动中 */
+        STARTING,
+        /** 运行中 */
+        RUNING,
+        /** 停止中 */
+        STOPPING,
+        /** 已停止 */
+        STOPPED,
+        /** 异常 */
+        Abnormal
+    }
+
 }
 
 enum StatisticStatus {
@@ -57,3 +83,4 @@ enum StatisticStatus {
         this.status = status;
     }
 }
+
