@@ -26,10 +26,12 @@ public class ChannelStat {
 	private Long timeFirstConnected = null;
 
 	/** 连接关闭的时间 */
-	private long timeClosed = SystemTimer.currentTimeMillis();
+	private long timeClosed;
 
 	/** 进入重连队列时间 */
-	private long timeInReconnect = SystemTimer.currentTimeMillis();
+	private long timeInReconnect;
+
+    private long heartbeatTimeoutMillis = CoreConstant.default_heart_beat_timeout;
 
 	/** 本连接已发送的字节数 */
 	private AtomicLong sentBytes = new AtomicLong();

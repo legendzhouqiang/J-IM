@@ -20,12 +20,11 @@ public class ChannelContainer {
         return getChannelContext(new Node(ip, port));
     }
 
-    public static void putChannleContext(Node node, ChannelContext channelContext) {
+    public static void putChannelContext(Node node, ChannelContext channelContext) {
         channelCache.put(node, channelContext);
     }
 
     public static void putChannleContext(String ip, int port, ChannelContext channelContext) {
-        putChannleContext(new Node(ip, port), channelContext);
+        putChannelContext(new Node(ip, port), channelContext);
     }
-
 }

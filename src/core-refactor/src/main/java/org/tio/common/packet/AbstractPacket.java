@@ -45,7 +45,7 @@ public class AbstractPacket implements ReadPacket, WritePacket {
 
     @Override
     public WritePacket setNeedReplay() {
-        type &= 0x80;
+        type |= 0x80;
         return this;
     }
 
