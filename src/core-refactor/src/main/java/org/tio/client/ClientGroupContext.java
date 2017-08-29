@@ -20,6 +20,4 @@ public class ClientGroupContext extends GroupContext {
 
     /** 建立的连接的 */
     private SetWithLock<ChannelContext> connections;
-
-
 }
