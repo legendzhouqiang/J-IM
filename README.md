@@ -1,5 +1,8 @@
 ## **t-io: 不仅仅是百万级即时通讯框架**
+[![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/logo/logo-128-%E8%93%9D%E7%99%BD-%E6%96%B9.png)](https://git.oschina.net/tywo45/t-io)
 
+
+## **t-io简介**
 - t-io是基于jdk aio实现的易学易用、稳定、性能强悍、**将多线程运用到极致**、内置功能丰富的即时通讯框架(广义上的即时通讯，并非指im)，字母 t 寓意talent。
 
 ## **t-io诞生的意义**
@@ -19,7 +22,7 @@
 [![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/t-io-api.png)](https://git.oschina.net/tywo45/t-io/raw/master/docs/api/t-io-api.png)
 
 
-##  **常见应用场景**
+##  **t-io常见应用场景**
     
 - IM（官方提供了im例子，含web端）
 - 实时监控
