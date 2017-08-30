@@ -100,10 +100,10 @@ public class HttpConfig {
 
 	/**
 	 * 示例：
-	 * 1、classpath中：classpath:page
+	 * 1、classpath中：page
 	 * 2、绝对路径：/page
 	 */
-	private String root = null;//FileUtil.getAbsolutePath("classpath:page");//"/page";
+	private String pageRoot = null;//FileUtil.getAbsolutePath("page");//"/page";
 
 	//	/**
 	//	 * @return the httpSessionManager
@@ -169,10 +169,10 @@ public class HttpConfig {
 	}
 
 	/**
-	 * @return the root
+	 * @return the pageRoot
 	 */
-	public String getRoot() {
-		return root;
+	public String getPageRoot() {
+		return pageRoot;
 	}
 
 	/**
@@ -239,10 +239,12 @@ public class HttpConfig {
 	}
 
 	/**
-	 * @param root the root to set
+	 * 
+	 * @param pageRoot
+	 * @author tanyaowu
 	 */
-	public void setRoot(String root) {
-		this.root = FileUtil.getAbsolutePath(root);//"/page";;
+	public void setPageRoot(String pageRoot) {
+		this.pageRoot = pageRoot;//FileUtil.getAbsolutePath(root);//"/page";;
 	}
 
 	/**

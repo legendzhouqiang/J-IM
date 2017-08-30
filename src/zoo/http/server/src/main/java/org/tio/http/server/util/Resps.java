@@ -55,13 +55,13 @@ public class Resps {
 	 * 根据文件内容创建响应
 	 * @param request
 	 * @param bodyBytes
-	 * @param filename
+	 * @param extension
 	 * @return
 	 * @author tanyaowu
 	 */
-	public static HttpResponse file(HttpRequest request, byte[] bodyBytes, String filename) {
+	public static HttpResponse file(HttpRequest request, byte[] bodyBytes, String extension) {
 		String contentType = null;
-		String extension = FilenameUtils.getExtension(filename);
+//		String extension = FilenameUtils.getExtension(filename);
 		if (StringUtils.isNoneBlank(extension)) {
 			MimeType mimeType = MimeType.fromExtension(extension);
 			if (mimeType != null) {
@@ -90,7 +90,8 @@ public class Resps {
 
 		byte[] bodyBytes = FileUtil.readBytes(fileOnServer);
 		String filename = fileOnServer.getName();
-		ret = file(request, bodyBytes, filename);
+		String extension = FilenameUtils.getExtension(filename);
+		ret = file(request, bodyBytes, extension);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified, lastModified.getTime() + "");
 		return ret;
 	}

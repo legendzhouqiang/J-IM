@@ -29,6 +29,7 @@ import org.tio.http.server.util.Resps;
 import org.tio.utils.cache.guava.GuavaCache;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
@@ -285,8 +286,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					ret.addHeaders(headers);
 					return ret;
 				} else {
-					String root = httpConfig.getRoot();
-					File file = new File(root, path);
+					String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
+					File file = new File(root + path);
 					if (!file.exists() || file.isDirectory()) {
 						if (StringUtils.endsWith(path, "/")) {
 							path = path + "index.html";
@@ -426,8 +427,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	@Override
 	public HttpResponse resp404(HttpRequest request, RequestLine requestLine) {
 		String file404 = httpConfig.getPage404();
-		String root = httpConfig.getRoot();
-		File file = new File(root, file404);
+		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
+		File file = new File(root + file404);
 		if (file.exists()) {
 			HttpResponse ret = Resps.redirect(request, file404 + "?tio_initpath=" + requestLine.getPathAndQuery());
 			return ret;
@@ -440,8 +441,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	@Override
 	public HttpResponse resp500(HttpRequest request, RequestLine requestLine, Throwable throwable) {
 		String file500 = httpConfig.getPage500();
-		String root = httpConfig.getRoot();
-		File file = new File(root, file500);
+		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
+		File file = new File(root + file500);
 		if (file.exists()) {
 			HttpResponse ret = Resps.redirect(request, file500 + "?tio_initpath=" + requestLine.getPathAndQuery());
 			return ret;

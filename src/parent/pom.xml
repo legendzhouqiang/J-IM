@@ -59,16 +59,16 @@
 		<commons-lang3.version>3.6</commons-lang3.version>
 		<commons-codec.version>1.10</commons-codec.version>
 		<commons-compress.version>1.14</commons-compress.version>
-		<fastjson.version>1.2.35</fastjson.version>
+		<fastjson.version>1.2.37</fastjson.version>
 		<testng.version>6.11</testng.version>
 		<hutool.version>3.1.0</hutool.version>
 
-		<protobuf-java.version>3.3.1</protobuf-java.version>
+		<protobuf-java.version>3.4.0</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<protobuf-java-format.version>1.4</protobuf-java-format.version>
 
 		<protostuff.version>1.6.0</protostuff.version>
-		<redisson.version>3.5.0</redisson.version>
+		<redisson.version>3.5.1</redisson.version>
 
 	</properties>
 
@@ -328,7 +328,7 @@
 			<dependency>
 				<groupId>nl.basjes.parse.useragent</groupId>
 				<artifactId>yauaa</artifactId>
-				<version>1.4</version>
+				<version>2.0</version>
 			</dependency>
 
 

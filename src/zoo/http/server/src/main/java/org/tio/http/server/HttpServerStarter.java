@@ -76,7 +76,7 @@ public class HttpServerStarter {
 		String pageRoot = pageRootDir;
 
 		httpConfig = new HttpConfig(port, null);
-		httpConfig.setRoot(pageRoot);
+		httpConfig.setPageRoot(pageRoot);
 		if (sessionStore != null) {
 			httpConfig.setSessionStore(sessionStore);
 		}
@@ -152,8 +152,8 @@ public class HttpServerStarter {
 			httpConfig.setSessionStore(guavaCache);
 		}
 
-		if (httpConfig.getRoot() == null) {
-			httpConfig.setRoot(FileUtil.getAbsolutePath("classpath:page"));
+		if (httpConfig.getPageRoot() == null) {
+			httpConfig.setPageRoot("page");
 		}
 
 		if (httpConfig.getSessionIdGenerator() == null) {
