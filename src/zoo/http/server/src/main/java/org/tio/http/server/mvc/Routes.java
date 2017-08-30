@@ -4,6 +4,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -75,14 +76,14 @@ public class Routes {
 	 * key: /user
 	 * value: object
 	 */
-	public Map<String, Object> pathBeanMap = new HashMap<>();
+	public Map<String, Object> pathBeanMap = new TreeMap<>();
 	/**
 	 * 路径和class映射
 	 * 只是用来打印的
 	 * key: /user
 	 * value: Class
 	 */
-	public Map<String, Class<?>> pathClassMap = new HashMap<>();
+	public Map<String, Class<?>> pathClassMap = new TreeMap<>();
 
 	/**
 	 * 路径和class映射
@@ -96,7 +97,7 @@ public class Routes {
 	 * key: /user/update
 	 * value: method
 	 */
-	public Map<String, Method> pathMethodMap = new HashMap<>();
+	public Map<String, Method> pathMethodMap = new TreeMap<>();
 
 	/**
 	 * Method路径映射
@@ -104,7 +105,7 @@ public class Routes {
 	 * key: /user/update
 	 * value: method string
 	 */
-	public Map<String, String> pathMethodstrMap = new HashMap<>();
+	public Map<String, String> pathMethodstrMap = new TreeMap<>();
 
 	/**
 	 * 方法参数名映射
