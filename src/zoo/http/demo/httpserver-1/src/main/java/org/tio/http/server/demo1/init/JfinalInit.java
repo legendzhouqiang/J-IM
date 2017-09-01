@@ -56,7 +56,7 @@ public class JfinalInit {
 			arp.setTransactionLevel(Connection.TRANSACTION_READ_COMMITTED);
 			_MappingKit.mapping(arp);
 			// 强制指定复合主键的次序，避免不同的开发环境生成在 _MappingKit 中的复合主键次序不相同
-			arp.setPrimaryKey("document", "mainMenu,subMenu");
+//			arp.setPrimaryKey("document", "mainMenu,subMenu");
 			//    me.add(arp);
 			if (PropKit.getBoolean("devMode", false)) {
 				arp.setShowSql(true);

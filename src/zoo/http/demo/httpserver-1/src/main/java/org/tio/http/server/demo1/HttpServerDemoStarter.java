@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.http.server.demo1.init.HttpServerInit;
 import org.tio.http.server.demo1.init.JfinalInit;
-
-import com.jfinal.kit.PropKit;
+import org.tio.http.server.demo1.init.JsonInit;
+import org.tio.http.server.demo1.init.PropInit;
 
 /**
  * ab -c 10 -n 200000 -k http://127.0.0.1:9527/test/abtest
@@ -33,9 +33,12 @@ public class HttpServerDemoStarter {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws Exception {
-		PropKit.use("app.properties");
+		PropInit.init();
+		
+		JsonInit.init();
 
 		JfinalInit.init();
+		
 		HttpServerInit.init();
 	}
 
