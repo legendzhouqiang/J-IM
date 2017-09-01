@@ -44,28 +44,28 @@ public class WsServerStarter {
 	/**
 	 * @return the wsServerConfig
 	 */
-	public WsServerConfig getHttpConfig() {
+	public WsServerConfig getWsServerConfig() {
 		return wsServerConfig;
 	}
 
 	/**
 	 * @return the wsMsgHandler
 	 */
-	public IWsMsgHandler getHttpRequestHandler() {
+	public IWsMsgHandler getWsMsgHandler() {
 		return wsMsgHandler;
 	}
 
 	/**
 	 * @return the wsServerAioHandler
 	 */
-	public WsServerAioHandler getHttpServerAioHandler() {
+	public WsServerAioHandler getWsServerAioHandler() {
 		return wsServerAioHandler;
 	}
 
 	/**
 	 * @return the wsServerAioListener
 	 */
-	public WsServerAioListener getHttpServerAioListener() {
+	public WsServerAioListener getWsServerAioListener() {
 		return wsServerAioListener;
 	}
 
