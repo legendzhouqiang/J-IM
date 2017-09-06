@@ -31,7 +31,7 @@ public class ServerChannelContext extends ChannelContext {
     private Node serverNode = null;
 
     public ServerChannelContext() throws IOException {
-        channelGroup = AsynchronousChannelGroup.withThreadPool(groupContext.getGroupExecutor());
+        channelGroup = AsynchronousChannelGroup.withThreadPool(groupContext.getAioExecutor());
         long start = SystemTimer.currentTimeMillis();
         this.asynchronousServerSocketChannel = AsynchronousServerSocketChannel.open(channelGroup);
         asynchronousServerSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, CoreConstant.default_reuse_addr);
@@ -53,6 +53,5 @@ public class ServerChannelContext extends ChannelContext {
         }
 
         asynchronousServerSocketChannel.accept(new ClientChannelContext(),new AcceptCompletionHandler());
-
     }
 }

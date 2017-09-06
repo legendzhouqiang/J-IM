@@ -44,7 +44,7 @@ public class ClientChannelContext extends ChannelContext {
     }
 
     private ClientChannelContext connect() throws IOException {
-        channelGroup = AsynchronousChannelGroup.withThreadPool(groupContext.getGroupExecutor());
+        channelGroup = AsynchronousChannelGroup.withThreadPool(groupContext.getAioExecutor());
         long start = SystemTimer.currentTimeMillis();
         this.asynchronousSocketChannel = AsynchronousSocketChannel.open(channelGroup);
         long end = SystemTimer.currentTimeMillis();

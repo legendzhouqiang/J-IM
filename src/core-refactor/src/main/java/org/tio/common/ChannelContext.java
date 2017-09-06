@@ -28,13 +28,7 @@ public abstract class ChannelContext {
 
     protected boolean use_checksum = false;
 
-    protected boolean waitingClose = false;
-
-    protected boolean isClosed = false;
-
-    protected boolean canRemove = false;
-
-    protected boolean isRemoved = false;
+    protected CoreConstant.ClientStatus status;
 
     protected ChannelStat stat = new ChannelStat();
 

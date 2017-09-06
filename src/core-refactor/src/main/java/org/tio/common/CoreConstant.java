@@ -60,7 +60,7 @@ public interface CoreConstant {
         round_robin,weight_round_robin;
     }
 
-    enum SessionStatus {
+    enum ClientStatus {
         /** 建立 */
         establish,
         /** 开始关闭 */
