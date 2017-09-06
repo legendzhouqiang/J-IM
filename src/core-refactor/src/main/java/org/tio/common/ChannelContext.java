@@ -11,6 +11,7 @@ import java.nio.channels.AsynchronousChannelGroup;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -52,7 +53,7 @@ public abstract class ChannelContext {
         return id;
     }
 
-    private final HashMap<String, Object> attributeContext = new HashMap<>();
+    private final ConcurrentHashMap<String, Object> attributeContext = new ConcurrentHashMap<>();
 
     public Object getAttribute(String name) {
         return attributeContext.get(name);
