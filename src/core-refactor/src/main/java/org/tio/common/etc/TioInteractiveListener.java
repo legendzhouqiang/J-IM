@@ -1,7 +1,7 @@
 package org.tio.common.etc;
 
 import org.tio.common.ChannelContext;
-import org.tio.common.packet.SuperPacket;
+import org.tio.common.packet.ReadPacket;
 
 /**
  * Copyright (c) for darkidiot
@@ -17,7 +17,7 @@ public interface TioInteractiveListener {
      * @param context
      * @param packet
      */
-    void onBeforeSent(ChannelContext context, SuperPacket packet) throws TioException;
+    void onBeforeSent(ChannelContext context, ReadPacket packet) throws TioException;
 
     /**
      * 消息包发送之后触发本方法
@@ -25,7 +25,7 @@ public interface TioInteractiveListener {
      * @param context
      * @param packet
      */
-    void onAfterSent(ChannelContext context, SuperPacket packet) throws TioException;
+    void onAfterSent(ChannelContext context, ReadPacket packet) throws TioException;
 
     /**
      * 解码前触发本方法
@@ -33,7 +33,7 @@ public interface TioInteractiveListener {
      * @param context
      * @param packet
      */
-    void onBeforeReceived(ChannelContext context, SuperPacket packet) throws TioException;
+    void onBeforeReceived(ChannelContext context, ReadPacket packet) throws TioException;
 
     /**
      * 解码成功后触发本方法
@@ -41,6 +41,6 @@ public interface TioInteractiveListener {
      * @param context
      * @param packet
      */
-    void onAfterReceive(ChannelContext context, SuperPacket packet) throws TioException;
+    void onAfterReceive(ChannelContext context, ReadPacket packet) throws TioException;
 
 }
