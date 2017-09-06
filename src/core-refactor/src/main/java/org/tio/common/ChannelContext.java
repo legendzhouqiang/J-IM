@@ -8,6 +8,10 @@ import org.tio.runnable.HandlerTaskQueue;
 import org.tio.runnable.SendTaskQueue;
 
 import java.nio.channels.AsynchronousChannelGroup;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Copyright (c) for 谭耀武
@@ -17,6 +21,8 @@ import java.nio.channels.AsynchronousChannelGroup;
  */
 @Data
 public abstract class ChannelContext {
+
+    private final static AtomicInteger idGenerator = new AtomicInteger();
 
     protected DecodeTaskQueue decodeRunnable = null;
 
@@ -39,4 +45,32 @@ public abstract class ChannelContext {
     protected AsynchronousChannelGroup channelGroup;
 
     protected TioLinkListener linkListener;
+
+    protected int id = idGenerator.incrementAndGet();
+
+    public Integer id() {
+        return id;
+    }
+
+    private final HashMap<String, Object> attributeContext = new HashMap<>();
+
+    public Object getAttribute(String name) {
+        return attributeContext.get(name);
+    }
+
+    public Object setAttribute(String name, Object value) {
+        return attributeContext.put(name, value);
+    }
+
+    public void removeAttribute(String name) {
+        attributeContext.remove(name);
+    }
+
+    public List<String> getAttributeNames(){
+        return new ArrayList<>(attributeContext.keySet());
+    }
+
+    void invalidate(){
+        this.status = CoreConstant.ClientStatus.invalid;
+    }
 }
