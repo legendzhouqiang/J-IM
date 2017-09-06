@@ -15,7 +15,7 @@ public interface TioLinkListener {
      *
      * @param channelContext
      */
-    void onAfterConnected(ChannelContext channelContext) throws Exception;
+    void onAfterConnected(ChannelContext channelContext) throws TioException;
 
     /**
      * 连接关闭前触发本方法
@@ -23,7 +23,7 @@ public interface TioLinkListener {
      * @param channelContext
      * @param throwable
      */
-    void onBeforeClose(ChannelContext channelContext, Throwable throwable);
+    void onBeforeClose(ChannelContext channelContext, Throwable throwable) throws TioException;
 
     /**
      * 连接关闭前后触发本方法
@@ -31,5 +31,5 @@ public interface TioLinkListener {
      * @param channelContext
      * @param throwable
      */
-    void onAfterClosed(ChannelContext channelContext, Throwable throwable) throws Exception;
+    void onAfterClosed(ChannelContext channelContext, Throwable throwable) throws TioException;
 }

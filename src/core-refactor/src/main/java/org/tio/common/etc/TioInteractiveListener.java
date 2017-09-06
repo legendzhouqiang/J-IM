@@ -17,7 +17,7 @@ public interface TioInteractiveListener {
      * @param channelContext
      * @param packet
      */
-    void onBeforeSent(ChannelContext channelContext, SuperPacket packet) throws Exception;
+    void onBeforeSent(ChannelContext channelContext, SuperPacket packet) throws TioException;
 
     /**
      * 消息包发送之后触发本方法
@@ -25,7 +25,7 @@ public interface TioInteractiveListener {
      * @param channelContext
      * @param packet
      */
-    void onAfterSent(ChannelContext channelContext, SuperPacket packet) throws Exception;
+    void onAfterSent(ChannelContext channelContext, SuperPacket packet) throws TioException;
 
     /**
      * 解码前触发本方法
@@ -33,7 +33,7 @@ public interface TioInteractiveListener {
      * @param channelContext
      * @param packet
      */
-    void onBeforeReceived(ChannelContext channelContext, SuperPacket packet) throws Exception;
+    void onBeforeReceived(ChannelContext channelContext, SuperPacket packet) throws TioException;
 
     /**
      * 解码成功后触发本方法
@@ -41,6 +41,6 @@ public interface TioInteractiveListener {
      * @param channelContext
      * @param packet
      */
-    void onAfterReceive(ChannelContext channelContext, SuperPacket packet) throws Exception;
+    void onAfterReceive(ChannelContext channelContext, SuperPacket packet) throws TioException;
 
 }
