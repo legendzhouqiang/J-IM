@@ -13,23 +13,23 @@ public interface TioLinkListener {
     /**
      * 建链后触发本方法，注：建链不一定成功，需要关注参数isConnected
      *
-     * @param channelContext
+     * @param context
      */
-    void onAfterConnected(ChannelContext channelContext) throws TioException;
+    void onAfterConnected(ChannelContext context) throws TioException;
 
     /**
      * 连接关闭前触发本方法
      *
-     * @param channelContext
+     * @param context
      * @param throwable
      */
-    void onBeforeClose(ChannelContext channelContext, Throwable throwable) throws TioException;
+    void onBeforeClose(ChannelContext context, Throwable throwable) throws TioException;
 
     /**
      * 连接关闭前后触发本方法
      *
-     * @param channelContext
+     * @param context
      * @param throwable
      */
-    void onAfterClosed(ChannelContext channelContext, Throwable throwable) throws TioException;
+    void onAfterClosed(ChannelContext context, Throwable throwable) throws TioException;
 }
