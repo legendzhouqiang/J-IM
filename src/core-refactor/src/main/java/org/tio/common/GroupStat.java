@@ -14,7 +14,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class GroupStat {
 
     /** 关闭连接数 */
-    private AtomicLong closed = new AtomicLong();
+    private AtomicLong closedCount = new AtomicLong();
+    /** 打开连接数 */
+    private AtomicLong connectionCount = new AtomicLong();
     /** 接收到消息包数 */
     private AtomicLong receivedPacket = new AtomicLong();
     /** 接收到消息字节数 */

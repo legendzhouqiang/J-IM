@@ -2,7 +2,7 @@ package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.CoreConstant;
-import org.tio.common.TioException;
+import org.tio.common.etc.TioException;
 import org.tio.concurrent.MapWithLock;
 import org.tio.robin.*;
 

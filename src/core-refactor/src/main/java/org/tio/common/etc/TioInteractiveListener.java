@@ -1,5 +1,6 @@
-package org.tio.common;
+package org.tio.common.etc;
 
+import org.tio.common.ChannelContext;
 import org.tio.common.packet.SuperPacket;
 
 /**

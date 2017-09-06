@@ -13,6 +13,7 @@ public interface ReadPacket extends SuperPacket {
      */
     byte packetType();
 
+    /** ack */
     boolean needReply();
 
     /** 保留字段 */

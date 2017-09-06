@@ -1,6 +1,7 @@
 package org.tio.common;
 
 import lombok.Data;
+import org.tio.common.etc.TioLinkListener;
 import org.tio.runnable.DecodeTaskQueue;
 import org.tio.runnable.EncodeTaskQueue;
 import org.tio.runnable.HandlerTaskQueue;

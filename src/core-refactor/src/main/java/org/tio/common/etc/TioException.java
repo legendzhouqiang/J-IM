@@ -1,4 +1,4 @@
-package org.tio.common;
+package org.tio.common.etc;
 
 import lombok.extern.slf4j.Slf4j;
 

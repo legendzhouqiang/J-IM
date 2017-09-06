@@ -39,15 +39,12 @@ public abstract class GroupContext {
     /** statistics */
     protected GroupStat statistics;
 
+    /** status */
+    protected CoreConstant.Status status;
+
     /** The group executor. */
     protected ThreadPoolExecutor tioExecutor = null;
 
     /** The group executor. */
-    protected ThreadPoolExecutor groupExecutor = null;
-
-    /** 等待关闭 */
-    private boolean waitingStop = false;
-
-    /** 完成关闭 */
-    private boolean isStopped = false;
+    protected ThreadPoolExecutor aioExecutor = null;
 }

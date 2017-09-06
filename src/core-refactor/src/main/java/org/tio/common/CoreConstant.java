@@ -61,9 +61,17 @@ public interface CoreConstant {
     }
 
     enum SessionStatus {
-        establish,closing,closed,invalid;
+        /** 建立 */
+        establish,
+        /** 开始关闭 */
+        closing,
+        /** 已经关闭 */
+        closed,
+        /** 失效 */
+        invalid;
     }
-    enum ServerStatus {
+
+    enum Status {
         /** 初始状态 */
         Init,
         /** 启动中 */

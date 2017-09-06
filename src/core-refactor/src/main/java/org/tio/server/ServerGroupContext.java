@@ -27,19 +27,8 @@ public class ServerGroupContext extends GroupContext {
     /** 断开连接的 */
     private SetWithLock<ChannelContext> closeds;
 
-    private ConcurrentHashMap<Node,ClientChannelContext> nodeForChennelMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Node, ClientChannelContext> nodeForChennelMap = new ConcurrentHashMap<>();
 
     /** 黑名单 */
     private Blacklist blacklist;
-
-    public static void main(String[] args) {
-        long start = System.currentTimeMillis();
-        for (int i = 0; i <10000; i++) {
-            long l = SystemTimer.currentTimeMillis();
-            long l1 = System.currentTimeMillis() - l;
-            boolean flag = l1 > 1000;
-        }
-        long l = System.currentTimeMillis() - start;
-        System.out.println(l);
-    }
 }

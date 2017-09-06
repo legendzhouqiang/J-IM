@@ -1,4 +1,6 @@
-package org.tio.common;
+package org.tio.common.etc;
+
+import org.tio.common.ChannelContext;
 
 /**
  * Copyright (c) for darkidiot

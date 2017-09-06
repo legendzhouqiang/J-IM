@@ -1,7 +1,7 @@
 package org.tio.robin;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.TioException;
+import org.tio.common.etc.TioException;
 import org.tio.concurrent.ListWithLock;
 
 import java.util.ArrayList;

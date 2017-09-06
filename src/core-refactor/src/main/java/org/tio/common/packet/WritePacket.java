@@ -13,11 +13,11 @@ public interface WritePacket extends SuperPacket {
      */
     WritePacket setPacketType(byte packetType);
 
+    /** ack */
     WritePacket setNeedReplay();
 
     /** 保留字段 */
     WritePacket setReserved(byte reserved);
-
 
     /** 可选区长度 */
     WritePacket setOptionalLength(byte optionalLength);
