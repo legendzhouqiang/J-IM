@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.tio.common.ChannelContext;
 import org.tio.common.CoreConstant;
 import org.tio.common.packet.AbstractPacket;
-import org.tio.common.packet.SuperPacket;
 import org.tio.util.CheckSumUtil;
 
 import java.nio.ByteBuffer;
@@ -32,7 +31,7 @@ public class EncodeTaskQueue extends AbstractTaskQueue<AbstractPacket> {
             packet.setCheckSum(checkSum);
         }
         ByteBuffer buffer = ByteBuffer.allocateDirect(packet.header().length + packet.optional().length + 2 + packet.body().length);
-        buffer.order(CoreConstant.byteOrder);
+        buffer.order(CoreConstant.default_byte_order);
         buffer.put(packet.header());
         buffer.put(packet.optional());
         buffer.put(new byte[]{(byte) (packet.packetSeq() >> 8), (byte) packet.packetSeq()});

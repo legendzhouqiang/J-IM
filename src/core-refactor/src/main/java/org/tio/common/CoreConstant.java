@@ -11,11 +11,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public interface CoreConstant {
 
-    /** 网络字节流对齐方式 */
-    ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
+    /** 默认网络字节流对齐方式 */
+    ByteOrder default_byte_order = ByteOrder.BIG_ENDIAN;
 
-    /** 心跳超时时间(单位: 毫秒)，如果用户不希望框架层面做心跳相关工作，请把此值设为0或负数 */
+    /** 默认心跳超时时间(单位:毫秒)，如果用户不希望框架层面做心跳相关工作，请把此值设为0或负数 */
     long default_heart_beat_timeout = 1000 * 120;
+
+    /** 默认服务器/客服端时间矫正间隔，即每n次心跳回复包中会有一次返回服务器时间，用于时间校准 */
+    int default_timestamp_rectify_interval = 20;
+
+    /** 默认关闭客服端时间校准 */
+    boolean default_client_timestamp_rectify = false;
 
     /** 默认最大消息队列长度，超出会打印警告日志 */
     long default_max_msg_queue_size = 10000;

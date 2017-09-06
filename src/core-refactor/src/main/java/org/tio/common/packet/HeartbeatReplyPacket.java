@@ -1,6 +1,5 @@
 package org.tio.common.packet;
 
-import org.tio.common.SystemTimer;
 import org.tio.util.ByteUtil;
 
 /**
@@ -13,7 +12,12 @@ public class HeartbeatReplyPacket extends AbstractPacket {
 
     public HeartbeatReplyPacket() {
         super.type = SuperPacket.HEART_MESSAGE_RSP;
-        filling(SystemTimer.currentTimeMillis());
+
+    }
+
+    public HeartbeatReplyPacket(long currentTimeMillis) {
+        this();
+        filling(currentTimeMillis);
     }
 
     public void filling(long currentTimeMillis) {
