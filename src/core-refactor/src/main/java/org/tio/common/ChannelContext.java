@@ -9,7 +9,6 @@ import org.tio.runnable.SendTaskQueue;
 
 import java.nio.channels.AsynchronousChannelGroup;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,7 +34,7 @@ public abstract class ChannelContext {
 
     protected boolean use_checksum = false;
 
-    protected CoreConstant.ClientStatus status;
+    protected CoreConstant.ConnectionStatus status;
 
     protected ChannelStat stat = new ChannelStat();
 
@@ -72,6 +71,6 @@ public abstract class ChannelContext {
     }
 
     void invalidate(){
-        this.status = CoreConstant.ClientStatus.invalid;
+        this.status = CoreConstant.ConnectionStatus.invalid;
     }
 }
