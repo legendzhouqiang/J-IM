@@ -10,7 +10,7 @@ import java.nio.channels.AsynchronousSocketChannel;
  * Copyright (c) for darkidiot
  * Date:2017/8/21
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
- * Desc: t-io
+ * Desc: t-io发送器
  */
 public class SendTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
