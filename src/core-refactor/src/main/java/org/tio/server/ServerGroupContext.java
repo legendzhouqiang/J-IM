@@ -7,9 +7,9 @@ import org.tio.concurrent.SetWithLock;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Copyright (c) for 谭耀武
+ * Copyright (c) for darkidiot
  * Date:2017/8/10
- * Author: <a href="tywo45@163.com">谭耀武</a>
+ * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc: 服务端分组上下文
  */
 public class ServerGroupContext extends GroupContext {

@@ -24,14 +24,6 @@ public abstract class ChannelContext {
 
     private final static AtomicInteger idGenerator = new AtomicInteger();
 
-    protected DecodeTaskQueue decodeRunnable = null;
-
-    protected HandlerTaskQueue handlerRunnable = null;
-
-    protected SendTaskQueue sendRunnable = null;
-
-    protected EncodeTaskQueue encodeRunnable = null;
-
     protected boolean use_checksum = false;
 
     protected CoreConstant.ConnectionStatus status;
