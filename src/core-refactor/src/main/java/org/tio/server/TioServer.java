@@ -8,19 +8,27 @@ package org.tio.server;
  */
 public class TioServer {
 
+    private ServerGroupContext context;
+
+    public TioServer(ServerGroupContext context) {
+        this.context = context;
+    }
+
     /**
      * 启动 t-io server
-     * @return
      */
-    public TioServer start(){
-        return null;
+    public TioServer start() {
+        context.start();
+        return this;
     }
 
     /**
      * 关闭 t-io server
-     * @return
      */
-    public TioServer stop(){
-        return null;
+    public TioServer stop() {
+        context.start();
+        return this;
     }
+
+
 }

@@ -31,4 +31,21 @@ public class ServerGroupContext extends GroupContext {
 
     /** 黑名单 */
     private Blacklist blacklist;
+
+    public void start(){
+        if (status.equals(CoreConstant.Status.Init)) {
+            status = CoreConstant.Status.STARTING;
+
+            status = CoreConstant.Status.RUNING;
+        }
+    }
+
+    public void stop(){
+        if (status.equals(CoreConstant.Status.RUNING)) {
+            status = CoreConstant.Status.STARTING;
+
+            status = CoreConstant.Status.STOPPED;
+        }
+
+    }
 }

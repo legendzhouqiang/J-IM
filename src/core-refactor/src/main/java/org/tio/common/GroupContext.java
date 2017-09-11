@@ -40,7 +40,7 @@ public abstract class GroupContext {
     protected GroupStat statistics;
 
     /** status */
-    protected CoreConstant.Status status;
+    protected CoreConstant.Status status = CoreConstant.Status.Init;
 
     /** The group executor. */
     protected ThreadPoolExecutor tioExecutor = null;

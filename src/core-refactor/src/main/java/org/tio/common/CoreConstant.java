@@ -82,7 +82,7 @@ public interface CoreConstant {
         STOPPING,
         /** 已停止 */
         STOPPED,
-        /** 异常 */
+        /** 启动/运行异常 */
         Abnormal
     }
 
