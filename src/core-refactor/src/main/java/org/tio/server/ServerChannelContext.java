@@ -26,7 +26,7 @@ public class ServerChannelContext extends ChannelContext {
 
     private AsynchronousServerSocketChannel asynchronousServerSocketChannel;
 
-    private ConcurrentHashMap<Node, Void> clientNodes = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Void> clientNodes = new ConcurrentHashMap<>();
 
     private Node serverNode = null;
 

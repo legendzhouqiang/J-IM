@@ -27,8 +27,9 @@ public class ServerGroupContext extends GroupContext {
     /** 断开连接的 */
     private SetWithLock<ChannelContext> closeds;
 
-    private ConcurrentHashMap<Node, ClientChannelContext> nodeForChennelMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, ClientChannelContext> nodeForChennelMap = new ConcurrentHashMap<>();
 
     /** 黑名单 */
     private Blacklist blacklist;
+
 }
