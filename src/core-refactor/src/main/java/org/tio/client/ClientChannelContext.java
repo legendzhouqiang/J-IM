@@ -4,6 +4,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.*;
 import org.tio.handler.ConnectionCompletionHandler;
+import org.tio.runnable.DecodeTaskQueue;
+import org.tio.runnable.EncodeTaskQueue;
+import org.tio.runnable.HandlerTaskQueue;
+import org.tio.runnable.SendTaskQueue;
 import org.tio.util.StringUtil;
 
 import java.io.IOException;
@@ -21,6 +25,14 @@ import java.nio.channels.AsynchronousSocketChannel;
 @Slf4j
 @Data
 public class ClientChannelContext extends ChannelContext {
+
+    protected DecodeTaskQueue decodeRunnable = null;
+
+    protected HandlerTaskQueue handlerRunnable = null;
+
+    protected SendTaskQueue sendRunnable = null;
+
+    protected EncodeTaskQueue encodeRunnable = null;
 
     private ClientGroupContext groupContext;
 

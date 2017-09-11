@@ -7,9 +7,9 @@ import org.tio.concurrent.SetWithLock;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Copyright (c) for 谭耀武
+ * Copyright (c) for darkidiot
  * Date:2017/8/10
- * Author: <a href="tywo45@163.com">谭耀武</a>
+ * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc: 服务端分组上下文
  */
 public class ServerGroupContext extends GroupContext {
@@ -27,9 +27,26 @@ public class ServerGroupContext extends GroupContext {
     /** 断开连接的 */
     private SetWithLock<ChannelContext> closeds;
 
-    private ConcurrentHashMap<Integer, ClientChannelContext> nodeForChennelMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Node, ClientChannelContext> nodeForChennelMap = new ConcurrentHashMap<>();
 
     /** 黑名单 */
     private Blacklist blacklist;
 
+
+    public void start(){
+        if (status.equals(CoreConstant.Status.Init)) {
+            status = CoreConstant.Status.STARTING;
+
+            status = CoreConstant.Status.RUNING;
+        }
+    }
+
+    public void stop(){
+        if (status.equals(CoreConstant.Status.RUNING)) {
+            status = CoreConstant.Status.STARTING;
+
+            status = CoreConstant.Status.STOPPED;
+        }
+
+    }
 }
