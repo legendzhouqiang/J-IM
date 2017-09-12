@@ -11,7 +11,9 @@ public enum PacketHandlerMode {
     /** 当前线程中处理=>同步处理 */
     SINGLE_THREAD(1),
     /** 把packet丢到一个队列中，让线程池去处理=>异步处理 */
-    QUEUE(2);
+    QUEUE(2),
+    /** 把packet丢到处理池中，让空闲的线程池去处理=>异步处理(吞吐量更大) */
+    POOL(3);
 
     private final int value;
 

@@ -120,7 +120,7 @@ public abstract class HelloAbsAioHandler implements AioHandler&lt;Object, HelloP
      * 消息体结构：   对象的json串的byte[]
      */
     @Override
-    public ByteBuffer encode(HelloPacket packet, GroupContext&lt;Object, HelloPacket, Object&gt; groupContext, ChannelContext&lt;Object, HelloPacket, Object&gt; channelContext)
+    public ByteBuffer encode(HelloPacket packet, GroupContext&lt;Object, HelloPacket, Object&gt; groupContext, ChannelContext&lt;Object, HelloPacket, Object&gt; channelContextImpl)
     {
         byte[] body = packet.getBody();
         int bodyLen = 0;
@@ -154,7 +154,7 @@ public abstract class HelloAbsAioHandler implements AioHandler&lt;Object, HelloP
      * 消息体结构：   对象的json串的byte[]
      */
     @Override
-    public HelloPacket decode(ByteBuffer buffer, ChannelContext&lt;Object, HelloPacket, Object&gt; channelContext) throws AioDecodeException
+    public HelloPacket decode(ByteBuffer buffer, ChannelContext&lt;Object, HelloPacket, Object&gt; channelContextImpl) throws AioDecodeException
     {
         int readableLength = buffer.limit() - buffer.position();
         //收到的数据组不了业务包，则返回null以告诉框架数据不够
@@ -169,7 +169,7 @@ public abstract class HelloAbsAioHandler implements AioHandler&lt;Object, HelloP
         //数据不正确，则抛出AioDecodeException异常
         if (bodyLength &lt; 0)
         {
-            throw new AioDecodeException("bodyLength [" + bodyLength + "] is not right, remote:" + channelContext.getClientNode());
+            throw new AioDecodeException("bodyLength [" + bodyLength + "] is not right, remote:" + channelContextImpl.getClientNode());
         }
  
         //计算本次需要的数据长度
@@ -224,7 +224,7 @@ public abstract class HelloAbsAioHandler implements AioHandler&lt;Object, HelloP
      * 处理消息
      */
     @Override
-    public Object handler(HelloPacket packet, ChannelContext&lt;Object, HelloPacket, Object&gt; channelContext) throws Exception
+    public Object handler(HelloPacket packet, ChannelContext&lt;Object, HelloPacket, Object&gt; channelContextImpl) throws Exception
     {
         byte[] body = packet.getBody();
         if (body != null)
@@ -234,7 +234,7 @@ public abstract class HelloAbsAioHandler implements AioHandler&lt;Object, HelloP
  
             HelloPacket resppacket = new HelloPacket();
             resppacket.setBody(("收到了你的消息，你的消息是:" + str).getBytes(HelloPacket.CHARSET));
-            Aio.send(channelContext, resppacket);
+            Aio.send(channelContextImpl, resppacket);
         }
         return null;
     }
@@ -294,7 +294,7 @@ public abstract class HelloAbsAioHandler implements AioHandler&lt;Object, HelloP
      * 处理消息
      */
     @Override
-    public Object handler(HelloPacket packet, ChannelContext&lt;Object, HelloPacket, Object&gt; channelContext) throws Exception
+    public Object handler(HelloPacket packet, ChannelContext&lt;Object, HelloPacket, Object&gt; channelContextImpl) throws Exception
     {
         byte[] body = packet.getBody();
         if (body != null)

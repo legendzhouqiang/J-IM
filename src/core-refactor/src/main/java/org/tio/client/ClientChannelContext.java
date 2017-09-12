@@ -24,7 +24,7 @@ import java.nio.channels.AsynchronousSocketChannel;
  */
 @Slf4j
 @Data
-public class ClientChannelContext extends ChannelContext {
+public class ClientChannelContext extends ChannelContextImpl {
 
     protected DecodeTaskQueue decodeRunnable = null;
 

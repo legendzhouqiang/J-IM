@@ -1,9 +1,8 @@
 package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.CoreConstant;
+import org.tio.common.ChannelContextImpl;
 import org.tio.common.packet.AbstractPacket;
-import org.tio.common.ChannelContext;
 import org.tio.common.packet.SuperPacket;
 import org.tio.util.CheckSumUtil;
 
@@ -18,16 +17,15 @@ import java.nio.ByteBuffer;
 @Slf4j
 public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
-    private ChannelContext context;
+    private ChannelContextImpl context;
 
-    public DecodeTaskQueue(ChannelContext context) {
+    public DecodeTaskQueue(ChannelContextImpl context) {
         this.context = context;
     }
 
     @Override
     public void runTask(ByteBuffer byteBuffer) throws InterruptedException {
         AbstractPacket packet = new AbstractPacket();
-
         while (byteBuffer.remaining() > 1) {
             short magic = byteBuffer.getShort();
             if (SuperPacket.magic == magic) {
@@ -63,27 +61,24 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
             byteBuffer = mergeByteBuffer(byteBuffer);
         }
         byte checkSum = byteBuffer.get();
-        packet.setOptionalLength(checkSum);
+        packet.setCheckSum(checkSum);
 
         while (!(byteBuffer.remaining() > optLen)) {
             byteBuffer = mergeByteBuffer(byteBuffer);
         }
         byte[] optData = new byte[optLen];
         byteBuffer.get(optData, 0, optLen);
-        packet.setOptional(optData);
 
         while (!(byteBuffer.remaining() > 2)) {
             byteBuffer = mergeByteBuffer(byteBuffer);
         }
         short packetSeq = byteBuffer.getShort();
-        packet.setPacketSeq(packetSeq);
 
         while (!(byteBuffer.remaining() > bodyLen - 2)) {
             byteBuffer = mergeByteBuffer(byteBuffer);
         }
         byte[] bodyData = new byte[bodyLen - 2];
         byteBuffer.get(bodyData, 0, bodyLen - 2);
-        packet.setBody(bodyData);
 
         if (byteBuffer.hasRemaining()) {
             boolean flag = msgQueue.offerFirst(byteBuffer.slice());

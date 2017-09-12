@@ -1,7 +1,7 @@
 package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.ChannelContext;
+import org.tio.common.ChannelContextImpl;
 import org.tio.common.CoreConstant;
 import org.tio.common.packet.AbstractPacket;
 import org.tio.util.CheckSumUtil;
@@ -17,9 +17,9 @@ import java.nio.ByteBuffer;
 @Slf4j
 public class EncodeTaskQueue extends AbstractTaskQueue<AbstractPacket> {
 
-    private ChannelContext context;
+    private ChannelContextImpl context;
 
-    public EncodeTaskQueue(ChannelContext context) {
+    public EncodeTaskQueue(ChannelContextImpl context) {
         this.context = context;
     }
 

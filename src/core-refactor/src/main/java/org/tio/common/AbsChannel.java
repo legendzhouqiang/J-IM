@@ -1,68 +1,75 @@
 package org.tio.common;
 
-import lombok.Data;
+import com.google.common.collect.Maps;
 import org.tio.common.etc.TioLinkListener;
-import org.tio.runnable.DecodeTaskQueue;
-import org.tio.runnable.EncodeTaskQueue;
-import org.tio.runnable.HandlerTaskQueue;
-import org.tio.runnable.SendTaskQueue;
 
 import java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Copyright (c) for 谭耀武
- * Date:2017/8/10
- * Author: <a href="tywo45@163.com">谭耀武</a>
- * Desc: 通信管道上下文超类
+ * Copyright (c) for darkidiot
+ * Date:2017/9/12
+ * Author: <a href="darkidiot@icloud.com">darkidiot</a>
+ * Desc:
  */
-@Data
-public abstract class ChannelContext {
+public abstract class AbsChannel implements Channel {
 
     private final static AtomicInteger idGenerator = new AtomicInteger();
 
     protected boolean use_checksum = false;
 
-    protected CoreConstant.ConnectionStatus status;
+    private final Map<String, Object> attributeContext = Maps.newConcurrentMap();
+
+    private int id = idGenerator.incrementAndGet();
+
+    private CoreConstant.ConnectionStatus status = CoreConstant.ConnectionStatus.Init;
 
     protected ChannelStat stat = new ChannelStat();
 
-    protected String ip = null;
+    protected TioLinkListener linkListener;
 
-    protected Integer port = null;
+    protected Node node = null;
 
     protected AsynchronousChannelGroup channelGroup;
 
-    protected TioLinkListener linkListener;
+    protected AsynchronousSocketChannel channel;
 
-    protected int id = idGenerator.incrementAndGet();
-
+    @Override
     public Integer id() {
         return id;
     }
 
-    private final ConcurrentHashMap<String, Object> attributeContext = new ConcurrentHashMap<>();
-
+    @Override
     public Object getAttribute(String name) {
         return attributeContext.get(name);
     }
 
+    @Override
     public Object setAttribute(String name, Object value) {
         return attributeContext.put(name, value);
     }
 
+    @Override
     public void removeAttribute(String name) {
         attributeContext.remove(name);
     }
 
-    public List<String> getAttributeNames(){
+    @Override
+    public List<String> getAttributeNames() {
         return new ArrayList<>(attributeContext.keySet());
     }
 
-    void invalidate(){
+    @Override
+    public void invalidate() {
         this.status = CoreConstant.ConnectionStatus.invalid;
+    }
+
+    @Override
+    public void bind(AsynchronousSocketChannel channel) {
+        this.channel = channel;
     }
 }

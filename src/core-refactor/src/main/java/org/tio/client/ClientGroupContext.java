@@ -1,6 +1,6 @@
 package org.tio.client;
 
-import org.tio.common.ChannelContext;
+import org.tio.common.ChannelContextImpl;
 import org.tio.common.GroupContext;
 import org.tio.common.PacketHandlerMode;
 import org.tio.concurrent.SetWithLock;
@@ -19,5 +19,5 @@ public class ClientGroupContext extends GroupContext {
     protected ReconnectConfig reconnConf;
 
     /** 建立的连接的 */
-    private SetWithLock<ChannelContext> connections;
+    private SetWithLock<ChannelContextImpl> connections;
 }

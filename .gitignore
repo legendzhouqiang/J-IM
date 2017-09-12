@@ -1,3 +1,5 @@
 .idea/
 *.iml
 src/core-refactor/target/
+*.class
+src/zoo/websocket/server/target/

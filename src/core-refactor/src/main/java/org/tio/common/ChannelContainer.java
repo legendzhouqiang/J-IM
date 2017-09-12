@@ -10,21 +10,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ChannelContainer {
 
-    private static ConcurrentHashMap<Node, ChannelContext> channelCache = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Node, ChannelContextImpl> channelCache = new ConcurrentHashMap<>();
 
-    public static ChannelContext getChannelContext(Node node) {
+    public static ChannelContextImpl getChannelContext(Node node) {
         return channelCache.get(node);
     }
 
-    public static ChannelContext getChannelContext(String ip, int port) {
+    public static ChannelContextImpl getChannelContext(String ip, int port) {
         return getChannelContext(new Node(ip, port));
     }
 
-    public static void putChannelContext(Node node, ChannelContext channelContext) {
-        channelCache.put(node, channelContext);
+    public static void putChannelContext(Node node, ChannelContextImpl channelContextImpl) {
+        channelCache.put(node, channelContextImpl);
     }
 
-    public static void putChannleContext(String ip, int port, ChannelContext channelContext) {
-        putChannelContext(new Node(ip, port), channelContext);
+    public static void putChannleContext(String ip, int port, ChannelContextImpl channelContextImpl) {
+        putChannelContext(new Node(ip, port), channelContextImpl);
     }
 }

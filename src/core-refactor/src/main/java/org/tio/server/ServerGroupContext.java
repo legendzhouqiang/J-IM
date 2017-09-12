@@ -15,17 +15,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerGroupContext extends GroupContext {
 
     /** 消息处理模式 */
-    private PacketHandlerMode packetHandlerMode = PacketHandlerMode.QUEUE;
+    private PacketHandlerMode packetHandlerMode = PacketHandlerMode.POOL;
 
     /** 已经连接的:高活 */
-    private SetWithLock<ChannelContext> highActiveConnections;
+    private SetWithLock<ChannelContextImpl> highActiveConnections;
     /** 已经连接的:活越 */
-    private SetWithLock<ChannelContext> activeConnections;
+    private SetWithLock<ChannelContextImpl> activeConnections;
     /** 已经连接的:低活 */
-    private SetWithLock<ChannelContext> commonConnections;
+    private SetWithLock<ChannelContextImpl> commonConnections;
 
     /** 断开连接的 */
-    private SetWithLock<ChannelContext> closeds;
+    private SetWithLock<ChannelContextImpl> closeds;
 
     private ConcurrentHashMap<Node, ClientChannelContext> nodeForChennelMap = new ConcurrentHashMap<>();
 

@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Desc:
  */
 @Slf4j
-public class ServerChannelContext extends ChannelContext {
+public class ServerChannelContext extends ChannelContextImpl {
 
     private ServerGroupContext groupContext;
 

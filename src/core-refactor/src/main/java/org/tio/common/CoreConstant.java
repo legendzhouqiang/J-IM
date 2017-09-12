@@ -61,6 +61,10 @@ public interface CoreConstant {
     }
 
     enum ConnectionStatus {
+        /** 初始状态 */
+        Init,
+        /** 开始建立连接 */
+        Connecting,
         /** 建立 */
         establish,
         /** 开始关闭 */

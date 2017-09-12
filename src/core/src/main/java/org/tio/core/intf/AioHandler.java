@@ -21,7 +21,7 @@ public interface AioHandler {
 	 *
 	 * @param buffer the buffer
 	 * @return the t
-	 * @throws AioDecodeException the aio decode exception
+	 * @throws AioDecodeException the aio decode etc
 	 */
 	Packet decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException;
 

@@ -1,6 +1,6 @@
 package org.tio.common.etc;
 
-import org.tio.common.ChannelContext;
+import org.tio.common.ChannelContextImpl;
 
 /**
  * Copyright (c) for darkidiot
@@ -15,7 +15,7 @@ public interface TioLinkListener {
      *
      * @param context
      */
-    void onAfterConnected(ChannelContext context) throws TioException;
+    void onAfterConnected(ChannelContextImpl context) throws TioException;
 
     /**
      * 连接关闭前触发本方法
@@ -23,7 +23,7 @@ public interface TioLinkListener {
      * @param context
      * @param throwable
      */
-    void onBeforeClose(ChannelContext context, Throwable throwable) throws TioException;
+    void onBeforeClose(ChannelContextImpl context, Throwable throwable) throws TioException;
 
     /**
      * 连接关闭前后触发本方法
@@ -31,5 +31,5 @@ public interface TioLinkListener {
      * @param context
      * @param throwable
      */
-    void onAfterClosed(ChannelContext context, Throwable throwable) throws TioException;
+    void onAfterClosed(ChannelContextImpl context, Throwable throwable) throws TioException;
 }

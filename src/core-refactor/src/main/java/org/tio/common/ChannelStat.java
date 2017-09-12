@@ -19,18 +19,22 @@ public class ChannelStat {
 	/** 最近一次发送业务消息包的时间(一个完整的业务消息包，一部分消息不算) */
 	private long latestTimeOfSentPacket = SystemTimer.currentTimeMillis();
 
-	/** ChannelContext对象创建的时间 */
-	private long timeCreated = SystemTimer.currentTimeMillis();
+	/** Channel对象创建的时间 */
+	private long createTime = SystemTimer.currentTimeMillis();
 
 	/** 第一次连接成功的时间 */
-	private Long timeFirstConnected = null;
+	private Long timeOfFirstConnected;
 
 	/** 连接关闭的时间 */
-	private long timeClosed;
+	private long timeOfClosed;
 
 	/** 进入重连队列时间 */
-	private long timeInReconnect;
+	private long timeOfInConnect;
 
+    /** 重连次数 */
+    private int timesOfReconnect;
+
+    /** 心跳超时时间 */
     private long heartbeatTimeoutMillis = CoreConstant.default_heart_beat_timeout;
 
 	/** 本连接已发送的字节数 */

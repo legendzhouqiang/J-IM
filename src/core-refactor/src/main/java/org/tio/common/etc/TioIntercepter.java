@@ -1,6 +1,6 @@
 package org.tio.common.etc;
 
-import org.tio.common.ChannelContext;
+import org.tio.common.ChannelContextImpl;
 
 /**
  * Copyright (c) for darkidiot
@@ -17,14 +17,14 @@ public interface TioIntercepter {
      * next interceptor or the handler itself.
      * @throws TioException
      */
-    boolean preHandle(ChannelContext context) throws TioException;
+    boolean preHandle(ChannelContextImpl context) throws TioException;
 
     /**
      * 处理方法之后调用
      * @param context
      * @throws TioException
      */
-    void postHandle(ChannelContext context) throws TioException;
+    void postHandle(ChannelContextImpl context) throws TioException;
 
     /**
      * 处理发生异常
@@ -32,5 +32,5 @@ public interface TioIntercepter {
      * @param e
      * @throws TioException
      */
-    void abort(ChannelContext context, TioException e) throws TioException;
+    void abort(ChannelContextImpl context, TioException e) throws TioException;
 }

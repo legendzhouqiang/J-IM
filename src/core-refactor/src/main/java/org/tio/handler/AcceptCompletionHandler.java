@@ -2,7 +2,8 @@ package org.tio.handler;
 
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
-import org.tio.client.ClientChannelContext;
+import org.tio.common.Channel;
+import org.tio.common.ChannelContextImpl;
 import org.tio.common.CoreConstant;
 
 import java.io.IOException;
@@ -18,11 +19,11 @@ import java.nio.channels.CompletionHandler;
  * Desc: 连接处理器
  */
 @Slf4j
-public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, ClientChannelContext> {
+public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, Channel> {
 
 
     @Override
-    public void completed(AsynchronousSocketChannel channel, ClientChannelContext context) {
+    public void completed(AsynchronousSocketChannel channel, Channel context) {
         try {
             context.bind(channel);
             channel.setOption(StandardSocketOptions.SO_REUSEADDR, CoreConstant.default_reuse_addr);
@@ -45,7 +46,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
     }
 
     @Override
-    public void failed(Throwable exc, ClientChannelContext context) {
+    public void failed(Throwable exc, Channel context) {
 
     }
 }
