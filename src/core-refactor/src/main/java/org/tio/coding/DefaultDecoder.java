@@ -1,6 +1,6 @@
 package org.tio.coding;
 
-import org.tio.common.packet.AbstractPacket;
+import org.tio.common.packet.AbsPacket;
 import org.tio.common.packet.ReadPacket;
 import org.tio.common.packet.SuperPacket;
 
@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 public class DefaultDecoder {
 
     public ReadPacket decode(ByteBuffer buffer) {
-        AbstractPacket packet = new AbstractPacket();
+        AbsPacket packet = new AbsPacket();
         short magic = buffer.getShort();
         if (SuperPacket.magic == magic) {
             return null;

@@ -8,7 +8,7 @@ import org.tio.util.ByteUtil;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc: 心跳消息RSP包
  */
-public class HeartbeatReplyPacket extends AbstractPacket {
+public class HeartbeatReplyPacket extends AbsPacket {
 
     public HeartbeatReplyPacket() {
         super.type = SuperPacket.HEART_MESSAGE_RSP;

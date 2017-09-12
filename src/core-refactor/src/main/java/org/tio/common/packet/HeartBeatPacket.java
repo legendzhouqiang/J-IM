@@ -8,7 +8,7 @@ import org.tio.util.ByteUtil;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc: 心跳消息REQ包
  */
-public class HeartBeatPacket extends AbstractPacket {
+public class HeartBeatPacket extends AbsPacket {
 
     public HeartBeatPacket reset(int timeout) {
         super.optLen = 4;

@@ -2,7 +2,7 @@ package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.ChannelContextImpl;
-import org.tio.common.packet.AbstractPacket;
+import org.tio.common.packet.AbsPacket;
 import org.tio.common.packet.SuperPacket;
 import org.tio.util.CheckSumUtil;
 
@@ -25,7 +25,7 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
     @Override
     public void runTask(ByteBuffer byteBuffer) throws InterruptedException {
-        AbstractPacket packet = new AbstractPacket();
+        AbsPacket packet = new AbsPacket();
         while (byteBuffer.remaining() > 1) {
             short magic = byteBuffer.getShort();
             if (SuperPacket.magic == magic) {

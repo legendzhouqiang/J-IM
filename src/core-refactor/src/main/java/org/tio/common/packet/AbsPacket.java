@@ -9,7 +9,7 @@ import lombok.ToString;
  * Desc:
  */
 @ToString
-public class AbstractPacket implements ReadPacket, WritePacket {
+public class AbsPacket implements ReadPacket, WritePacket {
 
     protected byte type;
 

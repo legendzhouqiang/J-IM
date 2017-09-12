@@ -3,6 +3,8 @@ package org.tio.common;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.List;
 
+import static org.tio.common.CoreConstant.ConnectionStatus;
+
 /**
  * Copyright (c) for darkidiot
  * Date:2017/9/12
@@ -21,8 +23,16 @@ public interface Channel {
 
     List<String> getAttributeNames();
 
+    void bind(AsynchronousSocketChannel channel);
+
+    ConnectionStatus getStatus();
+
+    void setStatus(ConnectionStatus status);
+
     void invalidate();
 
-    void bind(AsynchronousSocketChannel channel);
+    ChannelStat stat();
+
+    GroupContext channelContext();
 
 }

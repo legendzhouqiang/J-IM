@@ -3,7 +3,7 @@ package org.tio.runnable;
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.ChannelContextImpl;
 import org.tio.common.CoreConstant;
-import org.tio.common.packet.AbstractPacket;
+import org.tio.common.packet.AbsPacket;
 import org.tio.util.CheckSumUtil;
 
 import java.nio.ByteBuffer;
@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
  * Desc:
  */
 @Slf4j
-public class EncodeTaskQueue extends AbstractTaskQueue<AbstractPacket> {
+public class EncodeTaskQueue extends AbstractTaskQueue<AbsPacket> {
 
     private ChannelContextImpl context;
 
@@ -24,7 +24,7 @@ public class EncodeTaskQueue extends AbstractTaskQueue<AbstractPacket> {
     }
 
     @Override
-    public void runTask(AbstractPacket packet) {
+    public void runTask(AbsPacket packet) {
         if (context.isUse_checksum()) {
             byte[][] bytes = {packet.header(), packet.optional(), new byte[]{(byte) (packet.packetSeq() >> 8), (byte) packet.packetSeq()}, packet.body()};
             byte checkSum = CheckSumUtil.calcCheckSum(bytes);

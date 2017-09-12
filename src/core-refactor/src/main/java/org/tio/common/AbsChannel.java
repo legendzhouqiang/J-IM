@@ -34,9 +34,17 @@ public abstract class AbsChannel implements Channel {
 
     protected Node node = null;
 
-    protected AsynchronousChannelGroup channelGroup;
-
     protected AsynchronousSocketChannel channel;
+
+    @Override
+    public CoreConstant.ConnectionStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(CoreConstant.ConnectionStatus status) {
+        this.status = status;
+    }
 
     @Override
     public Integer id() {
@@ -71,5 +79,10 @@ public abstract class AbsChannel implements Channel {
     @Override
     public void bind(AsynchronousSocketChannel channel) {
         this.channel = channel;
+    }
+
+    @Override
+    public ChannelStat stat() {
+        return this.stat;
     }
 }

@@ -1,8 +1,10 @@
 package org.tio.server;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.client.ClientChannelContext;
-import org.tio.common.*;
+import org.tio.common.AbsChannel;
+import org.tio.common.CoreConstant;
+import org.tio.common.Node;
+import org.tio.common.SystemTimer;
 import org.tio.handler.AcceptCompletionHandler;
 import org.tio.util.StringUtil;
 
@@ -20,7 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * Desc:
  */
 @Slf4j
-public class ServerChannelContext extends ChannelContextImpl {
+public class ServerChannelContext extends AbsChannel {
+
+    private String ip;
+
+    private Integer port;
+
+    private AsynchronousChannelGroup channelGroup;
 
     private ServerGroupContext groupContext;
 
@@ -43,7 +51,7 @@ public class ServerChannelContext extends ChannelContextImpl {
             log.warn("open socket time out, spend time:{} ms", interval);
         }
         if (ip != null && port != null) {
-            if (StringUtil.isIp(getIp()) && port > 0) {
+            if (StringUtil.isIp(ip) && port > 0) {
                 asynchronousServerSocketChannel.bind(new InetSocketAddress(ip, port));
                 log.info("sock bind local address [{}:{}].", ip, port);
             }
@@ -52,6 +60,6 @@ public class ServerChannelContext extends ChannelContextImpl {
             log.info("sock bind local address [{}:{}].", localAddress.getHostName(), localAddress.getPort());
         }
 
-        asynchronousServerSocketChannel.accept(new ClientChannelContext(),new AcceptCompletionHandler());
+        asynchronousServerSocketChannel.accept(new ChannelContext(),new AcceptCompletionHandler());
     }
 }
