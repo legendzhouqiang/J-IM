@@ -5,6 +5,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.core.intf.TioUuid;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
@@ -31,15 +32,6 @@ public class WsServerStarter {
 	private ServerGroupContext serverGroupContext = null;
 
 	private AioServer aioServer = null;
-
-	/**
-	 *
-	 *
-	 * @author tanyaowu
-	 */
-	public WsServerStarter() {
-
-	}
 
 	/**
 	 * @return the wsServerConfig
@@ -76,20 +68,24 @@ public class WsServerStarter {
 		return serverGroupContext;
 	}
 
-	public void start(int port, IWsMsgHandler wsMsgHandler) throws IOException {
-		this.start(port, wsMsgHandler, null, null);
+	public WsServerStarter(int port, IWsMsgHandler wsMsgHandler) throws IOException {
+		this(port, wsMsgHandler, null, null);
 	}
 
-	public void start(int port, IWsMsgHandler wsMsgHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
-		this.wsServerConfig = new WsServerConfig(port);
-		start(wsServerConfig, wsMsgHandler, tioExecutor, groupExecutor);
+	public WsServerStarter(int port, IWsMsgHandler wsMsgHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
+		//		this.wsServerConfig = new WsServerConfig(port);
+		this(new WsServerConfig(port), wsMsgHandler, tioExecutor, groupExecutor);
 	}
 
-	public void start(WsServerConfig wsServerConfig, IWsMsgHandler wsMsgHandler) throws IOException {
-		this.start(wsServerConfig, wsMsgHandler, null, null);
+	public WsServerStarter(WsServerConfig wsServerConfig, IWsMsgHandler wsMsgHandler) throws IOException {
+		this(wsServerConfig, wsMsgHandler, null, null);
 	}
 
-	public void start(WsServerConfig wsServerConfig, IWsMsgHandler wsMsgHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
+	public WsServerStarter(WsServerConfig wsServerConfig, IWsMsgHandler wsMsgHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
+		this(wsServerConfig, wsMsgHandler, new WsTioUuid(), tioExecutor, groupExecutor);
+	}
+	
+	public WsServerStarter(WsServerConfig wsServerConfig, IWsMsgHandler wsMsgHandler, TioUuid tioUuid, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
 		this.wsServerConfig = wsServerConfig;
 		this.wsMsgHandler = wsMsgHandler;
 		wsServerAioHandler = new WsServerAioHandler(wsServerConfig, wsMsgHandler);
@@ -100,9 +96,11 @@ public class WsServerStarter {
 
 		aioServer = new AioServer(serverGroupContext);
 
-		WsTioUuid wsTioUuid = new WsTioUuid();
-		serverGroupContext.setTioUuid(wsTioUuid);
+		serverGroupContext.setTioUuid(tioUuid);
+	}
 
+	public void start() throws IOException {
 		aioServer.start(wsServerConfig.getBindIp(), wsServerConfig.getBindPort());
+
 	}
 }

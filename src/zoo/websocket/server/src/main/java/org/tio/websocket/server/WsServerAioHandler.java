@@ -20,8 +20,8 @@ import org.tio.http.common.HttpResponseEncoder;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.server.intf.ServerAioHandler;
 import org.tio.websocket.common.Opcode;
-import org.tio.websocket.common.WsRequestPacket;
-import org.tio.websocket.common.WsResponsePacket;
+import org.tio.websocket.common.WsRequest;
+import org.tio.websocket.common.WsResponse;
 import org.tio.websocket.common.WsServerDecoder;
 import org.tio.websocket.common.WsServerEncoder;
 import org.tio.websocket.common.WsSessionContext;
@@ -88,11 +88,11 @@ public class WsServerAioHandler implements ServerAioHandler {
 	 *
 	 */
 	@Override
-	public WsRequestPacket decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
-		WsSessionContext imSessionContext = (WsSessionContext) channelContext.getAttribute();
+	public WsRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
+		WsSessionContext wsSessionContext = (WsSessionContext) channelContext.getAttribute();
 		//		int initPosition = buffer.position();
 
-		if (!imSessionContext.isHandshaked()) {
+		if (!wsSessionContext.isHandshaked()) {
 			HttpRequest request = HttpRequestDecoder.decode(buffer, channelContext);
 			if (request == null) {
 				return null;
@@ -103,10 +103,10 @@ public class WsServerAioHandler implements ServerAioHandler {
 				throw new AioDecodeException("http协议升级到websocket协议失败");
 			}
 
-			imSessionContext.setHandshakeRequestPacket(request);
-			imSessionContext.setHandshakeResponsePacket(httpResponse);
+			wsSessionContext.setHandshakeRequestPacket(request);
+			wsSessionContext.setHandshakeResponsePacket(httpResponse);
 
-			WsRequestPacket wsRequestPacket = new WsRequestPacket();
+			WsRequest wsRequestPacket = new WsRequest();
 			//			wsRequestPacket.setHeaders(httpResponse.getHeaders());
 			//			wsRequestPacket.setBody(httpResponse.getBody());
 			wsRequestPacket.setHandShake(true);
@@ -114,7 +114,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 			return wsRequestPacket;
 		}
 
-		WsRequestPacket websocketPacket = WsServerDecoder.decode(buffer, channelContext);
+		WsRequest websocketPacket = WsServerDecoder.decode(buffer, channelContext);
 		return websocketPacket;
 		//		if (websocketPacket == null) {
 		//			return null;
@@ -132,7 +132,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 		//				throw new AioDecodeException("错误的websocket包，body为空");
 		//			}
 		//
-		//			WsRequestPacket imPacket = new WsRequestPacket();
+		//			WsRequest imPacket = new WsRequest();
 		//
 		//			if (wsBody.length > 1) {
 		//				byte[] dst = new byte[wsBody.length - 1];
@@ -143,7 +143,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 		//		} else if (opcode == Opcode.PING || opcode == Opcode.PONG) {
 		//			return heartbeatPacket;
 		//		} else if (opcode == Opcode.CLOSE) {
-		//			WsRequestPacket imPacket = new WsRequestPacket();
+		//			WsRequest imPacket = new WsRequest();
 		//			return imPacket;
 		//		} else if (opcode == Opcode.TEXT) {
 		//			throw new AioDecodeException("错误的websocket包，不支持TEXT类型的数据");
@@ -163,16 +163,16 @@ public class WsServerAioHandler implements ServerAioHandler {
 	 */
 	@Override
 	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
-		WsResponsePacket wsResponsePacket = (WsResponsePacket) packet;
+		WsResponse wsResponse = (WsResponse) packet;
 
 		//握手包
-		if (wsResponsePacket.isHandShake()) {
+		if (wsResponse.isHandShake()) {
 			WsSessionContext imSessionContext = (WsSessionContext) channelContext.getAttribute();
 			HttpResponse handshakeResponsePacket = imSessionContext.getHandshakeResponsePacket();
 			return HttpResponseEncoder.encode(handshakeResponsePacket, groupContext, channelContext, false);
 		}
 
-		ByteBuffer byteBuffer = WsServerEncoder.encode(wsResponsePacket, groupContext, channelContext);
+		ByteBuffer byteBuffer = WsServerEncoder.encode(wsResponse, groupContext, channelContext);
 		return byteBuffer;
 	}
 
@@ -183,8 +183,8 @@ public class WsServerAioHandler implements ServerAioHandler {
 		return wsServerConfig;
 	}
 
-	private WsResponsePacket h(WsRequestPacket websocketPacket, byte[] bytes, Opcode opcode, ChannelContext channelContext) throws Exception {
-		WsResponsePacket wsResponsePacket = null;
+	private WsResponse h(WsRequest websocketPacket, byte[] bytes, Opcode opcode, ChannelContext channelContext) throws Exception {
+		WsResponse wsResponse = null;
 		if (opcode == Opcode.TEXT) {
 			if (bytes == null || bytes.length == 0) {
 				Aio.remove(channelContext, "错误的websocket包，body为空");
@@ -193,8 +193,8 @@ public class WsServerAioHandler implements ServerAioHandler {
 			String text = new String(bytes, wsServerConfig.getCharset());
 			Object retObj = wsMsgHandler.onText(websocketPacket, text, channelContext);
 			String methodName = "onText";
-			wsResponsePacket = processRetObj(retObj, methodName, channelContext);
-			return wsResponsePacket;
+			wsResponse = processRetObj(retObj, methodName, channelContext);
+			return wsResponse;
 		} else if (opcode == Opcode.BINARY) {
 			if (bytes == null || bytes.length == 0) {
 				Aio.remove(channelContext, "错误的websocket包，body为空");
@@ -202,16 +202,16 @@ public class WsServerAioHandler implements ServerAioHandler {
 			}
 			Object retObj = wsMsgHandler.onBytes(websocketPacket, bytes, channelContext);
 			String methodName = "onBytes";
-			wsResponsePacket = processRetObj(retObj, methodName, channelContext);
-			return wsResponsePacket;
+			wsResponse = processRetObj(retObj, methodName, channelContext);
+			return wsResponse;
 		} else if (opcode == Opcode.PING || opcode == Opcode.PONG) {
 			log.error("收到" + opcode);
 			return null;
 		} else if (opcode == Opcode.CLOSE) {
 			Object retObj = wsMsgHandler.onClose(websocketPacket, bytes, channelContext);
 			String methodName = "onClose";
-			wsResponsePacket = processRetObj(retObj, methodName, channelContext);
-			return wsResponsePacket;
+			wsResponse = processRetObj(retObj, methodName, channelContext);
+			return wsResponse;
 		} else {
 			Aio.remove(channelContext, "错误的websocket包，错误的Opcode");
 			return null;
@@ -230,7 +230,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 	 */
 	@Override
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
-		WsRequestPacket wsRequestPacket = (WsRequestPacket) packet;
+		WsRequest wsRequestPacket = (WsRequest) packet;
 
 		if (wsRequestPacket.isHandShake()) {
 			WsSessionContext wsSessionContext = (WsSessionContext) channelContext.getAttribute();
@@ -242,52 +242,45 @@ public class WsServerAioHandler implements ServerAioHandler {
 				return;
 			}
 
-			WsResponsePacket wsResponsePacket = new WsResponsePacket();
-			wsResponsePacket.setHandShake(true);
-			Aio.send(channelContext, wsResponsePacket);
+			WsResponse wsResponse = new WsResponse();
+			wsResponse.setHandShake(true);
+			Aio.send(channelContext, wsResponse);
 			wsSessionContext.setHandshaked(true);
 			return;
 		}
 
-		WsResponsePacket wsResponsePacket = h(wsRequestPacket, wsRequestPacket.getBody(), wsRequestPacket.getWsOpcode(), channelContext);
+		WsResponse wsResponse = h(wsRequestPacket, wsRequestPacket.getBody(), wsRequestPacket.getWsOpcode(), channelContext);
 
-		if (wsResponsePacket != null) {
-			Aio.send(channelContext, wsResponsePacket);
+		if (wsResponse != null) {
+			Aio.send(channelContext, wsResponse);
 		}
 
 		return;
 	}
 
-	private WsResponsePacket processRetObj(Object obj, String methodName, ChannelContext channelContext) throws Exception {
-		WsResponsePacket wsResponsePacket = null;
+	private WsResponse processRetObj(Object obj, String methodName, ChannelContext channelContext) throws Exception {
+		WsResponse wsResponse = null;
 		if (obj == null) {
 			return null;
 		} else {
 			if (obj instanceof String) {
 				String str = (String) obj;
-				wsResponsePacket = new WsResponsePacket();
-				wsResponsePacket.setBody(str.getBytes(wsServerConfig.getCharset()));
-				wsResponsePacket.setWsOpcode(Opcode.TEXT);
-				return wsResponsePacket;
+				wsResponse = WsResponse.fromText(str, wsServerConfig.getCharset());
+				return wsResponse;
 			} else if (obj instanceof byte[]) {
-				wsResponsePacket = new WsResponsePacket();
-				wsResponsePacket.setBody((byte[]) obj);
-				wsResponsePacket.setWsOpcode(Opcode.BINARY);
-				return wsResponsePacket;
-			} else if (obj instanceof WsResponsePacket) {
-				return (WsResponsePacket) obj;
+				wsResponse = WsResponse.fromBytes((byte[])obj);
+				return wsResponse;
+			} else if (obj instanceof WsResponse) {
+				return (WsResponse) obj;
 			} else if (obj instanceof ByteBuffer) {
-				wsResponsePacket = new WsResponsePacket();
 				byte[] bs = ((ByteBuffer) obj).array();
-				wsResponsePacket.setBody(bs);
-				wsResponsePacket.setWsOpcode(Opcode.BINARY);
-				return wsResponsePacket;
+				wsResponse = WsResponse.fromBytes(bs);
+				return wsResponse;
 			} else {
-				log.error("{} {}.{}()方法，只允许返回byte[]、ByteBuffer、WsResponsePacket或null，但是程序返回了{}", channelContext, this.getClass().getName(), methodName, obj.getClass().getName());
+				log.error("{} {}.{}()方法，只允许返回byte[]、ByteBuffer、WsResponse或null，但是程序返回了{}", channelContext, this.getClass().getName(), methodName, obj.getClass().getName());
 				return null;
 			}
 		}
-
 	}
 
 	/**
@@ -305,7 +298,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 	 * @return
 	 * @author tanyaowu
 	 */
-	public HttpResponse updateWebSocketProtocol(HttpRequest request, ChannelContext channelContext) {
+	public static HttpResponse updateWebSocketProtocol(HttpRequest request, ChannelContext channelContext) {
 		Map<String, String> headers = request.getHeaders();
 
 		String Sec_WebSocket_Key = headers.get(HttpConst.RequestHeaderKey.Sec_WebSocket_Key);

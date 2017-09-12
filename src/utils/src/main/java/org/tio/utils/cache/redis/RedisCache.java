@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBucket;
 import org.redisson.api.RKeys;
 import org.redisson.api.RedissonClient;
@@ -92,6 +93,9 @@ public class RedisCache implements ICache {
 
 	@Override
 	public Serializable get(String key) {
+		if (StringUtils.isBlank(key)) {
+			return null;
+		}
 		RBucket<Serializable> bucket = getBucket(key);
 		Serializable ret = bucket.get();
 		if (timeToIdleSeconds != null) {
@@ -136,12 +140,18 @@ public class RedisCache implements ICache {
 
 	@Override
 	public void put(String key, Serializable value) {
+		if (StringUtils.isBlank(key)) {
+			return;
+		}
 		RBucket<Serializable> bucket = getBucket(key);
 		bucket.set(value, timeout, TimeUnit.SECONDS);
 	}
 
 	@Override
 	public void remove(String key) {
+		if (StringUtils.isBlank(key)) {
+			return;
+		}
 		RBucket<Serializable> bucket = getBucket(key);
 		bucket.delete();
 	}

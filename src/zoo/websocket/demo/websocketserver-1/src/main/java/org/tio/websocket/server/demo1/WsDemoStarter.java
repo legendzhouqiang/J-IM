@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.server.ServerGroupContext;
 import org.tio.websocket.server.WsServerStarter;
 
 /**
@@ -19,23 +20,36 @@ public class WsDemoStarter {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		WsDemoStarter appStarter = new WsDemoStarter();
-		appStarter.start(9321, new WsDemoMsgHandler());
+		WsDemoStarter appStarter = new WsDemoStarter(9321, new WsDemoMsgHandler());
+		appStarter.start();
 	}
 
-	WsServerStarter wsServerStarter;
-	WsDemoMsgHandler wsMsgHandler;
+	private WsServerStarter wsServerStarter;
+//	private WsDemoMsgHandler wsMsgHandler;
+	private ServerGroupContext serverGroupContext;
 
 	/**
 	 *
 	 * @author tanyaowu
 	 */
-	public WsDemoStarter() {
+	public WsDemoStarter(int port, WsDemoMsgHandler wsMsgHandler) throws IOException {
+		wsServerStarter = new WsServerStarter(port, wsMsgHandler);
+		serverGroupContext = wsServerStarter.getServerGroupContext();
 	}
 
-	public void start(int port, WsDemoMsgHandler wsMsgHandler) throws IOException {
-		this.wsMsgHandler = wsMsgHandler;
-		wsServerStarter = new WsServerStarter();
-		wsServerStarter.start(port, wsMsgHandler);
+	public WsServerStarter getWsServerStarter() {
+		return wsServerStarter;
 	}
+
+	public void start() throws IOException {
+		wsServerStarter.start();
+	}
+
+	/**
+	 * @return the serverGroupContext
+	 */
+	public ServerGroupContext getServerGroupContext() {
+		return serverGroupContext;
+	}
+
 }

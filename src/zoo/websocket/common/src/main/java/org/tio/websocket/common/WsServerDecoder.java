@@ -23,7 +23,7 @@ public class WsServerDecoder {
 
 	private static Logger log = LoggerFactory.getLogger(WsServerDecoder.class);
 
-	public static WsRequestPacket decode(ByteBuffer buf, ChannelContext channelContext) throws AioDecodeException {
+	public static WsRequest decode(ByteBuffer buf, ChannelContext channelContext) throws AioDecodeException {
 		WsSessionContext imSessionContext = (WsSessionContext) channelContext.getAttribute();
 		List<byte[]> lastParts = imSessionContext.getLastParts();
 
@@ -104,7 +104,7 @@ public class WsServerDecoder {
 		}
 
 		//第二阶段解析
-		WsRequestPacket websocketPacket = new WsRequestPacket();
+		WsRequest websocketPacket = new WsRequest();
 		websocketPacket.setWsEof(fin);
 		websocketPacket.setWsHasMask(hasMask);
 		websocketPacket.setWsMask(mask);

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.utils.GuavaUtils;
@@ -80,6 +81,9 @@ public class GuavaCache implements ICache {
 
 	@Override
 	public Serializable get(String key) {
+		if (StringUtils.isBlank(key)) {
+			return null;
+		}
 		return loadingCache.getIfPresent(key);
 	}
 
@@ -91,11 +95,17 @@ public class GuavaCache implements ICache {
 
 	@Override
 	public void put(String key, Serializable value) {
+		if (StringUtils.isBlank(key)) {
+			return;
+		}
 		loadingCache.put(key, value);
 	}
 
 	@Override
 	public void remove(String key) {
+		if (StringUtils.isBlank(key)) {
+			return;
+		}
 		loadingCache.invalidate(key);
 	}
 

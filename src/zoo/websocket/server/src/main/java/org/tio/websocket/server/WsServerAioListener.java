@@ -1,8 +1,5 @@
 package org.tio.websocket.server;
 
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.tio.core.ChannelContext;
 import org.tio.core.intf.Packet;
 import org.tio.server.intf.ServerAioListener;
@@ -15,14 +12,6 @@ import org.tio.websocket.common.WsSessionContext;
  */
 public class WsServerAioListener implements ServerAioListener {
 
-	//	private static Logger log = LoggerFactory.getLogger(WsServerAioListener.class);
-	//	private static Logger iplog = LoggerFactory.getLogger("tio-ip-trace-log");
-
-	static Map<String, AtomicLong> ipmap = new java.util.concurrent.ConcurrentHashMap<>();
-	static AtomicLong accessCount = new AtomicLong();
-
-	public static void main(String[] args) {
-	}
 
 	public WsServerAioListener() {
 	}

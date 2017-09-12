@@ -34,15 +34,15 @@ public class WsServerEncoder {
 		}
 	}
 
-	public static ByteBuffer encode(WsResponsePacket wsResponsePacket, GroupContext groupContext, ChannelContext channelContext) {
-		byte[] imBody = wsResponsePacket.getBody();//就是ws的body，不包括ws的头
+	public static ByteBuffer encode(WsResponse wsResponse, GroupContext groupContext, ChannelContext channelContext) {
+		byte[] imBody = wsResponse.getBody();//就是ws的body，不包括ws的头
 		int wsBodyLength = 0;
 
 		if (imBody != null) {
 			wsBodyLength += imBody.length;
 		}
 
-		byte header0 = (byte) (0x8f & (wsResponsePacket.getWsOpcode().getCode() | 0xf0));
+		byte header0 = (byte) (0x8f & (wsResponse.getWsOpcode().getCode() | 0xf0));
 		ByteBuffer buf = null;
 		if (wsBodyLength < 126) {
 			buf = ByteBuffer.allocate(2 + wsBodyLength);

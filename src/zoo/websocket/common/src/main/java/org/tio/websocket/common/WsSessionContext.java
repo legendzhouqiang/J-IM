@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
-import org.tio.monitor.RateLimiterWrap;
 
 /**
  *
@@ -22,11 +21,6 @@ public class WsSessionContext {
 	public static void main(String[] args) {
 
 	}
-
-	/**
-	 * 消息请求频率控制器
-	 */
-	private RateLimiterWrap requestRateLimiter = null;
 
 	/**
 	 * 是否已经握过手
@@ -81,13 +75,6 @@ public class WsSessionContext {
 	}
 
 	/**
-	 * @return the requestRateLimiter
-	 */
-	public RateLimiterWrap getRequestRateLimiter() {
-		return requestRateLimiter;
-	}
-
-	/**
 	 * @return the token
 	 */
 	public String getToken() {
@@ -127,13 +114,6 @@ public class WsSessionContext {
 	 */
 	public void setLastParts(List<byte[]> lastParts) {
 		this.lastParts = lastParts;
-	}
-
-	/**
-	 * @param requestRateLimiter the requestRateLimiter to set
-	 */
-	public void setRequestRateLimiter(RateLimiterWrap requestRateLimiter) {
-		this.requestRateLimiter = requestRateLimiter;
 	}
 
 	/**

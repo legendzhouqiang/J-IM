@@ -19,6 +19,11 @@ public class HttpSession implements java.io.Serializable {
 
 	private String id = null;
 
+	/**
+	 * 此处空的构造函数必须要有
+	 * 
+	 * @author: tanyaowu
+	 */
 	public HttpSession() {
 	}
 

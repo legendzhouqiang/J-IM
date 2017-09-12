@@ -242,4 +242,8 @@ public class ServerGroupContext extends GroupContext {
 		return serverGroupStat;
 	}
 
+	public void setServerAioListener(ServerAioListener serverAioListener) {
+		this.serverAioListener = serverAioListener;
+	}
+
 }

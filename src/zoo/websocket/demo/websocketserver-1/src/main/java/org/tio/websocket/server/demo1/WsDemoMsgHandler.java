@@ -8,7 +8,7 @@ import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
-import org.tio.websocket.common.WsRequestPacket;
+import org.tio.websocket.common.WsRequest;
 import org.tio.websocket.server.handler.IWsMsgHandler;
 
 /**
@@ -39,7 +39,7 @@ public class WsDemoMsgHandler implements IWsMsgHandler {
 	}
 
 	@Override
-	public Object onBytes(WsRequestPacket wsRequestPacket, byte[] bytes, ChannelContext channelContext) throws Exception {
+	public Object onBytes(WsRequest wsRequest, byte[] bytes, ChannelContext channelContext) throws Exception {
 		String ss = new String(bytes, "utf-8");
 		log.info("收到byte消息:{},{}", bytes, ss);
 
@@ -51,13 +51,13 @@ public class WsDemoMsgHandler implements IWsMsgHandler {
 	}
 
 	@Override
-	public Object onClose(WsRequestPacket websocketPacket, byte[] bytes, ChannelContext channelContext) throws Exception {
+	public Object onClose(WsRequest wsRequest, byte[] bytes, ChannelContext channelContext) throws Exception {
 		Aio.remove(channelContext, "receive close flag");
 		return null;
 	}
 
 	@Override
-	public Object onText(WsRequestPacket wsRequestPacket, String text, ChannelContext channelContext) throws Exception {
+	public Object onText(WsRequest wsRequest, String text, ChannelContext channelContext) throws Exception {
 		return "收到text消息:" + text;
 	}
 }

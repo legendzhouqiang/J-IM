@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.listener.MessageListener;
@@ -146,6 +147,10 @@ public class GuavaRedisCache implements ICache {
 	 */
 	@Override
 	public Serializable get(String key) {
+		if (StringUtils.isBlank(key)) {
+			return null;
+		}
+		
 		Serializable ret = guavaCache.get(key);
 		if (ret == null) {
 			ret = redisCache.get(key);
@@ -190,6 +195,10 @@ public class GuavaRedisCache implements ICache {
 	 */
 	@Override
 	public void remove(String key) {
+		if (StringUtils.isBlank(key)) {
+			return;
+		}
+		
 		guavaCache.remove(key);
 		redisCache.remove(key);
 
