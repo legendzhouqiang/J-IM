@@ -20,9 +20,11 @@ public class TioIntercepterChain {
     private IntercepterChain head = new IntercepterChain(null);
     private IntercepterChain tail = head;
 
-    private Map<Channel, IntercepterChain> errorMap = Maps.newConcurrentMap();
+    private Map<TioException, IntercepterChain> errorMap = Maps.newConcurrentMap();
 
     private static TioIntercepterChain chain;
+
+    private final String channel_default_key = "default_key:tio_exception_for_intercepter";
 
     public static TioIntercepterChain newInstance() {
         if (chain == null) {
@@ -51,7 +53,8 @@ public class TioIntercepterChain {
             }
         } catch (TioException e) {
             curIntercepter.getIntercepter().abort(channel, e);
-            errorMap.put(channel, curIntercepter);
+            errorMap.put(e, curIntercepter);
+            channel.setAttribute(channel_default_key, e);
         }
     }
 
@@ -61,9 +64,10 @@ public class TioIntercepterChain {
         }
 
         IntercepterChain curIntercepter = tail;
-        if (errorMap.containsKey(channel)) {
-            curIntercepter = errorMap.get(channel).getPre();
-            errorMap.remove(channel);
+        TioException e = (TioException) channel.getAttribute(channel_default_key);
+        if (e != null && errorMap.containsKey(e)) {
+            curIntercepter = errorMap.get(e).getPre();
+            errorMap.remove(e);
         }
         try {
             while (curIntercepter != null) {
