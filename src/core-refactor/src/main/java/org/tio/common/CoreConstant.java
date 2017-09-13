@@ -23,8 +23,11 @@ public interface CoreConstant {
     /** 默认关闭客服端时间校准 */
     boolean default_client_timestamp_rectify = false;
 
+    /** 默认消息队列容量 */
+    int default_msg_queue_capacity = 1500;
+
     /** 默认最大消息队列长度，超出会打印警告日志 */
-    long default_max_msg_queue_size = 10000;
+    long default_msg_queue_max_size = 1000;
 
     /** 默认交互超时时间(unit:second),需要答复型消息 */
     short default_interactive_timeout = 20;

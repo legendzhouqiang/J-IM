@@ -1,7 +1,6 @@
 package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.ChannelContextImpl;
 import org.tio.common.channel.Channel;
 import org.tio.common.packet.AbsPacket;
 import org.tio.common.packet.SuperPacket;
@@ -87,7 +86,7 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
                 log.warn("put the left ByteBuffer into msgQueue failed.");
             }
         }
-        if (context.isUse_checksum()) {
+        if (context.useChecksum()) {
             byte[][] bytes = {
                     packet.header(), optData, new byte[]{(byte) (packetSeq >> 8), (byte) packetSeq}, bodyData
             };

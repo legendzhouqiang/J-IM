@@ -27,5 +27,7 @@ public interface Channel extends AttributeMap {
 
     ChannelStat stat();
 
+    boolean useChecksum();
+
     ChannelContext channelContext();
 }

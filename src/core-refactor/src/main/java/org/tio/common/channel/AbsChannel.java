@@ -5,7 +5,8 @@ import org.tio.common.ChannelStat;
 import org.tio.common.CoreConstant;
 import org.tio.common.Node;
 import org.tio.common.TioParams;
-import org.tio.common.etc.TioLinkListener;
+import org.tio.common.misc.TioIntercepter;
+import org.tio.common.misc.TioLinkListener;
 
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ public abstract class AbsChannel implements Channel {
     protected ChannelStat stat = new ChannelStat();
 
     protected TioLinkListener linkListener;
+
+    protected TioIntercepter intercepter;
 
     protected Node node = null;
 
@@ -87,5 +90,10 @@ public abstract class AbsChannel implements Channel {
     @Override
     public ChannelStat stat() {
         return this.stat;
+    }
+
+    @Override
+    public boolean useChecksum() {
+        return use_checksum;
     }
 }

@@ -1,8 +1,8 @@
 package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.ChannelContextImpl;
 import org.tio.common.CoreConstant;
+import org.tio.common.channel.Channel;
 import org.tio.common.packet.AbsPacket;
 import org.tio.util.CheckSumUtil;
 
@@ -17,15 +17,15 @@ import java.nio.ByteBuffer;
 @Slf4j
 public class EncodeTaskQueue extends AbstractTaskQueue<AbsPacket> {
 
-    private ChannelContextImpl context;
+    private Channel context;
 
-    public EncodeTaskQueue(ChannelContextImpl context) {
+    public EncodeTaskQueue(Channel context) {
         this.context = context;
     }
 
     @Override
     public void runTask(AbsPacket packet) {
-        if (context.isUse_checksum()) {
+        if (context.useChecksum()) {
             byte[][] bytes = {packet.header(), packet.optional(), new byte[]{(byte) (packet.packetSeq() >> 8), (byte) packet.packetSeq()}, packet.body()};
             byte checkSum = CheckSumUtil.calcCheckSum(bytes);
             packet.setCheckSum(checkSum);
@@ -37,6 +37,10 @@ public class EncodeTaskQueue extends AbstractTaskQueue<AbsPacket> {
         buffer.put(new byte[]{(byte) (packet.packetSeq() >> 8), (byte) packet.packetSeq()});
         buffer.put(packet.body());
         SendTaskQueue sendRunnable = context.getSendRunnable();
-        sendRunnable.addMsg(buffer);
+        boolean flag = sendRunnable.addMsg(buffer);
+        if (!flag) {
+            log.error("lost parket ");
+        }
+
     }
 }

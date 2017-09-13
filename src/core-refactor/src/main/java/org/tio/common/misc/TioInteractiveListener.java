@@ -1,4 +1,4 @@
-package org.tio.common.etc;
+package org.tio.common.misc;
 
 import org.tio.common.ChannelContextImpl;
 import org.tio.common.packet.ReadPacket;

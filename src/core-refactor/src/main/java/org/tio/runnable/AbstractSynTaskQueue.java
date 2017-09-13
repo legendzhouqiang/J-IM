@@ -1,9 +1,11 @@
 package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.CoreConstant;
 
 import java.util.concurrent.LinkedBlockingDeque;
+
+import static org.tio.common.CoreConstant.default_msg_queue_capacity;
+import static org.tio.common.CoreConstant.default_msg_queue_max_size;
 
 
 /**
@@ -13,13 +15,10 @@ import java.util.concurrent.LinkedBlockingDeque;
  * Desc: 抽象任务队列类
  */
 @Slf4j
-public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T> {
+public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T>, QueueOperation<T> {
 
-    /**
-     * 任务队列
-     */
 //    protected ConcurrentLinkedQueue<T> msgQueue = new ConcurrentLinkedQueue<>();
-    protected LinkedBlockingDeque<T> msgQueue = new LinkedBlockingDeque<>();
+    protected LinkedBlockingDeque<T> msgQueue = new LinkedBlockingDeque<>(default_msg_queue_capacity);
 
     protected Thread currentThread;
 
@@ -29,6 +28,7 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T> {
      * @param t
      * @return
      */
+    @Override
     public boolean addMsg(T t) {
         if (this.isCanceled()) {
             log.debug("taskQueue[{}] has been canceled.", getName());
@@ -36,9 +36,9 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T> {
         }
         boolean flag = msgQueue.offer(t);
         int size = msgQueue.size();
-        if (size > CoreConstant.default_max_msg_queue_size) {
+        if (size > default_msg_queue_max_size) {
             log.warn("taskQueue[{}] is overflow the defaultMaxSize[{}], and the current size of taskQueue[{}] is {}.",
-                    getName(), CoreConstant.default_max_msg_queue_size, getName(), size);
+                    getName(), default_msg_queue_max_size, getName(), size);
         }
         return flag;
     }
@@ -48,6 +48,7 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T> {
      *
      * @return
      */
+    @Override
     public boolean hasRemaining() {
         return msgQueue.size() != 0;
     }
@@ -55,6 +56,7 @@ public abstract class AbstractSynTaskQueue<T> implements SynRunnable<T> {
     /**
      * 清空处理的队列消息
      */
+    @Override
     public void clearMsgQueue() {
         msgQueue.clear();
     }

@@ -1,6 +1,6 @@
 package org.tio.runnable;
 
-import org.tio.common.ChannelContextImpl;
+import org.tio.common.channel.Channel;
 import org.tio.common.packet.SuperPacket;
 
 /**
@@ -11,9 +11,9 @@ import org.tio.common.packet.SuperPacket;
  */
 public class HandlerTaskQueue extends AbstractTaskQueue<SuperPacket> {
 
-    private ChannelContextImpl context;
+    private Channel context;
 
-    public HandlerTaskQueue(ChannelContextImpl context) {
+    public HandlerTaskQueue(Channel context) {
         this.context = context;
     }
 

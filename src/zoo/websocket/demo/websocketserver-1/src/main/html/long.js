@@ -77,7 +77,7 @@
     // a positive number, it overflows back into a negative).  Not handling this
     // case would often result in infinite recursion.
     //
-    // Common constant values ZERO, ONE, NEG_ONE, etc. are defined below the from*
+    // Common constant values ZERO, ONE, NEG_ONE, misc. are defined below the from*
     // methods on which they depend.
 
     /**
