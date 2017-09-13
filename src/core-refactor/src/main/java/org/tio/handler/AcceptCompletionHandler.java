@@ -38,7 +38,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
                     break;
                 }
                 channel.read(buffer, context, new ReadCompletionHandler());
-                context.getDecodeRunnable().addMsg(buffer.slice());
+//                context.getDecodeRunnable().addMsg(buffer.slice());
                 buffer.clear();
             }
         } catch (IOException e) {

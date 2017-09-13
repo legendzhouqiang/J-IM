@@ -2,7 +2,6 @@ package org.tio.common.channel;
 
 import org.tio.common.AttributeMap;
 import org.tio.common.ChannelStat;
-import org.tio.common.GroupContext;
 
 import java.nio.channels.AsynchronousSocketChannel;
 
@@ -28,5 +27,5 @@ public interface Channel extends AttributeMap {
 
     ChannelStat stat();
 
-    GroupContext channelContext();
+    ChannelContext channelContext();
 }

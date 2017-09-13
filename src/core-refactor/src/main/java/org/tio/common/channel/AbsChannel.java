@@ -1,7 +1,10 @@
-package org.tio.common;
+package org.tio.common.channel;
 
 import com.google.common.collect.Maps;
-import org.tio.common.channel.Channel;
+import org.tio.common.ChannelStat;
+import org.tio.common.CoreConstant;
+import org.tio.common.Node;
+import org.tio.common.TioParams;
 import org.tio.common.etc.TioLinkListener;
 
 import java.nio.channels.AsynchronousSocketChannel;
@@ -20,7 +23,7 @@ public abstract class AbsChannel implements Channel {
 
     private final static AtomicInteger idGenerator = new AtomicInteger();
 
-    protected boolean use_checksum = false;
+    protected boolean use_checksum = Boolean.getBoolean(TioParams.default_params_use_checksum);
 
     private final Map<String, Object> attributeContext = Maps.newConcurrentMap();
 

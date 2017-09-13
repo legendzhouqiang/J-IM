@@ -25,9 +25,8 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, Channel
             ChannelStat cStat = context.stat();
             cStat.setLatestTimeOfReceivedPacket(SystemTimer.currentTimeMillis());
             cStat.getReceivedBytes().addAndGet(result);
-            GroupStat gStat = context.channelContext().getStatistics();
+            GroupStat gStat = context.channelContext().stat();
             gStat.getCountOfReceivedBytes().addAndGet(result);
-
         } else {
 
         }

@@ -1,7 +1,6 @@
 package org.tio.server;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.AbsChannel;
 import org.tio.common.CoreConstant;
 import org.tio.common.Node;
 import org.tio.common.SystemTimer;

@@ -2,6 +2,7 @@ package org.tio.server;
 
 import org.tio.client.ClientChannelContext;
 import org.tio.common.*;
+import org.tio.common.channel.AbsChannelContext;
 import org.tio.concurrent.SetWithLock;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,10 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc: 服务端分组上下文
  */
-public class ServerGroupContext extends GroupContext {
+public class ServerGroupContext extends AbsChannelContext {
 
     /** 消息处理模式 */
-    private PacketHandlerMode packetHandlerMode = PacketHandlerMode.POOL;
+    private final PacketHandlerMode packetHandlerMode = PacketHandlerMode.POOL;
 
     /** 已经连接的:高活 */
     private SetWithLock<ChannelContextImpl> highActiveConnections;
