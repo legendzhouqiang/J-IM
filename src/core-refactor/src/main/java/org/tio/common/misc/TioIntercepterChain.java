@@ -1,7 +1,9 @@
 package org.tio.common.misc;
 
 import com.google.common.collect.Maps;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.tio.common.channel.Channel;
 
 import java.util.Map;
@@ -12,12 +14,22 @@ import java.util.Map;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc: 拦截器链
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TioIntercepterChain {
 
     private IntercepterChain head = new IntercepterChain(null);
     private IntercepterChain tail = head;
 
     private Map<Channel, IntercepterChain> errorMap = Maps.newConcurrentMap();
+
+    private static TioIntercepterChain chain;
+
+    public static TioIntercepterChain newInstance() {
+        if (chain == null) {
+            chain = new TioIntercepterChain();
+        }
+        return chain;
+    }
 
     public void addIntercepter(TioIntercepter intercepter) {
         IntercepterChain intercepterChain = new IntercepterChain(intercepter);
@@ -51,6 +63,7 @@ public class TioIntercepterChain {
         IntercepterChain curIntercepter = tail;
         if (errorMap.containsKey(channel)) {
             curIntercepter = errorMap.get(channel).getPre();
+            errorMap.remove(channel);
         }
         try {
             while (curIntercepter != null) {

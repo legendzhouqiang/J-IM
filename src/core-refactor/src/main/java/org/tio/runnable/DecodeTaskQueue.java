@@ -1,9 +1,10 @@
 package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
+import org.tio.coding.DefaultDecoder;
+import org.tio.coding.IDecoder;
 import org.tio.common.channel.Channel;
-import org.tio.common.packet.AbsPacket;
-import org.tio.common.packet.SuperPacket;
+import org.tio.common.packet.ReadPacket;
 import org.tio.util.CheckSumUtil;
 
 import java.nio.ByteBuffer;
@@ -25,70 +26,13 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
     @Override
     public void runTask(ByteBuffer byteBuffer) throws InterruptedException {
-        AbsPacket packet = new AbsPacket();
-        while (byteBuffer.remaining() > 1) {
-            short magic = byteBuffer.getShort();
-            if (SuperPacket.magic == magic) {
-                break;
-            }
-        }
 
-        while (!byteBuffer.hasRemaining()) {
-            byteBuffer = mergeByteBuffer(byteBuffer);
-        }
-        byte packetType = byteBuffer.get();
-        packet.setPacketType(packetType);
+        IDecoder decoder = DefaultDecoder.newInstance();
+        ReadPacket packet = decoder.decode(byteBuffer, msgQueue);
 
-        while (!byteBuffer.hasRemaining()) {
-            byteBuffer = mergeByteBuffer(byteBuffer);
-        }
-        byte reserved = byteBuffer.get();
-        packet.setReserved(reserved);
-
-        while (!byteBuffer.hasRemaining()) {
-            byteBuffer = mergeByteBuffer(byteBuffer);
-        }
-        byte optLen = byteBuffer.get();
-        packet.setOptionalLength(optLen);
-
-        while (!(byteBuffer.remaining() > 2)) {
-            byteBuffer = mergeByteBuffer(byteBuffer);
-        }
-        short bodyLen = byteBuffer.get();
-        packet.setBodyLength(bodyLen);
-
-        while (!byteBuffer.hasRemaining()) {
-            byteBuffer = mergeByteBuffer(byteBuffer);
-        }
-        byte checkSum = byteBuffer.get();
-        packet.setCheckSum(checkSum);
-
-        while (!(byteBuffer.remaining() > optLen)) {
-            byteBuffer = mergeByteBuffer(byteBuffer);
-        }
-        byte[] optData = new byte[optLen];
-        byteBuffer.get(optData, 0, optLen);
-
-        while (!(byteBuffer.remaining() > 2)) {
-            byteBuffer = mergeByteBuffer(byteBuffer);
-        }
-        short packetSeq = byteBuffer.getShort();
-
-        while (!(byteBuffer.remaining() > bodyLen - 2)) {
-            byteBuffer = mergeByteBuffer(byteBuffer);
-        }
-        byte[] bodyData = new byte[bodyLen - 2];
-        byteBuffer.get(bodyData, 0, bodyLen - 2);
-
-        if (byteBuffer.hasRemaining()) {
-            boolean flag = msgQueue.offerFirst(byteBuffer.slice());
-            if (!flag) {
-                log.warn("put the left ByteBuffer into msgQueue failed.");
-            }
-        }
         if (context.useChecksum()) {
             byte[][] bytes = {
-                    packet.header(), optData, new byte[]{(byte) (packetSeq >> 8), (byte) packetSeq}, bodyData
+                    packet.header(), packet.optional(), new byte[]{(byte) (packet.packetSeq() >> 8), (byte) packet.packetSeq()}, packet.body()
             };
             if (CheckSumUtil.judgeCheckSum(bytes)) {
                 context.getHandlerRunnable().addMsg(packet);
@@ -96,16 +40,5 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
                 log.warn("validate checkSum failed, and the packet[{}] will be discard.", packet.toString());
             }
         }
-    }
-
-    private ByteBuffer mergeByteBuffer(ByteBuffer byteBuffer) throws InterruptedException {
-        int remaining = byteBuffer.remaining();
-        ByteBuffer nextBuffer = msgQueue.take();
-        int capacity = remaining + nextBuffer.capacity();
-        ByteBuffer newByteBuffer = ByteBuffer.allocateDirect(capacity);
-        newByteBuffer.put(byteBuffer.slice());
-        newByteBuffer.put(nextBuffer);
-        newByteBuffer.flip();
-        return newByteBuffer;
     }
 }
