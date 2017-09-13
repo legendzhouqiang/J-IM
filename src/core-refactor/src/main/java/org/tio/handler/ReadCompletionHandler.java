@@ -2,7 +2,7 @@ package org.tio.handler;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.Channel;
+import org.tio.common.channel.Channel;
 import org.tio.common.ChannelStat;
 import org.tio.common.GroupStat;
 import org.tio.common.SystemTimer;

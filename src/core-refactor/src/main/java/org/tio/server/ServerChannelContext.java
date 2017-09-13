@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Desc:
  */
 @Slf4j
-public class ServerChannelContext extends AbsChannel {
+public class ServerChannelContext {
 
     private String ip;
 

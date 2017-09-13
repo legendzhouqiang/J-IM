@@ -1,7 +1,10 @@
-package org.tio.common;
+package org.tio.common.channel;
+
+import org.tio.common.AttributeMap;
+import org.tio.common.ChannelStat;
+import org.tio.common.GroupContext;
 
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.List;
 
 import static org.tio.common.CoreConstant.ConnectionStatus;
 
@@ -11,28 +14,19 @@ import static org.tio.common.CoreConstant.ConnectionStatus;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public interface Channel {
+public interface Channel extends AttributeMap {
 
     Integer id();
 
-    Object getAttribute(String name);
-
-    Object setAttribute(String name, Object value);
-
-    void removeAttribute(String name);
-
-    List<String> getAttributeNames();
-
     void bind(AsynchronousSocketChannel channel);
 
-    ConnectionStatus getStatus();
+    ConnectionStatus status();
 
-    void setStatus(ConnectionStatus status);
+    void changeStatus(ConnectionStatus status);
 
     void invalidate();
 
     ChannelStat stat();
 
     GroupContext channelContext();
-
 }

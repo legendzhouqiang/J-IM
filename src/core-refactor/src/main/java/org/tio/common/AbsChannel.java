@@ -1,9 +1,9 @@
 package org.tio.common;
 
 import com.google.common.collect.Maps;
+import org.tio.common.channel.Channel;
 import org.tio.common.etc.TioLinkListener;
 
-import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +37,12 @@ public abstract class AbsChannel implements Channel {
     protected AsynchronousSocketChannel channel;
 
     @Override
-    public CoreConstant.ConnectionStatus getStatus() {
+    public CoreConstant.ConnectionStatus status() {
         return status;
     }
 
     @Override
-    public void setStatus(CoreConstant.ConnectionStatus status) {
+    public void changeStatus(CoreConstant.ConnectionStatus status) {
         this.status = status;
     }
 

@@ -2,7 +2,7 @@ package org.tio.handler;
 
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.Channel;
+import org.tio.common.channel.Channel;
 import org.tio.common.CoreConstant;
 
 import java.io.IOException;
@@ -32,9 +32,9 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
             ByteBuffer buffer = ByteBuffer.allocateDirect(CoreConstant.default_receive_buf_size);
             buffer.order(CoreConstant.default_byte_order);
             while (true) {
-                if (CoreConstant.ConnectionStatus.closing.equals(context.getStatus())
-                        || CoreConstant.ConnectionStatus.closed.equals(context.getStatus())
-                        || CoreConstant.ConnectionStatus.invalid.equals(context.getStatus())) {
+                if (CoreConstant.ConnectionStatus.closing.equals(context.status())
+                        || CoreConstant.ConnectionStatus.closed.equals(context.status())
+                        || CoreConstant.ConnectionStatus.invalid.equals(context.status())) {
                     break;
                 }
                 channel.read(buffer, context, new ReadCompletionHandler());
