@@ -3,7 +3,7 @@ package org.tio.client;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.*;
-import org.tio.handler.ConnectionCompletionHandler;
+import org.tio.common.handler.ConnectionCompletionHandler;
 import org.tio.runnable.DecodeTaskQueue;
 import org.tio.runnable.EncodeTaskQueue;
 import org.tio.runnable.HandlerTaskQueue;

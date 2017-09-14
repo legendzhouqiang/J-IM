@@ -74,8 +74,8 @@ public class TioIntercepterChain {
                 curIntercepter.getIntercepter().postHandle(channel);
                 curIntercepter = curIntercepter.getPre();
             }
-        } catch (TioException e) {
-            curIntercepter.getIntercepter().abort(channel, e);
+        } catch (TioException exception) {
+            curIntercepter.getIntercepter().abort(channel, exception);
         }
     }
 

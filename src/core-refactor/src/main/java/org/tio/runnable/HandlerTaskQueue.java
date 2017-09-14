@@ -2,6 +2,7 @@ package org.tio.runnable;
 
 import org.tio.common.channel.Channel;
 import org.tio.common.packet.SuperPacket;
+import org.tio.runnable.common.AbstractTaskQueue;
 
 /**
  * Copyright (c) for darkidiot

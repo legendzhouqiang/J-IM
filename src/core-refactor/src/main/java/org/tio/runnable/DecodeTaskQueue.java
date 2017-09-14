@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.tio.coding.IDecoder;
 import org.tio.common.IHandleStream;
 import org.tio.common.packet.ReadPacket;
+import org.tio.runnable.common.AbstractTaskQueue;
 import org.tio.util.CheckSumUtil;
 
 import java.nio.ByteBuffer;

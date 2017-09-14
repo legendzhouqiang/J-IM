@@ -1,6 +1,7 @@
 package org.tio.executor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.tio.runnable.common.SynRunnable;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Future;
@@ -11,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * Copyright (c) for 谭耀武
  * Date:2017/8/10
  * Author: <a href="tywo45@163.com">谭耀武</a>
- * Desc: 线程池-> {@link org.tio.runnable.SynRunnable}
+ * Desc: 线程池-> {@link SynRunnable}
  */
 @Slf4j
 public class ThreadPoolExecutor extends java.util.concurrent.ThreadPoolExecutor {

@@ -3,6 +3,7 @@ package org.tio.runnable;
 import lombok.extern.slf4j.Slf4j;
 import org.tio.coding.IEncoder;
 import org.tio.common.packet.ReadPacket;
+import org.tio.runnable.common.AbstractTaskQueue;
 import org.tio.util.CheckSumUtil;
 
 import java.nio.ByteBuffer;

@@ -1,6 +1,8 @@
-package org.tio.common;
+package org.tio.common.channel;
 
 import lombok.Data;
+import org.tio.common.CoreConstant;
+import org.tio.common.SystemTimer;
 
 import java.util.concurrent.atomic.AtomicLong;
 

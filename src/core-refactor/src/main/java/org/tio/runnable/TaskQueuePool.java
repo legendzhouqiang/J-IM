@@ -5,6 +5,7 @@ import org.tio.common.CoreConstant;
 import org.tio.common.misc.TioException;
 import org.tio.concurrent.MapWithLock;
 import org.tio.robin.*;
+import org.tio.runnable.common.AbstractTaskQueue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,8 +62,9 @@ public class TaskQueuePool<T extends AbstractTaskQueue> {
             return this;
         } else {
             throw new TioException(TioException.ExceptionCodeEnum.Illegal_Operation_Error.code);
-        }
+        }]
     }
+
     public TaskQueuePool<T> putIntoPool(String name, T t) throws TioException {
         if (roundRobin.equals(CoreConstant.RoundRobin.round_robin) && robin instanceof IRoundRobin) {
             ReadWriteLock lock = name4TaskQueueMap.getLock();
@@ -112,7 +114,11 @@ public class TaskQueuePool<T extends AbstractTaskQueue> {
         }
     }
 
-    public void close() {
+    public void start() {
+
+    }
+
+    public void stop() {
         ReadWriteLock lock = name4TaskQueueMap.getLock();
         Lock readLock = lock.writeLock();
         try {

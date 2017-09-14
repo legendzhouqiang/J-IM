@@ -1,7 +1,8 @@
 package org.tio.runnable;
 
 import org.tio.common.channel.Channel;
-import org.tio.handler.WriteCompletionHandler;
+import org.tio.common.handler.WriteCompletionHandler;
+import org.tio.runnable.common.AbstractTaskQueue;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;

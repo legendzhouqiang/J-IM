@@ -1,10 +1,11 @@
-package org.tio.server;
+package org.tio.common.channel;
 
 import lombok.extern.slf4j.Slf4j;
 import org.tio.common.CoreConstant;
 import org.tio.common.Node;
 import org.tio.common.SystemTimer;
-import org.tio.handler.AcceptCompletionHandler;
+import org.tio.common.handler.AcceptCompletionHandler;
+import org.tio.server.ServerGroupContext;
 import org.tio.util.StringUtil;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Desc:
  */
 @Slf4j
-public class ServerChannelContext {
+public class ServerChannel {
 
     private String ip;
 
@@ -37,7 +38,7 @@ public class ServerChannelContext {
 
     private Node serverNode = null;
 
-    public ServerChannelContext() throws IOException {
+    public ServerChannel() throws IOException {
         channelGroup = AsynchronousChannelGroup.withThreadPool(groupContext.getAioExecutor());
         long start = SystemTimer.currentTimeMillis();
         this.asynchronousServerSocketChannel = AsynchronousServerSocketChannel.open(channelGroup);

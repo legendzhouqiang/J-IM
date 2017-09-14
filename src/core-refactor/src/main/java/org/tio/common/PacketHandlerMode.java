@@ -23,6 +23,8 @@ public enum PacketHandlerMode {
                 return SINGLE_THREAD;
             case 2:
                 return QUEUE;
+            case 3:
+                return POOL;
             default:
                 return null;
         }

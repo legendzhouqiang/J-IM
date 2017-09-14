@@ -1,7 +1,8 @@
-package org.tio.runnable;
+package org.tio.runnable.common;
 
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
+import org.tio.runnable.common.AbstractSynTaskQueue;
 
 /**
  * Copyright (c) for darkidiot

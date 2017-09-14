@@ -1,8 +1,6 @@
 package org.tio.common.channel;
 
-import org.tio.common.AttributeMap;
-import org.tio.common.ChannelStat;
-
+import java.io.IOException;
 import java.nio.channels.AsynchronousSocketChannel;
 
 import static org.tio.common.CoreConstant.ConnectionStatus;
@@ -17,7 +15,7 @@ public interface Channel extends AttributeMap {
 
     Integer id();
 
-    void bind(AsynchronousSocketChannel channel);
+    void bind(AsynchronousSocketChannel channel) throws IOException;
 
     ConnectionStatus status();
 

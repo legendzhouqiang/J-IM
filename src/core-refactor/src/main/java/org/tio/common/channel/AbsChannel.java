@@ -1,13 +1,13 @@
 package org.tio.common.channel;
 
 import com.google.common.collect.Maps;
-import org.tio.common.ChannelStat;
+import lombok.extern.slf4j.Slf4j;
 import org.tio.common.CoreConstant;
 import org.tio.common.Node;
 import org.tio.common.TioParams;
-import org.tio.common.misc.TioIntercepter;
-import org.tio.common.misc.TioLinkListener;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +20,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
+@Slf4j
 public abstract class AbsChannel implements Channel {
 
     private final static AtomicInteger idGenerator = new AtomicInteger();
 
+    // 不采取volatile方式变量,允许小范围进程间不可见
     protected boolean use_checksum = Boolean.getBoolean(TioParams.default_params_use_checksum);
 
     private final Map<String, Object> attributeContext = Maps.newConcurrentMap();
@@ -34,11 +36,13 @@ public abstract class AbsChannel implements Channel {
 
     protected ChannelStat stat = new ChannelStat();
 
-    protected TioLinkListener linkListener;
+//    protected TioLinkListener linkListener;
+//    protected TioIntercepter intercepter;
+    // TODO: 2017/9/14 需要移动到channelcontext
 
-    protected TioIntercepter intercepter;
+    private Node remoteNode;
 
-    protected Node node = null;
+    private Node localNode;
 
     protected AsynchronousSocketChannel channel;
 
@@ -83,7 +87,12 @@ public abstract class AbsChannel implements Channel {
     }
 
     @Override
-    public void bind(AsynchronousSocketChannel channel) {
+    public void bind(AsynchronousSocketChannel channel) throws IOException {
+        InetSocketAddress localAddress = (InetSocketAddress) channel.getLocalAddress();
+        localNode = new Node(localAddress.getHostName(), localAddress.getPort());
+        InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
+        remoteNode = new Node(remoteAddress.getHostName(), remoteAddress.getPort());
+        log.info("Set up a new connection ==> [ {} to {} ]", localNode, remoteNode);
         this.channel = channel;
     }
 
