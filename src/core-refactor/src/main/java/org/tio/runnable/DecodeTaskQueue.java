@@ -1,13 +1,10 @@
 package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.coding.DefaultDecoder;
 import org.tio.coding.IDecoder;
 import org.tio.common.channel.Channel;
 import org.tio.common.packet.ReadPacket;
 import org.tio.util.CheckSumUtil;
-
-import java.nio.ByteBuffer;
 
 /**
  * Copyright (c) for darkidiot
@@ -16,7 +13,7 @@ import java.nio.ByteBuffer;
  * Desc:  t-io解码器
  */
 @Slf4j
-public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
+public class DecodeTaskQueue extends AbstractTaskQueue<IDecoder> {
 
     private Channel context;
 
@@ -25,10 +22,9 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
     }
 
     @Override
-    public void runTask(ByteBuffer byteBuffer) throws InterruptedException {
+    public void runTask(IDecoder decoder) throws InterruptedException {
 
-        IDecoder decoder = DefaultDecoder.newInstance();
-        ReadPacket packet = decoder.decode(byteBuffer, msgQueue);
+        ReadPacket packet = decoder.decode(msgQueue);
 
         if (context.useChecksum()) {
             byte[][] bytes = {

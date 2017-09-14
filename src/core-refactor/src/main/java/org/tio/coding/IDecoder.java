@@ -13,6 +13,6 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public interface IDecoder {
 
-    ReadPacket decode(ByteBuffer buffer, LinkedBlockingDeque<ByteBuffer> msgQueue) throws InterruptedException;
+    ReadPacket decode(LinkedBlockingDeque<ByteBuffer> msgQueue) throws InterruptedException;
 
 }

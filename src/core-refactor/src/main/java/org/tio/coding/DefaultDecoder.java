@@ -27,7 +27,8 @@ public class DefaultDecoder implements IDecoder {
     }
 
     @Override
-    public ReadPacket decode(ByteBuffer buffer, LinkedBlockingDeque<ByteBuffer> msgQueue) throws InterruptedException {
+    public ReadPacket decode(LinkedBlockingDeque<ByteBuffer> msgQueue) throws InterruptedException {
+        ByteBuffer buffer = msgQueue.take();
         AbsPacket packet = new AbsPacket();
         while (buffer.remaining() > 1) {
             short magic = buffer.getShort();
