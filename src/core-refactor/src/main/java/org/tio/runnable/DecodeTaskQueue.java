@@ -2,9 +2,11 @@ package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
 import org.tio.coding.IDecoder;
-import org.tio.common.channel.Channel;
+import org.tio.common.IHandleStream;
 import org.tio.common.packet.ReadPacket;
 import org.tio.util.CheckSumUtil;
+
+import java.nio.ByteBuffer;
 
 /**
  * Copyright (c) for darkidiot
@@ -13,25 +15,34 @@ import org.tio.util.CheckSumUtil;
  * Desc:  t-io解码器
  */
 @Slf4j
-public class DecodeTaskQueue extends AbstractTaskQueue<IDecoder> {
+public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
-    private Channel context;
+    private IHandleStream stream;
 
-    public DecodeTaskQueue(Channel context) {
-        this.context = context;
+    private boolean useChecksum;
+
+    private IDecoder decoder;
+
+    public DecodeTaskQueue(IHandleStream stream, boolean useChecksum) {
+        this.stream = stream;
+        this.useChecksum = useChecksum;
+    }
+
+    public void setDecoder(IDecoder decoder) {
+        this.decoder = decoder;
     }
 
     @Override
-    public void runTask(IDecoder decoder) throws InterruptedException {
+    public void runTask(ByteBuffer byteBuffer) throws InterruptedException {
 
-        ReadPacket packet = decoder.decode(msgQueue);
+        ReadPacket packet = decoder.decode(byteBuffer, msgQueue);
 
-        if (context.useChecksum()) {
+        if (useChecksum) {
             byte[][] bytes = {
                     packet.header(), packet.optional(), new byte[]{(byte) (packet.packetSeq() >> 8), (byte) packet.packetSeq()}, packet.body()
             };
             if (CheckSumUtil.judgeCheckSum(bytes)) {
-                context.getHandlerRunnable().addMsg(packet);
+                stream.handlePacket(packet);
             } else {
                 log.warn("validate checkSum failed, and the packet[{}] will be discard.", packet.toString());
             }

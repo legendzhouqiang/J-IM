@@ -1,9 +1,7 @@
 package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tio.common.CoreConstant;
-import org.tio.common.channel.Channel;
-import org.tio.common.packet.AbsPacket;
+import org.tio.coding.IEncoder;
 import org.tio.common.packet.ReadPacket;
 import org.tio.util.CheckSumUtil;
 
@@ -18,10 +16,16 @@ import java.nio.ByteBuffer;
 @Slf4j
 public class EncodeTaskQueue extends AbstractTaskQueue<ReadPacket> {
 
-    private Channel context;
 
-    public EncodeTaskQueue(Channel context) {
-        this.context = context;
+    private IEncoder encoder;
+
+
+    public EncodeTaskQueue() {
+
+    }
+
+    public void setEncoder(IEncoder encoder) {
+        this.encoder = encoder;
     }
 
     @Override
@@ -31,12 +35,7 @@ public class EncodeTaskQueue extends AbstractTaskQueue<ReadPacket> {
             byte checkSum = CheckSumUtil.calcCheckSum(bytes);
             packet.setCheckSum(checkSum);
         }
-        ByteBuffer buffer = ByteBuffer.allocateDirect(packet.header().length + packet.optional().length + 2 + packet.body().length);
-        buffer.order(CoreConstant.default_byte_order);
-        buffer.put(packet.header());
-        buffer.put(packet.optional());
-        buffer.put(new byte[]{(byte) (packet.packetSeq() >> 8), (byte) packet.packetSeq()});
-        buffer.put(packet.body());
+        ByteBuffer buffer = encoder.encode(packet);
         SendTaskQueue sendRunnable = context.getSendRunnable();
         boolean flag = sendRunnable.addMsg(buffer);
         if (!flag) {
