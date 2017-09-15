@@ -9,7 +9,7 @@ import lombok.ToString;
  * Desc:
  */
 @ToString
-public class AbsPacket implements ReadPacket, WritePacket {
+public class AbsPacket implements ReadPacket, WritePacket, CheckSumSupport {
 
     protected byte type;
 
@@ -83,14 +83,13 @@ public class AbsPacket implements ReadPacket, WritePacket {
     }
 
     @Override
-    public byte checkSum() {
-        return checkSum;
+    public byte[][] checkSum() {
+        return new byte[][]{this.header(), this.optional(), new byte[]{(byte) (this.packetSeq() >> 8), (byte) this.packetSeq()}, this.body()};
     }
 
     @Override
-    public WritePacket setCheckSum(byte checkSum) {
+    public void setCheckSum(byte checkSum) {
         this.checkSum = checkSum;
-        return this;
     }
 
     @Override

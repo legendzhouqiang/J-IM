@@ -6,7 +6,7 @@ package org.tio.coding;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public interface Iterator {
+public interface Iterator<T> {
 
     /**
      * 是否还有下一个
@@ -18,5 +18,5 @@ public interface Iterator {
      * 下一个元素
      * @return
      */
-    Object next();
+    T next();
 }

@@ -15,59 +15,27 @@ public class TlvDecoder {
         return this;
     }
 
-
     public Iterator iterater() {
         return new tlvIterator();
     }
 
-    private class tlvIterator implements Iterator {
+    private class tlvIterator implements Iterator<ITlv> {
 
-        int len = 0;
+        int length = 0;
 
         @Override
         public boolean hasNext() {
-            if (len < data.length) {
-                return true;
-            }
-            return false;
+            return length < data.length;
         }
 
         @Override
-        public Itlv next() {
-            byte type = data[len++];
-            byte len = data[this.len++];
+        public ITlv next() {
+            byte type = data[length++];
+            byte len = data[this.length++];
             byte[] val = new byte[len];
-            System.arraycopy(data, this.len, val, 0, len);
-            this.len += len;
+            System.arraycopy(data, this.length, val, 0, len);
+            this.length += len;
             return new Tlv(type, len, val);
-        }
-    }
-
-    private class Tlv implements Itlv {
-
-        private byte type;
-        private byte len;
-        private byte[] value;
-
-        private Tlv(byte type, byte len, byte[] value) {
-            this.type = type;
-            this.len = len;
-            this.value = value;
-        }
-
-        @Override
-        public byte type() {
-            return type;
-        }
-
-        @Override
-        public byte len() {
-            return len;
-        }
-
-        @Override
-        public byte[] val() {
-            return value;
         }
     }
 }
