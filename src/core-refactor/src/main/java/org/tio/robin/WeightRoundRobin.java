@@ -157,7 +157,7 @@ public class WeightRoundRobin implements IWeightRoundRobin{
         }
     }
 
-    static class Node {
+    private class Node {
         String value;
         int weight;
 

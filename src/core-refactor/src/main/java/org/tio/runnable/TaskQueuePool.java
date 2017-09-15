@@ -62,7 +62,7 @@ public class TaskQueuePool<T extends AbstractTaskQueue> {
             return this;
         } else {
             throw new TioException(TioException.ExceptionCodeEnum.Illegal_Operation_Error.code);
-        }]
+        }
     }
 
     public TaskQueuePool<T> putIntoPool(String name, T t) throws TioException {
