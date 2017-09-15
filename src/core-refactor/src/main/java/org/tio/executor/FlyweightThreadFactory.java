@@ -1,26 +1,28 @@
 package org.tio.executor;
 
+import com.google.common.collect.Maps;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Copyright (c) for 谭耀武
+ * Copyright (c) for darkidiot
  * Date:2017/8/10
- * Author: <a href="tywo45@163.com">谭耀武</a>
- * Desc: 线程工程类
+ * Author: <a href="darkidiot@icloud.com">darkidiot</a>
+ * Desc: 线程工厂类
  */
 public class FlyweightThreadFactory implements ThreadFactory {
 
 	/** The thread factory name. */
-    private String name = null;
+    private String name;
 
 	/** The map of name and thread factory. */
-	private static Map<String, FlyweightThreadFactory> mapOfNameAndThreadFactory = new HashMap<>();
+	private static Map<String, FlyweightThreadFactory> mapOfNameAndThreadFactory = Maps.newHashMap();
 
 	/** The map of name and atomic integer. */
-	private static Map<String, AtomicInteger> mapOfNameAndAtomicInteger = new HashMap<>();
+	private static Map<String, AtomicInteger> mapOfNameAndAtomicInteger = Maps.newHashMap();
 
 	/** The priority. */
 	private int priority = Thread.NORM_PRIORITY;

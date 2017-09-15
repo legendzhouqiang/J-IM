@@ -22,7 +22,7 @@ public class DecodeTaskQueue extends AbstractTaskQueue<ByteBuffer> {
 
     private boolean useChecksum;
 
-    private IDecoder decoder;
+    private IDecoder<ReadPacket> decoder;
 
     public DecodeTaskQueue(IHandleStream stream, boolean useChecksum) {
         this.stream = stream;

@@ -14,7 +14,7 @@ import java.nio.ByteBuffer;
  * Desc:
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DefaultEncoder implements IEncoder {
+public class DefaultEncoder implements IEncoder<ReadPacket> {
 
     private static IEncoder encoder = new DefaultEncoder();
 

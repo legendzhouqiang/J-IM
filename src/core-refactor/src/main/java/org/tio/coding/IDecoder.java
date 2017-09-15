@@ -1,7 +1,5 @@
 package org.tio.coding;
 
-import org.tio.common.packet.ReadPacket;
-
 import java.nio.ByteBuffer;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -11,8 +9,8 @@ import java.util.concurrent.LinkedBlockingDeque;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public interface IDecoder {
+public interface IDecoder<packet> {
 
-    ReadPacket decode(ByteBuffer buffer, LinkedBlockingDeque<ByteBuffer> msgQueue) throws InterruptedException;
+    packet decode(ByteBuffer buffer, LinkedBlockingDeque<ByteBuffer> msgQueue) throws InterruptedException;
 
 }

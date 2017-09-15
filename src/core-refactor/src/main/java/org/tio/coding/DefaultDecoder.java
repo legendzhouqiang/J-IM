@@ -18,7 +18,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DefaultDecoder implements IDecoder {
+public class DefaultDecoder implements IDecoder<ReadPacket> {
 
     private static IDecoder decoder = new DefaultDecoder();
 

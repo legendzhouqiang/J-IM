@@ -1,7 +1,9 @@
 package org.tio.executor;
 
+import com.google.common.collect.Maps;
 import org.tio.robin.RoundRobin;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -14,7 +16,7 @@ public class TaskQueueContainer<T> {
     /** 名称 */
     private String name;
     /** 任务队列容器 */
-    private final ConcurrentHashMap<String, T> cacheMap = new ConcurrentHashMap<>();
+    private final Map<String, T> cacheMap = Maps.newConcurrentMap();
 
     private RoundRobin robin;
 

@@ -58,6 +58,7 @@ public class WeightRoundRobin implements IWeightRoundRobin{
         return roundRobin;
     }
 
+    @Override
     public IWeightRoundRobin expand(String val, int weight) {
         ReadWriteLock lock = arr.getLock();
         Lock writeLock = lock.writeLock();
@@ -75,6 +76,7 @@ public class WeightRoundRobin implements IWeightRoundRobin{
         return this;
     }
 
+    @Override
     public IWeightRoundRobin shrink(String val) {
         ReadWriteLock lock = arr.getLock();
         Lock writeLock = lock.writeLock();
@@ -123,6 +125,7 @@ public class WeightRoundRobin implements IWeightRoundRobin{
         return max;
     }
 
+    @Override
     public String round() {
         if (maxWeight == 0) {
             return null;
