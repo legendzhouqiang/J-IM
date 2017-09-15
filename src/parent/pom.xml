@@ -62,14 +62,14 @@
 		<commons-compress.version>1.14</commons-compress.version>
 		<fastjson.version>1.2.38</fastjson.version>
 		<testng.version>6.11</testng.version>
-		<hutool.version>3.1.0</hutool.version>
+		<hutool.version>3.1.1</hutool.version>
 
 		<protobuf-java.version>3.4.0</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<protobuf-java-format.version>1.4</protobuf-java-format.version>
 
 		<protostuff.version>1.6.0</protostuff.version>
-		<redisson.version>3.5.1</redisson.version>
+		<redisson.version>3.5.3</redisson.version>
 
 	</properties>
 
