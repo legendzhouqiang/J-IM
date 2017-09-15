@@ -15,7 +15,6 @@ public class PropInit {
 	public static void init() {
 		try {
 			PropKit.use("app.properties");
-			//			PropKit.use("app-env.properties");
 		} catch (Exception e2) {
 			log.error(e2.toString(), e2);
 		}

@@ -91,6 +91,10 @@ public class HttpRequest extends HttpPacket {
 	public RequestBodyFormat getBodyFormat() {
 		return bodyFormat;
 	}
+	
+	public String getUserAgent() {
+		return this.headers.get(org.tio.http.common.HttpConst.RequestHeaderKey.User_Agent);
+	}
 
 	/**
 	 * @return the bodyString

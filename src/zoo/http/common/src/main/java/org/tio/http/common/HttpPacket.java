@@ -1,7 +1,9 @@
 package org.tio.http.common;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.tio.core.intf.Packet;
 
@@ -24,7 +26,48 @@ public class HttpPacket extends Packet {
 	public static void main(String[] args) {
 
 	}
+	
+	private Map<String, Serializable> props = new ConcurrentHashMap<>();
+	
+	/**
+	 * 获取请求属性
+	 * @param key
+	 * @return
+	 * @author tanyaowu
+	 */
+	public Object getAttribute(String key) {
+		return props.get(key);
+	}
+	
+	public Object getAttribute(String key, Serializable defaultValue) {
+		Serializable ret = props.get(key);
+		if (ret == null) {
+			return defaultValue;
+		}
+		return ret;
+	}
+	
+	/**
+	 *
+	 * @param key
+	 * @param httpConfig
+	 * @author tanyaowu
+	 */
+	public void removeAttribute(String key) {
+		props.remove(key);
+	}
 
+	/**
+	 * 设置请求属性
+	 * @param key
+	 * @param value
+	 * @param httpConfig
+	 * @author tanyaowu
+	 */
+	public void setAttribute(String key, Serializable value) {
+		props.put(key, value);
+	}
+	
 	protected byte[] body;
 
 	private String headerString;

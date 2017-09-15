@@ -2,6 +2,8 @@ package org.tio.utils.cache.guavaredis;
 
 import java.io.Serializable;
 
+import org.tio.utils.Uuid;
+
 import com.xiaoleilu.hutool.util.RandomUtil;
 
 /**
@@ -26,7 +28,7 @@ public class CacheChangedVo implements Serializable {
 
 	private String key;
 
-	private String clientId = CLIENTID;
+	private String clientId = Uuid.getWorkid() + "_" + Uuid.getDatacenterid() + "_" + CLIENTID;
 
 	//	private String serverId;
 	private CacheChangeType type;
@@ -36,6 +38,7 @@ public class CacheChangedVo implements Serializable {
 	 * @author tanyaowu
 	 */
 	public CacheChangedVo() {
+		super();
 	}
 
 	//	private
@@ -46,7 +49,7 @@ public class CacheChangedVo implements Serializable {
 	 * @author tanyaowu
 	 */
 	public CacheChangedVo(String cacheName, CacheChangeType type) {
-		super();
+		this();
 		this.cacheName = cacheName;
 		this.type = type;
 	}
@@ -58,7 +61,7 @@ public class CacheChangedVo implements Serializable {
 	 * @author tanyaowu
 	 */
 	public CacheChangedVo(String cacheName, String key, CacheChangeType type) {
-		super();
+		this();
 		this.cacheName = cacheName;
 		this.key = key;
 		this.type = type;

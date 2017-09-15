@@ -112,7 +112,7 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	@Override
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
 		HttpRequest request = (HttpRequest) packet;
-		HttpResponse httpResponse = requestHandler.handler(request, request.getRequestLine());
+		HttpResponse httpResponse = requestHandler.handler(request);
 		Aio.send(channelContext, httpResponse);
 	}
 

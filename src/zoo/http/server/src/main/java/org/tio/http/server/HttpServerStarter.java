@@ -19,8 +19,6 @@ import org.tio.utils.cache.ICache;
 import org.tio.utils.cache.guava.GuavaCache;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
-import com.xiaoleilu.hutool.io.FileUtil;
-
 /**
  *
  * @author tanyaowu
@@ -53,6 +51,12 @@ public class HttpServerStarter {
 	private AioServer aioServer = null;
 
 	private IHttpRequestHandler requestHandler;
+	
+	private Routes routes;
+
+	public Routes getRoutes() {
+		return routes;
+	}
 
 	public HttpServerStarter(HttpConfig httpConfig, IHttpRequestHandler requestHandler) {
 		this(httpConfig, requestHandler, null, null);
@@ -85,7 +89,7 @@ public class HttpServerStarter {
 		//		}
 
 		//		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };
-		Routes routes = new Routes(scanPackages);
+		routes = new Routes(scanPackages);
 		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		requestHandler.setHttpServerListener(httpServerListener);
 

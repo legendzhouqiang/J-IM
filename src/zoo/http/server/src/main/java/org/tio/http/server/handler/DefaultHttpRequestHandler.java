@@ -147,9 +147,11 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	}
 
 	@Override
-	public HttpResponse handler(HttpRequest request, RequestLine requestLine) throws Exception {
+	public HttpResponse handler(HttpRequest request) throws Exception {
 		HttpResponse ret = null;
+		RequestLine requestLine = request.getRequestLine();
 		try {
+			
 			processCookieBeforeHandler(request, requestLine);
 			HttpSession httpSession = request.getHttpSession();//(HttpSession) channelContext.getAttribute();
 
@@ -165,7 +167,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					return ret;
 				}
 			}
-
+			requestLine  = request.getRequestLine();
 			//			if (ret != null) {
 			//				return ret;
 			//			}

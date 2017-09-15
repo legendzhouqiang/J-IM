@@ -50,13 +50,14 @@ public class GuavaRedisCache implements ICache {
 						public void onMessage(String channel, CacheChangedVo cacheChangedVo) {
 							String clientid = cacheChangedVo.getClientId();
 							if (Objects.equals(CacheChangedVo.CLIENTID, clientid)) {
-								log.info("自己发布的消息");
+								log.info("自己发布的消息,{}", clientid);
 								return;
 							}
 
 							String cacheName = cacheChangedVo.getCacheName();
 							GuavaRedisCache guavaRedisCache = GuavaRedisCache.getCache(cacheName);
 							if (guavaRedisCache == null) {
+								log.warn("不能根据cacheName[{}]找到GuavaRedisCache对象", cacheName);
 								return;
 							}
 

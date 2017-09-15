@@ -25,7 +25,7 @@ public class JfinalInit {
 
 	public static void init() {
 		try {
-			PropKit.use("app.properties");
+			PropInit.init();
 		} catch (Exception e2) {
 			log.error(e2.toString(), e2);
 		}

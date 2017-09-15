@@ -1,6 +1,5 @@
 package org.tio.http.common.handler;
 
-import org.tio.core.ChannelContext;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.RequestLine;
@@ -14,12 +13,11 @@ public interface IHttpRequestHandler {
 	/**
 	 *
 	 * @param packet
-	 * @param requestLine
 	 * @return
 	 * @throws Exception
 	 * @author tanyaowu
 	 */
-	public HttpResponse handler(HttpRequest packet, RequestLine requestLine) throws Exception;
+	public HttpResponse handler(HttpRequest packet) throws Exception;
 
 	/**
 	 *
