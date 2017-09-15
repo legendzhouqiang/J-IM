@@ -497,6 +497,10 @@ public abstract class Aio {
 		}
 	}
 
+	public static void sendToAll(GroupContext groupContext, Packet packet) {
+		sendToAll(groupContext, packet, null);
+	}
+	
 	/**
 	 * 发消息到所有连接
 	 * @param groupContext
@@ -560,7 +564,7 @@ public abstract class Aio {
 	private static Boolean sendToGroup(GroupContext groupContext, String group, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
 		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.groups.clients(groupContext, group);
 		if (setWithLock == null) {
-			log.error("组[{}]不存在", group);
+			log.info("{}, 组[{}]不存在", groupContext.getName(), group);
 			return false;
 		}
 
@@ -573,8 +577,8 @@ public abstract class Aio {
 	 * @param packet
 	 * @author tanyaowu
 	 */
-	public static void sendToId(GroupContext groupContext, String channelContextId, Packet packet) {
-		sendToId(groupContext, channelContextId, packet, false);
+	public static Boolean sendToId(GroupContext groupContext, String channelContextId, Packet packet) {
+		return sendToId(groupContext, channelContextId, packet, false);
 	}
 
 	/**
@@ -587,6 +591,9 @@ public abstract class Aio {
 	 */
 	private static Boolean sendToId(GroupContext groupContext, String channelContextId, Packet packet, boolean isBlock) {
 		ChannelContext channelContext = Aio.getChannelContextById(groupContext, channelContextId);
+		if (channelContext == null) {
+			return false;
+		}
 		if (isBlock) {
 			return bSend(channelContext, packet);
 		} else {
@@ -715,8 +722,8 @@ public abstract class Aio {
 	 * @param packet
 	 * @author tanyaowu
 	 */
-	public static void sendToUser(GroupContext groupContext, String userid, Packet packet) {
-		sendToUser(groupContext, userid, packet, false);
+	public static Boolean sendToUser(GroupContext groupContext, String userid, Packet packet) {
+		return sendToUser(groupContext, userid, packet, false);
 	}
 
 	/**
@@ -729,6 +736,10 @@ public abstract class Aio {
 	 */
 	private static Boolean sendToUser(GroupContext groupContext, String userid, Packet packet, boolean isBlock) {
 		ChannelContext channelContext = groupContext.users.find(groupContext, userid);
+		if (channelContext == null) {
+			return false;
+		}
+		
 		if (isBlock) {
 			return bSend(channelContext, packet);
 		} else {

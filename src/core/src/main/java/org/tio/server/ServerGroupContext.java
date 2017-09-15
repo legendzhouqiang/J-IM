@@ -68,7 +68,7 @@ public class ServerGroupContext extends GroupContext {
 				while (!isStopped()) {
 					//					long sleeptime = heartbeatTimeout;
 					if (heartbeatTimeout <= 0) {
-						log.info("用户取消了框架层面的心跳检测，如果业务需要，请用户自己去完成心跳检测");
+						log.info("{}, 用户取消了框架层面的心跳检测，如果业务需要，请用户自己去完成心跳检测", ServerGroupContext.this.name);
 						break;
 					}
 					long start = SystemTimer.currentTimeMillis();
