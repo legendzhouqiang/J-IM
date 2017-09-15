@@ -4,8 +4,6 @@ import org.tio.http.common.handler.IHttpRequestHandler;
 import org.tio.http.common.session.id.ISessionIdGenerator;
 import org.tio.utils.cache.ICache;
 
-import com.xiaoleilu.hutool.io.FileUtil;
-
 /**
  * @author tanyaowu
  * 2017年8月15日 下午1:21:14

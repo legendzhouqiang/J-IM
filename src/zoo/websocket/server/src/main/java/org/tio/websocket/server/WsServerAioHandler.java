@@ -241,6 +241,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 				Aio.remove(channelContext, "业务层不同意握手");
 				return;
 			}
+			wsSessionContext.setHandshakeResponsePacket(r);
 
 			WsResponse wsResponse = new WsResponse();
 			wsResponse.setHandShake(true);

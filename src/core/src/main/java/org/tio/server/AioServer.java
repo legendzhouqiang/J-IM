@@ -107,7 +107,7 @@ public class AioServer {
 		AcceptCompletionHandler acceptCompletionHandler = serverGroupContext.getAcceptCompletionHandler();
 		serverSocketChannel.accept(this, acceptCompletionHandler);
 
-		log.warn("t-io server started, listen on {}", this.serverNode);
+		log.warn("{} started, listen on {}", serverGroupContext.getName(), this.serverNode);
 	}
 
 	/**

@@ -125,7 +125,7 @@ public class WsPacket extends Packet {
 	 */
 	@Override
 	public String logstr() {
-		return null;
+		return "websocket";
 
 	}
 
