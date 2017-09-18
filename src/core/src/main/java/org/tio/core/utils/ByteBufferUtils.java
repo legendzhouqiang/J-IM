@@ -82,6 +82,8 @@ public class ByteBufferUtils {
 					int endPosition = buffer.position();
 					return endPosition - 2;
 				}
+			} else {
+				canEnd = false;
 			}
 		}
 		return -1;
