@@ -1,5 +1,5 @@
 ## **t-io: 不仅仅是百万级即时通讯框架**
-[![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/logo/logo-128-%E8%93%9D%E7%99%BD-%E6%96%B9.png)](https://git.oschina.net/tywo45/t-io)
+[![image](https://git.oschina.net/tywo45/t-io/raw/master/docs/logo/preview.png)](https://git.oschina.net/tywo45/t-io)
 
 
 ## **t-io简介**
