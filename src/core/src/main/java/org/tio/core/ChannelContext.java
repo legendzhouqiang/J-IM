@@ -19,7 +19,7 @@ import org.tio.core.stat.ChannelStat;
 import org.tio.core.task.DecodeRunnable;
 import org.tio.core.task.HandlerRunnable;
 import org.tio.core.task.SendRunnable;
-import org.tio.json.Json;
+import org.tio.utils.json.Json;
 import org.tio.utils.prop.MapWithLockPropSupport;
 
 import com.xiaoleilu.hutool.date.DatePattern;

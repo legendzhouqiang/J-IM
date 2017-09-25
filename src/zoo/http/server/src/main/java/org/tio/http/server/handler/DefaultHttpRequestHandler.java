@@ -151,7 +151,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		HttpResponse ret = null;
 		RequestLine requestLine = request.getRequestLine();
 		try {
-			
+
 			processCookieBeforeHandler(request, requestLine);
 			HttpSession httpSession = request.getHttpSession();//(HttpSession) channelContext.getAttribute();
 
@@ -167,7 +167,7 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					return ret;
 				}
 			}
-			requestLine  = request.getRequestLine();
+			requestLine = request.getRequestLine();
 			//			if (ret != null) {
 			//				return ret;
 			//			}
@@ -428,30 +428,12 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 	@Override
 	public HttpResponse resp404(HttpRequest request, RequestLine requestLine) {
-		String file404 = httpConfig.getPage404();
-		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
-		File file = new File(root + file404);
-		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(request, file404 + "?tio_initpath=" + requestLine.getPathAndQuery());
-			return ret;
-		} else {
-			HttpResponse ret = Resps.html(request, "404");
-			return ret;
-		}
+		return Resps.resp404(request, requestLine, httpConfig);
 	}
 
 	@Override
 	public HttpResponse resp500(HttpRequest request, RequestLine requestLine, Throwable throwable) {
-		String file500 = httpConfig.getPage500();
-		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
-		File file = new File(root + file500);
-		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(request, file500 + "?tio_initpath=" + requestLine.getPathAndQuery());
-			return ret;
-		} else {
-			HttpResponse ret = Resps.html(request, "500");
-			return ret;
-		}
+		return Resps.resp500(request, requestLine, httpConfig, throwable);
 	}
 
 	/**

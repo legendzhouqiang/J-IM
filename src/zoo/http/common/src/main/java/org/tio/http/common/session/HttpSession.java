@@ -53,6 +53,18 @@ public class HttpSession implements java.io.Serializable {
 	public Object getAttribute(String key) {
 		return data.get(key);
 	}
+	
+	/**
+	 * 
+	 * @param key
+	 * @param clazz
+	 * @return
+	 * @author: tanyaowu
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T getAttribute(String key, Class<T> clazz) {
+		return (T)data.get(key);
+	}
 
 //	public Map<String, Serializable> getData() {
 //		return data;

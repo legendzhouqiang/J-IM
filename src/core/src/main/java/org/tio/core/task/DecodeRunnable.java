@@ -106,10 +106,11 @@ public class DecodeRunnable implements Runnable {
 				{
 					lastByteBuffer = ByteBufferUtils.copy(byteBuffer, initPosition, byteBuffer.limit());
 					ChannelStat channelStat = channelContext.getStat();
-					channelStat.setDecodeFailCount(channelStat.getDecodeFailCount() + 1);
-					int len = byteBuffer.capacity() - initPosition;
-					log.info("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节", channelContext, channelStat.getDecodeFailCount(), len);
-					if (channelStat.getDecodeFailCount() > 5) {
+					int decodeFailCount = channelStat.getDecodeFailCount() + 1;
+					channelStat.setDecodeFailCount(decodeFailCount);
+					int len = byteBuffer.limit() - initPosition;
+					log.info("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节", channelContext, decodeFailCount, len);
+					if (decodeFailCount > 5) {
 						log.error("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节，请考虑要不要拉黑这个ip", channelContext, channelStat.getDecodeFailCount(), len);
 
 					}

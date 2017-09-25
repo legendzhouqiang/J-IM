@@ -3,7 +3,7 @@ package org.tio.core.cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.stat.IpStat;
-import org.tio.json.Json;
+import org.tio.utils.json.Json;
 
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;

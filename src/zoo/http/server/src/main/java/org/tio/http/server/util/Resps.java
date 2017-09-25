@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +15,12 @@ import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.MimeType;
-import org.tio.json.Json;
+import org.tio.http.common.RequestLine;
+import org.tio.utils.json.Json;
 
 import com.xiaoleilu.hutool.io.FileUtil;
+
+import jodd.io.FileNameUtil;
 
 /**
  * @author tanyaowu
@@ -61,7 +63,7 @@ public class Resps {
 	 */
 	public static HttpResponse file(HttpRequest request, byte[] bodyBytes, String extension) {
 		String contentType = null;
-//		String extension = FilenameUtils.getExtension(filename);
+		//		String extension = FilenameUtils.getExtension(filename);
 		if (StringUtils.isNoneBlank(extension)) {
 			MimeType mimeType = MimeType.fromExtension(extension);
 			if (mimeType != null) {
@@ -90,10 +92,71 @@ public class Resps {
 
 		byte[] bodyBytes = FileUtil.readBytes(fileOnServer);
 		String filename = fileOnServer.getName();
-		String extension = FilenameUtils.getExtension(filename);
+		String extension = FileNameUtil.getExtension(filename);
 		ret = file(request, bodyBytes, extension);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified, lastModified.getTime() + "");
 		return ret;
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param path 文件在服务器上的相对pageRoot的路径，形如："/user/index.html"
+	 * @param httpConfig
+	 * @return
+	 * @throws IOException
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse file(HttpRequest request, String path, HttpConfig httpConfig) throws IOException {
+		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
+		File file = new File(root + path);
+		if (!file.exists()) {
+			return resp404(request, request.getRequestLine(), httpConfig);
+		}
+		return file(request, file);
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param requestLine
+	 * @param httpConfig
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse resp404(HttpRequest request, RequestLine requestLine, HttpConfig httpConfig) {
+		String file404 = httpConfig.getPage404();
+		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
+		File file = new File(root + file404);
+		if (file.exists()) {
+			HttpResponse ret = Resps.redirect(request, file404 + "?tio_initpath=" + requestLine.getPathAndQuery());
+			return ret;
+		} else {
+			HttpResponse ret = Resps.html(request, "404");
+			return ret;
+		}
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param requestLine
+	 * @param httpConfig
+	 * @param throwable
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static HttpResponse resp500(HttpRequest request, RequestLine requestLine, HttpConfig httpConfig, Throwable throwable) {
+		String file500 = httpConfig.getPage500();
+		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
+		File file = new File(root + file500);
+		if (file.exists()) {
+			HttpResponse ret = Resps.redirect(request, file500 + "?tio_initpath=" + requestLine.getPathAndQuery());
+			return ret;
+		} else {
+			HttpResponse ret = Resps.html(request, "500");
+			return ret;
+		}
 	}
 
 	/**
