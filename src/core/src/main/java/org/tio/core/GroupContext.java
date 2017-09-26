@@ -89,6 +89,8 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	public final Users users = new Users();
 	public final Ids ids = new Ids();
 	public Ips ips = null;
+	
+	
 
 	/**
 	 * ip黑名单
@@ -123,7 +125,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 		super();
 		this.id = ID_ATOMIC.incrementAndGet() + "";
 		this.ipBlacklist = new IpBlacklist(id);
-		this.ips = new Ips(this.id);
+		this.ips = new Ips(this.id, null);
 		this.tioExecutor = tioExecutor;
 		if (this.tioExecutor == null) {
 			LinkedBlockingQueue<Runnable> tioQueue = new LinkedBlockingQueue<>();

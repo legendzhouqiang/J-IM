@@ -1,6 +1,7 @@
 package org.tio.core;
 
 import java.nio.channels.AsynchronousSocketChannel;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
@@ -12,7 +13,6 @@ import org.tio.client.ReconnConf;
 import org.tio.core.intf.AioListener;
 import org.tio.core.maintain.MaintainUtils;
 import org.tio.core.stat.IpStat;
-import org.tio.core.stat.IpStatType;
 import org.tio.utils.SystemTimer;
 
 public class CloseRunnable implements Runnable {
@@ -139,8 +139,8 @@ public class CloseRunnable implements Runnable {
 //						ipStat.getActivatedCount().decrementAndGet();
 //					}
 					
-					IpStatType[] ipStatTypes = IpStatType.values();
-					for (IpStatType v : ipStatTypes) {
+					List<Long> list = groupContext.ips.list;
+					for (Long v : list) {
 						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
 						ipStat.getActivatedCount().decrementAndGet();
 					}

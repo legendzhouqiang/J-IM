@@ -4,12 +4,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.stat.IpStat;
-import org.tio.core.stat.IpStatType;
 import org.tio.core.task.DecodeRunnable;
 import org.tio.core.utils.AioUtils;
 import org.tio.utils.SystemTimer;
@@ -59,8 +59,8 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 //				ipStat.getReceivedBytes().addAndGet(result);
 //				ipStat.getReceivedTcps().incrementAndGet();
 //			}
-			IpStatType[] ipStatTypes = IpStatType.values();
-			for (IpStatType v : ipStatTypes) {
+			List<Long> list = groupContext.ips.list;
+			for (Long v : list) {
 				IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
 				ipStat.getReceivedBytes().addAndGet(result);
 				ipStat.getReceivedTcps().incrementAndGet();

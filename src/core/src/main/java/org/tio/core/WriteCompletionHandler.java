@@ -14,7 +14,6 @@ import org.tio.core.intf.PacketWithMeta;
 import org.tio.core.stat.ChannelStat;
 import org.tio.core.stat.GroupStat;
 import org.tio.core.stat.IpStat;
-import org.tio.core.stat.IpStatType;
 import org.tio.utils.SystemTimer;
 
 /**
@@ -129,7 +128,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 		
 //		GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
 		
-		IpStatType[] ipStatTypes = IpStatType.values();
+		List<Long> list = groupContext.ips.list;
 		
 		
 		
@@ -142,7 +141,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 //				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
 //				ipStat.getSentBytes().addAndGet(result);
 //			}
-			for (IpStatType v : ipStatTypes) {
+			for (Long v : list) {
 				IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
 				ipStat.getSentBytes().addAndGet(result);
 			}
@@ -165,7 +164,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 //						ipStat.getSentPackets().incrementAndGet();
 //					}
 					
-					for (IpStatType v : ipStatTypes) {
+					for (Long v : list) {
 						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
 						ipStat.getSentPackets().incrementAndGet();
 					}
@@ -184,7 +183,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 //						ipStat.getSentPackets().addAndGet(packetCount);
 //					}
 					
-					for (IpStatType v : ipStatTypes) {
+					for (Long v : list) {
 						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
 						ipStat.getSentPackets().addAndGet(packetCount);
 					}

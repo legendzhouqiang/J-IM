@@ -1,6 +1,7 @@
 package org.tio.core.task;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.tio.core.intf.AioListener;
 import org.tio.core.intf.Packet;
 import org.tio.core.stat.ChannelStat;
 import org.tio.core.stat.IpStat;
-import org.tio.core.stat.IpStatType;
 import org.tio.core.utils.ByteBufferUtils;
 import org.tio.utils.SystemTimer;
 
@@ -141,11 +141,20 @@ public class DecodeRunnable implements Runnable {
 //						ipStat.getReceivedPackets().incrementAndGet();
 //					}
 					
-					IpStatType[] ipStatTypes = IpStatType.values();
-					for (IpStatType v : ipStatTypes) {
+					List<Long> list = groupContext.ips.list;
+					for (Long v : list) {
 						IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
 						ipStat.getReceivedPackets().incrementAndGet();
 					}
+					
+//					List<Long> list = groupContext.ips.list;
+//					for (Long v : list) {
+//						IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
+//						ipStat.getReceivedPackets().incrementAndGet();
+//
+//					}
+					
+					
 
 					channelContext.traceClient(ChannelAction.RECEIVED, packet, null);
 
@@ -187,10 +196,10 @@ public class DecodeRunnable implements Runnable {
 //				ipStat.getDecodeErrorCount().incrementAndGet();
 //			}
 			
-			
-			IpStatType[] ipStatTypes = IpStatType.values();
-			for (IpStatType v : ipStatTypes) {
-				IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+			GroupContext groupContext = channelContext.getGroupContext();
+			List<Long> list = groupContext.ips.list;
+			for (Long v : list) {
+				IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
 				ipStat.getDecodeErrorCount().incrementAndGet();
 			}
 			

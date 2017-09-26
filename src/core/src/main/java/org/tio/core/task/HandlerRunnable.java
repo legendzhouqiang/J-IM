@@ -3,6 +3,7 @@
  */
 package org.tio.core.task;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -14,7 +15,6 @@ import org.tio.core.GroupContext;
 import org.tio.core.intf.Packet;
 import org.tio.core.maintain.ChannelContextMapWithLock;
 import org.tio.core.stat.IpStat;
-import org.tio.core.stat.IpStatType;
 import org.tio.utils.thread.pool.AbstractQueueRunnable;
 
 /**
@@ -86,8 +86,8 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 //				ipStat.getHandledBytes().addAndGet(packet.getByteCount());
 //			}
 			
-			IpStatType[] ipStatTypes = IpStatType.values();
-			for (IpStatType v : ipStatTypes) {
+			List<Long> list = groupContext.ips.list;
+			for (Long v : list) {
 				IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
 				ipStat.getHandledPackets().incrementAndGet();
 				ipStat.getHandledBytes().addAndGet(packet.getByteCount());
