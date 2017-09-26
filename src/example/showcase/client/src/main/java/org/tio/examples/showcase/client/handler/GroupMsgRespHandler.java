@@ -6,7 +6,7 @@ import org.tio.core.ChannelContext;
 import org.tio.examples.showcase.common.ShowcasePacket;
 import org.tio.examples.showcase.common.intf.AbsShowcaseBsHandler;
 import org.tio.examples.showcase.common.packets.GroupMsgRespBody;
-import org.tio.json.Json;
+import org.tio.utils.json.Json;
 
 /**
  * @author tanyaowu

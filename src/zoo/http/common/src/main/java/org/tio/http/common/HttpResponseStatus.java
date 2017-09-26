@@ -1,7 +1,7 @@
 package org.tio.http.common;
 
 /**
- * 本类直接摘自baseio: https://git.oschina.net/generallycloud/baseio<br>
+ * 本类直接摘自baseio: https://gitee.com/generallycloud/baseio<br>
  * 谢谢作者整理<br>
  *
  * @author tanyaowu

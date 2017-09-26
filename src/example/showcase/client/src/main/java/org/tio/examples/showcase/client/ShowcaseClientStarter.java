@@ -16,7 +16,7 @@ import org.tio.examples.showcase.common.packets.GroupMsgReqBody;
 import org.tio.examples.showcase.common.packets.JoinGroupReqBody;
 import org.tio.examples.showcase.common.packets.LoginReqBody;
 import org.tio.examples.showcase.common.packets.P2PReqBody;
-import org.tio.json.Json;
+import org.tio.utils.json.Json;
 
 /**
  *

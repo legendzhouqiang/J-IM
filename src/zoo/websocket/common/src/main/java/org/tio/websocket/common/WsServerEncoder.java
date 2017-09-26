@@ -9,7 +9,7 @@ import org.tio.core.GroupContext;
 import org.tio.core.utils.ByteBufferUtils;
 
 /**
- * 参考了baseio: https://git.oschina.net/generallycloud/baseio
+ * 参考了baseio: https://gitee.com/generallycloud/baseio
  * com.generallycloud.nio.codec.http11.WebSocketProtocolEncoder
  * @author tanyaowu
  *

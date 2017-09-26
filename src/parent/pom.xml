@@ -15,15 +15,15 @@
 	<licenses>
 		<license>
 			<name>GNU LESSER GENERAL PUBLIC LICENSE Version 2.1</name>
-			<url>https://git.oschina.net/tywo45/t-io/blob/master/LICENSE</url>
+			<url>https://gitee.com/tywo45/t-io/blob/master/LICENSE</url>
 		</license>
 	</licenses>
 
 
 	<scm>
-		<connection>scm:svn://git.oschina.net/tywo45/t-io</connection>
-		<developerConnection>scm:svn://git.oschina.net/tywo45/t-io</developerConnection>
-		<url>svn://git.oschina.net/tywo45/t-io</url>
+		<connection>scm:svn://gitee.com/tywo45/t-io</connection>
+		<developerConnection>scm:svn://gitee.com/tywo45/t-io</developerConnection>
+		<url>svn://gitee.com/tywo45/t-io</url>
 	</scm>
 
 	<modules>
@@ -78,7 +78,7 @@
 			<id>tanyaowu</id>
 			<name>tanyaowu</name>
 			<email>tywo45@163.com</email>
-			<url>https://git.oschina.net/tywo45/t-io</url>
+			<url>https://gitee.com/tywo45/t-io</url>
 		</developer>
 	</developers>
 

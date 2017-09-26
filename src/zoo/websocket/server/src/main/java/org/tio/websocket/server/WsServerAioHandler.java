@@ -292,7 +292,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 	}
 
 	/**
-	 * 本方法改编自baseio: https://git.oschina.net/generallycloud/baseio<br>
+	 * 本方法改编自baseio: https://gitee.com/generallycloud/baseio<br>
 	 * 感谢开源作者的付出
 	 * @param request
 	 * @param channelContext

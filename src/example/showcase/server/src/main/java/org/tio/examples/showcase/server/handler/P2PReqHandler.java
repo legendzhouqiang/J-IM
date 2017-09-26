@@ -10,7 +10,7 @@ import org.tio.examples.showcase.common.Type;
 import org.tio.examples.showcase.common.intf.AbsShowcaseBsHandler;
 import org.tio.examples.showcase.common.packets.P2PReqBody;
 import org.tio.examples.showcase.common.packets.P2PRespBody;
-import org.tio.json.Json;
+import org.tio.utils.json.Json;
 
 /**
  * @author tanyaowu

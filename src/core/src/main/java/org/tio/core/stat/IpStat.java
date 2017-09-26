@@ -20,8 +20,19 @@ public class IpStat implements java.io.Serializable {
 
 	private Date start = new Date();
 
+	/**
+	 * 当前统计了多久，单位：毫秒
+	 */
 	private long duration;
 
+	/**
+	 * 固定的统计时长，单位：秒，譬如60，3600等
+	 */
+	private Long fixedDuration;
+
+	/**
+	 * 客户端ip
+	 */
 	private String ip;
 
 	/**
@@ -74,8 +85,9 @@ public class IpStat implements java.io.Serializable {
 	 */
 	private AtomicLong receivedPackets = new AtomicLong();
 
-	public IpStat(String ip) {
+	public IpStat(String ip, Long fixedDuration) {
 		this.ip = ip;
+		this.fixedDuration = fixedDuration;
 	}
 
 	/**
@@ -106,6 +118,13 @@ public class IpStat implements java.io.Serializable {
 	public long getDuration() {
 		duration = SystemTimer.currentTimeMillis() - this.start.getTime();
 		return duration;
+	}
+
+	/**
+	 * @return the fixedDuration
+	 */
+	public Long getFixedDuration() {
+		return fixedDuration;
 	}
 
 	/**
@@ -198,7 +217,12 @@ public class IpStat implements java.io.Serializable {
 		return start;
 	}
 
-	
+	/**
+	 * @param fixedDuration the fixedDuration to set
+	 */
+	public void setFixedDuration(Long fixedDuration) {
+		this.fixedDuration = fixedDuration;
+	}
 
 	/**
 	 * @param ip the ip to set

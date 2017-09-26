@@ -118,7 +118,8 @@ public class ServerGroupContext extends GroupContext {
 										+ "\r\n已处理消息                                     {}p"
 										+ "\r\n已发送消息                                      ({}p)({}b)"
 										+ "\r\n平均每次TCP包接收的字节数   {}"
-										+ "\r\n平均每次TCP包接收的业务包   {}", 
+										+ "\r\n平均每次TCP包接收的业务包   {}"
+										+ "\r\n目前IP统计的时长   {}", 
 										ServerGroupContext.this.name,  SystemTimer.currentTimeMillis(), id, 
 										set.size(), 
 										groups, 
@@ -130,7 +131,8 @@ public class ServerGroupContext extends GroupContext {
 										serverGroupStat.getSentPacket().get(),
 										serverGroupStat.getSentBytes().get(),
 										serverGroupStat.getBytesPerTcpReceive(),
-										serverGroupStat.getPacketsPerTcpReceive());
+										serverGroupStat.getPacketsPerTcpReceive(),
+										Json.toJson(ServerGroupContext.this.ips.list));
 							}
 
 							//打印各集合信息

@@ -27,6 +27,7 @@ import org.tio.http.server.mvc.Routes;
 import org.tio.http.server.util.ClassUtils;
 import org.tio.http.server.util.Resps;
 import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.json.Json;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.io.FileUtil;
@@ -261,7 +262,9 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					ret = (HttpResponse) obj;
 					return ret;
 				} else {
-					throw new Exception(bean.getClass().getName() + "#" + method.getName() + "返回的对象不是" + HttpResponse.class.getName());
+					ret = Resps.json(request, Json.toJson(obj));
+					return ret;
+					//throw new Exception(bean.getClass().getName() + "#" + method.getName() + "返回的对象不是" + HttpResponse.class.getName());
 				}
 			} else {
 				GuavaCache contentCache = null;

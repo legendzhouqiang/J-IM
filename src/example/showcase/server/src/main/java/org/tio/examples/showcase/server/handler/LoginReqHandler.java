@@ -13,7 +13,7 @@ import org.tio.examples.showcase.common.intf.AbsShowcaseBsHandler;
 import org.tio.examples.showcase.common.packets.JoinGroupRespBody;
 import org.tio.examples.showcase.common.packets.LoginReqBody;
 import org.tio.examples.showcase.common.packets.LoginRespBody;
-import org.tio.json.Json;
+import org.tio.utils.json.Json;
 
 /**
  * @author tanyaowu
