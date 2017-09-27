@@ -25,9 +25,6 @@ public interface ReadPacket extends SuperPacket {
     /** 数据区长度 */
     short bodyLength();
 
-    /** 数据校验 */
-    byte checkSum();
-
     /** 数据包头 */
     byte[] header();
 

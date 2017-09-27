@@ -6,7 +6,7 @@ package org.tio.coding;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public interface Itlv {
+public interface ITlv {
 
     byte type();
 

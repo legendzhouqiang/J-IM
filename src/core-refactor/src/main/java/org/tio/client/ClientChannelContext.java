@@ -26,13 +26,9 @@ import java.nio.channels.AsynchronousSocketChannel;
 @Data
 public class ClientChannelContext extends ChannelContextImpl {
 
-    protected DecodeTaskQueue decodeRunnable = null;
+    protected String ip;
 
-    protected HandlerTaskQueue handlerRunnable = null;
-
-    protected SendTaskQueue sendRunnable = null;
-
-    protected EncodeTaskQueue encodeRunnable = null;
+    protected Integer port;
 
     private ClientGroupContext groupContext;
 

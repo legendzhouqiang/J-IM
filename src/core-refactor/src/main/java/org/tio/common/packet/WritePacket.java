@@ -25,8 +25,7 @@ public interface WritePacket extends SuperPacket {
     /** 数据区长度 */
     WritePacket setBodyLength(short bodyLength);
 
-    /** 数据校验 */
-    WritePacket setCheckSum(byte checkSum);
+
 
     /** 可选区数据 */
     WritePacket setOptional(byte[] optional);
