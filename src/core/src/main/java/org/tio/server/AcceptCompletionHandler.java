@@ -63,10 +63,11 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 //				IpStat ipStat = (IpStat) guavaCache.get(clientIp);
 //				ipStat.getActivatedCount().incrementAndGet();
 //			}
-			for (Long v : list) {
-				IpStat ipStat = (IpStat) serverGroupContext.ips.get(v, clientIp);
-				ipStat.getActivatedCount().incrementAndGet();
-			}
+//			for (Long v : list) {
+//				IpStat ipStat = (IpStat) serverGroupContext.ips.get(v, clientIp);
+//				IpStat.getActivatedCount().incrementAndGet();
+//			}
+			IpStat.getActivatedCount(clientIp, true).incrementAndGet();
 
 			asynchronousSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 			asynchronousSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 32 * 1024);

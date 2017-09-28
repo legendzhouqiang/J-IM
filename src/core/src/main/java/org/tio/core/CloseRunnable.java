@@ -1,7 +1,7 @@
 package org.tio.core;
 
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
@@ -139,12 +139,19 @@ public class CloseRunnable implements Runnable {
 //						ipStat.getActivatedCount().decrementAndGet();
 //					}
 					
-					List<Long> list = groupContext.ips.list;
-					for (Long v : list) {
-						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
-						ipStat.getActivatedCount().decrementAndGet();
+//					List<Long> list = groupContext.ips.list;
+//					for (Long v : list) {
+//						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+//						ipStat.getActivatedCount().decrementAndGet();
+//					}
+					String clientIp = channelContext.getClientNode().getIp();
+					AtomicInteger activatedCount = IpStat.getActivatedCount(clientIp, false);
+					if (activatedCount != null) {
+						activatedCount.decrementAndGet();
+						if (activatedCount.get() <= 0) {
+							IpStat.removeActivatedCount(clientIp);
+						}
 					}
-					
 					
 					if (isRemove) {
 						MaintainUtils.removeFromMaintain(channelContext);

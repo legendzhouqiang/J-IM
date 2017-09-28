@@ -1,6 +1,6 @@
 package org.tio.http.common;
 
-import org.tio.http.common.handler.IHttpRequestHandler;
+import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.common.session.id.ISessionIdGenerator;
 import org.tio.utils.cache.ICache;
 
@@ -94,7 +94,7 @@ public class HttpConfig {
 
 	private ISessionIdGenerator sessionIdGenerator;
 	
-	private IHttpRequestHandler httpRequestHandler;
+	private HttpRequestHandler httpRequestHandler;
 
 	/**
 	 * 示例：
@@ -275,14 +275,14 @@ public class HttpConfig {
 	/**
 	 * @return the httpRequestHandler
 	 */
-	public IHttpRequestHandler getHttpRequestHandler() {
+	public HttpRequestHandler getHttpRequestHandler() {
 		return httpRequestHandler;
 	}
 
 	/**
 	 * @param httpRequestHandler the httpRequestHandler to set
 	 */
-	public void setHttpRequestHandler(IHttpRequestHandler httpRequestHandler) {
+	public void setHttpRequestHandler(HttpRequestHandler httpRequestHandler) {
 		this.httpRequestHandler = httpRequestHandler;
 	}
 }

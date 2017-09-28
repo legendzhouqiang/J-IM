@@ -1,10 +1,13 @@
 package org.tio.core.stat;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Lock;
 
 import org.tio.utils.SystemTimer;
+import org.tio.utils.lock.MapWithLock;
 
 import com.xiaoleilu.hutool.date.BetweenFormater;
 import com.xiaoleilu.hutool.date.BetweenFormater.Level;
@@ -26,9 +29,9 @@ public class IpStat implements java.io.Serializable {
 	private long duration;
 
 	/**
-	 * 固定的统计时长，单位：秒，譬如60，3600等
+	 * 时长类型，单位：秒，譬如60，3600等
 	 */
-	private Long fixedDuration;
+	private Long durationType;
 
 	/**
 	 * 客户端ip
@@ -48,7 +51,7 @@ public class IpStat implements java.io.Serializable {
 	/**
 	 * 当前处于连接状态的个数
 	 */
-	private AtomicInteger activatedCount = new AtomicInteger();
+	private static MapWithLock<String, AtomicInteger> activatedCount = new MapWithLock<>(new HashMap<String, AtomicInteger>());
 
 	/**
 	 * 本IP已发送的字节数
@@ -85,16 +88,44 @@ public class IpStat implements java.io.Serializable {
 	 */
 	private AtomicLong receivedPackets = new AtomicLong();
 
-	public IpStat(String ip, Long fixedDuration) {
+	public IpStat(String ip, Long durationType) {
 		this.ip = ip;
-		this.fixedDuration = fixedDuration;
+		this.durationType = durationType;
 	}
 
 	/**
 	 * @return the activatedCount
 	 */
-	public AtomicInteger getActivatedCount() {
-		return activatedCount;
+	public static AtomicInteger getActivatedCount(String ip, boolean forceCreate) {
+		AtomicInteger atomicInteger = activatedCount.getObj().get(ip);
+		if (atomicInteger == null && forceCreate) {
+			Lock lock = activatedCount.getLock().writeLock();
+			try {
+				lock.lock();
+				atomicInteger = activatedCount.getObj().get(ip);
+				if (atomicInteger == null) {
+					atomicInteger = new AtomicInteger();
+					activatedCount.getObj().put(ip, atomicInteger);
+				}
+			} catch (Exception e) {
+				throw e;
+			} finally {
+				lock.unlock();
+			}
+		}
+		return atomicInteger;
+	}
+	
+	public static void removeActivatedCount(String ip) {
+		Lock lock = activatedCount.getLock().writeLock();
+		try {
+			lock.lock();
+			activatedCount.getObj().remove(ip);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -121,10 +152,10 @@ public class IpStat implements java.io.Serializable {
 	}
 
 	/**
-	 * @return the fixedDuration
+	 * @return the durationType
 	 */
-	public Long getFixedDuration() {
-		return fixedDuration;
+	public Long getDurationType() {
+		return durationType;
 	}
 
 	/**
@@ -218,10 +249,10 @@ public class IpStat implements java.io.Serializable {
 	}
 
 	/**
-	 * @param fixedDuration the fixedDuration to set
+	 * @param durationType the durationType to set
 	 */
-	public void setFixedDuration(Long fixedDuration) {
-		this.fixedDuration = fixedDuration;
+	public void setDurationType(Long durationType) {
+		this.durationType = durationType;
 	}
 
 	/**

@@ -8,7 +8,7 @@ import org.tio.http.common.RequestLine;
  * @author tanyaowu
  * 2017年7月25日 下午2:16:06
  */
-public interface IHttpServerListener {
+public interface HttpServerInterceptor {
 
 	/**
 	 * 在执行org.tio.http.server.handler.IHttpRequestHandler.handler(HttpRequestPacket, RequestLine, ChannelContext<HttpSessionContext, HttpPacket, Object>)后会调用此方法，业务层可以统一在这里给HttpResponsePacket作一些修饰

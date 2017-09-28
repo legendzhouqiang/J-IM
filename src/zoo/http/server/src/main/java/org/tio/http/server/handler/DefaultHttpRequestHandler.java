@@ -20,14 +20,14 @@ import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.RequestLine;
-import org.tio.http.common.handler.IHttpRequestHandler;
+import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.common.session.HttpSession;
-import org.tio.http.server.listener.IHttpServerListener;
+import org.tio.http.server.listener.HttpServerInterceptor;
+import org.tio.http.server.listener.HttpSessionListener;
 import org.tio.http.server.mvc.Routes;
 import org.tio.http.server.util.ClassUtils;
 import org.tio.http.server.util.Resps;
 import org.tio.utils.cache.guava.GuavaCache;
-import org.tio.utils.json.Json;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.io.FileUtil;
@@ -39,7 +39,7 @@ import com.xiaoleilu.hutool.util.ClassUtil;
  * @author tanyaowu
  *
  */
-public class DefaultHttpRequestHandler implements IHttpRequestHandler {
+public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	private static Logger log = LoggerFactory.getLogger(DefaultHttpRequestHandler.class);
 
 	//	/**
@@ -72,7 +72,9 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 
 	//	private LoadingCache<String, HttpSession> loadingCache = null;
 
-	private IHttpServerListener httpServerListener;
+	private HttpServerInterceptor httpServerInterceptor;
+
+	private HttpSessionListener httpSessionListener;
 
 	private GuavaCache staticResCache;
 
@@ -118,9 +120,12 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 	 * @return
 	 * @author tanyaowu
 	 */
-	private HttpSession createSession() {
-		String sessionId = httpConfig.getSessionIdGenerator().sessionId(httpConfig);
+	private HttpSession createSession(HttpRequest request) {
+		String sessionId = httpConfig.getSessionIdGenerator().sessionId(httpConfig, request);
 		HttpSession httpSession = new HttpSession(sessionId);
+		if (httpSessionListener != null) {
+			httpSessionListener.doAfterCreated(httpSession, httpConfig);
+		}
 		return httpSession;
 	}
 
@@ -131,8 +136,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		return httpConfig;
 	}
 
-	public IHttpServerListener getHttpServerListener() {
-		return httpServerListener;
+	public HttpServerInterceptor getHttpServerInterceptor() {
+		return httpServerInterceptor;
 	}
 
 	private Cookie getSessionCookie(HttpRequest request, HttpConfig httpConfig) throws ExecutionException {
@@ -162,8 +167,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			//				log.info("从缓存中获取响应:{}", requestLine.getPath());
 			//			}
 
-			if (httpServerListener != null) {
-				ret = httpServerListener.doBeforeHandler(request, requestLine, ret);
+			if (httpServerInterceptor != null) {
+				ret = httpServerInterceptor.doBeforeHandler(request, requestLine, ret);
 				if (ret != null) {
 					return ret;
 				}
@@ -262,9 +267,12 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 					ret = (HttpResponse) obj;
 					return ret;
 				} else {
-					ret = Resps.json(request, Json.toJson(obj));
+					if (obj == null) {
+						ret = Resps.txt(request, "");//.json(request, obj + "");
+					} else {
+						ret = Resps.json(request, obj);
+					}
 					return ret;
-					//throw new Exception(bean.getClass().getName() + "#" + method.getName() + "返回的对象不是" + HttpResponse.class.getName());
 				}
 			} else {
 				GuavaCache contentCache = null;
@@ -345,8 +353,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 			if (ret != null) {
 				try {
 					processCookieAfterHandler(request, requestLine, ret);
-					if (httpServerListener != null) {
-						httpServerListener.doAfterHandler(request, requestLine, ret);
+					if (httpServerInterceptor != null) {
+						httpServerInterceptor.doAfterHandler(request, requestLine, ret);
 					}
 				} catch (Exception e) {
 					logError(request, requestLine, e);
@@ -416,14 +424,14 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		Cookie cookie = getSessionCookie(request, httpConfig);
 		HttpSession httpSession = null;
 		if (cookie == null) {
-			httpSession = createSession();
+			httpSession = createSession(request);
 		} else {
 			//			httpSession = (HttpSession)httpSession.getAttribute(SESSIONID_KEY);//loadingCache.getIfPresent(sessionCookie.getValue());
 			String sessionId = cookie.getValue();
 			httpSession = (HttpSession) httpConfig.getSessionStore().get(sessionId);
 			if (httpSession == null) {
 				log.info("{} session【{}】超时", request.getChannelContext(), sessionId);
-				httpSession = createSession();
+				httpSession = createSession(request);
 			}
 		}
 		request.setHttpSession(httpSession);
@@ -446,8 +454,8 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		this.httpConfig = httpConfig;
 	}
 
-	public void setHttpServerListener(IHttpServerListener httpServerListener) {
-		this.httpServerListener = httpServerListener;
+	public void setHttpServerInterceptor(HttpServerInterceptor httpServerInterceptor) {
+		this.httpServerInterceptor = httpServerInterceptor;
 	}
 
 	/**
@@ -462,6 +470,14 @@ public class DefaultHttpRequestHandler implements IHttpRequestHandler {
 		if (staticResCache != null) {
 			staticResCache.clear();
 		}
+	}
+
+	public HttpSessionListener getHttpSessionListener() {
+		return httpSessionListener;
+	}
+
+	public void setHttpSessionListener(HttpSessionListener httpSessionListener) {
+		this.httpSessionListener = httpSessionListener;
 	}
 
 }

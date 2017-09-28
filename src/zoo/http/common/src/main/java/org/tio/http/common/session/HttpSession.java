@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tio.http.common.HttpConfig;
 
 /**
@@ -12,6 +14,7 @@ import org.tio.http.common.HttpConfig;
  * 2017年8月5日 上午10:16:26
  */
 public class HttpSession implements java.io.Serializable {
+	private static Logger log = LoggerFactory.getLogger(HttpSession.class);
 
 	private static final long serialVersionUID = 6077020620501316538L;
 
@@ -41,7 +44,7 @@ public class HttpSession implements java.io.Serializable {
 	 */
 	public void clear(HttpConfig httpConfig) {
 		data.clear();
-		httpConfig.getSessionStore().put(id, this);
+		update(httpConfig);
 	}
 
 	/**
@@ -53,7 +56,7 @@ public class HttpSession implements java.io.Serializable {
 	public Object getAttribute(String key) {
 		return data.get(key);
 	}
-	
+
 	/**
 	 * 
 	 * @param key
@@ -63,12 +66,22 @@ public class HttpSession implements java.io.Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getAttribute(String key, Class<T> clazz) {
-		return (T)data.get(key);
+		return (T) data.get(key);
 	}
 
-//	public Map<String, Serializable> getData() {
-//		return data;
-//	}
+	@SuppressWarnings("unchecked")
+	public <T> T getAttribute(String key, Class<T> clazz, T defaultObj) {
+		T t = (T) data.get(key);
+		if (t == null) {
+			log.warn("key【{}】'value in session is null", key);
+			return defaultObj;
+		}
+		return t;
+	}
+
+	//	public Map<String, Serializable> getData() {
+	//		return data;
+	//	}
 
 	public String getId() {
 		return id;
@@ -82,7 +95,7 @@ public class HttpSession implements java.io.Serializable {
 	 */
 	public void removeAttribute(String key, HttpConfig httpConfig) {
 		data.remove(key);
-		httpConfig.getSessionStore().put(id, this);
+		update(httpConfig);
 	}
 
 	/**
@@ -94,12 +107,16 @@ public class HttpSession implements java.io.Serializable {
 	 */
 	public void setAttribute(String key, Serializable value, HttpConfig httpConfig) {
 		data.put(key, value);
+		update(httpConfig);
+	}
+
+	public void update(HttpConfig httpConfig) {
 		httpConfig.getSessionStore().put(id, this);
 	}
 
-//	public void setData(Map<String, Serializable> data) {
-//		this.data = data;
-//	}
+	//	public void setData(Map<String, Serializable> data) {
+	//		this.data = data;
+	//	}
 
 	public void setId(String id) {
 		this.id = id;

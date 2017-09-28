@@ -8,10 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.tio.http.common.GroupContextKey;
 import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpUuid;
-import org.tio.http.common.handler.IHttpRequestHandler;
+import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.common.session.id.impl.UUIDSessionIdGenerator;
 import org.tio.http.server.handler.DefaultHttpRequestHandler;
-import org.tio.http.server.listener.IHttpServerListener;
+import org.tio.http.server.listener.HttpServerInterceptor;
+import org.tio.http.server.listener.HttpSessionListener;
 import org.tio.http.server.mvc.Routes;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
@@ -50,7 +51,7 @@ public class HttpServerStarter {
 
 	private AioServer aioServer = null;
 
-	private IHttpRequestHandler requestHandler;
+	private HttpRequestHandler requestHandler;
 	
 	private Routes routes;
 
@@ -58,23 +59,28 @@ public class HttpServerStarter {
 		return routes;
 	}
 
-	public HttpServerStarter(HttpConfig httpConfig, IHttpRequestHandler requestHandler) {
+	public HttpServerStarter(HttpConfig httpConfig, HttpRequestHandler requestHandler) {
 		this(httpConfig, requestHandler, null, null);
 	}
 
-	public HttpServerStarter(HttpConfig httpConfig, IHttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+	public HttpServerStarter(HttpConfig httpConfig, HttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
 	}
 
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener) {
-		this(pageRootDir, serverPort, scanPackages, httpServerListener, null, null, null);
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, HttpServerInterceptor httpServerInterceptor) {
+		this(pageRootDir, serverPort, scanPackages, httpServerInterceptor, null, null, null);
 	}
 
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache sessionStore) {
-		this(pageRootDir, serverPort, scanPackages, httpServerListener, sessionStore, null, null);
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore) {
+		this(pageRootDir, serverPort, scanPackages, httpServerInterceptor, sessionStore, null, null);
 	}
 
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, IHttpServerListener httpServerListener, ICache sessionStore,
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore,
+			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		this(pageRootDir, serverPort, scanPackages, httpServerInterceptor, null, sessionStore, tioExecutor, groupExecutor);
+	}
+	
+	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, HttpSessionListener httpSessionListener, ICache sessionStore,
 			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		int port = serverPort;
 		String pageRoot = pageRootDir;
@@ -91,7 +97,8 @@ public class HttpServerStarter {
 		//		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };
 		routes = new Routes(scanPackages);
 		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
-		requestHandler.setHttpServerListener(httpServerListener);
+		requestHandler.setHttpServerInterceptor(httpServerInterceptor);
+		requestHandler.setHttpSessionListener(httpSessionListener);
 
 		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
 	}
@@ -103,7 +110,7 @@ public class HttpServerStarter {
 		return httpConfig;
 	}
 
-	public IHttpRequestHandler getHttpRequestHandler() {
+	public HttpRequestHandler getHttpRequestHandler() {
 		return requestHandler;
 	}
 
@@ -128,7 +135,7 @@ public class HttpServerStarter {
 		return serverGroupContext;
 	}
 
-	private void init(HttpConfig httpConfig, IHttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+	private void init(HttpConfig httpConfig, HttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		this.httpConfig = httpConfig;
 		this.requestHandler = requestHandler;
 		httpConfig.setHttpRequestHandler(this.requestHandler);
@@ -146,7 +153,7 @@ public class HttpServerStarter {
 		serverGroupContext.setTioUuid(imTioUuid);
 	}
 
-	public void setHttpRequestHandler(IHttpRequestHandler requestHandler) {
+	public void setHttpRequestHandler(HttpRequestHandler requestHandler) {
 		this.requestHandler = requestHandler;
 	}
 

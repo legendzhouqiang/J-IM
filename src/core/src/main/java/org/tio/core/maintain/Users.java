@@ -90,7 +90,7 @@ public class Users {
 	}
 
 	/**
-	 * 解除绑定
+	 * 解除channelContext绑定的userid
 	 *
 	 * @param channelContext the channel context
 	 */
@@ -113,25 +113,25 @@ public class Users {
 	}
 
 	/**
-	 * 解除绑定
+	 * 解除userid的绑定。一般用于多地登录，踢掉前面登录的场景
 	 *
 	 * @param userid the userid
 	 * @author tanyaowu
 	 */
-	public void unbind(GroupContext groupContext, String userid) {
+	public ChannelContext unbind(GroupContext groupContext, String userid) {
 		if (groupContext.isShortConnection()) {
-			return;
+			return null;
 		}
 
 		if (StringUtils.isBlank(userid)) {
-			return;
+			return null;
 		}
 
 		Lock lock = map.getLock().writeLock();
 		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 		try {
 			lock.lock();
-			m.remove(userid);
+			return m.remove(userid);
 		} catch (Exception e) {
 			throw e;
 		} finally {

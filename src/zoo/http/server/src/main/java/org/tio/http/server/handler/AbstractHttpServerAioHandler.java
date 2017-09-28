@@ -14,7 +14,7 @@ import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpRequestDecoder;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseEncoder;
-import org.tio.http.common.handler.IHttpRequestHandler;
+import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.server.mvc.Routes;
 import org.tio.server.intf.ServerAioHandler;
 
@@ -23,7 +23,8 @@ import org.tio.server.intf.ServerAioHandler;
  * @author tanyaowu
  *
  */
-public abstract class AbstractHttpServerAioHandler implements ServerAioHandler, IHttpRequestHandler {
+public abstract class AbstractHttpServerAioHandler implements ServerAioHandler, HttpRequestHandler {
+	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(AbstractHttpServerAioHandler.class);
 
 	/**

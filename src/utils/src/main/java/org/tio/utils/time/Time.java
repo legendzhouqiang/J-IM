@@ -1,14 +1,10 @@
 package org.tio.utils.time;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author tanyaowu
  * 2017年8月16日 上午10:27:26
  */
 public class Time {
-	private static Logger log = LoggerFactory.getLogger(Time.class);
 
 	/**
 	 * 一秒

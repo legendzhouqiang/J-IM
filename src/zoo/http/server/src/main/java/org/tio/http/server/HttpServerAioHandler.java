@@ -12,7 +12,7 @@ import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpRequestDecoder;
 import org.tio.http.common.HttpResponse;
 import org.tio.http.common.HttpResponseEncoder;
-import org.tio.http.common.handler.IHttpRequestHandler;
+import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.server.intf.ServerAioHandler;
 
 /**
@@ -37,13 +37,13 @@ public class HttpServerAioHandler implements ServerAioHandler {
 
 	//	protected Routes routes = null;
 
-	//	public HttpServerAioHandler(IHttpRequestHandler requestHandler) {
+	//	public HttpServerAioHandler(HttpRequestHandler requestHandler) {
 	//		this.requestHandler = requestHandler;
 	//	}
 
-	private IHttpRequestHandler requestHandler;
+	private HttpRequestHandler requestHandler;
 
-	//	public HttpServerAioHandler(HttpConfig httpConfig, IHttpRequestHandler requestHandler) {
+	//	public HttpServerAioHandler(HttpConfig httpConfig, HttpRequestHandler requestHandler) {
 	//		this(httpConfig, requestHandler);
 	////		this.routes = routes;
 	//	}
@@ -55,7 +55,7 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	 * 2016年11月18日 上午9:13:15
 	 *
 	 */
-	public HttpServerAioHandler(HttpConfig httpConfig, IHttpRequestHandler requestHandler) {
+	public HttpServerAioHandler(HttpConfig httpConfig, HttpRequestHandler requestHandler) {
 		this.httpConfig = httpConfig;
 		this.requestHandler = requestHandler;
 	}

@@ -19,6 +19,7 @@ import org.tio.http.common.RequestLine;
 import org.tio.utils.json.Json;
 
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.util.ClassUtil;
 
 import jodd.io.FileNameUtil;
 
@@ -262,13 +263,12 @@ public class Resps {
 		if (body == null) {
 			ret = string(request, "", charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
 		} else {
-			if (body.getClass() == String.class) {
-				ret = string(request, (String) body, charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
+			if (body.getClass() == String.class || ClassUtil.isBasicType(body.getClass())) {
+				ret = string(request, body + "", charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
 			} else {
 				ret = string(request, Json.toJson(body), charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
 			}
 		}
-
 		return ret;
 	}
 
