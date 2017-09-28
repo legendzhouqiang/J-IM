@@ -48,9 +48,9 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 //				ipStat.getRequestCount().incrementAndGet();
 //			}
 			
-			List<Long> list = serverGroupContext.ips.list;
+			List<Long> list = serverGroupContext.ipStats.list;
 			for (Long v : list) {
-				IpStat ipStat = (IpStat) serverGroupContext.ips.get(v, clientIp);
+				IpStat ipStat = (IpStat) serverGroupContext.ipStats.get(v, clientIp);
 				ipStat.getRequestCount().incrementAndGet();
 			}
 
@@ -67,7 +67,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 //				IpStat ipStat = (IpStat) serverGroupContext.ips.get(v, clientIp);
 //				IpStat.getActivatedCount().incrementAndGet();
 //			}
-			IpStat.getActivatedCount(clientIp, true).incrementAndGet();
+//			IpStat.getActivatedCount(clientIp, true).incrementAndGet();
 
 			asynchronousSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 			asynchronousSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 32 * 1024);
@@ -83,6 +83,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			channelContext.traceClient(ChannelAction.CONNECT, null, null);
 			
 			serverGroupContext.connecteds.add(channelContext);
+			serverGroupContext.ips.bind(channelContext);
 			try {
 				serverAioListener.onAfterConnected(channelContext, true, false);
 			} catch (Exception e) {

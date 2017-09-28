@@ -52,17 +52,26 @@ public class ServerGroupContext extends GroupContext {
 	 *
 	 */
 	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener) {
-		this(serverAioHandler, serverAioListener, null, null);
+		this(null, serverAioHandler, serverAioListener);
+	}
+
+	public ServerGroupContext(String name, ServerAioHandler serverAioHandler, ServerAioListener serverAioListener) {
+		this(name, serverAioHandler, serverAioListener, null, null);
 	}
 
 	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		this(null, serverAioHandler, serverAioListener, tioExecutor, groupExecutor);
+	}
+
+	public ServerGroupContext(String name, ServerAioHandler serverAioHandler, ServerAioListener serverAioListener, SynThreadPoolExecutor tioExecutor,
+			ThreadPoolExecutor groupExecutor) {
 		super(tioExecutor, groupExecutor);
+		this.name = name;
 		this.acceptCompletionHandler = new AcceptCompletionHandler();
 		this.serverAioHandler = serverAioHandler;
 		this.serverAioListener = serverAioListener == null ? new DefaultServerAioListener() : serverAioListener;
 
 		checkHeartbeatThread = new Thread(new Runnable() {
-			@SuppressWarnings("unused")
 			@Override
 			public void run() {
 				while (!isStopped()) {
@@ -109,54 +118,54 @@ public class ServerGroupContext extends GroupContext {
 									groups = objwithlock.getObj().size();
 								}
 
-								log.info("{}, [{}]:[{}]"
-										+ "\r\n当前连接个数                                 {}"
-										+ "\r\n群组(g)                 {}"
-										+ "\r\n共接受连接                                      {}"
-										+ "\r\n一共关闭过的连接个数            {}"
-										+ "\r\n已接收消息                                   ({}p)({}b)"
-										+ "\r\n已处理消息                                     {}p"
-										+ "\r\n已发送消息                                      ({}p)({}b)"
-										+ "\r\n平均每次TCP包接收的字节数   {}"
-										+ "\r\n平均每次TCP包接收的业务包   {}"
-										+ "\r\n目前IP统计的时长   {}", 
-										ServerGroupContext.this.name,  SystemTimer.currentTimeMillis(), id, 
+								log.info(
+										"{}, [{}]:[{}]" 
+												+ "\r\n当前连接个数                                 {}" 
+												+ "\r\n当前共有 不同的ip数      {}"
+												+ "\r\n群组(g)                 {}"
+												+ "\r\n共接受连接                                      {}" 
+												+ "\r\n一共关闭过的连接个数            {}"
+												+ "\r\n已接收消息                                   ({}p)({}b)" 
+												+ "\r\n已处理消息                                     {}p"
+												+ "\r\n已发送消息                                      ({}p)({}b)" 
+												+ "\r\n平均每次TCP包接收的字节数   {}" 
+												+ "\r\n平均每次TCP包接收的业务包   {}"
+												+ "\r\n目前IP统计的时长   {}",
+										ServerGroupContext.this.name, 
+										SystemTimer.currentTimeMillis(), 
+										id, 
 										set.size(), 
+										ServerGroupContext.this.ips.getIpmap().getObj().size(),
 										groups, 
-										serverGroupStat.getAccepted().get(), 
+										serverGroupStat.getAccepted().get(),
 										serverGroupStat.getClosed().get(), 
-										serverGroupStat.getReceivedPackets().get(),
-										serverGroupStat.getReceivedBytes().get(), 
+										serverGroupStat.getReceivedPackets().get(), 
+										serverGroupStat.getReceivedBytes().get(),
 										serverGroupStat.getHandledPacket().get(), 
-										serverGroupStat.getSentPacket().get(),
+										serverGroupStat.getSentPacket().get(), 
 										serverGroupStat.getSentBytes().get(),
-										serverGroupStat.getBytesPerTcpReceive(),
-										serverGroupStat.getPacketsPerTcpReceive(),
-										Json.toJson(ServerGroupContext.this.ips.list));
+										serverGroupStat.getBytesPerTcpReceive(), 
+										serverGroupStat.getPacketsPerTcpReceive(), 
+										Json.toJson(ServerGroupContext.this.ipStats.list));
 							}
 
 							//打印各集合信息
 							if (log.isInfoEnabled()) {
-								log.info("{}, "
-										+ "\r\nclientNodes:{}"
-										+ "\r\n所有连接:{}"
-										+ "\r\n目前连上的连接:{}"
-										+ "\r\n关闭的连接次数:{}"
-										+ "\r\n群组:[channelmap:{}, groupmap:{}]"
-										+ "\r\n绑定用户数:{}"
-										+ "\r\n等待同步消息响应:{}"
-//										+ "\r\n正在被监控统计的ip数:{}"
-										+ "\r\n被拉黑的ip:{}",
-										ServerGroupContext.this.name,
-										ServerGroupContext.this.clientNodes.getMap().getObj().size(), 
-										ServerGroupContext.this.connections.getSetWithLock().getObj().size(),
-										ServerGroupContext.this.connecteds.getSetWithLock().getObj().size(), 
-										ServerGroupContext.this.closeds.getSetWithLock().getObj().size(),
-										ServerGroupContext.this.groups.getChannelmap().getObj().size(), 
-										ServerGroupContext.this.groups.getGroupmap().getObj().size(),
-										ServerGroupContext.this.users.getMap().getObj().size(), 
+								log.info("{}, " 
+									+ "\r\nclientNodes:{}" 
+									+ "\r\n所有连接:{}" 
+									+ "\r\n目前连上的连接:{}" 
+									+ "\r\n关闭的连接次数:{}" 
+									+ "\r\n群组:[channelmap:{}, groupmap:{}]"
+									+ "\r\n绑定用户数:{}" 
+									+ "\r\n等待同步消息响应:{}"
+								//										+ "\r\n正在被监控统计的ip数:{}"
+										+ "\r\n被拉黑的ip:{}", ServerGroupContext.this.name, ServerGroupContext.this.clientNodeMap.getMap().getObj().size(),
+										ServerGroupContext.this.connections.getSetWithLock().getObj().size(), ServerGroupContext.this.connecteds.getSetWithLock().getObj().size(),
+										ServerGroupContext.this.closeds.getSetWithLock().getObj().size(), ServerGroupContext.this.groups.getChannelmap().getObj().size(),
+										ServerGroupContext.this.groups.getGroupmap().getObj().size(), ServerGroupContext.this.users.getMap().getObj().size(),
 										ServerGroupContext.this.waitingResps.getMap().getObj().size(),
-//										ServerGroupContext.this.ips.size(),
+										//										ServerGroupContext.this.ips.size(),
 										Json.toJson(ServerGroupContext.this.ipBlacklist.getCopy()));
 							}
 

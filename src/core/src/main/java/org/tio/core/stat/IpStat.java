@@ -51,7 +51,7 @@ public class IpStat implements java.io.Serializable {
 	/**
 	 * 当前处于连接状态的个数
 	 */
-	private static MapWithLock<String, AtomicInteger> activatedCount = new MapWithLock<>(new HashMap<String, AtomicInteger>());
+//	private static MapWithLock<String, AtomicInteger> activatedCount = new MapWithLock<>(new HashMap<String, AtomicInteger>());
 
 	/**
 	 * 本IP已发送的字节数
@@ -93,40 +93,40 @@ public class IpStat implements java.io.Serializable {
 		this.durationType = durationType;
 	}
 
-	/**
-	 * @return the activatedCount
-	 */
-	public static AtomicInteger getActivatedCount(String ip, boolean forceCreate) {
-		AtomicInteger atomicInteger = activatedCount.getObj().get(ip);
-		if (atomicInteger == null && forceCreate) {
-			Lock lock = activatedCount.getLock().writeLock();
-			try {
-				lock.lock();
-				atomicInteger = activatedCount.getObj().get(ip);
-				if (atomicInteger == null) {
-					atomicInteger = new AtomicInteger();
-					activatedCount.getObj().put(ip, atomicInteger);
-				}
-			} catch (Exception e) {
-				throw e;
-			} finally {
-				lock.unlock();
-			}
-		}
-		return atomicInteger;
-	}
-	
-	public static void removeActivatedCount(String ip) {
-		Lock lock = activatedCount.getLock().writeLock();
-		try {
-			lock.lock();
-			activatedCount.getObj().remove(ip);
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
-	}
+//	/**
+//	 * @return the activatedCount
+//	 */
+//	public static AtomicInteger getActivatedCount(String ip, boolean forceCreate) {
+//		AtomicInteger atomicInteger = activatedCount.getObj().get(ip);
+//		if (atomicInteger == null && forceCreate) {
+//			Lock lock = activatedCount.getLock().writeLock();
+//			try {
+//				lock.lock();
+//				atomicInteger = activatedCount.getObj().get(ip);
+//				if (atomicInteger == null) {
+//					atomicInteger = new AtomicInteger();
+//					activatedCount.getObj().put(ip, atomicInteger);
+//				}
+//			} catch (Exception e) {
+//				throw e;
+//			} finally {
+//				lock.unlock();
+//			}
+//		}
+//		return atomicInteger;
+//	}
+//	
+//	public static void removeActivatedCount(String ip) {
+//		Lock lock = activatedCount.getLock().writeLock();
+//		try {
+//			lock.lock();
+//			activatedCount.getObj().remove(ip);
+//		} catch (Exception e) {
+//			throw e;
+//		} finally {
+//			lock.unlock();
+//		}
+//	}
 
 	/**
 	 * 平均每次TCP接收到的字节数，这个可以用来监控慢攻击，配置PacketsPerTcpReceive定位慢攻击

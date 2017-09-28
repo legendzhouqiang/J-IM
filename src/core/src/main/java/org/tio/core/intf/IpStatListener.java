@@ -1,5 +1,6 @@
 package org.tio.core.intf;
 
+import org.tio.core.GroupContext;
 import org.tio.core.stat.IpStat;
 
 /**
@@ -12,6 +13,6 @@ public interface IpStatListener {
 	 * @param ipStat
 	 * @author: tanyaowu
 	 */
-	public void onExpired(IpStat ipStat);
+	public void onExpired(GroupContext groupContext, IpStat ipStat);
 
 }

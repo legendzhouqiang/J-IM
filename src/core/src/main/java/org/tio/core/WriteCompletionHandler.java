@@ -128,7 +128,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 		
 //		GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
 		
-		List<Long> list = groupContext.ips.list;
+		List<Long> list = groupContext.ipStats.list;
 		
 		
 		
@@ -142,7 +142,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 //				ipStat.getSentBytes().addAndGet(result);
 //			}
 			for (Long v : list) {
-				IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+				IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
 				ipStat.getSentBytes().addAndGet(result);
 			}
 			
@@ -165,7 +165,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 //					}
 					
 					for (Long v : list) {
-						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+						IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
 						ipStat.getSentPackets().incrementAndGet();
 					}
 				}
@@ -184,7 +184,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 //					}
 					
 					for (Long v : list) {
-						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
+						IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
 						ipStat.getSentPackets().addAndGet(packetCount);
 					}
 				}

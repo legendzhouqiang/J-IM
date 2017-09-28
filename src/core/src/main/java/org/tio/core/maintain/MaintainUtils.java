@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
+import org.tio.server.ServerGroupContext;
 
 public class MaintainUtils {
 	private static Logger log = LoggerFactory.getLogger(MaintainUtils.class);
@@ -23,6 +24,7 @@ public class MaintainUtils {
 		groupContext.connections.remove(channelContext);
 		groupContext.connecteds.remove(channelContext);
 		groupContext.closeds.remove(channelContext);
+		groupContext.ips.unbind(channelContext);
 		
 //		if (groupContext.isShortConnection()) {
 //			return;

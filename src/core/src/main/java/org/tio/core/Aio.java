@@ -204,7 +204,7 @@ public abstract class Aio {
 	 * @author tanyaowu
 	 */
 	public static void close(GroupContext groupContext, String clientIp, Integer clientPort, Throwable throwable, String remark) {
-		ChannelContext channelContext = groupContext.clientNodes.find(clientIp, clientPort);
+		ChannelContext channelContext = groupContext.clientNodeMap.find(clientIp, clientPort);
 		close(channelContext, throwable, remark);
 	}
 
@@ -237,7 +237,7 @@ public abstract class Aio {
 	 * @author tanyaowu
 	 */
 	public static ChannelContext getChannelContextByClientNode(GroupContext groupContext, String clientIp, Integer clientPort) {
-		return groupContext.clientNodes.find(clientIp, clientPort);
+		return groupContext.clientNodeMap.find(clientIp, clientPort);
 	}
 
 	/**
@@ -367,7 +367,7 @@ public abstract class Aio {
 	 * @author tanyaowu
 	 */
 	public static void remove(GroupContext groupContext, String clientIp, Integer clientPort, Throwable throwable, String remark) {
-		ChannelContext channelContext = groupContext.clientNodes.find(clientIp, clientPort);
+		ChannelContext channelContext = groupContext.clientNodeMap.find(clientIp, clientPort);
 		remove(channelContext, throwable, remark);
 	}
 
@@ -483,7 +483,7 @@ public abstract class Aio {
 	 * @author tanyaowu
 	 */
 	private static Boolean send(GroupContext groupContext, String ip, int port, Packet packet, boolean isBlock) {
-		ChannelContext channelContext = groupContext.clientNodes.find(ip, port);
+		ChannelContext channelContext = groupContext.clientNodeMap.find(ip, port);
 		if (channelContext != null) {
 			if (isBlock) {
 				return bSend(channelContext, packet);
@@ -818,12 +818,22 @@ public abstract class Aio {
 	//	org.tio.core.GroupContext.ipBlacklist
 
 	/**
-	 * 解绑用户
+	 * 解除channelContext绑定的userid
 	 * @param channelContext
 	 * @author tanyaowu
 	 */
 	public static void unbindUser(ChannelContext channelContext) {
 		channelContext.getGroupContext().users.unbind(channelContext);
+	}
+	
+	/**
+	 * 解除userid的绑定。一般用于多地登录，踢掉前面登录的场景
+	 * @param groupContext
+	 * @param userid
+	 * @author: tanyaowu
+	 */
+	public static void unbindUser(GroupContext groupContext, String userid) {
+		groupContext.users.unbind(groupContext, userid);
 	}
 
 }

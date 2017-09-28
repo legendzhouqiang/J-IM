@@ -1,7 +1,6 @@
 package org.tio.core;
 
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
@@ -12,7 +11,6 @@ import org.tio.client.ClientChannelContext;
 import org.tio.client.ReconnConf;
 import org.tio.core.intf.AioListener;
 import org.tio.core.maintain.MaintainUtils;
-import org.tio.core.stat.IpStat;
 import org.tio.utils.SystemTimer;
 
 public class CloseRunnable implements Runnable {
@@ -144,14 +142,14 @@ public class CloseRunnable implements Runnable {
 //						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
 //						ipStat.getActivatedCount().decrementAndGet();
 //					}
-					String clientIp = channelContext.getClientNode().getIp();
-					AtomicInteger activatedCount = IpStat.getActivatedCount(clientIp, false);
-					if (activatedCount != null) {
-						activatedCount.decrementAndGet();
-						if (activatedCount.get() <= 0) {
-							IpStat.removeActivatedCount(clientIp);
-						}
-					}
+//					String clientIp = channelContext.getClientNode().getIp();
+//					AtomicInteger activatedCount = IpStat.getActivatedCount(clientIp, false);
+//					if (activatedCount != null) {
+//						activatedCount.decrementAndGet();
+//						if (activatedCount.get() <= 0) {
+//							IpStat.removeActivatedCount(clientIp);
+//						}
+//					}
 					
 					if (isRemove) {
 						MaintainUtils.removeFromMaintain(channelContext);
@@ -177,7 +175,7 @@ public class CloseRunnable implements Runnable {
 					}
 
 					try {
-						channelContext.setClosed(true);
+						
 						channelContext.setRemoved(isRemove);
 						channelContext.getGroupContext().getGroupStat().getClosed().incrementAndGet();
 						channelContext.getStat().setTimeClosed(SystemTimer.currentTimeMillis());
@@ -187,9 +185,10 @@ public class CloseRunnable implements Runnable {
 
 					try {
 						aioListener.onAfterClose(channelContext, throwable, remark, isRemove);
+						channelContext.setClosed(true);
 					} catch (Throwable e) {
 						log.error(e.toString(), e);
-					}
+					}					
 				} catch (Throwable e) {
 					log.error(e.toString(), e);
 				} finally {

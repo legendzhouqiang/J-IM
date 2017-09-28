@@ -86,9 +86,9 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 //				ipStat.getHandledBytes().addAndGet(packet.getByteCount());
 //			}
 			
-			List<Long> list = groupContext.ips.list;
+			List<Long> list = groupContext.ipStats.list;
 			for (Long v : list) {
-				IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
+				IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
 				ipStat.getHandledPackets().incrementAndGet();
 				ipStat.getHandledBytes().addAndGet(packet.getByteCount());
 

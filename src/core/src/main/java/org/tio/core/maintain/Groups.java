@@ -54,11 +54,12 @@ public class Groups {
 		SetWithLock<ChannelContext> channelContexts = null;
 		try {
 			lock1.lock();
-			channelContexts = groupmap.getObj().get(groupid);
+			Map<String, SetWithLock<ChannelContext>> map = groupmap.getObj();
+			channelContexts = map.get(groupid);
 			if (channelContexts == null) {
 				channelContexts = new SetWithLock<>(new HashSet<ChannelContext>());
+				map.put(groupid, channelContexts);
 			}
-			groupmap.getObj().put(groupid, channelContexts);
 		} catch (Exception e) {
 			log.error(e.toString(), e);
 		} finally {

@@ -12,7 +12,7 @@ import org.tio.utils.lock.ObjWithLock;
  * @author tanyaowu
  * 2017年4月1日 上午9:35:20
  */
-public class ClientNodes {
+public class ClientNodeMap {
 
 	/**
 	 *

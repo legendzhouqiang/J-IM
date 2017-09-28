@@ -16,10 +16,11 @@ import org.tio.core.intf.GroupListener;
 import org.tio.core.intf.TioUuid;
 import org.tio.core.maintain.ChannelContextMapWithLock;
 import org.tio.core.maintain.ChannelContextSetWithLock;
-import org.tio.core.maintain.ClientNodes;
+import org.tio.core.maintain.ClientNodeMap;
 import org.tio.core.maintain.Groups;
 import org.tio.core.maintain.Ids;
 import org.tio.core.maintain.IpBlacklist;
+import org.tio.core.maintain.IpStats;
 import org.tio.core.maintain.Ips;
 import org.tio.core.maintain.Users;
 import org.tio.core.stat.GroupStat;
@@ -80,7 +81,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	protected SynThreadPoolExecutor tioExecutor = null;
 
 	protected ThreadPoolExecutor groupExecutor = null;
-	public final ClientNodes clientNodes = new ClientNodes();
+	public final ClientNodeMap clientNodeMap = new ClientNodeMap();
 	public final ChannelContextSetWithLock connections = new ChannelContextSetWithLock();
 	public final ChannelContextSetWithLock connecteds = new ChannelContextSetWithLock();
 
@@ -88,7 +89,8 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	public final Groups groups = new Groups();
 	public final Users users = new Users();
 	public final Ids ids = new Ids();
-	public Ips ips = null;
+	public final Ips ips = new Ips();
+	public IpStats ipStats = null;
 	
 	
 
@@ -125,7 +127,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 		super();
 		this.id = ID_ATOMIC.incrementAndGet() + "";
 		this.ipBlacklist = new IpBlacklist(id);
-		this.ips = new Ips(this.id, null, null);
+		this.ipStats = new IpStats(this, null, null);
 		this.tioExecutor = tioExecutor;
 		if (this.tioExecutor == null) {
 			LinkedBlockingQueue<Runnable> tioQueue = new LinkedBlockingQueue<>();

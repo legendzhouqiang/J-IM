@@ -2,6 +2,7 @@ package org.tio.core.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.core.GroupContext;
 import org.tio.core.intf.IpStatListener;
 import org.tio.core.stat.IpStat;
 
@@ -18,11 +19,14 @@ public class IpStatRemovalListener implements RemovalListener {
 
 	private IpStatListener ipStatListener;
 
+	private GroupContext groupContext = null;
+
 	/**
 	 * 
 	 * @author: tanyaowu
 	 */
-	public IpStatRemovalListener(IpStatListener ipStatListener) {
+	public IpStatRemovalListener(GroupContext groupContext, IpStatListener ipStatListener) {
+		this.groupContext = groupContext;
 		this.ipStatListener = ipStatListener;
 	}
 
@@ -40,7 +44,7 @@ public class IpStatRemovalListener implements RemovalListener {
 		IpStat ipStat = (IpStat) notification.getValue();
 
 		if (ipStatListener != null) {
-			ipStatListener.onExpired(ipStat);
+			ipStatListener.onExpired(groupContext, ipStat);
 		}
 
 		//		log.info("ip数据统计[{}]\r\n{}", ip, Json.toFormatedJson(ipStat));

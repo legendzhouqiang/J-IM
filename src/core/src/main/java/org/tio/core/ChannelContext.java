@@ -370,7 +370,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	private void setClientNode(Node clientNode) {
 		if (this.clientNode != null) {
 			try {
-				groupContext.clientNodes.remove(this);
+				groupContext.clientNodeMap.remove(this);
 			} catch (Exception e1) {
 				log.error(e1.toString(), e1);
 			}
@@ -380,7 +380,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 		if (this.clientNode != null && !Objects.equals(UNKNOWN_ADDRESS_IP, this.clientNode.getIp())) {
 			try {
-				groupContext.clientNodes.put(this);
+				groupContext.clientNodeMap.put(this);
 			} catch (Exception e1) {
 				log.error(e1.toString(), e1);
 			}

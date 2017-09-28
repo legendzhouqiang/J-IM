@@ -1,221 +1,163 @@
 package org.tio.core.maintain;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tio.core.cache.IpStatRemovalListener;
-import org.tio.core.intf.IpStatListener;
-import org.tio.core.stat.IpStat;
-import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.core.ChannelContext;
+import org.tio.core.GroupContext;
+import org.tio.utils.lock.MapWithLock;
+import org.tio.utils.lock.SetWithLock;
 
-/**
- *
- * @author tanyaowu
- * 2017年4月15日 下午12:13:19
- */
 public class Ips {
-	@SuppressWarnings("unused")
+
+	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(Ips.class);
 
-	private final static String CACHE_NAME = "TIO_IP_STAT";
-	//	private final static Long timeToLiveSeconds = null;
-	//	private final static Long timeToIdleSeconds = Time.DAY_1;
-
-	private String groupContextId;
-
-	//	private GuavaCache[] caches = null;
-	/**
-	 * key: 时长，单位：秒
+	/** 一个IP有哪些客户端
+	 * key: ip
+	 * value: Set<ChannelContext>
 	 */
-	public final Map<Long, GuavaCache> map = new HashMap<>();
-
-	public final List<Long> list = new ArrayList<>();
-
-	public Ips(String groupContextId, IpStatListener ipStatListener, Long[] ipStatDurations) {
-		this.groupContextId = groupContextId;
-		if (ipStatDurations != null) {
-			for (Long ipStatDuration : ipStatDurations) {
-				addMonitor(ipStatDuration, ipStatListener);
-			}
-		}
-	}
-
-	//	public void stat(AtomicLong forStat, long delta) {
-	//		Set<Entry<Long, GuavaCache>> set = map.entrySet();
-	//		for (Entry<Long, GuavaCache> entry : set) {
-	//			forStat.addAndGet(delta);
-	//
-	//		}
-	//	}
+	private MapWithLock<String, SetWithLock<ChannelContext>> ipmap = new MapWithLock<>(new ConcurrentHashMap<String, SetWithLock<ChannelContext>>());
 
 	/**
-	 * 添加监控时段
-	 * @param ipStatDuration 单位：秒
-	 * @param ipStatListener 可以为null
-	 * @author: tanyaowu
+	 * 和ip绑定
+	 * @param ip
+	 * @param channelContext
+	 * @author tanyaowu
 	 */
-	public void addMonitor(Long ipStatDuration, IpStatListener ipStatListener) {
-		@SuppressWarnings("unchecked")
-		GuavaCache guavaCache = GuavaCache.register(getCacheName(ipStatDuration), ipStatDuration, null, new IpStatRemovalListener(ipStatListener));
-		map.put(ipStatDuration, guavaCache);
-		list.add(ipStatDuration);
-	}
-
-	/**
-	 * 
-	 * @param ipStatDurations
-	 * @author: tanyaowu
-	 */
-	public void addMonitors(Long[] ipStatDurations, IpStatListener ipStatListener) {
-		if (ipStatDurations != null) {
-			for (Long ipStatDuration : ipStatDurations) {
-				addMonitor(ipStatDuration, ipStatListener);
-			}
-		}
-	}
-
-	/**
-	 * 删除监控时间段
-	 * @param ipStatDuration
-	 * @author: tanyaowu
-	 */
-	public void removeMonitor(Long ipStatDuration) {
-		clear(ipStatDuration);
-		map.remove(ipStatDuration);
-		list.remove(ipStatDuration);
-	}
-
-	/**
-	 * 
-	 * @param ipStatDuration
-	 * @return
-	 * @author: tanyaowu
-	 */
-	public String getCacheName(Long ipStatDuration) {
-		String cacheName = CACHE_NAME + "_" + this.groupContextId + "_";
-		return cacheName + ipStatDuration;
-	}
-
-	/**
-	 * 清空监控数据
-	 * @author: tanyaowu
-	 */
-	public void clear(Long ipStatDuration) {
-		GuavaCache guavaCache = map.get(ipStatDuration);
-		if (guavaCache == null) {
+	public void bind(ChannelContext channelContext) {
+		if (channelContext == null) {
 			return;
 		}
-		guavaCache.clear();
+		
+		String ip = channelContext.getClientNode().getIp();
+		if (ChannelContext.UNKNOWN_ADDRESS_IP.equals(ip)) {
+			return;
+		}
+		
+//		GroupContext groupContext = channelContext.getGroupContext();
+//		if (groupContext.isShortConnection()) {
+//			return;
+//		}
+
+		if (StringUtils.isBlank(ip)) {
+			return;
+		}
+
+		Lock lock1 = ipmap.getLock().writeLock();
+		SetWithLock<ChannelContext> channelContexts = null;//ipmap.getObj().get(ip);
+		try {
+			lock1.lock();
+			Map<String, SetWithLock<ChannelContext>> map = ipmap.getObj();
+			channelContexts = map.get(ip);
+			if (channelContexts == null) {
+				channelContexts = new SetWithLock<>(new HashSet<ChannelContext>());
+				map.put(ip, channelContexts);
+			}
+		} catch (Exception e) {
+			log.error(e.toString(), e);
+		} finally {
+			lock1.unlock();
+		}
+
+		//		if (channelContexts != null) {
+		Lock lock11 = channelContexts.getLock().writeLock();
+		try {
+			lock11.lock();
+			channelContexts.getObj().add(channelContext);
+		} catch (Exception e) {
+			log.error(e.toString(), e);
+		} finally {
+			lock11.unlock();
+		}
+		//		}
+
 	}
 
 	/**
-	 * 根据ip获取IpStat，如果缓存中不存在，则创建
-	 * @param ipStatDuration
+	 * 一个ip有哪些客户端，有可能返回null
 	 * @param ip
 	 * @return
-	 * @author: tanyaowu
+	 * @author tanyaowu
 	 */
-	public IpStat get(Long ipStatDuration, String ip) {
-		return get(ipStatDuration, ip, true);
-	}
+	public SetWithLock<ChannelContext> clients(GroupContext groupContext, String ip) {
+//		if (groupContext.isShortConnection()) {
+//			return null;
+//		}
 
-	/**
-	 * 根据ip获取IpStat，如果缓存中不存在，则根据forceCreate的值决定是否创建
-	 * @param ipStatDuration
-	 * @param ip
-	 * @param forceCreate
-	 * @return
-	 * @author: tanyaowu
-	 */
-	public IpStat get(Long ipStatDuration, String ip, boolean forceCreate) {
 		if (StringUtils.isBlank(ip)) {
 			return null;
 		}
-		GuavaCache guavaCache = map.get(ipStatDuration);
-		if (guavaCache == null) {
-			return null;
-		}
 
-		IpStat ipStat = (IpStat) guavaCache.get(ip);
-		if (ipStat == null && forceCreate) {
-			synchronized (this) {
-				ipStat = (IpStat) guavaCache.get(ip);
-				if (ipStat == null) {
-					ipStat = new IpStat(ip, ipStatDuration);
-					guavaCache.put(ip, ipStat);
-				}
-			}
-		}
-		return ipStat;
-	}
-
-	//	public GuavaCache[] getCaches() {
-	//		return caches;
-	//	}
-
-	//	/**
-	//	 * 打印
-	//	 * 
-	//	 * @author: tanyaowu
-	//	 */
-	//	public void print() {
-	//		synchronized (this) {
-	//			ConcurrentMap<String, Serializable> map = caches.asMap();
-	//			log.info(Json.toFormatedJson(map));
-	//		}
-	//	}
-
-	/**
-	 *
-	 * @return
-	 * @author: tanyaowu
-	 */
-	public ConcurrentMap<String, Serializable> map(Long ipStatDuration) {
-		GuavaCache guavaCache = map.get(ipStatDuration);
-		if (guavaCache == null) {
-			return null;
-		}
-		ConcurrentMap<String, Serializable> map = guavaCache.asMap();
-		return map;
-	}
-
-	//	public void setCaches(GuavaCache[] caches) {
-	//		this.caches = caches;
-	//	}
-
-	/**
-	 *
-	 * @return
-	 * @author: tanyaowu
-	 */
-	public Long size(Long ipStatDuration) {
-		GuavaCache guavaCache = map.get(ipStatDuration);
-		if (guavaCache == null) {
-			return null;
-		}
-		return guavaCache.size();
-	}
-
-	/**
-	 *
-	 * @return
-	 * @author: tanyaowu
-	 */
-	public Collection<Serializable> values(Long ipStatDuration) {
-		GuavaCache guavaCache = map.get(ipStatDuration);
-		if (guavaCache == null) {
-			return null;
-		}
-		Collection<Serializable> set = guavaCache.asMap().values();
+		Map<String, SetWithLock<ChannelContext>> map = ipmap.getObj();
+		SetWithLock<ChannelContext> set = map.get(ip);
 		return set;
 	}
 
+	/**
+	 * @return the ipmap
+	 */
+	public MapWithLock<String, SetWithLock<ChannelContext>> getIpmap() {
+		return ipmap;
+	}
+
+	/**
+	 * 与指定ip解除绑定
+	 * @param ip
+	 * @param channelContext
+	 * @author tanyaowu
+	 */
+	public void unbind(ChannelContext channelContext) {
+		if (channelContext == null) {
+			return;
+		}
+		
+		String ip = channelContext.getClientNode().getIp();
+		if (ChannelContext.UNKNOWN_ADDRESS_IP.equals(ip)) {
+			log.error("{} ip is not right", channelContext);
+			return;
+		}
+		
+		GroupContext groupContext = channelContext.getGroupContext();
+//		if (groupContext.isShortConnection()) {
+//			return;
+//		}
+
+		if (StringUtils.isBlank(ip)) {
+			return;
+		}
+
+		SetWithLock<ChannelContext> channelContexts = ipmap.getObj().get(ip);
+		if (channelContexts != null) {
+			Lock lock1 = channelContexts.getLock().writeLock();
+			try {
+				lock1.lock();
+				channelContexts.getObj().remove(channelContext);
+				
+				if (channelContexts.getObj().size() == 0) {
+					Lock lock2 = ipmap.getLock().writeLock();
+					try {
+						lock2.lock();
+						ipmap.getObj().remove(ip);
+					} catch (Exception e) {
+						log.error(e.toString(), e);
+					} finally {
+						lock2.unlock();
+					}
+				}
+				
+			} catch (Exception e) {
+				log.error(e.toString(), e);
+			} finally {
+				lock1.unlock();
+			}
+		} else {
+			log.error("{}, ip【{}】 找不到对应的SetWithLock", groupContext.getName(), ip);
+		}
+	}
 }

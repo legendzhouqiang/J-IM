@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.http.common.HttpConfig;
-import org.tio.http.common.handler.IHttpRequestHandler;
+import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.server.HttpServerStarter;
 import org.tio.http.server.demo1.HttpServerDemoStarter;
 import org.tio.utils.SystemTimer;
@@ -21,7 +21,7 @@ public class HttpServerInit {
 
 	public static HttpConfig httpConfig;
 
-	public static IHttpRequestHandler requestHandler;
+	public static HttpRequestHandler requestHandler;
 
 	public static HttpServerStarter httpServerStarter;
 

@@ -86,6 +86,7 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 
 				attachment.setChannelContext(channelContext);
 
+//				clientGroupContext.ips.bind(channelContext);
 				clientGroupContext.connecteds.add(channelContext);
 
 				ReadCompletionHandler readCompletionHandler = channelContext.getReadCompletionHandler();
