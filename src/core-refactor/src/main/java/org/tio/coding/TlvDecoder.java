@@ -1,5 +1,7 @@
 package org.tio.coding;
 
+import java.util.Iterator;
+
 /**
  * Copyright (c) for darkidiot
  * Date:2017/9/15
