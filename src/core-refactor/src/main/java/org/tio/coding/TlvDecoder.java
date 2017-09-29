@@ -37,7 +37,7 @@ public class TlvDecoder {
             byte[] val = new byte[len];
             System.arraycopy(data, this.length, val, 0, len);
             this.length += len;
-            return new Tlv(type, len, val);
+            return new ITlv.Tlv(type, len, val);
         }
     }
 }

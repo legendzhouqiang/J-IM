@@ -16,7 +16,7 @@ public class TlvEncoder {
     private int length;
 
     public TlvEncoder addTLV(byte type, byte len, byte[] val) {
-        tlvs.add(new Tlv(type, len, val));
+        tlvs.add(new ITlv.Tlv(type, len, val));
         this.length += len + 2;
         return this;
     }
