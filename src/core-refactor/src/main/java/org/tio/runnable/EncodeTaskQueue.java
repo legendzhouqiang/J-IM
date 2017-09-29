@@ -2,9 +2,7 @@ package org.tio.runnable;
 
 import lombok.extern.slf4j.Slf4j;
 import org.tio.coding.IEncoder;
-import org.tio.common.packet.AbsPacket;
-import org.tio.common.packet.CheckSumSupport;
-import org.tio.common.packet.ReadPacket;
+import org.tio.common.packet.CheckSumAware;
 import org.tio.runnable.common.AbstractTaskQueue;
 import org.tio.util.CheckSumUtil;
 
@@ -33,8 +31,8 @@ public class EncodeTaskQueue<P> extends AbstractTaskQueue<P> {
 
     @Override
     public void runTask(P p) {
-        if (p instanceof CheckSumSupport) {
-            CheckSumSupport support = (CheckSumSupport) p;
+        if (p instanceof CheckSumAware) {
+            CheckSumAware support = (CheckSumAware) p;
             byte[][] bytes = support.checkSum();
             byte checkSum = CheckSumUtil.calcCheckSum(bytes);
             support.setCheckSum(checkSum);

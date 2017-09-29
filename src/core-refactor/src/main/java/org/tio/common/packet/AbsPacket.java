@@ -9,7 +9,7 @@ import lombok.ToString;
  * Desc:
  */
 @ToString
-public class AbsPacket implements ReadPacket, WritePacket, CheckSumSupport {
+public class AbsPacket implements ReadPacket, WritePacket, CheckSumAware {
 
     protected byte type;
 

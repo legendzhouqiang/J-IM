@@ -6,7 +6,7 @@ package org.tio.common.packet;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public interface CheckSumSupport {
+public interface CheckSumAware {
     /** 数据校验 */
     byte[][] checkSum();
 
