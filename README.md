@@ -3,10 +3,10 @@
 
 
 ## **t-io简介**
-- t-io是基于aio的性能爆炸且稳如泰山、API丰富且极易掌握、监控丰富且不损性能、将多线程玩到极致的即时通讯框架(广义上的即时通讯，并非指im)，字母 t 寓意talent。
+- t-io是基于aio的性能爆炸却又稳如泰山、API丰富却又极易掌握、监控全面无死角却又无损性能、将多线程玩到极致的即时通讯框架，字母"t"寓意"talent"。
 
 ## **t-io诞生的意义**
-- 旧时王谢堂前燕，飞入寻常百姓家----当年那些王谢贵族们才拥有的"百万级TCP长连接"应用，将因为t-io的诞生，纷纷飞入普通人家的屋檐下。
+- 旧时王谢堂前燕，飞入寻常百姓家----当年那些王谢贵族们才拥有的"百万级即时通讯"应用，将因为t-io的诞生，纷纷飞入普通人家的屋檐下。
 
 ## **t-io官网**
 
@@ -263,7 +263,8 @@
 showcase一词是从springside借来的，放这很应景，[天蓬元帅](https://gitee.com/kobe577590/im)就是这样学习的，可以和他交流。
 
 ## 列一下作者本人用过的国产开源软件（统计时间：2017-10-04）
-网上很多人对国产开源的印象还停留在n年前，此处列一下作者本人一直在用的部分国产开源软件，其中有的是有争议的，也有暴过漏洞的，但是我们想一下struts、netty、mongodb这些国外知名软件不也暴过严重漏洞吗？
+网上很多人对国产开源的印象还停留在很多年前，此处列一下作者本人一直在用的部分国产开源软件（用开源软件，回馈开源社区）
+
 1. [https://www.oschina.net/p/weixin-java-tools-new](https://www.oschina.net/p/weixin-java-tools-new) （使用一年）
 2. [http://layim.layui.com](http://layim.layui.com)（2017年5月11号开始使用）
 3. [https://www.oschina.net/p/echarts](https://www.oschina.net/p/echarts) （使用两年以上吧）
@@ -280,7 +281,13 @@ showcase一词是从springside借来的，放这很应景，[天蓬元帅](https
 
 [![image](https://gitee.com/tywo45/t-io/raw/master/docs/wechat/1.jpg)](https://gitee.com/tywo45/t-io/raw/master/docs/wechat/1.jpg)
 
+## t-io荣誉及口碑
+1. 码云最有价值开源项目
 
+[![image](https://gitee.com/tywo45/t-io/raw/master/docs/honor/gvp.png)](https://gitee.com/tywo45/t-io/raw/master/docs/wechat/1.jpg)
+
+2. 真实用户的口碑反馈:
+[https://www.oschina.net/p/t-io/comments](https://www.oschina.net/p/t-io/comments)
 
 
 
