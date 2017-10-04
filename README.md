@@ -73,6 +73,9 @@
 - **客户端内置断线自动重连功能**
 - **对连接的监控数据做到了极致：发送\接收\处理了多少个字节多少个业务包，全部有监控**
 - **针对IP做了内置的监控：譬如某IP有多少个连接、某段时间发送了多少条消息等全部一应俱有，为防攻击作了很好的基础**
+![](https://gitee.com/tywo45/t-io/raw/master/docs/monitor/1.png)
+
+![](https://gitee.com/tywo45/t-io/raw/master/docs/monitor/2.png)
 
 
 
