@@ -16,6 +16,10 @@
 
 [![image](https://gitee.com/tywo45/t-io/raw/master/docs/api/tio-parent.png)](https://gitee.com/tywo45/t-io/raw/master/docs/api/tio-parent.png)
 
+## **t-io生态及案例**
+
+[![image](https://gitee.com/tywo45/t-io/raw/master/docs/api/zoo.png)](https://gitee.com/tywo45/t-io/raw/master/docs/api/zoo.png)
+
 ##  t-io常用api全景图
 
 
