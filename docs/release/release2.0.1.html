@@ -25,25 +25,56 @@ t-io 2.0.1发布----从"小猫小狗"到"码云最有价值开源项目"
 </h2>
 <p>
 	<ol>
-		<li>增加针对ip发送的相关API，在Aio.sendToIp(), Aio.bSendToIp()
+		<li>增加针对ip发送的相关API，Aio.sendToIp(), Aio.bSendToIp()等，tio老用户的应该能秒懂这些API所在的位置及使用方式
 		</li>
 		
-		<li>针对ip的数据监控更灵活，以前是在tio-core中规定死的3个时间段监控（当时急着发2.0.0，临时做的一个监控方案），现在变成由用户自己设置
-		<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/release/2.0.1/1.png" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/release/2.0.1/1.png"/></a></div>
+		<li>针对ip的数据监控更灵活，以前是在tio-core中规定死的3个时间段监控（当时赶着发2.0.0，临时做的一个监控方案），现在变成由用户自己设置。使用方法是：groupContext.ipStats.addMonitor()
+		<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/release/img/2.0.1/1.png" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/release/img/2.0.1/1.png"/></a></div>
+		
+		</li>
+		
+		<li>优化tio-http-server协议相关的解析，容错和防错进一步增强
+		</li>
+		
+		<li>优化tio-http-server中自带的mvc，路径和handler映射日志更友好，一目了然
+		</li>
+		
+		<li>优化tio-http-server，增加session创建监听器
+		</li>
+		
+		<li>优化tio-http-server mvc，不再限制hander的返回值必须返回org.tio.http.common.HttpResponse，框架内部自己判断返回值，如果不是HttpResponse，则默认给出json响应的HttpResponse对象，减少开发人员的机械性的代码。
+		</li>
+		
+		<li>优化tio-core bug修复，org.tio.core.task.DecodeRunnable.java中有一个日志数据有误，修正（不影响业务，就是日志打印有个数据不正确），感谢群友某某某(不好意思，聊天记录找不到了)反馈
 		</li>
 	</ol>
 </p>
 
 <h2>
-	
+	后继工作预告及说明
 </h2>
-
-
-<h2>
-	
-</h2>
-
-
-<h2>
-	
-</h2>
+<p>
+	<ol>
+		<li>t-io官网ui已经全部找专业的设计师设计，并且已经交由专业的前端进行相关作业，感谢朋友们的支持，争取尽快上线，先看一张预览图吧
+		<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/logo/psd/priview.jpg" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/logo/psd/priview.jpg"/></a></div>
+		</li>
+		
+		<li>大家一直说的t-io文档太少，其实官网已经给出相关学习步骤了，如果你只是使用t-io，这些资料是够的，因为t-io已经做了大量工作，只为减少大家的学习成本！如果当然想要看懂t-io的源代码，大家还是翻一些多线程的资料以及aio的相关api，这些资料网上有很多，我就不凑热闹去重写一份了
+		</li>
+		
+		<li>优化tio-http-server中自带的mvc，路径和handler映射日志更友好，一目了然
+		</li>
+		
+		<li>优化tio-http-server，增加session创建监听器
+		</li>
+		
+		<li>优化tio-http-server mvc，不再限制hander的返回值必须返回org.tio.http.common.HttpResponse，框架内部自己判断返回值，如果不是HttpResponse，则默认给出json响应的HttpResponse对象，减少开发人员的机械性的代码。
+		</li>
+		
+		<li>优化tio-core bug修复，org.tio.core.task.DecodeRunnable.java中有一个日志数据有误，修正（不影响业务，就是日志打印有个数据不正确），感谢群友某某某(不好意思，聊天记录找不到了)反馈
+		</li>
+		
+		<li>其它各种零碎优化
+		</li>
+	</ol>
+</p>
