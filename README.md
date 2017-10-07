@@ -286,7 +286,7 @@ showcase一词是从springside借来的，放这很应景，[天蓬元帅](https
 [![image](https://gitee.com/tywo45/t-io/raw/master/docs/wechat/1.jpg)](https://gitee.com/tywo45/t-io/raw/master/docs/wechat/1.jpg)
 
 ## t-io荣誉及口碑
-1. 真实用户的口碑反馈:
+1. 真实用户的口碑反馈，承认有几个是熟人过去捧场的，如果完全没熟人过来捧场那作者也混得太差了^_^:
 [https://www.oschina.net/p/t-io/comments](https://www.oschina.net/p/t-io/comments)
 
 2. 码云最有价值开源项目
