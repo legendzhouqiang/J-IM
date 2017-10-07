@@ -10,10 +10,10 @@ t-io 2.0.1发布----从"小猫小狗"到"码云最有价值开源项目"
 </h2>
 <p>
 	<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/honor/gvp.png" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/honor/gvp.png"/></a></div>
-	t-io最初开源的时候，是被鄙视到不行的，譬如“小猫小狗也出来写框架了”、“这代码看了几行就看不下去了”、“我随便压压，他网站(t-io官网和当时演示的webim)就挂了，这能怪我？”，“垃圾，连DDOS都防不住”，“加个群还收费，不给钱就踢。不用还不行吗。”，一腔热情几乎被瞬间浇灭，甚至一度发布了闭源通告（现在码云上的捐赠通道全部处于关闭状态，就是当时关闭的），不过事后很快出现反转，一群t-io真实用户极力挽留，OSC官方不受谣言影响继续公正客观不吹不捧地支持t-io，t-io才没被夭折！所以面对质疑，最好的回应就是做强自己，就如《黄帝内经》所说<strong>“正气内存，邪不可干”</strong>！
+	t-io最初开源的时候，是被鄙视到不行的，譬如“小猫小狗也出来写框架了”、“这代码看了几行就看不下去了”、“我随便压压，他网站（t-io官网和当时演示的webim）就挂了，这能怪我？”，“垃圾，连DDOS都防不住”，“加个群还收费，不给钱就踢。不用还不行吗。”，一腔热情几乎被瞬间浇灭，甚至一度发布了闭源通告（现在码云上的捐赠通道全部处于关闭状态，就是当时关闭的）。不过事后很快出现反转，一群t-io真实用户极力挽留，OSC官方不受谣言影响继续公正客观不吹不捧地支持t-io，t-io才没被夭折！所以面对质疑，最好的回应就是做强自己，就如《黄帝内经》所说<strong>“正气内存，邪不可干”</strong>！
 </p>
 <p>
-	今天t-io被OSC评为<strong>码云最有价值开源项目</strong>（之一），要感谢当初那些力挺t-io的朋友们，尤其是几位开源大佬、t-io忠实用户和业界知名人士，让t-io作者重拾开放分享精神。
+	今天t-io被OSC评为<strong>码云最有价值开源项目</strong>（之一），要感谢当初那些力挺t-io的朋友们，尤其是几位开源大佬、t-io真实用户和业界知名人士，让t-io作者重拾开放分享精神。
 </p>
 
 
@@ -26,10 +26,16 @@ t-io 2.0.1发布----从"小猫小狗"到"码云最有价值开源项目"
 		<li>增加针对ip发送的相关API，Aio.sendToIp(), Aio.bSendToIp()等，tio老用户的应该能秒懂这些API所在的位置及使用方式
 		</li>
 		
-		<li>针对ip的数据监控更灵活，以前是在tio-core中规定死的3个时间段监控（当时赶着发2.0.0，临时做的一个监控方案），现在变成由用户自己设置。使用方法是：groupContext.ipStats.addMonitor()，可监控的数据可参见：
-		<a href="http://www.t-io.org/page/tio/ipstat/ipstat.html" target="_blank">http://www.t-io.org/page/tio/ipstat/ipstat.html</a>
-		<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/monitor/1.png" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/monitor/1.png"/></a></div>
+		<li>针对ip的数据监控更灵活，以前是在tio-core中规定死的3个时间段监控（当时赶着发2.0.0，临时做的一个监控方案），现在变成由用户自己设置。
+		<br>使用方法：groupContext.ipStats.addMonitor()
 		<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/release/img/2.0.1/1.png" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/release/img/2.0.1/1.png"/></a></div>
+		<br>可监控的数据请点击查看：<br>
+		<a href="http://www.t-io.org/page/tio/ipstat/ipstat.html" target="_blank">http://www.t-io.org/page/tio/ipstat/ipstat.html</a><br>
+		<a href="http://www.t-io.org/page/tio/ipstat/ipstat.html?duration=3600" target="_blank">http://www.t-io.org/page/tio/ipstat/ipstat.html?duration=3600</a><br>
+		<a href="http://www.t-io.org/page/tio/ipstat/ipstat.html?duration=60" target="_blank">http://www.t-io.org/page/tio/ipstat/ipstat.html?duration=60</a>
+		
+		<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/monitor/1.png" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/monitor/1.png"/></a></div>
+		
 		
 		</li>
 		
@@ -45,13 +51,13 @@ t-io 2.0.1发布----从"小猫小狗"到"码云最有价值开源项目"
 		<li>优化tio-http-server mvc，不再限制hander的返回值必须返回org.tio.http.common.HttpResponse，框架内部自己判断返回值，如果不是HttpResponse，则默认给出json响应的HttpResponse对象，减少开发人员的机械性的代码。
 		</li>
 		
-		<li>优化tio-core bug修复，org.tio.core.task.DecodeRunnable.java中有一个日志数据有误，修正（不影响业务，就是日志打印有个数据不正确），感谢群友某某某(不好意思，聊天记录找不到了)反馈
+		<li>tio-core bug修复，org.tio.core.task.DecodeRunnable.java中一个日志有误，（不影响逻辑，就是日志打印不正确），感谢群友某某某(不好意思，聊天记录找不到了)反馈
 		</li>
 	</ol>
 </p>
 
 <h2>
-	再了解一下t-io最近的生态和案例
+	简单了解一下t-io最近的生态和案例
 </h2>
 <p>
 	<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/api/zoo.png" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/api/zoo.png"/></a></div>
@@ -65,7 +71,10 @@ t-io 2.0.1发布----从"小猫小狗"到"码云最有价值开源项目"
 		<li>大家一直说的t-io文档太少，其实官网已经给出相关学习步骤了，如果你只是使用t-io，这些资料是够的，因为t-io已经做了大量工作，只为减少大家的学习成本！如果当然想要看懂t-io的源代码，大家还是翻一些多线程的资料以及aio的相关api，这些资料网上有很多，我就不凑热闹去重写一份了。要熟练掌握java多线程，建议大家至少准备花上一个月，多写代码验证，熟能生巧！否则各种不敢用
 		</li>
 		
-		<li>准备为tio的高级用法写一篇博客，譬如如何监控ip数据，如何展示，如何存储这些监控数据等，文档永远是开源的疼点(写代码是爱好，写文档可不是爱好^_^)
+		<li>准备为tio的高级用法写一篇博客，譬如如何监控ip数据，如何展示，如何存储这些监控数据等，文档永远是开源的疼点（写代码是爱好，写文档可不是爱好^_^）
+		</li>
+		
+		<li>大家近期问得比较多的问题是t-io是不是完全开源的，这里统一答复一下：t-io有一个自用版和社区版，自用版多了一些防网络攻击的代码（防攻击的代码是不能开源的，因为开源后就没用了），两个版本只有几十行代码的差距，请大家放心使用！
 		</li>
 		
 		<li>t-io官网ui已经全部找专业的设计师设计，并且已经交由专业的前端进行相关作业，感谢朋友们的支持，争取尽快上线，先看一张预览图吧
