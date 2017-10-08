@@ -91,9 +91,23 @@ public class HttpRequest extends HttpPacket {
 	public RequestBodyFormat getBodyFormat() {
 		return bodyFormat;
 	}
-	
+
+	/**
+	 * 获取请求头中的User-Agent字段
+	 * @return
+	 * @author: tanyaowu
+	 */
 	public String getUserAgent() {
 		return this.headers.get(org.tio.http.common.HttpConst.RequestHeaderKey.User_Agent);
+	}
+
+	/**
+	 * 获取请求头中的host字段
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public String getHost() {
+		return this.headers.get(org.tio.http.common.HttpConst.RequestHeaderKey.Host);
 	}
 
 	/**
@@ -229,7 +243,7 @@ public class HttpRequest extends HttpPacket {
 	public Map<String, Object[]> getParams() {
 		return params;
 	}
-	
+
 	/**
 	 * 
 	 * @param name
@@ -240,11 +254,11 @@ public class HttpRequest extends HttpPacket {
 		Object[] values = params.get(name);
 		if (values != null && values.length > 0) {
 			Object obj = values[0];
-			return (String)obj;
+			return (String) obj;
 		}
 		return null;
 	}
-	
+
 	public Node getRemote() {
 		return remote;
 	}

@@ -73,8 +73,9 @@ public class IpStats {
 	}
 
 	/**
-	 * 
-	 * @param ipStatDurations
+	 * 添加监控时段
+	 * @param ipStatDurations 单位：秒
+	 * @param ipStatListener 可以为null
 	 * @author: tanyaowu
 	 */
 	public void addMonitors(Long[] ipStatDurations, IpStatListener ipStatListener) {

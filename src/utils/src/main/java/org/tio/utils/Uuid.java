@@ -20,13 +20,6 @@ public class Uuid {
 	public Uuid() {
 	}
 
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
-	}
 
 	/**
 	 * 系统启动时，重设此两值，只

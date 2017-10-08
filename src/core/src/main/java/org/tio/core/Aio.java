@@ -567,6 +567,72 @@ public abstract class Aio {
 			log.info("{}, 组[{}]不存在", groupContext.getName(), group);
 			return false;
 		}
+		return sendToSet(groupContext, setWithLock, packet, channelContextFilter, isBlock);
+	}
+	
+	/**
+	 * 阻塞发送到指定ip对应的集合
+	 * @param groupContext
+	 * @param ip
+	 * @param packet
+	 * @author: tanyaowu
+	 */
+	public static void bSendToIp(GroupContext groupContext, String ip, Packet packet) {
+		bSendToIp(groupContext, ip, packet, null);
+	}
+
+	/**
+	 * 阻塞发送到指定ip对应的集合
+	 * @param groupContext
+	 * @param ip
+	 * @param packet
+	 * @param channelContextFilter
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public static Boolean bSendToIp(GroupContext groupContext, String ip, Packet packet, ChannelContextFilter channelContextFilter) {
+		return sendToIp(groupContext, ip, packet, channelContextFilter, true);
+	}
+	
+	/**
+	 * 发送到指定ip对应的集合
+	 * @param groupContext
+	 * @param ip
+	 * @param packet
+	 * @author: tanyaowu
+	 */
+	public static void sendToIp(GroupContext groupContext, String ip, Packet packet) {
+		sendToIp(groupContext, ip, packet, null);
+	}
+	
+	/**
+	 * 发送到指定ip对应的集合
+	 * @param groupContext
+	 * @param ip
+	 * @param packet
+	 * @param channelContextFilter
+	 * @author: tanyaowu
+	 */
+	public static void sendToIp(GroupContext groupContext, String ip, Packet packet, ChannelContextFilter channelContextFilter) {
+		sendToIp(groupContext, ip, packet, channelContextFilter, false);
+	}
+	
+	/**
+	 * 发送到指定ip对应的集合
+	 * @param groupContext
+	 * @param ip
+	 * @param packet
+	 * @param channelContextFilter
+	 * @param isBlock
+	 * @return
+	 * @author: tanyaowu
+	 */
+	private static Boolean sendToIp(GroupContext groupContext, String ip, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
+		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.ips.clients(groupContext, ip);
+		if (setWithLock == null) {
+			log.info("{}, 没有ip为[{}]的对端", groupContext.getName(), ip);
+			return false;
+		}
 
 		return sendToSet(groupContext, setWithLock, packet, channelContextFilter, isBlock);
 	}

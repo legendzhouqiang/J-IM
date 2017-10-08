@@ -33,6 +33,7 @@ import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  *
@@ -390,7 +391,8 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		String sessionId = null;
 
 		if (cookie == null) {
-			String domain = request.getHeader(HttpConst.RequestHeaderKey.Host);
+			String host = request.getHost();
+			String domain = domainFromHost(host);
 			String name = httpConfig.getSessionCookieName();
 			long maxAge = httpConfig.getSessionTimeout();
 			//			maxAge = Integer.MAX_VALUE; //把过期时间掌握在服务器端
@@ -407,7 +409,9 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 			if (httpSession1 == null) {//有cookie但是超时了
 				sessionId = httpSession.getId();
-				String domain = request.getHeader(HttpConst.RequestHeaderKey.Host);
+				String host = request.getHost();
+				String domain = domainFromHost(host);
+				
 				String name = httpConfig.getSessionCookieName();
 				long maxAge = httpConfig.getSessionTimeout();
 				//				maxAge = Long.MAX_VALUE; //把过期时间掌握在服务器端
@@ -418,6 +422,10 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 				httpConfig.getSessionStore().put(sessionId, httpSession);
 			}
 		}
+	}
+	
+	private static String domainFromHost(String host) {
+		return StrUtil.subBefore(host, ":", false);
 	}
 
 	private void processCookieBeforeHandler(HttpRequest request, RequestLine requestLine) throws ExecutionException {

@@ -69,7 +69,7 @@
 		<protobuf-java-format.version>1.4</protobuf-java-format.version>
 
 		<protostuff.version>1.6.0</protostuff.version>
-		<redisson.version>3.5.3</redisson.version>
+		<redisson.version>3.5.4</redisson.version>
 
 	</properties>
 
@@ -369,7 +369,7 @@
 			<dependency>
 				<groupId>nl.basjes.parse.useragent</groupId>
 				<artifactId>yauaa</artifactId>
-				<version>2.1</version>
+				<version>2.2</version>
 			</dependency>
 
 

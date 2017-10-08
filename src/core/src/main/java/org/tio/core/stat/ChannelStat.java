@@ -82,7 +82,7 @@ public class ChannelStat implements java.io.Serializable {
 	private AtomicLong receivedBytes = new AtomicLong();
 	
 	/**
-	 * 本IP已接收了多少次TCP数据包
+	 * 本连接已接收了多少次TCP数据包
 	 */
 	private AtomicLong receivedTcps = new AtomicLong();
 
