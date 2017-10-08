@@ -1,0 +1,33 @@
+
+html, body, :global(#root) {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: MicrosoftYaHei;
+}
+a{
+  text-decoration:none;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+:root {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+:root body {
+    position: absolute;
+}
+
+body {
+    width: 100vw;
+    overflow: hidden;
+
+}
+
+#app {
+    height: 100%;
+}
