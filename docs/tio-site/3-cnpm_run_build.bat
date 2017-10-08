@@ -1,2 +1,2 @@
-call npm run build
+call cnpm run build
 pause
