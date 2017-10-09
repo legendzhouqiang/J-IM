@@ -81,7 +81,7 @@ public class Zk {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String path = "/192.168.0.0:9090";
+		String path = "/192.168.0.0";
 		String s = Zk.createOrUpdate(path, (byte[]) null, CreateMode.PERSISTENT);
 		System.out.println(s);
 		s = Zk.createOrUpdate(path, "hello1", CreateMode.EPHEMERAL);
@@ -221,7 +221,7 @@ public class Zk {
 	 */
 	public static String getString(String path, String charset) throws Exception {
 		byte[] bs = getBytes(path);
-		if (bs != null || bs.length > 0) {
+		if (bs != null && bs.length > 0) {
 			return new String(bs, charset);
 		}
 		return null;

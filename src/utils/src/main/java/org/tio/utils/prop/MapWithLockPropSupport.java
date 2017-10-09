@@ -13,6 +13,7 @@ import org.tio.utils.lock.MapWithLock;
  * 2017年8月18日 下午5:36:02
  */
 public class MapWithLockPropSupport implements IPropSupport {
+	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(MapWithLockPropSupport.class);
 
 	/**

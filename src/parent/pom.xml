@@ -70,6 +70,7 @@
 
 		<protostuff.version>1.6.0</protostuff.version>
 		<redisson.version>3.5.4</redisson.version>
+		<jodd.version>3.9.1</jodd.version>
 
 	</properties>
 
@@ -104,7 +105,7 @@
 				<artifactId>tio-core</artifactId>
 				<version>${tio-core.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.t-io</groupId>
 				<artifactId>tio-live-bs-api</artifactId>
@@ -149,23 +150,23 @@
 				<artifactId>tio-live-bs-service</artifactId>
 				<version>${tio-live.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.t-io</groupId>
-				<artifactId>tio-live-http-common</artifactId>
+				<artifactId>tio-live-web-common</artifactId>
 				<version>${tio-live.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.t-io</groupId>
-				<artifactId>tio-live-http-server</artifactId>
+				<artifactId>tio-live-web-server</artifactId>
 				<version>${tio-live.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.t-io</groupId>
-				<artifactId>tio-live-http-client</artifactId>
+				<artifactId>tio-live-web-client</artifactId>
 				<version>${tio-live.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.t-io</groupId>
 				<artifactId>tio-live-im-common</artifactId>
@@ -372,6 +373,17 @@
 				<version>2.2</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-core</artifactId>
+				<version>${jodd.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-all</artifactId>
+				<version>${jodd.version}</version>
+			</dependency>
+
 
 			<dependency>
 				<groupId>com.typesafe</groupId>
@@ -388,6 +400,17 @@
 				<groupId>io.protostuff</groupId>
 				<artifactId>protostuff-runtime</artifactId>
 				<version>${protostuff.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz</artifactId>
+				<version>2.2.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz-jobs</artifactId>
+				<version>2.2.3</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

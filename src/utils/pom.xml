@@ -30,6 +30,17 @@
 			<artifactId>redisson</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- slf4j-logback绑定 -->
 		<dependency>
@@ -62,9 +73,6 @@
 			<artifactId>log4j-over-slf4j</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -98,6 +106,10 @@
 			<artifactId>curator-x-discovery</artifactId>
 			<version>4.0.0</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-core</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
