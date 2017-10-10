@@ -51,7 +51,7 @@ public class RedisCache implements ICache {
 	 * @author tanyaowu
 	 */
 	public static RedisCache register(RedissonClient redisson, String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds) {
-		RedisTask.start();
+		RedisExpireUpdateTask.start(); 
 
 		RedisCache redisCache = map.get(cacheName);
 		if (redisCache == null) {
@@ -100,7 +100,7 @@ public class RedisCache implements ICache {
 		Serializable ret = bucket.get();
 		if (timeToIdleSeconds != null) {
 			//			bucket.expire(timeout, TimeUnit.SECONDS);
-			RedisTask.add(cacheName, key, timeout);
+			RedisExpireUpdateTask.add(cacheName, key, timeout);
 		}
 		return ret;
 	}

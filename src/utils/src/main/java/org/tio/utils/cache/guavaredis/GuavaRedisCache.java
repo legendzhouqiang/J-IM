@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.utils.cache.ICache;
 import org.tio.utils.cache.guava.GuavaCache;
 import org.tio.utils.cache.redis.RedisCache;
-import org.tio.utils.cache.redis.RedisTask;
+import org.tio.utils.cache.redis.RedisExpireUpdateTask;
 
 /**
  * @author tanyaowu
@@ -161,7 +161,7 @@ public class GuavaRedisCache implements ICache {
 		} else {
 			Long timeToIdleSeconds = redisCache.getTimeToIdleSeconds();
 			if (timeToIdleSeconds != null) {
-				RedisTask.add(cacheName, key, timeToIdleSeconds);
+				RedisExpireUpdateTask.add(cacheName, key, timeToIdleSeconds);
 			}
 		}
 		return ret;

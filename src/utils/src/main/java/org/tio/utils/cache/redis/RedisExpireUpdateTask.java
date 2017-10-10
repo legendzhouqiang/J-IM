@@ -10,13 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.tio.utils.lock.SetWithLock;
 
 /**
+ * 定时更新redis的过期时间
  * @author tanyaowu
  * 2017年8月14日 下午1:34:06
  */
-public class RedisTask {
-	private static Logger log = LoggerFactory.getLogger(RedisTask.class);
+public class RedisExpireUpdateTask {
+	private static Logger log = LoggerFactory.getLogger(RedisExpireUpdateTask.class);
 
-	//	private static RedisTask instance = null;
+	//	private static RedisExpireUpdateTask instance = null;
 
 	private static boolean started = false;
 
@@ -40,11 +41,11 @@ public class RedisTask {
 	}
 
 	public static void start() {
-		//		instance = new RedisTask();
+		//		instance = new RedisExpireUpdateTask();
 		if (started) {
 			return;
 		}
-		synchronized (RedisTask.class) {
+		synchronized (RedisExpireUpdateTask.class) {
 			if (started) {
 				return;
 			}
@@ -79,14 +80,14 @@ public class RedisTask {
 				}
 
 			}
-		}, RedisTask.class.getName()).start();
+		}, RedisExpireUpdateTask.class.getName()).start();
 	}
 
 	/**
 	 *
 	 * @author tanyaowu
 	 */
-	private RedisTask() {
+	private RedisExpireUpdateTask() {
 		//		this.redisson = redisson;
 	}
 }
