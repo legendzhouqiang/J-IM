@@ -25,6 +25,7 @@ import org.tio.http.common.session.HttpSession;
 import org.tio.http.server.listener.HttpServerInterceptor;
 import org.tio.http.server.listener.HttpSessionListener;
 import org.tio.http.server.mvc.Routes;
+import org.tio.http.server.session.SessionCookieDecorator;
 import org.tio.http.server.util.ClassUtils;
 import org.tio.http.server.util.Resps;
 import org.tio.utils.cache.guava.GuavaCache;
@@ -76,6 +77,8 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	private HttpServerInterceptor httpServerInterceptor;
 
 	private HttpSessionListener httpSessionListener;
+	
+	private SessionCookieDecorator sessionCookieDecorator;
 
 	private GuavaCache staticResCache;
 
@@ -391,37 +394,37 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		String sessionId = null;
 
 		if (cookie == null) {
-			String host = request.getHost();
-			String domain = domainFromHost(host);
-			String name = httpConfig.getSessionCookieName();
-			long maxAge = httpConfig.getSessionTimeout();
-			//			maxAge = Integer.MAX_VALUE; //把过期时间掌握在服务器端
-
-			sessionId = httpSession.getId();//randomCookieValue();
-
-			cookie = new Cookie(domain, name, sessionId, maxAge);
-			httpResponse.addCookie(cookie);
-			httpConfig.getSessionStore().put(sessionId, httpSession);
+			createSessionCookie(request, httpSession, httpResponse);
 			log.info("{} 创建会话Cookie, {}", request.getChannelContext(), cookie);
 		} else {
 			sessionId = cookie.getValue();
 			HttpSession httpSession1 = (HttpSession) httpConfig.getSessionStore().get(sessionId);
 
 			if (httpSession1 == null) {//有cookie但是超时了
-				sessionId = httpSession.getId();
-				String host = request.getHost();
-				String domain = domainFromHost(host);
-				
-				String name = httpConfig.getSessionCookieName();
-				long maxAge = httpConfig.getSessionTimeout();
-				//				maxAge = Long.MAX_VALUE; //把过期时间掌握在服务器端
-
-				cookie = new Cookie(domain, name, sessionId, maxAge);
-				httpResponse.addCookie(cookie);
-
-				httpConfig.getSessionStore().put(sessionId, httpSession);
+				createSessionCookie(request, httpSession, httpResponse);
 			}
 		}
+	}
+	
+	private Cookie createSessionCookie(HttpRequest request, HttpSession httpSession, HttpResponse httpResponse) {
+		String sessionId = httpSession.getId();
+		String host = request.getHost();
+		String domain = domainFromHost(host);
+		
+		String name = httpConfig.getSessionCookieName();
+		long maxAge = httpConfig.getSessionTimeout();
+		//				maxAge = Long.MAX_VALUE; //把过期时间掌握在服务器端
+
+		Cookie sessionCookie = new Cookie(domain, name, sessionId, maxAge);
+		
+		if (sessionCookieDecorator != null) {
+			sessionCookieDecorator.decorate(sessionCookie);
+		}
+		httpResponse.addCookie(sessionCookie);
+
+		httpConfig.getSessionStore().put(sessionId, httpSession);
+		
+		return sessionCookie;
 	}
 	
 	private static String domainFromHost(String host) {
@@ -486,6 +489,14 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 	public void setHttpSessionListener(HttpSessionListener httpSessionListener) {
 		this.httpSessionListener = httpSessionListener;
+	}
+
+	public SessionCookieDecorator getSessionCookieDecorator() {
+		return sessionCookieDecorator;
+	}
+
+	public void setSessionCookieDecorator(SessionCookieDecorator sessionCookieDecorator) {
+		this.sessionCookieDecorator = sessionCookieDecorator;
 	}
 
 }

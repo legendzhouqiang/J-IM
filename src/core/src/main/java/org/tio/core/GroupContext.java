@@ -28,6 +28,11 @@ import org.tio.utils.prop.MapWithLockPropSupport;
 import org.tio.utils.thread.pool.DefaultThreadFactory;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2016年10月10日 下午5:25:43
+ */
 public abstract class GroupContext extends MapWithLockPropSupport {
 	static Logger log = LoggerFactory.getLogger(GroupContext.class);
 
@@ -113,7 +118,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	 */
 	protected int maxDecodeErrorCountForIp = 10;
 
-	protected String name;
+	protected String name = "未命名GroupContext";
 
 	private boolean isStopped = false;
 

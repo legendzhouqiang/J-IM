@@ -115,12 +115,12 @@ public abstract class Aio {
 
 	/**
 	 * 发消息给指定ChannelContext id
-	 * @param channelContextId
+	 * @param channelId
 	 * @param packet
 	 * @author tanyaowu
 	 */
-	public static void bSendToId(GroupContext groupContext, String channelContextId, Packet packet) {
-		sendToId(groupContext, channelContextId, packet, true);
+	public static void bSendToId(GroupContext groupContext, String channelId, Packet packet) {
+		sendToId(groupContext, channelId, packet, true);
 	}
 
 	/**
@@ -178,14 +178,14 @@ public abstract class Aio {
 	 */
 	private static void close(ChannelContext channelContext, Throwable throwable, String remark, boolean isNeedRemove) {
 		if (channelContext.isWaitingClose()) {
-			log.info("{} 正在等待被关闭", channelContext);
+			log.debug("{} 正在等待被关闭", channelContext);
 			return;
 		}
 
 		synchronized (channelContext) {
 			//double check
 			if (channelContext.isWaitingClose()) {
-				log.info("{} 正在等待被关闭", channelContext);
+				log.debug("{} 正在等待被关闭", channelContext);
 				return;
 			}
 			channelContext.setWaitingClose(true);
@@ -242,12 +242,12 @@ public abstract class Aio {
 
 	/**
 	 * 根据id获取ChannelContext
-	 * @param channelContextId
+	 * @param channelId
 	 * @return
 	 * @author tanyaowu
 	 */
-	public static ChannelContext getChannelContextById(GroupContext groupContext, String channelContextId) {
-		return groupContext.ids.find(groupContext, channelContextId);
+	public static ChannelContext getChannelContextById(GroupContext groupContext, String channelId) {
+		return groupContext.ids.find(groupContext, channelId);
 	}
 
 	/**
@@ -321,7 +321,7 @@ public abstract class Aio {
 	public static void remove(ChannelContext channelContext, String remark) {
 		remove(channelContext, null, remark);
 	}
-	
+
 	/**
 	 * 删除client ip为指定值的所有连接
 	 * @param groupContext
@@ -377,8 +377,8 @@ public abstract class Aio {
 	 * @param packet
 	 * @author tanyaowu
 	 */
-	public static void send(ChannelContext channelContext, Packet packet) {
-		send(channelContext, packet, null, null);
+	public static Boolean send(ChannelContext channelContext, Packet packet) {
+		return send(channelContext, packet, null, null);
 	}
 
 	/**
@@ -468,8 +468,8 @@ public abstract class Aio {
 	 * @param packet
 	 * @author tanyaowu
 	 */
-	public static void send(GroupContext groupContext, String ip, int port, Packet packet) {
-		send(groupContext, ip, port, packet, false);
+	public static Boolean send(GroupContext groupContext, String ip, int port, Packet packet) {
+		return send(groupContext, ip, port, packet, false);
 	}
 
 	/**
@@ -492,7 +492,7 @@ public abstract class Aio {
 				return null;
 			}
 		} else {
-			log.error("can find channelContext by {}:{}", ip, port);
+			log.info("{}, can find channelContext by {}:{}", groupContext.getName(), ip, port);
 			return false;
 		}
 	}
@@ -500,7 +500,7 @@ public abstract class Aio {
 	public static void sendToAll(GroupContext groupContext, Packet packet) {
 		sendToAll(groupContext, packet, null);
 	}
-	
+
 	/**
 	 * 发消息到所有连接
 	 * @param groupContext
@@ -523,7 +523,7 @@ public abstract class Aio {
 	private static Boolean sendToAll(GroupContext groupContext, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
 		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.connections.getSetWithLock();
 		if (setWithLock == null) {
-			log.debug("没有任何连接");
+			log.debug("{}, 没有任何连接", groupContext.getName());
 			return false;
 		}
 
@@ -564,7 +564,7 @@ public abstract class Aio {
 	private static Boolean sendToGroup(GroupContext groupContext, String group, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
 		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.groups.clients(groupContext, group);
 		if (setWithLock == null) {
-			log.info("{}, 组[{}]不存在", groupContext.getName(), group);
+			log.debug("{}, 组[{}]不存在", groupContext.getName(), group);
 			return false;
 		}
 		return sendToSet(groupContext, setWithLock, packet, channelContextFilter, isBlock);
@@ -593,7 +593,7 @@ public abstract class Aio {
 	public static Boolean bSendToIp(GroupContext groupContext, String ip, Packet packet, ChannelContextFilter channelContextFilter) {
 		return sendToIp(groupContext, ip, packet, channelContextFilter, true);
 	}
-	
+
 	/**
 	 * 发送到指定ip对应的集合
 	 * @param groupContext
@@ -604,7 +604,7 @@ public abstract class Aio {
 	public static void sendToIp(GroupContext groupContext, String ip, Packet packet) {
 		sendToIp(groupContext, ip, packet, null);
 	}
-	
+
 	/**
 	 * 发送到指定ip对应的集合
 	 * @param groupContext
@@ -616,7 +616,7 @@ public abstract class Aio {
 	public static void sendToIp(GroupContext groupContext, String ip, Packet packet, ChannelContextFilter channelContextFilter) {
 		sendToIp(groupContext, ip, packet, channelContextFilter, false);
 	}
-	
+
 	/**
 	 * 发送到指定ip对应的集合
 	 * @param groupContext
@@ -639,32 +639,31 @@ public abstract class Aio {
 
 	/**
 	 * 发消息给指定ChannelContext id
-	 * @param channelContextId
+	 * @param channelId
 	 * @param packet
 	 * @author tanyaowu
 	 */
-	public static Boolean sendToId(GroupContext groupContext, String channelContextId, Packet packet) {
-		return sendToId(groupContext, channelContextId, packet, false);
+	public static Boolean sendToId(GroupContext groupContext, String channelId, Packet packet) {
+		return sendToId(groupContext, channelId, packet, false);
 	}
 
 	/**
 	 * 发消息给指定ChannelContext id
-	 * @param channelContextId
+	 * @param channelId
 	 * @param packet
 	 * @param isBlock
 	 * @return
 	 * @author tanyaowu
 	 */
-	private static Boolean sendToId(GroupContext groupContext, String channelContextId, Packet packet, boolean isBlock) {
-		ChannelContext channelContext = Aio.getChannelContextById(groupContext, channelContextId);
+	private static Boolean sendToId(GroupContext groupContext, String channelId, Packet packet, boolean isBlock) {
+		ChannelContext channelContext = Aio.getChannelContextById(groupContext, channelId);
 		if (channelContext == null) {
 			return false;
 		}
 		if (isBlock) {
 			return bSend(channelContext, packet);
 		} else {
-			send(channelContext, packet);
-			return null;
+			return send(channelContext, packet);
 		}
 	}
 
@@ -708,7 +707,7 @@ public abstract class Aio {
 			lock.lock();
 			Set<ChannelContext> set = setWithLock.getObj();
 			if (set.size() == 0) {
-				log.debug("集合为空");
+				log.debug("{}, 集合为空", groupContext.getName());
 				return false;
 			}
 			if (!groupContext.isEncodeCareWithChannelContext()) {
@@ -753,7 +752,7 @@ public abstract class Aio {
 					timeout = timeout < 10 ? 10 : timeout;
 					boolean awaitFlag = countDownLatch.await(timeout, TimeUnit.SECONDS);
 					if (!awaitFlag) {
-						log.error("同步群发超时, size:{}, timeout:{}, packet:{}", setWithLock.getObj().size(), timeout, packet.logstr());
+						log.error("{}, 同步群发超时, size:{}, timeout:{}, packet:{}", groupContext.getName(), setWithLock.getObj().size(), timeout, packet.logstr());
 						return false;
 					} else {
 						return true;
@@ -802,15 +801,17 @@ public abstract class Aio {
 	 */
 	private static Boolean sendToUser(GroupContext groupContext, String userid, Packet packet, boolean isBlock) {
 		ChannelContext channelContext = groupContext.users.find(groupContext, userid);
-		if (channelContext == null) {
-			return false;
-		}
-		
-		if (isBlock) {
-			return bSend(channelContext, packet);
-		} else {
-			send(channelContext, packet);
-			return null;
+		try {
+			if (channelContext == null) {
+				return false;
+			}
+
+			if (isBlock) {
+				return bSend(channelContext, packet);
+			} else {
+				return send(channelContext, packet);
+			}
+		} finally {
 		}
 	}
 
@@ -855,7 +856,7 @@ public abstract class Aio {
 				return null;
 			}
 			if (respPacket == packet) {
-				log.error("同步发送超时,{}", channelContext);
+				log.error("{}, 同步发送超时, {}", channelContext.getGroupContext().getName(), channelContext);
 				return null;
 			}
 			return respPacket;
@@ -891,7 +892,7 @@ public abstract class Aio {
 	public static void unbindUser(ChannelContext channelContext) {
 		channelContext.getGroupContext().users.unbind(channelContext);
 	}
-	
+
 	/**
 	 * 解除userid的绑定。一般用于多地登录，踢掉前面登录的场景
 	 * @param groupContext

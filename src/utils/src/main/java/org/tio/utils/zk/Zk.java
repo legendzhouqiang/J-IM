@@ -39,7 +39,7 @@ public class Zk {
 	static CuratorFramework zkclient = null;
 	//		static String nameSpace = "php";
 	//	static {
-	//		String zkhost = "127.0.0.1:2181";//AppConfig.getInstance().getString("zk.address", null);//"127.0.0.1:2181";//ZK host
+	//		String zkhost = "192.168.1.41:2181";//AppConfig.getInstance().getString("zk.address", null);//"192.168.1.41:2181";//ZK host
 	//		zkhost = AppConfig.getInstance().getString("zk.address", null);
 	//
 	//		if (StringUtils.isBlank(zkhost)) {
@@ -59,11 +59,11 @@ public class Zk {
 
 	/**
 	 * 
-	 * @param address 形如：127.0.0.1:2181
+	 * @param address 形如：192.168.1.41:2181
 	 * @author: tanyaowu
 	 */
 	public static void init(String address) {
-		//		String zkhost = "127.0.0.1:2181";//AppConfig.getInstance().getString("zk.address", null);//"127.0.0.1:2181";//ZK host
+		//		String zkhost = "192.168.1.41:2181";//AppConfig.getInstance().getString("zk.address", null);//"192.168.1.41:2181";//ZK host
 		//		zkhost = AppConfig.getInstance().getString("zk.address", null);
 
 		if (StringUtils.isBlank(address)) {

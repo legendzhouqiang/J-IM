@@ -318,8 +318,8 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 			countDownLatch.countDown();
 		}
 		try {
-			if (log.isInfoEnabled()) {
-				log.info("{} 已经发送 {}", this, packet.logstr());
+			if (log.isDebugEnabled()) {
+				log.debug("{} 已经发送 {}", this, packet.logstr());
 			}
 			groupContext.getAioListener().onAfterSent(this, packet, isSentSuccess == null ? false : isSentSuccess);
 		} catch (Exception e) {

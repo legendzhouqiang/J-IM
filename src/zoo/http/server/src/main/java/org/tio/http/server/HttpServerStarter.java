@@ -51,7 +51,7 @@ public class HttpServerStarter {
 
 	private AioServer aioServer = null;
 
-	private HttpRequestHandler requestHandler;
+	private HttpRequestHandler httpRequestHandler;
 	
 	private Routes routes;
 
@@ -111,7 +111,7 @@ public class HttpServerStarter {
 	}
 
 	public HttpRequestHandler getHttpRequestHandler() {
-		return requestHandler;
+		return httpRequestHandler;
 	}
 
 	/**
@@ -137,8 +137,8 @@ public class HttpServerStarter {
 
 	private void init(HttpConfig httpConfig, HttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		this.httpConfig = httpConfig;
-		this.requestHandler = requestHandler;
-		httpConfig.setHttpRequestHandler(this.requestHandler);
+		this.httpRequestHandler = requestHandler;
+		httpConfig.setHttpRequestHandler(this.httpRequestHandler);
 		this.httpServerAioHandler = new HttpServerAioHandler(httpConfig, requestHandler);
 		httpServerAioListener = new HttpServerAioListener();
 		serverGroupContext = new ServerGroupContext(httpServerAioHandler, httpServerAioListener, tioExecutor, groupExecutor);
@@ -154,7 +154,7 @@ public class HttpServerStarter {
 	}
 
 	public void setHttpRequestHandler(HttpRequestHandler requestHandler) {
-		this.requestHandler = requestHandler;
+		this.httpRequestHandler = requestHandler;
 	}
 
 	public void start() throws IOException {

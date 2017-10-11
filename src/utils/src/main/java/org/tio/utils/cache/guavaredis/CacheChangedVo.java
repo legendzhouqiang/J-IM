@@ -1,10 +1,7 @@
 package org.tio.utils.cache.guavaredis;
 
 import java.io.Serializable;
-
-import org.tio.utils.Uuid;
-
-import com.xiaoleilu.hutool.util.RandomUtil;
+import java.util.UUID;
 
 /**
  * @author tanyaowu
@@ -14,7 +11,7 @@ public class CacheChangedVo implements Serializable {
 
 	private static final long serialVersionUID = 1546804469064012259L;
 
-	public static final String CLIENTID = RandomUtil.randomString(10);
+	public static final String CLIENTID = UUID.randomUUID().toString();
 
 	/**
 	 * @param args
@@ -28,7 +25,7 @@ public class CacheChangedVo implements Serializable {
 
 	private String key;
 
-	private String clientId = Uuid.getWorkid() + "_" + Uuid.getDatacenterid() + "_" + CLIENTID;
+	private String clientId = CLIENTID;
 
 	//	private String serverId;
 	private CacheChangeType type;

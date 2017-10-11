@@ -21,9 +21,9 @@ import org.tio.utils.lock.ObjWithLock;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
- * The Class ServerGroupContext.
- *
- * @author tanyaowu
+ * 
+ * @author tanyaowu 
+ * 2016年10月10日 下午5:51:56
  */
 public class ServerGroupContext extends GroupContext {
 	static Logger log = LoggerFactory.getLogger(ServerGroupContext.class);
@@ -42,27 +42,47 @@ public class ServerGroupContext extends GroupContext {
 	private Thread checkHeartbeatThread = null;
 
 	/**
-	 *
+	 * 
 	 * @param serverAioHandler
 	 * @param serverAioListener
-	 * @param groupExecutor
-	 *
-	 * @author tanyaowu
-	 * 2017年2月2日 下午1:40:11
-	 *
+	 * @author: tanyaowu
 	 */
 	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener) {
 		this(null, serverAioHandler, serverAioListener);
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param serverAioHandler
+	 * @param serverAioListener
+	 * @author: tanyaowu
+	 */
 	public ServerGroupContext(String name, ServerAioHandler serverAioHandler, ServerAioListener serverAioListener) {
 		this(name, serverAioHandler, serverAioListener, null, null);
 	}
 
+	/**
+	 * 
+	 * @param serverAioHandler
+	 * @param serverAioListener
+	 * @param tioExecutor
+	 * @param groupExecutor
+	 * @author: tanyaowu
+	 */
 	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		this(null, serverAioHandler, serverAioListener, tioExecutor, groupExecutor);
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param serverAioHandler
+	 * @param serverAioListener
+	 * @param tioExecutor
+	 * @param groupExecutor
+	 * @author: tanyaowu
+	 */
 	public ServerGroupContext(String name, ServerAioHandler serverAioHandler, ServerAioListener serverAioListener, SynThreadPoolExecutor tioExecutor,
 			ThreadPoolExecutor groupExecutor) {
 		super(tioExecutor, groupExecutor);
@@ -70,7 +90,6 @@ public class ServerGroupContext extends GroupContext {
 		this.acceptCompletionHandler = new AcceptCompletionHandler();
 		this.serverAioHandler = serverAioHandler;
 		this.serverAioListener = serverAioListener == null ? new DefaultServerAioListener() : serverAioListener;
-
 		checkHeartbeatThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -79,6 +98,11 @@ public class ServerGroupContext extends GroupContext {
 					if (heartbeatTimeout <= 0) {
 						log.info("{}, 用户取消了框架层面的心跳检测，如果业务需要，请用户自己去完成心跳检测", ServerGroupContext.this.name);
 						break;
+					}
+					try {
+						Thread.sleep(heartbeatTimeout);
+					} catch (InterruptedException e1) {
+						log.error(e1.toString(), e1);
 					}
 					long start = SystemTimer.currentTimeMillis();
 					ObjWithLock<Set<ChannelContext>> objWithLock = ServerGroupContext.this.connections.getSetWithLock();
@@ -175,7 +199,6 @@ public class ServerGroupContext extends GroupContext {
 								long iv = end - start1;
 								log.info("{}, 检查心跳, 共{}个连接, 取锁耗时{}ms, 循环耗时{}ms, 心跳超时时间:{}ms", ServerGroupContext.this.name, count, iv1, iv, heartbeatTimeout);
 							}
-							Thread.sleep(heartbeatTimeout);
 						} catch (Exception e) {
 							log.error("", e);
 						}
@@ -186,7 +209,6 @@ public class ServerGroupContext extends GroupContext {
 		checkHeartbeatThread.setDaemon(true);
 		checkHeartbeatThread.setPriority(Thread.MIN_PRIORITY);
 		checkHeartbeatThread.start();
-
 	}
 
 	/**

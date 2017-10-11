@@ -23,6 +23,12 @@ public class Packet implements java.io.Serializable {
 	private PacketListener packetListener;
 
 	private boolean isBlockSend = false;
+	
+	/**
+	 * 消息是否是另外一台机器通过topic转过来的，如果是就不要死循环地再一次转发啦
+	 * 这个属性是tio内部使用，业务层的用户请务使用
+	 */
+	private boolean isFromCluster = false;
 
 	/**
 	 * 同步发送时，需要的同步序列号
@@ -134,6 +140,14 @@ public class Packet implements java.io.Serializable {
 	 */
 	public void setSynSeq(Integer synSeq) {
 		this.synSeq = synSeq;
+	}
+
+	public boolean isFromCluster() {
+		return isFromCluster;
+	}
+
+	public void setFromCluster(boolean isFromCluster) {
+		this.isFromCluster = isFromCluster;
 	}
 
 }

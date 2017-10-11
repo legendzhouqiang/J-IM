@@ -162,8 +162,8 @@ public class DecodeRunnable implements Runnable {
 
 					AioListener aioListener = channelContext.getGroupContext().getAioListener();
 					try {
-						if (log.isInfoEnabled()) {
-							log.info("{} 收到消息 {}", channelContext, packet.logstr());
+						if (log.isDebugEnabled()) {
+							log.debug("{} 收到消息 {}", channelContext, packet.logstr());
 						}
 						aioListener.onAfterReceived(channelContext, packet, len);
 					} catch (Exception e) {

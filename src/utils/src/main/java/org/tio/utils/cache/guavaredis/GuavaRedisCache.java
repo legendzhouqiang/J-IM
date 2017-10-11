@@ -49,6 +49,10 @@ public class GuavaRedisCache implements ICache {
 						@Override
 						public void onMessage(String channel, CacheChangedVo cacheChangedVo) {
 							String clientid = cacheChangedVo.getClientId();
+							if (StringUtils.isBlank(clientid)) {
+								log.error("clientid is null");
+								return;
+							}
 							if (Objects.equals(CacheChangedVo.CLIENTID, clientid)) {
 								log.info("自己发布的消息,{}", clientid);
 								return;
