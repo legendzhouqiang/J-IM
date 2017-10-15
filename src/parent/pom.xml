@@ -4,7 +4,7 @@
 	<groupId>org.t-io</groupId>
 	<artifactId>tio-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>2.0.0.v20170824-RELEASE</version>
+	<version>2.0.1.v20171015-RELEASE</version>
 	<name>${project.artifactId}</name>
 	<url>http://maven.apache.org</url>
 
@@ -34,12 +34,12 @@
 	</modules>
 
 	<properties>
-		<tio-core.version>2.0.0.v20170824-RELEASE</tio-core.version>
-		<tio-http.version>0.0.2-tio-http</tio-http.version>
-		<tio-websocket.version>0.0.2-tio-websocket</tio-websocket.version>
-		<tio-live.version>0.0.2-tio-live</tio-live.version>
-		<tio-bs.version>0.0.2-tio-bs</tio-bs.version>
-		<tio-utils.version>2.0.0.v20170824-RELEASE</tio-utils.version>
+		<tio-core.version>2.0.1.v20171015-RELEASE</tio-core.version>
+		<tio-http.version>0.0.3-tio-http</tio-http.version>
+		<tio-websocket.version>0.0.3-tio-websocket</tio-websocket.version>
+		<tio-live.version>0.0.3-tio-live</tio-live.version>
+		<tio-bs.version>0.0.3-tio-bs</tio-bs.version>
+		<tio-utils.version>2.0.1.v20171015-RELEASE</tio-utils.version>
 
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
