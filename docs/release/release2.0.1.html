@@ -6,14 +6,14 @@
 t-io 2.0.1发布----从"阿猫阿狗"到"码云最有价值开源项目"
 
 <h2>
-	先和大家分享一下t-io最近获得的荣誉 -- GVP
+	先和大家分享一下t-io的最新荣誉 -- GVP
 </h2>
 <p>
 	<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/honor/gvp.png" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/honor/gvp.png"/></a></div>
 	
 </p>
 <p>
-	毫无BAT背书的t-io作者在最初开源t-io的时候，是很被嫌弃的，“阿猫阿狗也出来写框架了”、“这作者就是个傻比”等典型的嫌弃用语作者收到过多次，不过面对嫌弃，最好的方式就是不卑不亢地做好自己，《黄帝内经》曰：<strong>“正气内存，邪不可干”</strong>！
+	没有BAT做背书，开源网络框架是很容易被嫌弃的，网络框架毕竟不是管理型应用，前者偏重技术，对抽象能力、思维慎密、核心基础知识、API规划能力及各种取舍判断能力要求比较高，所以最初作者经常收到类似“阿猫阿狗也出来写框架了”等典型的嫌弃用语，不过面对嫌弃，最好的方式就是不卑不亢地做好自己，《黄帝内经》曰：<strong>“正气内存，邪不可干”</strong>！
 	今天t-io被OSC评为<strong>GVP -- 码云最有价值开源项目</strong>（之一），感谢t-io的朋友们，尤其是t-io真实用户们，他们的各种需求、建议、挑剔和鼓励，让t-io在短时间内获得爆炸性的发展。
 </p>
 
@@ -52,7 +52,7 @@ t-io 2.0.1发布----从"阿猫阿狗"到"码云最有价值开源项目"
 		<li>优化tio-http-server mvc，不再限制hander的返回值必须返回org.tio.http.common.HttpResponse，框架内部自己判断返回值，如果不是HttpResponse，则默认给出json响应的HttpResponse对象，减少开发人员的机械性的代码。
 		</li>
 		
-		<li>tio-core bug修复，org.tio.core.task.DecodeRunnable.java中一个日志有误，（不影响逻辑，就是日志打印不正确），感谢群友某某某(不好意思，聊天记录找不到了)反馈
+		<li>tio-core bug修复，org.tio.core.task.DecodeRunnable.java中一个日志有误，（不影响逻辑，就是日志打印不正确），感谢群友某某反馈
 		</li>
 	</ol>
 </p>
@@ -63,6 +63,73 @@ t-io 2.0.1发布----从"阿猫阿狗"到"码云最有价值开源项目"
 <p>
 	<div><a href="https://gitee.com/tywo45/t-io/raw/master/docs/api/zoo.png" target="_blank"><img src="https://gitee.com/tywo45/t-io/raw/master/docs/api/zoo.png"/></a></div>
 </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <h2>
+            <strong>最新maven坐标</strong>
+        </h2>
+        <p><h3>tio-utils</h3>
+            tio工具类库，类似hutool等工具库，tio-core已经引用hutool，所以tio-utils只作为一个补充存在
+			<div style="font-size:18px;color:#efef8f;background-color:#3f3f3f;margin:8px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-utils&lt;/artifactId&gt;
+    &lt;version&gt;2.0.1.v20171015-RELEASE&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </p>
+		
+		<p><h3>tio-core</h3>
+		tio主工程
+            <div style="font-size:18px;color:#efef8f;background-color:#3f3f3f;margin:8px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-core&lt;/artifactId&gt;
+    &lt;version&gt;2.0.1.v20171015-RELEASE&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </p>
+		
+		<p><h3>tio-httpserver</h3>
+		用tio-core实现的httpserver，目前t-io官网已经在用，运行十分稳定！<a href="http://www.t-io.org" target="_blank">http://www.t-io.org<a>
+            <div style="font-size:18px;color:#efef8f;background-color:#3f3f3f;margin:8px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-http-server&lt;/artifactId&gt;
+    &lt;version&gt;0.0.3-tio-http&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </p>
+
+        <p><h3>tio-websocket-server</h3>
+		用tio-core实现的websocket，本人已经投入到生产环境中使用
+            <div style="font-size:18px;color:#efef8f;background-color:#3f3f3f;margin:8px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-websocket-server&lt;/artifactId&gt;
+    &lt;version&gt;0.0.3-tio-websocket&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </p>
+
+
+
+
+
+
+
 
 <h2>
 	后继工作预告及说明
