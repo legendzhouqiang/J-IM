@@ -93,17 +93,22 @@ public class Zk {
 			public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
 				switch (event.getType()) {
 				case CHILD_ADDED: {
-					System.out.println("Node added: path:" + event.getData().getPath() + ", data:" + new String(event.getData().getData()));
+					log.error("Node added: path:" + event.getData().getPath() + ", data:" + new String(event.getData().getData()));
 					break;
 				}
 
 				case CHILD_UPDATED: {
-					System.out.println("Node changed: path:" + event.getData().getPath() + ", data:" + new String(event.getData().getData()));
+					log.error("Node changed: path:" + event.getData().getPath() + ", data:" + new String(event.getData().getData()));
 					break;
 				}
 
 				case CHILD_REMOVED: {
-					System.out.println("Node removed: path:" + event.getData().getPath() + ", data:" + new String(event.getData().getData()));
+					log.error("Node removed: path:" + event.getData().getPath() + ", data:" + new String(event.getData().getData()));
+					break;
+				}
+				
+				default:{
+					log.error("not found correct event type");
 					break;
 				}
 				}

@@ -13,14 +13,14 @@ import com.xiaoleilu.hutool.date.DateUtil;
  * @author tanyaowu 
  * 2017年10月8日 下午4:58:34
  */
-public abstract class JobWihLog implements Job {
-	private static Logger log = LoggerFactory.getLogger(JobWihLog.class);
+public abstract class AbstractJobWihLog implements Job {
+	private static Logger log = LoggerFactory.getLogger(AbstractJobWihLog.class);
 
 	/**
 	 * 
 	 * @author: tanyaowu
 	 */
-	public JobWihLog() {
+	public AbstractJobWihLog() {
 	}
 
 	/** 

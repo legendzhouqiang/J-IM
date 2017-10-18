@@ -12,6 +12,7 @@ import org.redisson.api.RKeys;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.utils.SystemTimer;
 import org.tio.utils.cache.ICache;
 
 /**
@@ -51,7 +52,7 @@ public class RedisCache implements ICache {
 	 * @author tanyaowu
 	 */
 	public static RedisCache register(RedissonClient redisson, String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds) {
-		RedisExpireUpdateTask.start(); 
+		RedisExpireUpdateTask.start();
 
 		RedisCache redisCache = map.get(cacheName);
 		if (redisCache == null) {
@@ -87,8 +88,14 @@ public class RedisCache implements ICache {
 
 	@Override
 	public void clear() {
+		long start = SystemTimer.currentTimeMillis();
+		
 		RKeys keys = redisson.getKeys();
 		keys.deleteByPattern(keyPrefix(cacheName) + "*");
+		
+		long end = SystemTimer.currentTimeMillis();
+		long iv = end - start;
+		log.info("clear cache {}, cost {}ms", cacheName, iv);
 	}
 
 	@Override

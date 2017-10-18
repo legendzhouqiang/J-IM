@@ -10,7 +10,18 @@ import org.slf4j.LoggerFactory;
  * 2017年8月18日 下午3:56:02
  */
 public enum RespResult {
-	ok(1), fail(2), unknown(3);
+	/**
+	 * 成功的响应
+	 */
+	OK(1), 
+	/**
+	 * 失败的响应
+	 */
+	FAIL(2), 
+	/**
+	 * 未知的响应
+	 */
+	UNKNOWN(3);
 
 	public static RespResult from(int value) {
 		RespResult[] values = RespResult.values();

@@ -9,7 +9,7 @@ public class RespVo implements java.io.Serializable {
 	//	private static Logger log = LoggerFactory.getLogger(RespVo.class);
 
 	public static RespVo fail() {
-		RespVo resp = new RespVo(RespResult.fail);
+		RespVo resp = new RespVo(RespResult.FAIL);
 		return resp;
 	}
 
@@ -26,7 +26,7 @@ public class RespVo implements java.io.Serializable {
 	}
 
 	public static RespVo ok() {
-		RespVo resp = new RespVo(RespResult.ok);
+		RespVo resp = new RespVo(RespResult.OK);
 		return resp;
 	}
 
@@ -89,7 +89,7 @@ public class RespVo implements java.io.Serializable {
 	}
 
 	public boolean isOk() {
-		return this.result == RespResult.ok;
+		return this.result == RespResult.OK;
 	}
 
 	public RespVo msg(String msg) {
@@ -110,7 +110,7 @@ public class RespVo implements java.io.Serializable {
 	}
 
 	//	public boolean isFail() {
-	//		return this.result == RespResult.fail;
+	//		return this.result == RespResult.FAIL;
 	//	}
 
 	public void setResult(RespResult result) {

@@ -251,6 +251,9 @@ public class HttpRequest extends HttpPacket {
 	 * @author: tanyaowu
 	 */
 	public String getParam(String name) {
+		if (params == null) {
+			return null;
+		}
 		Object[] values = params.get(name);
 		if (values != null && values.length > 0) {
 			Object obj = values[0];

@@ -104,12 +104,12 @@ public class CloseRunnable implements Runnable {
 				channelContext.traceClient(ChannelAction.UNCONNECT, null, null);
 
 				if (channelContext.isClosed() && !isRemove) {
-					log.info("{}已经关闭，备注:{}，异常:{}", channelContext, remark, throwable == null ? "无" : throwable.toString());
+					log.info("{}, {}已经关闭，备注:{}，异常:{}", channelContext.getGroupContext(), channelContext, remark, throwable == null ? "无" : throwable.toString());
 					return;
 				}
 
 				if (channelContext.isRemoved()) {
-					log.info("{}已经删除，备注:{}，异常:{}", channelContext, remark, throwable == null ? "无" : throwable.toString());
+					log.info("{}, {}已经删除，备注:{}，异常:{}", channelContext.getGroupContext(), channelContext, remark, throwable == null ? "无" : throwable.toString());
 					return;
 				}
 
@@ -126,7 +126,7 @@ public class CloseRunnable implements Runnable {
 				channelContext.getSendRunnable().clearMsgQueue();
 				//		channelContext.getSendRunnableHighPrior().clearMsgQueue();
 
-				log.info("{} 准备关闭连接, isNeedRemove:{}, {}", channelContext, isRemove, remark);
+				log.info("{}, {} 准备关闭连接, isNeedRemove:{}, {}", channelContext.getGroupContext(), channelContext, isRemove, remark);
 
 				try {
 //					channelContext.getIpStat().getActivatedCount().decrementAndGet();
@@ -198,7 +198,6 @@ public class CloseRunnable implements Runnable {
 						ReconnConf.put(clientChannelContext);
 					}
 				}
-
 			} catch (Exception e) {
 				log.error(throwable.toString(), e);
 			} finally {

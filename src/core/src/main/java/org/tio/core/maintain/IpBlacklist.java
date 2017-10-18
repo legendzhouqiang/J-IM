@@ -22,8 +22,8 @@ public class IpBlacklist {
 	private String id;
 
 	private final static String CACHE_NAME = "TIO_IP_BLACK_LIST";
-	private final static Long timeToLiveSeconds = Time.DAY_1;
-	private final static Long timeToIdleSeconds = null;
+	private final static Long TIME_TO_LIVE_SECONDS = Time.DAY_1;
+	private final static Long TIME_TO_IDLE_SECONDS = null;
 
 	private String cacheName = null;
 	private GuavaCache cache = null;
@@ -31,7 +31,7 @@ public class IpBlacklist {
 	public IpBlacklist(String id) {
 		this.id = id;
 		this.cacheName = CACHE_NAME + this.id;
-		this.cache = GuavaCache.register(this.cacheName, timeToLiveSeconds, timeToIdleSeconds, null);
+		this.cache = GuavaCache.register(this.cacheName, TIME_TO_LIVE_SECONDS, TIME_TO_IDLE_SECONDS, null);
 	}
 
 	

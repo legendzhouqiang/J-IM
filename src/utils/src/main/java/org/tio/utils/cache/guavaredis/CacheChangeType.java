@@ -8,10 +8,22 @@ import java.util.Objects;
  * 2017年8月12日 下午9:33:02
  */
 public enum CacheChangeType {
-	REMOVE(1), //key级别清空本地缓存
-	UPDATE(2), //key级别清空本地缓存
-	PUT(3), //key级别清空本地缓存
-	CLEAR(4); //cacheName级别清空本地缓存
+	/**
+	 * key级别清空本地缓存
+	 */
+	REMOVE(1),
+	/**
+	 * key级别清空本地缓存
+	 */
+	UPDATE(2),
+	/**
+	 * key级别清空本地缓存
+	 */
+	PUT(3),
+	/**
+	 * cacheName级别清空本地缓存
+	 */
+	CLEAR(4);
 
 	public static CacheChangeType from(Integer method) {
 		CacheChangeType[] values = CacheChangeType.values();

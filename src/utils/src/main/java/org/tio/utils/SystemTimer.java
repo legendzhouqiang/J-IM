@@ -1,7 +1,7 @@
 package org.tio.utils;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
@@ -18,7 +18,7 @@ public class SystemTimer {
 		}
 	}
 
-	private final static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+	private final static ScheduledExecutorService EXECUTOR = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
 		@Override
 		public Thread newThread(Runnable runnable) {
 			Thread thread = new Thread(runnable, "SystemTimer");
@@ -26,17 +26,26 @@ public class SystemTimer {
 			return thread;
 		}
 	});
+			
+//			Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+//		@Override
+//		public Thread newThread(Runnable runnable) {
+//			Thread thread = new Thread(runnable, "SystemTimer");
+//			thread.setDaemon(true);
+//			return thread;
+//		}
+//	});
 
-	private static final long period = Long.parseLong(System.getProperty("system.timer.period", "10"));
+	private static final long PERIOD = Long.parseLong(System.getProperty("system.timer.period", "10"));
 
 	private static volatile long time = System.currentTimeMillis();
 
 	static {
-		executor.scheduleAtFixedRate(new TimerTask(), period, period, TimeUnit.MILLISECONDS);
+		EXECUTOR.scheduleAtFixedRate(new TimerTask(), PERIOD, PERIOD, TimeUnit.MILLISECONDS);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				executor.shutdown();
+				EXECUTOR.shutdown();
 			}
 		});
 	}

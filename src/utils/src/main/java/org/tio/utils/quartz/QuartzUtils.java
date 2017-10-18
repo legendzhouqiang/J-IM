@@ -38,18 +38,18 @@ public class QuartzUtils {
 	public QuartzUtils() {
 	}
 
-	private static final List<QuartzTimeVo> jobClasses = new ArrayList<>(10);
+	private static final List<QuartzTimeVo> JOB_CLASSES = new ArrayList<>(10);
 
 	public static void start() {
 		initJobClasses();
-		if (jobClasses.size() <= 0) {
+		if (JOB_CLASSES.size() <= 0) {
 			log.error("文件[{}]中没有配置定时任务类", file);
 			return;
 		}
 		try {
 			Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
 			int index = 1;
-			for (QuartzTimeVo quartzTimeVo : jobClasses) {
+			for (QuartzTimeVo quartzTimeVo : JOB_CLASSES) {
 				try {
 					@SuppressWarnings("unchecked")
 					Class<? extends Job> clazzz = (Class<? extends Job>) Class.forName(quartzTimeVo.getClazz());
@@ -85,7 +85,7 @@ public class QuartzUtils {
 				String cron = StringUtils.trim((String) entry.getValue());
 
 				QuartzTimeVo quartzTimeVo = new QuartzTimeVo(clazz, cron);
-				jobClasses.add(quartzTimeVo);
+				JOB_CLASSES.add(quartzTimeVo);
 			}
 		}
 	}
