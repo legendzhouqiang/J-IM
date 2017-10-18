@@ -29,21 +29,40 @@ import com.xiaoleilu.hutool.setting.dialect.Props;
 public class QuartzUtils {
 	private static Logger log = LoggerFactory.getLogger(QuartzUtils.class);
 
-	private static String file = "config/tio-quartz.properties";
+	private static final String DEFAULT_FILE = "config/tio-quartz.properties";
+	
+	private static String file = DEFAULT_FILE;
 
 	/**
 	 * 
 	 * @author: tanyaowu
 	 */
-	public QuartzUtils() {
+	private QuartzUtils() {
 	}
 
 	private static final List<QuartzTimeVo> JOB_CLASSES = new ArrayList<>(10);
 
+	/**
+	 * 配置文件为"/config/tio-quartz.properties"
+	 * 
+	 * @author: tanyaowu
+	 */
 	public static void start() {
+		start(null);
+	}
+
+	/**
+	 * 
+	 * @param file1 形如："/config/tio-quartz.properties"
+	 * @author: tanyaowu
+	 */
+	public static void start(String file1) {
+		if (StringUtils.isBlank(file1)) {
+			file = DEFAULT_FILE;
+		}
 		initJobClasses();
 		if (JOB_CLASSES.size() <= 0) {
-			log.error("文件[{}]中没有配置定时任务类", file);
+			log.error("文件[{}]中没有配置定时任务类", file1);
 			return;
 		}
 		try {
@@ -53,12 +72,12 @@ public class QuartzUtils {
 				try {
 					@SuppressWarnings("unchecked")
 					Class<? extends Job> clazzz = (Class<? extends Job>) Class.forName(quartzTimeVo.getClazz());
-//					@SuppressWarnings("unchecked")
+					//					@SuppressWarnings("unchecked")
 					JobDetail job = JobBuilder.newJob(clazzz).withIdentity("job-" + index, "group-" + index).build();
 					CronTrigger trigger = newTrigger().withIdentity("trigger-" + index, "group-" + index).withSchedule(cronSchedule(quartzTimeVo.getCron())).build();
 
 					@SuppressWarnings("unused")
-					Date d = scheduler.scheduleJob(job, trigger);			
+					Date d = scheduler.scheduleJob(job, trigger);
 					log.info("定时任务[{}]已经启动, cron:{}", clazzz.getName(), trigger.getCronExpression());
 
 				} catch (ClassNotFoundException e) {
@@ -66,9 +85,7 @@ public class QuartzUtils {
 				} finally {
 					index++;
 				}
-
 			}
-
 			scheduler.start();
 		} catch (SchedulerException e) {
 			log.error(e.toString(), e);
@@ -76,7 +93,7 @@ public class QuartzUtils {
 		}
 	}
 
-	public static void initJobClasses() {
+	private static void initJobClasses() {
 		Props props = new Props(file);
 		Set<Entry<Object, Object>> set = props.entrySet();//.keySet();
 		if (set != null && set.size() > 0) {

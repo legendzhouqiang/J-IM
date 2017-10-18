@@ -14,13 +14,14 @@ import com.xiaoleilu.hutool.date.DateUtil;
  * 2017年10月8日 下午4:58:34
  */
 public abstract class AbstractJobWihLog implements Job {
-	private static Logger log = LoggerFactory.getLogger(AbstractJobWihLog.class);
+	private Logger log = LoggerFactory.getLogger(AbstractJobWihLog.class);
 
 	/**
 	 * 
 	 * @author: tanyaowu
 	 */
 	public AbstractJobWihLog() {
+		log = LoggerFactory.getLogger(AbstractJobWihLog.class);
 	}
 
 	/** 
@@ -46,6 +47,12 @@ public abstract class AbstractJobWihLog implements Job {
 
 	}
 
+	/**
+	 * 在这里写上业务逻辑
+	 * @param context
+	 * @throws Exception
+	 * @author: tanyaowu
+	 */
 	public abstract void run(JobExecutionContext context) throws Exception;
 
 	/**
