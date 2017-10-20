@@ -13,7 +13,7 @@ import org.tio.utils.lock.ObjWithLock;
  * @author tanyaowu
  * 2017年5月10日 下午1:14:15
  */
-public abstract class PageUtils {
+public class PageUtils {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(PageUtils.class);
 

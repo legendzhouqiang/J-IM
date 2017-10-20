@@ -17,15 +17,11 @@ import org.tio.utils.lock.SetWithLock;
 public class RedisExpireUpdateTask {
 	private static Logger log = LoggerFactory.getLogger(RedisExpireUpdateTask.class);
 
-	//	private static RedisExpireUpdateTask instance = null;
-
 	private static boolean started = false;
 
 	private static Set<ExpireVo> set = new HashSet<>();
 
 	private static SetWithLock<ExpireVo> setWithLock = new SetWithLock<>(set);
-
-	//	private RedissonClient redisson;
 
 	public static void add(String cacheName, String key, long expire) {
 		ExpireVo expireVo = new ExpireVo(cacheName, key, expire);
@@ -41,7 +37,7 @@ public class RedisExpireUpdateTask {
 	}
 
 	public static void start() {
-		//		instance = new RedisExpireUpdateTask();
+		//		INSTANCE = new RedisExpireUpdateTask();
 		if (started) {
 			return;
 		}

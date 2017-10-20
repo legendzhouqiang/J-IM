@@ -26,15 +26,6 @@ public class SystemTimer {
 			return thread;
 		}
 	});
-			
-//			Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-//		@Override
-//		public Thread newThread(Runnable runnable) {
-//			Thread thread = new Thread(runnable, "SystemTimer");
-//			thread.setDaemon(true);
-//			return thread;
-//		}
-//	});
 
 	private static final long PERIOD = Long.parseLong(System.getProperty("system.timer.period", "10"));
 

@@ -13,6 +13,11 @@ import org.tio.core.GroupContext;
 import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.lock.SetWithLock;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:40:27
+ */
 public class Ips {
 
 	/** The log. */

@@ -4,6 +4,11 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:40:07
+ */
 public class Node implements Comparable<Node> {
 	private String ip;
 	private int port;

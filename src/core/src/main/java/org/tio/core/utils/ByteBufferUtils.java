@@ -6,6 +6,11 @@ import java.nio.ByteBuffer;
 import org.apache.commons.lang3.StringUtils;
 import org.tio.core.exception.LengthOverflowException;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:41:00
+ */
 public class ByteBufferUtils {
 	/**
 	 *

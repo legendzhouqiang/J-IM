@@ -42,14 +42,6 @@ public class ExpireVo {
 		//		this.expirable = expirable;
 	}
 
-	//	public RExpirable getExpirable() {
-	//		return expirable;
-	//	}
-	//
-	//	public void setExpirable(RExpirable expirable) {
-	//		this.expirable = expirable;
-	//	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -94,8 +86,6 @@ public class ExpireVo {
 	public void setExpire(long expire) {
 		this.expire = expire;
 	}
-
-	//	private RExpirable expirable;
 
 	public void setKey(String key) {
 		this.key = key;

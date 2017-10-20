@@ -291,22 +291,23 @@ public class Zk {
 		}
 	}
 
-	/**
-	 * 暂未实现
-	 * @param path
-	 * @param content
-	 * @throws Exception
-	 *
-	 * @author: tanyaowu
-	 * @创建时间:　2016年12月13日 下午4:00:26
-	 *
-	 */
-	@Deprecated
-	public static void addListener(String path, String content) throws Exception {
-
-		//		zkclient.getCuratorListenable().addListener(listener);;
-
-	}
+//	/**
+//	 * 暂未实现
+//	 * @param path
+//	 * @param content
+//	 * @throws Exception
+//	 *
+//	 * @author: tanyaowu
+//	 * @创建时间:　2016年12月13日 下午4:00:26
+//	 *
+//	 */
+//	@Deprecated
+//	public static void addListener(String path, String content) throws Exception {
+//
+//		zkclient.get.getCuratorListenable().addListener(listener);
+//		//		zkclient.getCuratorListenable().addListener(listener);;
+//
+//	}
 
 	/**
 	 * 

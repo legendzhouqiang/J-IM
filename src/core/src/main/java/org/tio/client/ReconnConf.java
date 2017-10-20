@@ -53,7 +53,9 @@ public class ReconnConf {
 
 	LinkedBlockingQueue<ChannelContext> queue = new LinkedBlockingQueue<>();
 
-	//用来重连的线程池
+	/**
+	 * 用来重连的线程池
+	 */
 	private ThreadPoolExecutor threadPoolExecutor = null;
 
 	/**

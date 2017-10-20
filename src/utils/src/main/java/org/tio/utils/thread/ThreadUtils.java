@@ -1,5 +1,10 @@
 package org.tio.utils.thread;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:41:46
+ */
 public class ThreadUtils {
 	public static String stackTrace() {
 		StackTraceElement[] elements = Thread.currentThread().getStackTrace();

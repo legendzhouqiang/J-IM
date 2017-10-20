@@ -8,6 +8,11 @@ import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.server.ServerGroupContext;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:40:34
+ */
 public class MaintainUtils {
 	private static Logger log = LoggerFactory.getLogger(MaintainUtils.class);
 

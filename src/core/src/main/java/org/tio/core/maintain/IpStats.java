@@ -51,14 +51,6 @@ public class IpStats {
 		}
 	}
 
-	//	public void stat(AtomicLong forStat, long delta) {
-	//		Set<Entry<Long, GuavaCache>> set = map.entrySet();
-	//		for (Entry<Long, GuavaCache> entry : set) {
-	//			forStat.addAndGet(delta);
-	//
-	//		}
-	//	}
-
 	/**
 	 * 添加监控时段
 	 * @param ipStatDuration 单位：秒
@@ -161,22 +153,6 @@ public class IpStats {
 		return ipStat;
 	}
 
-	//	public GuavaCache[] getCaches() {
-	//		return caches;
-	//	}
-
-	//	/**
-	//	 * 打印
-	//	 * 
-	//	 * @author: tanyaowu
-	//	 */
-	//	public void print() {
-	//		synchronized (this) {
-	//			ConcurrentMap<String, Serializable> map = caches.asMap();
-	//			log.info(Json.toFormatedJson(map));
-	//		}
-	//	}
-
 	/**
 	 *
 	 * @return
@@ -190,10 +166,6 @@ public class IpStats {
 		ConcurrentMap<String, Serializable> map = guavaCache.asMap();
 		return map;
 	}
-
-	//	public void setCaches(GuavaCache[] caches) {
-	//		this.caches = caches;
-	//	}
 
 	/**
 	 *

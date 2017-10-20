@@ -18,7 +18,7 @@ public interface ICache {
 
 	/**
 	 * 根据key获取value
-	 * @param id
+	 * @param key
 	 * @return
 	 * @author tanyaowu
 	 */
@@ -41,7 +41,7 @@ public interface ICache {
 
 	/**
 	 * 删除一个key
-	 * @param id
+	 * @param key
 	 * @return
 	 * @author tanyaowu
 	 */

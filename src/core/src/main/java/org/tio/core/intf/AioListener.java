@@ -15,7 +15,8 @@ public interface AioListener {
 	 * @param throwable the throwable 有可能为空
 	 * @param remark the remark 有可能为空
 	 * @param isRemove 是否是删除
-	 * @author tanyaowu
+	 * @throws Exception
+	 * @author: tanyaowu
 	 */
 	void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception;
 
@@ -24,9 +25,8 @@ public interface AioListener {
 	 * @param channelContext
 	 * @param isConnected 是否连接成功,true:表示连接成功，false:表示连接失败
 	 * @param isReconnect 是否是重连, true: 表示这是重新连接，false: 表示这是第一次连接
-	 *
-	 * @author tanyaowu
-	 *
+	 * @throws Exception
+	 * @author: tanyaowu
 	 */
 	void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) throws Exception;
 
@@ -34,10 +34,9 @@ public interface AioListener {
 	 * 解码成功后触发本方法
 	 * @param channelContext
 	 * @param packet
-	 * @param sentSize
-	 *
-	 * @author tanyaowu
-	 *
+	 * @param packetSize
+	 * @throws Exception
+	 * @author: tanyaowu
 	 */
 	void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) throws Exception;
 
@@ -46,7 +45,7 @@ public interface AioListener {
 	 * @param channelContext
 	 * @param packet
 	 * @param isSentSuccess true:发送成功，false:发送失败
-	 *
+	 * @throws Exception
 	 * @author tanyaowu
 	 *
 	 */

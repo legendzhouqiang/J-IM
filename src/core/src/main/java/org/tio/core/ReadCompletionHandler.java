@@ -68,7 +68,7 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 			
 
 			if (channelContext.isTraceClient()) {
-				Map<String, Object> map = new HashMap<>();
+				Map<String, Object> map = new HashMap<>(10);
 				map.put("p_r_buf_len", result);
 				channelContext.traceClient(ChannelAction.RECEIVED_BUF, null, map);
 			}

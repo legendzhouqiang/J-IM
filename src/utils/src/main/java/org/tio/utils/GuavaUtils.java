@@ -114,7 +114,6 @@ public class GuavaUtils {
 
 		loadingCache.put("1", "1");
 		Object o = loadingCache.get("1");
-		//		loadingCache.invalidate("1");
 
 		TimeUnit.SECONDS.sleep(3);
 		loadingCache.put("2", "2");

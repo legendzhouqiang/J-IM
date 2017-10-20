@@ -23,11 +23,11 @@ public class DefaultThreadFactory implements ThreadFactory {
 	}
 
 	/**
-	 * Gets the single instance of DefaultThreadFactory.
+	 * Gets the single INSTANCE of DefaultThreadFactory.
 	 *
 	 * @param threadName the thread name
 	 * @param priority the priority
-	 * @return single instance of DefaultThreadFactory
+	 * @return single INSTANCE of DefaultThreadFactory
 	 */
 	public static DefaultThreadFactory getInstance(String threadName, Integer priority) {
 		DefaultThreadFactory defaultThreadFactory = mapOfNameAndThreadFactory.get(threadName);

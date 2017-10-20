@@ -153,20 +153,16 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	}
 
 	/**
+	 * 获取AioHandler对象
 	 * @return
-	 *
-	 * @author tanyaowu
-	 * 2016年12月20日 上午11:32:02
-	 *
+	 * @author: tanyaowu
 	 */
 	public abstract AioHandler getAioHandler();
 
 	/**
+	 * 获取AioListener对象
 	 * @return
-	 *
-	 * @author tanyaowu
-	 * 2016年12月20日 上午11:33:28
-	 *
+	 * @author: tanyaowu
 	 */
 	public abstract AioListener getAioListener();
 
@@ -201,11 +197,9 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	}
 
 	/**
+	 * 获取GroupStat对象
 	 * @return
-	 *
-	 * @author tanyaowu
-	 * 2016年12月20日 上午11:33:02
-	 *
+	 * @author: tanyaowu
 	 */
 	public abstract GroupStat getGroupStat();
 

@@ -8,6 +8,11 @@ import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.utils.thread.ThreadUtils;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:40:54
+ */
 public class AioUtils {
 	private static Logger log = LoggerFactory.getLogger(AioUtils.class);
 

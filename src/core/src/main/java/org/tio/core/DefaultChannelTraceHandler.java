@@ -39,7 +39,7 @@ public class DefaultChannelTraceHandler implements ChannelTraceHandler {
 	@Override
 	public void traceChannel(ChannelContext channelContext, ChannelAction channelAction, Packet packet, Map<String, Object> extmsg) {
 		if (clientTraceLog.isInfoEnabled()) {
-			Map<String, Object> map = new HashMap<>();
+			Map<String, Object> map = new HashMap<>(10);
 			map.put("time", DateTime.now().toString(DatePattern.NORM_DATETIME_MS_FORMAT));
 			map.put("action", channelAction);
 			map.put("c_id", channelContext.getId());

@@ -2,6 +2,11 @@ package org.tio.core.stat;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:40:48
+ */
 public class GroupStat implements java.io.Serializable  {
 	private static final long serialVersionUID = -6988655941470121164L;
 	/**

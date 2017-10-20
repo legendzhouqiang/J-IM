@@ -109,10 +109,6 @@ public class RespVo implements java.io.Serializable {
 		this.msg = msg;
 	}
 
-	//	public boolean isFail() {
-	//		return this.result == RespResult.FAIL;
-	//	}
-
 	public void setResult(RespResult result) {
 		this.result = result;
 	}

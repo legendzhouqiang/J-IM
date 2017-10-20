@@ -27,7 +27,6 @@ public class CacheChangedVo implements Serializable {
 
 	private String clientId = CLIENTID;
 
-	//	private String serverId;
 	private CacheChangeType type;
 
 	/**

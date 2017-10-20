@@ -23,14 +23,18 @@ import org.slf4j.LoggerFactory;
 import com.xiaoleilu.hutool.setting.dialect.Props;
 
 /**
+ * 对Quartz的封装, 使用方法见:<a href="https://my.oschina.net/talenttan/blog/1550826">https://my.oschina.net/talenttan/blog/1550826</a>
  * @author tanyaowu 
  * 2017年10月8日 下午3:20:23
  */
 public class QuartzUtils {
 	private static Logger log = LoggerFactory.getLogger(QuartzUtils.class);
 
-	private static final String DEFAULT_FILE = "config/tio-quartz.properties";
-	
+	/**
+	 * 默认的配置文件
+	 */
+	private static final String DEFAULT_FILE = "/config/tio-quartz.properties";
+
 	private static String file = DEFAULT_FILE;
 
 	/**
@@ -40,6 +44,9 @@ public class QuartzUtils {
 	private QuartzUtils() {
 	}
 
+	/**
+	 * 
+	 */
 	private static final List<QuartzTimeVo> JOB_CLASSES = new ArrayList<>(10);
 
 	/**
@@ -93,6 +100,11 @@ public class QuartzUtils {
 		}
 	}
 
+	/**
+	 * 初始化QuartzTimeVo列表
+	 * 
+	 * @author: tanyaowu
+	 */
 	private static void initJobClasses() {
 		Props props = new Props(file);
 		Set<Entry<Object, Object>> set = props.entrySet();//.keySet();
@@ -105,14 +117,6 @@ public class QuartzUtils {
 				JOB_CLASSES.add(quartzTimeVo);
 			}
 		}
-	}
-
-	/**
-	 * @param args
-	 * @author: tanyaowu
-	 */
-	public static void main(String[] args) {
-
 	}
 
 	private static class QuartzTimeVo {
@@ -129,16 +133,8 @@ public class QuartzUtils {
 			return clazz;
 		}
 
-		//		public void setClazz(String clazz) {
-		//			this.clazz = clazz;
-		//		}
-
 		public String getCron() {
 			return cron;
 		}
-
-		//		public void setCron(String cron) {
-		//			this.cron = cron;
-		//		}
 	}
 }

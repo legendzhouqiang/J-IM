@@ -8,7 +8,7 @@ import org.tio.core.ChannelContext;
  */
 public interface GroupListener {
 	/**
-	 *
+	 * 绑定群组后回调该方法
 	 * @param channelContext
 	 * @param group
 	 * @throws Exception
@@ -17,7 +17,7 @@ public interface GroupListener {
 	void onAfterBind(ChannelContext channelContext, String group) throws Exception;
 
 	/**
-	 *
+	 * 解绑群组后回调该方法
 	 * @param channelContext
 	 * @param group
 	 * @throws Exception

@@ -13,6 +13,11 @@ import org.tio.core.intf.AioListener;
 import org.tio.core.maintain.MaintainUtils;
 import org.tio.utils.SystemTimer;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:39:59
+ */
 public class CloseRunnable implements Runnable {
 
 	private static Logger log = LoggerFactory.getLogger(CloseRunnable.class);

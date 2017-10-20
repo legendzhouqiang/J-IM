@@ -16,7 +16,7 @@ import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
  * @author tanyaowu
  * 2017年4月16日 上午11:36:53
  */
-public abstract class Json {
+public class Json {
 	private static SerializeConfig mapping = new SerializeConfig();
 
 	static {

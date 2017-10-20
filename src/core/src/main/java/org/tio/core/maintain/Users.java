@@ -9,11 +9,9 @@ import org.tio.core.GroupContext;
 import org.tio.utils.lock.ObjWithLock;
 
 /**
- * The Class Users.
- *
- * @param <Ext> the generic type
- * @param  the generic type
- * @param <R> the generic type
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:40:40
  */
 public class Users {
 

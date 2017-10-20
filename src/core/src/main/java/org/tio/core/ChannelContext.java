@@ -25,6 +25,11 @@ import org.tio.utils.prop.MapWithLockPropSupport;
 import com.xiaoleilu.hutool.date.DatePattern;
 import com.xiaoleilu.hutool.date.DateTime;
 
+/**
+ * 
+ * @author tanyaowu 
+ * 2017年10月19日 上午9:39:46
+ */
 public abstract class ChannelContext extends MapWithLockPropSupport {
 	private static Logger log = LoggerFactory.getLogger(ChannelContext.class);
 
@@ -61,8 +66,6 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	private boolean isRemoved = false;
 
-//	private IpStat ipStat;
-
 	private ChannelStat stat = new ChannelStat();
 
 	/** The asynchronous socket channel. */
@@ -95,7 +98,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	}
 
 	/**
-	 *
+	 * 创建Node
 	 * @param asynchronousSocketChannel
 	 * @return
 	 * @throws IOException
@@ -185,10 +188,6 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	public String getId() {
 		return id;
 	}
-
-//	public IpStat getIpStat() {
-//		return ipStat;
-//	}
 
 	/**
 	 * @return the readCompletionHandler
@@ -430,10 +429,6 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		}
 	}
 
-//	public void setIpStat(IpStat ipStat) {
-//		this.ipStat = ipStat;
-//	}
-
 	/**
 	 * @param reConnCount the reConnCount to set
 	 */
@@ -499,7 +494,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	public void traceBlockPacket(SynPacketAction synPacketAction, Packet packet, CountDownLatch countDownLatch, Map<String, Object> extmsg) {
 		if (isTraceSynPacket) {
 			ChannelContext channelContext = this;
-			Map<String, Object> map = new HashMap<>();
+			Map<String, Object> map = new HashMap<>(10);
 			map.put("time", DateTime.now().toString(DatePattern.NORM_DATETIME_MS_FORMAT));
 			map.put("c_id", channelContext.getId());
 			map.put("c", channelContext.toString());
