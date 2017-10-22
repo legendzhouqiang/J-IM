@@ -1,7 +1,7 @@
-import axios from 'axios';
+import fetch from 'dva/fetch';
 
 function parseJSON(response) {
-  return response;
+  return response.json();
 }
 
 function checkStatus(response) {
@@ -21,8 +21,10 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(options) {
-  return axios(options)
+export default function request(url, options) {
+  return fetch(url, options)
     .then(checkStatus)
-    .then(parseJSON);
+    .then(parseJSON)
+    .then(data => ({ data }))
+    .catch(err => ({ err }));
 }

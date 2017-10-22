@@ -1,42 +1,50 @@
 import React from 'react';
+import { Pagination } from 'antd';
 import { connect } from 'dva';
 import styles from './index.less';
 import CaseItem from './CaseItem';
+import { casePage } from '../../services/case';
 
-const json = [
-  {
-    title: '某省移动公司CRM系统业务',
-    readNum: 20000,
-    updateTime: '2017-08-03 14:24:17',
-    info: `上线的项目服务器用的是tio框架，作为server端与温控设备（客户端）进行socket通讯，客户端是客户那边的硬件
-    设备，有自己的协议实现，所以没有用到tio，tio帮我实现了自动重连和心跳检测...`,
-  },
-  {
-    title: '某省移动公司CRM系统业务',
-    readNum: 20200,
-    updateTime: '2017-08-03 14:24:17',
-    info: `上线的项目服务器用的是tio框架，作为server端与温控设备（客户端）进行socket通讯，客户端是客户那边的硬件
-    设备，有自己的协议实现，所以没有用到tio，tio帮我实现了自动重连和心跳检测...`,
-    isProvide: true,
-  },
-  {
-    title: '某省移动公司CRM系统业务',
-    readNum: 10000,
-    updateTime: '2017-08-03 14:24:17',
-    info: '上线的项目服务器用的是tio框架，作为server端与温控设备（客户端）进行socket通讯',
-  },
-];
 class CasePage extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      pageNumber: 1,
+      pageSize: 10,
+      totalRow: 100,
+      list: [],
+    };
+  }
+  componentWillMount() {
+    this.queryCasePage(this.state.pageNumber, this.state.pageSize);
+  }
+  async queryCasePage(page, pageSize) {
+    const { data } = await casePage(page, pageSize);
+    this.setState(data);
+  }
   render() {
     return (
       <div className={styles.container}>
+        <div className={styles.bcolor}>
+
+        </div>
         <div className={styles.main}>
           {
-            json.map((item) => {
-              return <CaseItem {...item} />;
-            })
+          this.state.list.map((item) => {
+            return <CaseItem key={item.id} {...item} />;
+          })
           }
+          <Pagination
+            style={{ textAlign: 'right' }}
+            showSizeChanger
+            showQuickJumper
+            current={this.state.pageNumber}
+            pageSize={this.state.pageSize}
+            total={this.state.totalRow}
+            onChange={this.queryCasePage.bind(this)}
+            onShowSizeChange={this.queryCasePage.bind(this)}
+          />
         </div>
       </div>
     );

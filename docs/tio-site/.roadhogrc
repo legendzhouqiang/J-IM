@@ -15,5 +15,12 @@
       ]
     }
 
+  },
+  "proxy": {
+  "/api": {
+    "target": "http://www.t-io.org/",
+    "changeOrigin": true,
+    "pathRewrite": { "^/api" : "" }
   }
+}
 }
