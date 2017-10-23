@@ -11,7 +11,7 @@ class CasePage extends React.Component {
     super(props);
     this.state = {
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 4,
       totalRow: 100,
       list: [],
     };
