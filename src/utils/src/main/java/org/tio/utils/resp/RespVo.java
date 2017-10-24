@@ -52,7 +52,7 @@ public class RespVo implements java.io.Serializable {
 	/**
 	 * 业务编码：一般是在失败情况下会用到这个，以便告知用户失败的原因是什么
 	 */
-	private Object code;
+	private Integer code;
 
 	/**
 	 *
@@ -62,7 +62,7 @@ public class RespVo implements java.io.Serializable {
 		this.result = respCode;
 	}
 
-	public RespVo code(Object code) {
+	public RespVo code(Integer code) {
 		this.setCode(code);
 		return this;
 	}
@@ -72,7 +72,7 @@ public class RespVo implements java.io.Serializable {
 		return this;
 	}
 
-	public Object getCode() {
+	public Integer getCode() {
 		return code;
 	}
 
@@ -97,7 +97,7 @@ public class RespVo implements java.io.Serializable {
 		return this;
 	}
 
-	public void setCode(Object code) {
+	public void setCode(Integer code) {
 		this.code = code;
 	}
 

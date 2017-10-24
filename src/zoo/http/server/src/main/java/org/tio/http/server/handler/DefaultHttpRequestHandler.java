@@ -303,46 +303,49 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					ret.addHeaders(headers);
 					return ret;
 				} else {
-					String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
-					File file = new File(root + path);
-					if (!file.exists() || file.isDirectory()) {
-						if (StringUtils.endsWith(path, "/")) {
-							path = path + "index.html";
-						} else {
-							path = path + "/index.html";
-						}
-						file = new File(root, path);
-					}
-
-					if (file.exists()) {
-						ret = Resps.file(request, file);
-						ret.setStaticRes(true);
-
-						if (contentCache != null && request.getIsSupportGzip()) {
-							if (ret.getBody() != null && ret.getStatus() == HttpResponseStatus.C200) {
-								String contentType = ret.getHeader(HttpConst.ResponseHeaderKey.Content_Type);
-								String contentEncoding = ret.getHeader(HttpConst.ResponseHeaderKey.Content_Encoding);
-								String lastModified = ret.getHeader(HttpConst.ResponseHeaderKey.Last_Modified);
-
-								Map<String, String> headers = new HashMap<>();
-								if (StringUtils.isNotBlank(contentType)) {
-									headers.put(HttpConst.ResponseHeaderKey.Content_Type, contentType);
-								}
-								if (StringUtils.isNotBlank(contentEncoding)) {
-									headers.put(HttpConst.ResponseHeaderKey.Content_Encoding, contentEncoding);
-								}
-								if (StringUtils.isNotBlank(lastModified)) {
-									headers.put(HttpConst.ResponseHeaderKey.Last_Modified, lastModified);
-								}
-								headers.put(HttpConst.ResponseHeaderKey.tio_from_cache, "true");
-
-								fileCache = new FileCache(headers, file.lastModified(), ret.getBody());
-								contentCache.put(initPath, fileCache);
-								log.info("放入缓存:[{}], {}", initPath, ret.getBody().length);
+					String pageRoot = httpConfig.getPageRoot();
+					if (pageRoot != null) {
+						String root = FileUtil.getAbsolutePath(pageRoot);
+						File file = new File(root + path);
+						if (!file.exists() || file.isDirectory()) {
+							if (StringUtils.endsWith(path, "/")) {
+								path = path + "index.html";
+							} else {
+								path = path + "/index.html";
 							}
+							file = new File(root, path);
 						}
 
-						return ret;
+						if (file.exists()) {
+							ret = Resps.file(request, file);
+							ret.setStaticRes(true);
+
+							if (contentCache != null && request.getIsSupportGzip()) {
+								if (ret.getBody() != null && ret.getStatus() == HttpResponseStatus.C200) {
+									String contentType = ret.getHeader(HttpConst.ResponseHeaderKey.Content_Type);
+									String contentEncoding = ret.getHeader(HttpConst.ResponseHeaderKey.Content_Encoding);
+									String lastModified = ret.getHeader(HttpConst.ResponseHeaderKey.Last_Modified);
+
+									Map<String, String> headers = new HashMap<>();
+									if (StringUtils.isNotBlank(contentType)) {
+										headers.put(HttpConst.ResponseHeaderKey.Content_Type, contentType);
+									}
+									if (StringUtils.isNotBlank(contentEncoding)) {
+										headers.put(HttpConst.ResponseHeaderKey.Content_Encoding, contentEncoding);
+									}
+									if (StringUtils.isNotBlank(lastModified)) {
+										headers.put(HttpConst.ResponseHeaderKey.Last_Modified, lastModified);
+									}
+									headers.put(HttpConst.ResponseHeaderKey.tio_from_cache, "true");
+
+									fileCache = new FileCache(headers, file.lastModified(), ret.getBody());
+									contentCache.put(initPath, fileCache);
+									log.info("放入缓存:[{}], {}", initPath, ret.getBody().length);
+								}
+							}
+
+							return ret;
+						}
 					}
 				}
 			}

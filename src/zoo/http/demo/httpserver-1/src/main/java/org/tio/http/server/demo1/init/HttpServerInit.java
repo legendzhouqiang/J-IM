@@ -33,7 +33,7 @@ public class HttpServerInit {
 		int port = PropKit.getInt("http.port");//启动端口
 		String pageRoot = PropKit.get("http.page");//html/css/js等的根目录，支持classpath:，也支持绝对路径
 		String[] scanPackages = new String[] { HttpServerDemoStarter.class.getPackage().getName() };//tio mvc需要扫描的根目录包
-		httpServerStarter = new HttpServerStarter(pageRoot, port, scanPackages, null);
+		httpServerStarter = new HttpServerStarter(pageRoot, port, "", scanPackages, null);
 		httpServerStarter.start();
 
 		long end = SystemTimer.currentTimeMillis();

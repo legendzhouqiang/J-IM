@@ -67,23 +67,66 @@ public class HttpServerStarter {
 		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
 	}
 
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, HttpServerInterceptor httpServerInterceptor) {
-		this(pageRootDir, serverPort, scanPackages, httpServerInterceptor, null, null, null);
+	/**
+	 * 
+	 * @param pageRoot 如果为null，则不提供静态资源服务
+	 * @param serverPort
+	 * @param contextPath
+	 * @param scanPackages
+	 * @param httpServerInterceptor
+	 * @author tanyaowu
+	 */
+	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor) {
+		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, null, null, null);
 	}
 
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore) {
-		this(pageRootDir, serverPort, scanPackages, httpServerInterceptor, sessionStore, null, null);
+	/**
+	 * 
+	 * @param pageRoot 如果为null，则不提供静态资源服务
+	 * @param serverPort
+	 * @param contextPath
+	 * @param scanPackages
+	 * @param httpServerInterceptor
+	 * @param sessionStore
+	 * @author tanyaowu
+	 */
+	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore) {
+		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, sessionStore, null, null);
 	}
 
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore,
+	/**
+	 * pageRoot 如果为null，则不提供静态资源服务
+	 * @param pageRoot
+	 * @param serverPort
+	 * @param contextPath
+	 * @param scanPackages
+	 * @param httpServerInterceptor
+	 * @param sessionStore
+	 * @param tioExecutor
+	 * @param groupExecutor
+	 * @author tanyaowu
+	 */
+	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore,
 			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
-		this(pageRootDir, serverPort, scanPackages, httpServerInterceptor, null, sessionStore, tioExecutor, groupExecutor);
+		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, null, sessionStore, tioExecutor, groupExecutor);
 	}
 	
-	public HttpServerStarter(String pageRootDir, int serverPort, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, HttpSessionListener httpSessionListener, ICache sessionStore,
+	/**
+	 * pageRoot 如果为null，则不提供静态资源服务
+	 * @param pageRoot
+	 * @param serverPort
+	 * @param contextPath
+	 * @param scanPackages
+	 * @param httpServerInterceptor
+	 * @param httpSessionListener
+	 * @param sessionStore
+	 * @param tioExecutor
+	 * @param groupExecutor
+	 * @author tanyaowu
+	 */
+	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, HttpSessionListener httpSessionListener, ICache sessionStore,
 			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		int port = serverPort;
-		String pageRoot = pageRootDir;
 
 		httpConfig = new HttpConfig(port, null);
 		httpConfig.setPageRoot(pageRoot);
@@ -95,7 +138,7 @@ public class HttpServerStarter {
 		//		}
 
 		//		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };
-		routes = new Routes(scanPackages);
+		routes = new Routes(contextPath, scanPackages);
 		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		requestHandler.setHttpServerInterceptor(httpServerInterceptor);
 		requestHandler.setHttpSessionListener(httpSessionListener);
@@ -163,9 +206,9 @@ public class HttpServerStarter {
 			httpConfig.setSessionStore(guavaCache);
 		}
 
-		if (httpConfig.getPageRoot() == null) {
-			httpConfig.setPageRoot("page");
-		}
+//		if (httpConfig.getPageRoot() == null) {
+//			httpConfig.setPageRoot("page");
+//		}
 
 		if (httpConfig.getSessionIdGenerator() == null) {
 			httpConfig.setSessionIdGenerator(UUIDSessionIdGenerator.instance);

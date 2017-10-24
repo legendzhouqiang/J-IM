@@ -210,4 +210,10 @@ public class GuavaRedisCache implements ICache {
 		CacheChangedVo cacheChangedVo = new CacheChangedVo(cacheName, key, CacheChangeType.REMOVE);
 		topic.publish(cacheChangedVo);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T get(String key, Class<T> clazz) {
+		return (T)get(key);
+	}
 }

@@ -109,12 +109,17 @@ public class Resps {
 	 * @author: tanyaowu
 	 */
 	public static HttpResponse file(HttpRequest request, String path, HttpConfig httpConfig) throws IOException {
-		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
-		File file = new File(root + path);
-		if (!file.exists()) {
+		String pageRoot = httpConfig.getPageRoot();
+		if (pageRoot != null) {
+			String root = FileUtil.getAbsolutePath(pageRoot);
+			File file = new File(root + path);
+			if (!file.exists()) {
+				return resp404(request, request.getRequestLine(), httpConfig);
+			}
+			return file(request, file);
+		} else {
 			return resp404(request, request.getRequestLine(), httpConfig);
 		}
-		return file(request, file);
 	}
 
 	/**
@@ -126,16 +131,21 @@ public class Resps {
 	 * @author: tanyaowu
 	 */
 	public static HttpResponse resp404(HttpRequest request, RequestLine requestLine, HttpConfig httpConfig) {
-		String file404 = httpConfig.getPage404();
-		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
-		File file = new File(root + file404);
-		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(request, file404 + "?tio_initpath=" + requestLine.getPathAndQuery());
-			return ret;
-		} else {
-			HttpResponse ret = Resps.html(request, "404");
-			return ret;
+		String pageRoot = httpConfig.getPageRoot();
+		
+		if (pageRoot != null) {
+			String file404 = httpConfig.getPage404();
+			String root = FileUtil.getAbsolutePath(pageRoot);
+			File file = new File(root + file404);
+			if (file.exists()) {
+				HttpResponse ret = Resps.redirect(request, file404 + "?tio_initpath=" + requestLine.getPathAndQuery());
+				return ret;
+			}
 		}
+		
+		HttpResponse ret = Resps.html(request, "404");
+		ret.setStatus(HttpResponseStatus.C404);
+		return ret;
 	}
 
 	/**
@@ -148,16 +158,21 @@ public class Resps {
 	 * @author: tanyaowu
 	 */
 	public static HttpResponse resp500(HttpRequest request, RequestLine requestLine, HttpConfig httpConfig, Throwable throwable) {
-		String file500 = httpConfig.getPage500();
-		String root = FileUtil.getAbsolutePath(httpConfig.getPageRoot());
-		File file = new File(root + file500);
-		if (file.exists()) {
-			HttpResponse ret = Resps.redirect(request, file500 + "?tio_initpath=" + requestLine.getPathAndQuery());
-			return ret;
-		} else {
-			HttpResponse ret = Resps.html(request, "500");
-			return ret;
+		String pageRoot = httpConfig.getPageRoot();
+		
+		if (pageRoot != null) {
+			String file500 = httpConfig.getPage500();
+			String root = FileUtil.getAbsolutePath(pageRoot);
+			File file = new File(root + file500);
+			if (file.exists()) {
+				HttpResponse ret = Resps.redirect(request, file500 + "?tio_initpath=" + requestLine.getPathAndQuery());
+				return ret;
+			}
 		}
+		
+		HttpResponse ret = Resps.html(request, "500");
+		ret.setStatus(HttpResponseStatus.C500);
+		return ret;
 	}
 
 	/**

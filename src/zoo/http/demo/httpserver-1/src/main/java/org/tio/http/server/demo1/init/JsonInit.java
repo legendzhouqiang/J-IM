@@ -15,7 +15,7 @@ public class JsonInit {
 	private static Logger log = LoggerFactory.getLogger(JsonInit.class);
 
 	public static void init() {
-		Json.put(Record.class, JfinalRecordSerializer.instance);
+		Json.put(Record.class, JfinalRecordSerializer.INSTANCE);
 	}
 
 	/**

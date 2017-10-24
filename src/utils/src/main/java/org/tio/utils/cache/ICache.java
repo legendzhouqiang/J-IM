@@ -23,6 +23,15 @@ public interface ICache {
 	 * @author tanyaowu
 	 */
 	public Serializable get(String key);
+	
+	/**
+	 * 根据key获取value
+	 * @param key
+	 * @param clazz
+	 * @return
+	 * @author: tanyaowu
+	 */
+	public <T> T get(String key, Class<T> clazz);
 
 	/**
 	 * 获取所有的key

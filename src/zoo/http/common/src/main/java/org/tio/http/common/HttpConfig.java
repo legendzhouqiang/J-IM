@@ -67,6 +67,8 @@ public class HttpConfig {
 	private String charset = HttpConst.CHARSET_NAME;
 
 	private ICache sessionStore = null;
+	
+	private String contextPath = "";
 
 	/**
 	 * 存放HttpSession对象的cacheName
@@ -284,5 +286,13 @@ public class HttpConfig {
 	 */
 	public void setHttpRequestHandler(HttpRequestHandler httpRequestHandler) {
 		this.httpRequestHandler = httpRequestHandler;
+	}
+
+	public String getContextPath() {
+		return contextPath;
+	}
+
+	public void setContextPath(String contextPath) {
+		this.contextPath = contextPath;
 	}
 }

@@ -30,6 +30,8 @@ public class Routes {
 
 	//	private String[] scanPackages = null;
 
+	private String contextPath;
+
 	/**
 	 * 格式化成"/user","/"这样的路径
 	 * @param initPath
@@ -122,12 +124,18 @@ public class Routes {
 	public Map<Method, Object> methodBeanMap = new HashMap<>();
 
 	/**
-	 *
+	 * 
+	 * @param contextPath
+	 * @param scanPackages
 	 * @author tanyaowu
 	 */
-	public Routes(String[] scanPackages) {
+	public Routes(String contextPath, String[] scanPackages) {
 		//		this.scanPackages = scanPackages;
-
+		if (contextPath == null) {
+			contextPath = "";
+		}
+		this.contextPath = contextPath;
+		
 		if (scanPackages != null) {
 			final FastClasspathScanner fastClasspathScanner = new FastClasspathScanner(scanPackages);
 			//			fastClasspathScanner.verbose();
@@ -137,7 +145,7 @@ public class Routes {
 					try {
 						Object bean = classWithAnnotation.newInstance();
 						RequestPath mapping = classWithAnnotation.getAnnotation(RequestPath.class);
-						String beanPath = mapping.value();
+						String beanPath = Routes.this.contextPath + mapping.value();
 						//						if (!StringUtils.endsWith(beanUrl, "/")) {
 						//							beanUrl = beanUrl + "/";
 						//						}

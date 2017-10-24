@@ -162,4 +162,10 @@ public class RedisCache implements ICache {
 		RBucket<Serializable> bucket = getBucket(key);
 		bucket.delete();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T get(String key, Class<T> clazz) {
+		return (T)get(key);
+	}
 }
