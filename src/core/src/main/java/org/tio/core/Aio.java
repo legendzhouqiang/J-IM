@@ -74,6 +74,21 @@ public abstract class Aio {
 			lock.unlock();
 		}
 	}
+	
+	/**
+	 * 群组有多少个连接
+	 * @param group
+	 * @return
+	 * @author tanyaowu
+	 */
+	public static int groupCount(GroupContext groupContext, String group) {
+		SetWithLock<ChannelContext> setWithLock = groupContext.groups.clients(groupContext, group);
+		if (setWithLock == null) {
+			return 0;
+		}
+		
+		return setWithLock.getObj().size();
+	}
 
 	/**
 	 * 绑定用户

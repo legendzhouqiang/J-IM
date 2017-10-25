@@ -27,14 +27,14 @@ public class Groups {
 
 	/** 一个组有哪些客户端
 	 * key: groupid
-	 * value: Set<ChannelContext
+	 * value: Set<ChannelContext>
 	 */
 	private MapWithLock<String, SetWithLock<ChannelContext>> groupmap = new MapWithLock<>(
 			new ConcurrentHashMap<String, SetWithLock<ChannelContext>>());
 
 	/** 一个客户端在哪组组中
 	 *  key: ChannelContext
-	 *  value: Set<groupid
+	 *  value: Set<groupid>
 	 */
 	private MapWithLock<ChannelContext, SetWithLock<String>> channelmap = new MapWithLock<>(
 			new ConcurrentHashMap<ChannelContext, SetWithLock<String>>());
