@@ -99,9 +99,19 @@ public abstract class Aio {
 	public static void bindUser(ChannelContext channelContext, String userid) {
 		channelContext.getGroupContext().users.bind(userid, channelContext);
 	}
+	
+	/**
+	 * 绑定token
+	 * @param channelContext
+	 * @param token
+	 * @author tanyaowu
+	 */
+	public static void bindToken(ChannelContext channelContext, String token) {
+		channelContext.getGroupContext().tokens.bind(token, channelContext);
+	}
 
 	/**
-	 * 同步发送消息到指定ChannelContext
+	 * 阻塞发送消息到指定ChannelContext
 	 * @param channelContext
 	 * @param packet
 	 * @return
@@ -184,7 +194,7 @@ public abstract class Aio {
 	}
 
 	/**
-	 * 同步发消息给指定用户
+	 * 阻塞发消息给指定用户
 	 * @param groupContext
 	 * @param userid
 	 * @param packet
@@ -195,6 +205,17 @@ public abstract class Aio {
 		return sendToUser(groupContext, userid, packet, true);
 	}
 
+	/**
+	 * 阻塞发消息到指定token
+	 * @param groupContext
+	 * @param token
+	 * @param packet
+	 * @return
+	 * @author tanyaowu
+	 */
+	public static Boolean bSendToToken(GroupContext groupContext, String token, Packet packet) {
+		return sendToToken(groupContext, token, packet, true);
+	}
 	/**
 	 * 关闭连接
 	 * @param channelContext
@@ -299,14 +320,25 @@ public abstract class Aio {
 	}
 
 	/**
-	 * 根据userid获取ChannelContext
+	 * 根据userid获取SetWithLock<ChannelContext>
 	 * @param groupContext
 	 * @param userid
 	 * @return
 	 * @author tanyaowu
 	 */
-	public static SetWithLock<ChannelContext> getChannelContextByUserid(GroupContext groupContext, String userid) {
+	public static SetWithLock<ChannelContext> getChannelContextsByUserid(GroupContext groupContext, String userid) {
 		return groupContext.users.find(groupContext, userid);
+	}
+	
+	/**
+	 * 根据token获取SetWithLock<ChannelContext>
+	 * @param groupContext
+	 * @param token
+	 * @return
+	 * @author tanyaowu
+	 */
+	public static SetWithLock<ChannelContext> getChannelContextsByToken(GroupContext groupContext, String token) {
+		return groupContext.tokens.find(groupContext, token);
 	}
 
 	/**
@@ -485,7 +517,7 @@ public abstract class Aio {
 					//log.error("{} after await, packet:{}, countDownLatch:{}", channelContext, packet.logstr(), countDownLatch);
 
 					if (!awaitFlag) {
-						log.error("{} 同步发送超时, timeout:{}s, packet:{}", channelContext, timeout, packet.logstr());
+						log.error("{} 阻塞发送超时, timeout:{}s, packet:{}", channelContext, timeout, packet.logstr());
 					}
 				} catch (InterruptedException e) {
 					log.error(e.toString(), e);
@@ -837,6 +869,18 @@ public abstract class Aio {
 	public static Boolean sendToUser(GroupContext groupContext, String userid, Packet packet) {
 		return sendToUser(groupContext, userid, packet, false);
 	}
+	
+	/**
+	 * 发消息到指定token
+	 * @param groupContext
+	 * @param token
+	 * @param packet
+	 * @return
+	 * @author tanyaowu
+	 */
+	public static Boolean sendToToken(GroupContext groupContext, String token, Packet packet) {
+		return sendToToken(groupContext, token, packet, false);
+	}
 
 	/**
 	 * 发消息给指定用户
@@ -878,6 +922,51 @@ public abstract class Aio {
 			}
 			return false;
 		} finally {
+			
+		}
+	}
+	
+	/**
+	 * 发消息给指定token
+	 * @param groupContext
+	 * @param token
+	 * @param packet
+	 * @param isBlock
+	 * @author tanyaowu
+	 */
+	private static Boolean sendToToken(GroupContext groupContext, String token, Packet packet, boolean isBlock) {
+		SetWithLock<ChannelContext> setWithLock = groupContext.tokens.find(groupContext, token);
+		try {
+			if (setWithLock == null) {
+				return false;
+			}
+			
+			ReadLock readLock = setWithLock.getLock().readLock();
+			readLock.lock();
+			try {
+				Set<ChannelContext> set = setWithLock.getObj();
+				boolean ret = false;
+				for (ChannelContext channelContext : set) {
+					boolean singleRet = false;
+					// 不要用 a = a || b()，容易漏执行后面的函数
+					if (isBlock) {
+						singleRet = bSend(channelContext, packet);
+					} else {
+						singleRet = send(channelContext, packet);
+					}
+					if (singleRet) {
+						ret = true;
+					}
+				}
+				return ret;
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			} finally {
+				readLock.unlock();
+			}
+			return false;
+		} finally {
+			
 		}
 	}
 
@@ -957,6 +1046,15 @@ public abstract class Aio {
 	 */
 	public static void unbindUser(ChannelContext channelContext) {
 		channelContext.getGroupContext().users.unbind(channelContext);
+	}
+	
+	/**
+	 * 解除channelContext绑定的token
+	 * @param channelContext
+	 * @author tanyaowu
+	 */
+	public static void unbindToken(ChannelContext channelContext) {
+		channelContext.getGroupContext().tokens.unbind(channelContext);
 	}
 
 	/**

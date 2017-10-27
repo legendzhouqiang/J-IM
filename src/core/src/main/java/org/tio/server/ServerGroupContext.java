@@ -181,13 +181,14 @@ public class ServerGroupContext extends GroupContext {
 									+ "\r\n目前连上的连接:{}" 
 									+ "\r\n关闭的连接次数:{}" 
 									+ "\r\n群组:[channelmap:{}, groupmap:{}]"
-									+ "\r\n绑定用户数:{}" 
+									+ "\r\n绑定userid数:{}" 
+									+ "\r\n绑定token数:{}" 
 									+ "\r\n等待同步消息响应:{}"
 								//										+ "\r\n正在被监控统计的ip数:{}"
 										+ "\r\n被拉黑的ip:{}", ServerGroupContext.this.name, ServerGroupContext.this.clientNodeMap.getMap().getObj().size(),
 										ServerGroupContext.this.connections.getSetWithLock().getObj().size(), ServerGroupContext.this.connecteds.getSetWithLock().getObj().size(),
 										ServerGroupContext.this.closeds.getSetWithLock().getObj().size(), ServerGroupContext.this.groups.getChannelmap().getObj().size(),
-										ServerGroupContext.this.groups.getGroupmap().getObj().size(), ServerGroupContext.this.users.getMap().getObj().size(),
+										ServerGroupContext.this.groups.getGroupmap().getObj().size(), ServerGroupContext.this.users.getMap().getObj().size(), ServerGroupContext.this.tokens.getMap().getObj().size(),
 										ServerGroupContext.this.waitingResps.getMap().getObj().size(),
 										//										ServerGroupContext.this.ips.size(),
 										Json.toJson(ServerGroupContext.this.ipBlacklist.getCopy()));

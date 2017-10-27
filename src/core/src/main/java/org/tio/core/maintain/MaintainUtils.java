@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
-import org.tio.server.ServerGroupContext;
 
 /**
  * 
@@ -23,31 +22,54 @@ public class MaintainUtils {
 	 * @author tanyaowu
 	 *
 	 */
-	public static void removeFromMaintain(ChannelContext channelContext) {
+	public static void remove(ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
-		
+
 		groupContext.connections.remove(channelContext);
 		groupContext.connecteds.remove(channelContext);
 		groupContext.closeds.remove(channelContext);
 		groupContext.ips.unbind(channelContext);
-		
-//		if (groupContext.isShortConnection()) {
-//			return;
-//		}
+
+		//		if (groupContext.isShortConnection()) {
+		//			return;
+		//		}
 
 		try {
-			
+			//id解绑
 			groupContext.ids.unbind(channelContext);
-			if (StringUtils.isNotBlank(channelContext.getUserid())) {
-				try {
-					Aio.unbindUser(channelContext);
-				} catch (Throwable e) {
-					log.error(e.toString(), e);
-				}
-			}
-			Aio.unbindGroup(channelContext);
+
+			close(channelContext);
 		} catch (Exception e1) {
 			log.error(e1.toString(), e1);
+		}
+	}
+
+	public static void close(ChannelContext channelContext) {
+		//		GroupContext groupContext = channelContext.getGroupContext();
+
+		//用户id解绑
+		if (StringUtils.isNotBlank(channelContext.getUserid())) {
+			try {
+				Aio.unbindUser(channelContext);
+			} catch (Throwable e) {
+				log.error(e.toString(), e);
+			}
+		}
+
+		//token解绑
+		if (StringUtils.isNotBlank(channelContext.getToken())) {
+			try {
+				Aio.unbindToken(channelContext);
+			} catch (Throwable e) {
+				log.error(e.toString(), e);
+			}
+		}
+
+		//群组解绑
+		try {
+			Aio.unbindGroup(channelContext);
+		} catch (Throwable e) {
+			log.error(e.toString(), e);
 		}
 	}
 

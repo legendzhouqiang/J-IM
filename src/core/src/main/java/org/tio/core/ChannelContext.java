@@ -59,6 +59,8 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	private int reconnCount = 0;//连续重连次数，连接成功后，此值会被重置0
 
 	private String userid;
+	
+	private String token;
 
 	private boolean isWaitingClose = false;
 
@@ -533,6 +535,14 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		if (isTraceClient) {
 			this.getGroupContext().getClientTraceHandler().traceChannel(this, channelAction, packet, extmsg);
 		}
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }

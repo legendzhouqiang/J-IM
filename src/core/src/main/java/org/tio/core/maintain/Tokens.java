@@ -21,32 +21,32 @@ import org.tio.utils.lock.SetWithLock;
  * @author tanyaowu 
  * 2017年10月19日 上午9:40:40
  */
-public class Users {
-	private static Logger log = LoggerFactory.getLogger(Users.class);
+public class Tokens {
+	private static Logger log = LoggerFactory.getLogger(Tokens.class);
 
 	/**
-	 * key: userid
+	 * key: token
 	 * value: ChannelContext
 	 */
 	private MapWithLock<String, SetWithLock<ChannelContext>> mapWithLock = new MapWithLock<>(new HashMap<String, SetWithLock<ChannelContext>>());
 
 	/**
-	 * 绑定userid.
+	 * 绑定token.
 	 *
-	 * @param userid the userid
+	 * @param token the token
 	 * @param channelContext the channel context
 	 * @author tanyaowu
 	 */
-	public void bind(String userid, ChannelContext channelContext) {
+	public void bind(String token, ChannelContext channelContext) {
 		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
 		}
 
-		if (StringUtils.isBlank(userid)) {
+		if (StringUtils.isBlank(token)) {
 			return;
 		}
-		String key = userid;
+		String key = token;
 		Lock lock = mapWithLock.getLock().writeLock();
 		Map<String, SetWithLock<ChannelContext>> map = mapWithLock.getObj();
 
@@ -62,7 +62,7 @@ public class Users {
 
 			//			map.put(key, channelContext);
 
-			channelContext.setUserid(userid);
+			channelContext.setToken(token);
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -73,18 +73,18 @@ public class Users {
 	/**
 	 * Find.
 	 *
-	 * @param userid the userid
+	 * @param token the token
 	 * @return the channel context
 	 */
-	public SetWithLock<ChannelContext> find(GroupContext groupContext, String userid) {
+	public SetWithLock<ChannelContext> find(GroupContext groupContext, String token) {
 		if (groupContext.isShortConnection()) {
 			return null;
 		}
 
-		if (StringUtils.isBlank(userid)) {
+		if (StringUtils.isBlank(token)) {
 			return null;
 		}
-		String key = userid;
+		String key = token;
 		Lock lock = mapWithLock.getLock().readLock();
 		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 
@@ -106,7 +106,7 @@ public class Users {
 	}
 
 	/**
-	 * 解除channelContext绑定的userid
+	 * 解除channelContext绑定的token
 	 *
 	 * @param channelContext the channel context
 	 */
@@ -116,8 +116,8 @@ public class Users {
 			return;
 		}
 
-		String userid = channelContext.getUserid();
-		if (StringUtils.isBlank(userid)) {
+		String token = channelContext.getToken();
+		if (StringUtils.isBlank(token)) {
 			log.info("{}, {}, 并没有绑定用户", groupContext.getName(), channelContext.toString());
 			return;
 		}
@@ -127,18 +127,19 @@ public class Users {
 		try {
 			lock.lock();
 
-			SetWithLock<ChannelContext> setWithLock = m.get(userid);
+			SetWithLock<ChannelContext> setWithLock = m.get(token);
 			if (setWithLock == null) {
-				log.info("{}, {}, userid:{}, 没有找到对应的SetWithLock", groupContext.getName(), channelContext.toString(), userid);
+				log.info("{}, {}, token:{}, 没有找到对应的SetWithLock", groupContext.getName(), channelContext.toString(), token);
 				return;
 			}
-			channelContext.setUserid(null);
+			channelContext.setToken(null);
 			setWithLock.remove(channelContext);
 			
 			
 			if(setWithLock.getObj().size() == 0) {
-				m.remove(userid);
+				m.remove(token);
 			}
+			
 			
 		} catch (Exception e) {
 			throw e;
@@ -148,17 +149,17 @@ public class Users {
 	}
 
 	/**
-	 * 解除groupContext范围内所有ChannelContext的 userid绑定
+	 * 解除groupContext范围内所有ChannelContext的 token绑定
 	 *
-	 * @param userid the userid
+	 * @param token the token
 	 * @author tanyaowu
 	 */
-	public void unbind(GroupContext groupContext, String userid) {
+	public void unbind(GroupContext groupContext, String token) {
 		if (groupContext.isShortConnection()) {
 			return;
 		}
 
-		if (StringUtils.isBlank(userid)) {
+		if (StringUtils.isBlank(token)) {
 			return;
 		}
 
@@ -167,7 +168,7 @@ public class Users {
 		try {
 			lock.lock();
 
-			SetWithLock<ChannelContext> setWithLock = m.get(userid);
+			SetWithLock<ChannelContext> setWithLock = m.get(token);
 			if (setWithLock == null) {
 				return;
 			}
@@ -178,12 +179,12 @@ public class Users {
 				Set<ChannelContext> set = setWithLock.getObj();
 				if (set.size() > 0) {
 					for (ChannelContext channelContext : set) {
-						channelContext.setUserid(null);
+						channelContext.setToken(null);
 					}
 					set.clear();
 				}
 				
-				m.remove(userid);
+				m.remove(token);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			} finally {

@@ -22,6 +22,7 @@ import org.tio.core.maintain.Ids;
 import org.tio.core.maintain.IpBlacklist;
 import org.tio.core.maintain.IpStats;
 import org.tio.core.maintain.Ips;
+import org.tio.core.maintain.Tokens;
 import org.tio.core.maintain.Users;
 import org.tio.core.stat.GroupStat;
 import org.tio.utils.prop.MapWithLockPropSupport;
@@ -93,11 +94,10 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	public final ChannelContextSetWithLock closeds = new ChannelContextSetWithLock();
 	public final Groups groups = new Groups();
 	public final Users users = new Users();
+	public final Tokens tokens = new Tokens();
 	public final Ids ids = new Ids();
 	public final Ips ips = new Ips();
 	public IpStats ipStats = null;
-	
-	
 
 	/**
 	 * ip黑名单
@@ -112,7 +112,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	private boolean isEncodeCareWithChannelContext = true;
 
 	protected String id;
-	
+
 	/**
 	 * 解码异常多少次就把ip拉黑
 	 */

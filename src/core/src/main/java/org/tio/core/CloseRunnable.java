@@ -4,7 +4,6 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.client.ClientChannelContext;
@@ -157,25 +156,13 @@ public class CloseRunnable implements Runnable {
 //					}
 					
 					if (isRemove) {
-						MaintainUtils.removeFromMaintain(channelContext);
+						MaintainUtils.remove(channelContext);
 					} else {
 //						if (!groupContext.isShortConnection()) {
 							groupContext.closeds.add(channelContext);
 							groupContext.connecteds.remove(channelContext);
 
-							if (StringUtils.isNotBlank(channelContext.getUserid())) {
-								try {
-									Aio.unbindUser(channelContext);
-								} catch (Throwable e) {
-									log.error(e.toString(), e);
-								}
-							}
-
-							try {
-								Aio.unbindGroup(channelContext);
-							} catch (Throwable e) {
-								log.error(e.toString(), e);
-							}
+							MaintainUtils.close(channelContext);
 //						}
 					}
 
