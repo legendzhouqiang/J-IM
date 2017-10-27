@@ -30,7 +30,7 @@ public class Routes {
 
 	//	private String[] scanPackages = null;
 
-	private String contextPath;
+	
 
 	/**
 	 * 格式化成"/user","/"这样的路径
@@ -126,15 +126,21 @@ public class Routes {
 	/**
 	 * 
 	 * @param contextPath
+	 * @param suffix
 	 * @param scanPackages
 	 * @author tanyaowu
 	 */
-	public Routes(String contextPath, String[] scanPackages) {
+	public Routes(String[] scanPackages) {
 		//		this.scanPackages = scanPackages;
-		if (contextPath == null) {
-			contextPath = "";
-		}
-		this.contextPath = contextPath;
+//		if (contextPath == null) {
+//			contextPath = "";
+//		}
+//		this.contextPath = contextPath;
+//		
+//		if (suffix == null) {
+//			suffix = "";
+//		}
+//		this.suffix = suffix;
 		
 		if (scanPackages != null) {
 			final FastClasspathScanner fastClasspathScanner = new FastClasspathScanner(scanPackages);
@@ -145,7 +151,8 @@ public class Routes {
 					try {
 						Object bean = classWithAnnotation.newInstance();
 						RequestPath mapping = classWithAnnotation.getAnnotation(RequestPath.class);
-						String beanPath = Routes.this.contextPath + mapping.value();
+//						String beanPath = Routes.this.contextPath + mapping.value();
+						String beanPath = mapping.value();
 						//						if (!StringUtils.endsWith(beanUrl, "/")) {
 						//							beanUrl = beanUrl + "/";
 						//						}
@@ -175,7 +182,9 @@ public class Routes {
 
 					String methodName = matchingMethodOrConstructor.getName();
 
+//					String methodPath = mapping.value() + Routes.this.suffix;
 					String methodPath = mapping.value();
+
 					methodPath = formateMethodPath(methodPath);
 					String beanPath = classPathMap.get(matchingClass);
 
@@ -222,4 +231,12 @@ public class Routes {
 			//			log.info("methodParamnameMap scan result :\r\n {}\r\n", Json.toFormatedJson(methodParamnameMap));
 		}
 	}
+
+//	public String getSuffix() {
+//		return suffix;
+//	}
+//
+//	public void setSuffix(String suffix) {
+//		this.suffix = suffix;
+//	}
 }

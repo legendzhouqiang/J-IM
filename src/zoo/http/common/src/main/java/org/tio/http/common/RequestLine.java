@@ -28,6 +28,7 @@ public class RequestLine {
 	}
 
 	/**
+	 * 譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是/user/get
 	 * @return the path
 	 */
 	public String getPath() {
@@ -39,6 +40,7 @@ public class RequestLine {
 	}
 
 	/**
+	 * 譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是name=tan&id=789
 	 * @return the query
 	 */
 	public String getQuery() {
@@ -67,6 +69,7 @@ public class RequestLine {
 	}
 
 	/**
+	 * 譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是/user/get
 	 * @param path the path to set
 	 */
 	public void setPath(String path) {
@@ -78,6 +81,7 @@ public class RequestLine {
 	}
 
 	/**
+	 * 譬如http://www.163.com/user/get?name=tan&id=789，那些此值就是name=tan&id=789
 	 * @param query the query to set
 	 */
 	public void setQuery(String query) {

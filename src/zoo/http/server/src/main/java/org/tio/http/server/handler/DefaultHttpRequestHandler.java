@@ -81,28 +81,11 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	private SessionCookieDecorator sessionCookieDecorator;
 
 	private GuavaCache staticResCache;
-
-	/**
-	 *
-	 * @param httpConfig
-	 * @author tanyaowu
-	 */
-	public DefaultHttpRequestHandler(HttpConfig httpConfig) {
-		this.httpConfig = httpConfig;
-
-		if (httpConfig.getMaxLiveTimeOfStaticRes() > 0) {
-			//			GuavaCache.register(STATIC_RES_CACHENAME, (long) httpConfig.getMaxLiveTimeOfStaticRes(), null);
-			staticResCache = GuavaCache.register(STATIC_RES_CONTENT_CACHENAME, (long) httpConfig.getMaxLiveTimeOfStaticRes(), null);
-		}
-
-		//		Integer concurrencyLevel = 8;
-		//		Long timeToLiveSeconds = null;
-		//		Long timeToIdleSeconds = httpConfig.getSessionTimeout();
-		//		Integer initialCapacity = 10;
-		//		Integer maximumSize = 100000000;
-		//		boolean recordStats = false;
-		//		loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, timeToLiveSeconds, timeToIdleSeconds, initialCapacity, maximumSize, recordStats);
-	}
+	
+	private String contextPath;
+	private int contextPathLength = 0;
+	private String suffix;	
+	private int suffixLength = 0;
 
 	//	private static String randomCookieValue() {
 	//		return RandomUtil.randomUUID();
@@ -115,7 +98,25 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	 * @author tanyaowu
 	 */
 	public DefaultHttpRequestHandler(HttpConfig httpConfig, Routes routes) {
-		this(httpConfig);
+		if (httpConfig == null) {
+			throw new RuntimeException("httpConfig can not be null");
+		}
+		this.contextPath=httpConfig.getContextPath();
+		this.suffix=httpConfig.getSuffix();
+		
+		if (StringUtils.isNotBlank(contextPath)) {
+			contextPathLength = contextPath.length();
+		}
+		if (StringUtils.isNotBlank(suffix)) {
+			suffixLength = suffix.length();
+		}
+		
+		this.httpConfig = httpConfig;
+
+		if (httpConfig.getMaxLiveTimeOfStaticRes() > 0) {
+			staticResCache = GuavaCache.register(STATIC_RES_CONTENT_CACHENAME, (long) httpConfig.getMaxLiveTimeOfStaticRes(), null);
+		}
+		
 		this.routes = routes;
 	}
 
@@ -160,6 +161,27 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	public HttpResponse handler(HttpRequest request) throws Exception {
 		HttpResponse ret = null;
 		RequestLine requestLine = request.getRequestLine();
+		String path = requestLine.getPath();
+		
+		if (StringUtils.isNotBlank(contextPath)) {
+			if (StringUtils.startsWith(path, contextPath)) {
+				path = StringUtils.substring(path, contextPathLength);
+			} else {
+//				Aio.remove(request.getChannelContext(), "请求路径不合法，必须以" + contextPath + "开头：" + requestLine.getLine());
+//				return null;
+			}
+		}
+		
+		if (StringUtils.isNotBlank(suffix)) {
+			if (StringUtils.endsWith(path, suffix)) {
+				path = StringUtils.substring(path, 0, path.length() - suffixLength);
+			} else {
+//				Aio.remove(request.getChannelContext(), "请求路径不合法，必须以" + suffix + "结尾：" + requestLine.getLine());
+//				return null;
+			}
+		}
+		requestLine.setPath(path);
+		
 		try {
 
 			processCookieBeforeHandler(request, requestLine);
@@ -182,10 +204,9 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 			//				return ret;
 			//			}
 
-			String path = requestLine.getPath();
-			String initPath = path;
+			path = requestLine.getPath();
 
-			Method method = routes.pathMethodMap.get(initPath);
+			Method method = routes.pathMethodMap.get(path);
 			if (method != null) {
 				String[] paramnames = routes.methodParamnameMap.get(method);
 				Class<?>[] parameterTypes = method.getParameterTypes();
@@ -283,7 +304,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 				FileCache fileCache = null;
 				if (httpConfig.getMaxLiveTimeOfStaticRes() > 0) {
 					contentCache = GuavaCache.getCache(STATIC_RES_CONTENT_CACHENAME);
-					fileCache = (FileCache) contentCache.get(initPath);
+					fileCache = (FileCache) contentCache.get(path);
 				}
 				if (fileCache != null) {
 					byte[] bodyBytes = fileCache.getData();
@@ -339,8 +360,8 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 									headers.put(HttpConst.ResponseHeaderKey.tio_from_cache, "true");
 
 									fileCache = new FileCache(headers, file.lastModified(), ret.getBody());
-									contentCache.put(initPath, fileCache);
-									log.info("放入缓存:[{}], {}", initPath, ret.getBody().length);
+									contentCache.put(path, fileCache);
+									log.info("放入缓存:[{}], {}", path, ret.getBody().length);
 								}
 							}
 

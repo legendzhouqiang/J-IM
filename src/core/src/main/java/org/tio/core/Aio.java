@@ -305,7 +305,7 @@ public abstract class Aio {
 	 * @return
 	 * @author tanyaowu
 	 */
-	public static ChannelContext getChannelContextByUserid(GroupContext groupContext, String userid) {
+	public static SetWithLock<ChannelContext> getChannelContextByUserid(GroupContext groupContext, String userid) {
 		return groupContext.users.find(groupContext, userid);
 	}
 
@@ -494,11 +494,11 @@ public abstract class Aio {
 				Boolean isSentSuccess = packetWithMeta.getIsSentSuccess();
 				return isSentSuccess;
 			} else {
-				return null;
+				return true;
 			}
 		} catch (Exception e) {
 			log.error(e.toString(), e);
-			return null;
+			return false;
 		} finally {
 			//			if (isSingleBlock)
 			//			{
@@ -536,8 +536,7 @@ public abstract class Aio {
 			if (isBlock) {
 				return bSend(channelContext, packet);
 			} else {
-				send(channelContext, packet);
-				return null;
+				return send(channelContext, packet);
 			}
 		} else {
 			log.info("{}, can find channelContext by {}:{}", groupContext.getName(), ip, port);
@@ -812,7 +811,7 @@ public abstract class Aio {
 
 				}
 			} else {
-				return null;
+				return true;
 			}
 		} catch (Exception e) {
 			log.error(e.toString(), e);
@@ -848,17 +847,36 @@ public abstract class Aio {
 	 * @author tanyaowu
 	 */
 	private static Boolean sendToUser(GroupContext groupContext, String userid, Packet packet, boolean isBlock) {
-		ChannelContext channelContext = groupContext.users.find(groupContext, userid);
+		SetWithLock<ChannelContext> setWithLock = groupContext.users.find(groupContext, userid);
 		try {
-			if (channelContext == null) {
+			if (setWithLock == null) {
 				return false;
 			}
-
-			if (isBlock) {
-				return bSend(channelContext, packet);
-			} else {
-				return send(channelContext, packet);
+			
+			ReadLock readLock = setWithLock.getLock().readLock();
+			readLock.lock();
+			try {
+				Set<ChannelContext> set = setWithLock.getObj();
+				boolean ret = false;
+				for (ChannelContext channelContext : set) {
+					boolean singleRet = false;
+					// 不要用 a = a || b()，容易漏执行后面的函数
+					if (isBlock) {
+						singleRet = bSend(channelContext, packet);
+					} else {
+						singleRet = send(channelContext, packet);
+					}
+					if (singleRet) {
+						ret = true;
+					}
+				}
+				return ret;
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			} finally {
+				readLock.unlock();
 			}
+			return false;
 		} finally {
 		}
 	}

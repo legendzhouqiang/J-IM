@@ -2,6 +2,8 @@ package org.tio.http.server;
 
 import java.nio.ByteBuffer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
@@ -21,7 +23,7 @@ import org.tio.server.intf.ServerAioHandler;
  *
  */
 public class HttpServerAioHandler implements ServerAioHandler {
-	//	private static Logger log = LoggerFactory.getLogger(HttpServerAioHandler.class);
+	private static Logger log = LoggerFactory.getLogger(HttpServerAioHandler.class);
 
 	/**
 	 * @param args
@@ -113,7 +115,11 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
 		HttpRequest request = (HttpRequest) packet;
 		HttpResponse httpResponse = requestHandler.handler(request);
-		Aio.send(channelContext, httpResponse);
+		if (httpResponse != null) {
+			Aio.send(channelContext, httpResponse);
+		} else {
+			log.info("{}, {}, handler return null, request line: {}", channelContext.getGroupContext().getName(), channelContext.toString(), request.getRequestLine().getLine());
+		}
 	}
 
 	/**

@@ -1,12 +1,20 @@
 package org.tio.core.maintain;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
-import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
+import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.lock.ObjWithLock;
+import org.tio.utils.lock.SetWithLock;
 
 /**
  * 
@@ -14,12 +22,13 @@ import org.tio.utils.lock.ObjWithLock;
  * 2017年10月19日 上午9:40:40
  */
 public class Users {
+	private static Logger log = LoggerFactory.getLogger(Users.class);
 
 	/**
 	 * key: userid
 	 * value: ChannelContext
 	 */
-	private ObjWithLock<DualHashBidiMap<String, ChannelContext>> map = new ObjWithLock<>(new DualHashBidiMap<String, ChannelContext>());
+	private MapWithLock<String, SetWithLock<ChannelContext>> mapWithLock = new MapWithLock<>(new HashMap<String, SetWithLock<ChannelContext>>());
 
 	/**
 	 * 绑定userid.
@@ -38,12 +47,21 @@ public class Users {
 			return;
 		}
 		String key = userid;
-		Lock lock = map.getLock().writeLock();
-		DualHashBidiMap<String, ChannelContext> m = map.getObj();
+		Lock lock = mapWithLock.getLock().writeLock();
+		Map<String, SetWithLock<ChannelContext>> map = mapWithLock.getObj();
 
 		try {
 			lock.lock();
-			m.put(key, channelContext);
+
+			SetWithLock<ChannelContext> setWithLock = map.get(key);
+			if (setWithLock == null) {
+				setWithLock = new SetWithLock<>(new HashSet<>());
+				map.put(key, setWithLock);
+			}
+			setWithLock.add(channelContext);
+
+			//			map.put(key, channelContext);
+
 			channelContext.setUserid(userid);
 		} catch (Exception e) {
 			throw e;
@@ -58,7 +76,7 @@ public class Users {
 	 * @param userid the userid
 	 * @return the channel context
 	 */
-	public ChannelContext find(GroupContext groupContext, String userid) {
+	public SetWithLock<ChannelContext> find(GroupContext groupContext, String userid) {
 		if (groupContext.isShortConnection()) {
 			return null;
 		}
@@ -67,8 +85,8 @@ public class Users {
 			return null;
 		}
 		String key = userid;
-		Lock lock = map.getLock().readLock();
-		DualHashBidiMap<String, ChannelContext> m = map.getObj();
+		Lock lock = mapWithLock.getLock().readLock();
+		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 
 		try {
 			lock.lock();
@@ -81,10 +99,10 @@ public class Users {
 	}
 
 	/**
-	 * @return the map
+	 * @return the mapWithLock
 	 */
-	public ObjWithLock<DualHashBidiMap<String, ChannelContext>> getMap() {
-		return map;
+	public ObjWithLock<Map<String, SetWithLock<ChannelContext>>> getMap() {
+		return mapWithLock;
 	}
 
 	/**
@@ -98,11 +116,24 @@ public class Users {
 			return;
 		}
 
-		Lock lock = map.getLock().writeLock();
-		DualHashBidiMap<String, ChannelContext> m = map.getObj();
+		String userid = channelContext.getUserid();
+		if (StringUtils.isBlank(userid)) {
+			log.info("{}, {}, 并没有绑定用户", groupContext.getName(), channelContext.toString());
+			return;
+		}
+
+		Lock lock = mapWithLock.getLock().writeLock();
+		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 		try {
 			lock.lock();
-			m.removeValue(channelContext);
+
+			SetWithLock<ChannelContext> setWithLock = m.get(userid);
+			if (setWithLock == null) {
+				log.info("{}, {}, userid:{}, 没有找到对应的SetWithLock", groupContext.getName(), channelContext.toString(), userid);
+				return;
+			}
+			channelContext.setUserid(null);
+			setWithLock.remove(channelContext);
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -116,20 +147,41 @@ public class Users {
 	 * @param userid the userid
 	 * @author tanyaowu
 	 */
-	public ChannelContext unbind(GroupContext groupContext, String userid) {
+	public void unbind(GroupContext groupContext, String userid) {
 		if (groupContext.isShortConnection()) {
-			return null;
+			return;
 		}
 
 		if (StringUtils.isBlank(userid)) {
-			return null;
+			return;
 		}
 
-		Lock lock = map.getLock().writeLock();
-		DualHashBidiMap<String, ChannelContext> m = map.getObj();
+		Lock lock = mapWithLock.getLock().writeLock();
+		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 		try {
 			lock.lock();
-			return m.remove(userid);
+
+			SetWithLock<ChannelContext> setWithLock = m.get(userid);
+			if (setWithLock == null) {
+				return;
+			}
+
+			WriteLock writeLock = setWithLock.getLock().writeLock();
+			writeLock.lock();
+			try {
+				Set<ChannelContext> set = setWithLock.getObj();
+				if (set.size() > 0) {
+					for (ChannelContext channelContext : set) {
+						channelContext.setUserid(null);
+					}
+					set.clear();
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			} finally {
+				writeLock.unlock();
+			}
+
 		} catch (Exception e) {
 			throw e;
 		} finally {

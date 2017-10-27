@@ -69,6 +69,8 @@ public class HttpConfig {
 	private ICache sessionStore = null;
 	
 	private String contextPath = "";
+	
+	private String suffix = "";
 
 	/**
 	 * 存放HttpSession对象的cacheName
@@ -123,11 +125,21 @@ public class HttpConfig {
 	 *
 	 * @author tanyaowu
 	 */
-	public HttpConfig(Integer bindPort, Long sessionTimeout) {
+	public HttpConfig(Integer bindPort, Long sessionTimeout, String contextPath, String suffix) {
 		this.bindPort = bindPort;
 		if (sessionTimeout != null) {
 			this.sessionTimeout = sessionTimeout;
 		}
+		
+		if (contextPath == null) {
+			contextPath = "";
+		}
+		this.contextPath = contextPath;
+		
+		if (suffix == null) {
+			suffix = "";
+		}
+		this.suffix = suffix;
 	}
 
 	//	private File rootFile = null;
@@ -292,7 +304,7 @@ public class HttpConfig {
 		return contextPath;
 	}
 
-	public void setContextPath(String contextPath) {
-		this.contextPath = contextPath;
+	public String getSuffix() {
+		return suffix;
 	}
 }

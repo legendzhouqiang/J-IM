@@ -53,22 +53,32 @@ public class HttpServerStarter {
 
 	private HttpRequestHandler httpRequestHandler;
 	
-	private Routes routes;
+	
 
-	public Routes getRoutes() {
-		return routes;
-	}
-
+	/**
+	 * 
+	 * @param httpConfig
+	 * @param requestHandler
+	 * @author tanyaowu
+	 */
 	public HttpServerStarter(HttpConfig httpConfig, HttpRequestHandler requestHandler) {
 		this(httpConfig, requestHandler, null, null);
 	}
 
+	/**
+	 * 
+	 * @param httpConfig
+	 * @param requestHandler
+	 * @param tioExecutor
+	 * @param groupExecutor
+	 * @author tanyaowu
+	 */
 	public HttpServerStarter(HttpConfig httpConfig, HttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
 	}
 
 	/**
-	 * 
+	 * @deprecated
 	 * @param pageRoot 如果为null，则不提供静态资源服务
 	 * @param serverPort
 	 * @param contextPath
@@ -81,7 +91,7 @@ public class HttpServerStarter {
 	}
 
 	/**
-	 * 
+	 * @deprecated
 	 * @param pageRoot 如果为null，则不提供静态资源服务
 	 * @param serverPort
 	 * @param contextPath
@@ -95,6 +105,7 @@ public class HttpServerStarter {
 	}
 
 	/**
+	 * @deprecated
 	 * pageRoot 如果为null，则不提供静态资源服务
 	 * @param pageRoot
 	 * @param serverPort
@@ -112,6 +123,7 @@ public class HttpServerStarter {
 	}
 	
 	/**
+	 * @deprecated
 	 * pageRoot 如果为null，则不提供静态资源服务
 	 * @param pageRoot
 	 * @param serverPort
@@ -128,17 +140,18 @@ public class HttpServerStarter {
 			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		int port = serverPort;
 
-		httpConfig = new HttpConfig(port, null);
+		httpConfig = new HttpConfig(port, null, contextPath, null);
 		httpConfig.setPageRoot(pageRoot);
 		if (sessionStore != null) {
 			httpConfig.setSessionStore(sessionStore);
 		}
+		
 		//		} else {
 		//			httpConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpConfig.getSessionTimeout()));
 		//		}
 
 		//		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };
-		routes = new Routes(contextPath, scanPackages);
+		Routes routes = new Routes(scanPackages);
 		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		requestHandler.setHttpServerInterceptor(httpServerInterceptor);
 		requestHandler.setHttpSessionListener(httpSessionListener);
