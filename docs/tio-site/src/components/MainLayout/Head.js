@@ -16,7 +16,7 @@ function Head() {
           <NavLink to="/b" activeClassName={styles.active}>生态</NavLink>
           <NavLink to="/c" activeClassName={styles.active}>贡献</NavLink>
           <NavLink to="/d" activeClassName={styles.active}>提问</NavLink>
-          <NavLink to="/e" activeClassName={styles.active}>捐赠</NavLink>
+          <NavLink to="/donation" activeClassName={styles.active}>捐赠</NavLink>
         </div>
         <div className={styles.userInfo} >
           <Link to="/login" >登录</Link>

@@ -4,6 +4,7 @@ import styles from './App.less';
 import IndexPage from './IndexPage';
 import CasePage from './CasePage/index';
 import MainLayout from './../components/MainLayout';
+import DonationPage from './DonationPage/index';
 
 class App extends React.Component {
   render() {
@@ -13,6 +14,7 @@ class App extends React.Component {
           <Switch>
             <Route path="/" exact component={IndexPage} />
             <Route path="/case" exact component={CasePage} />
+            <Route path="/donation" exact component={DonationPage} />
           </Switch>
         </MainLayout>
       </div>

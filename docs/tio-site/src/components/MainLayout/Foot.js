@@ -12,7 +12,7 @@ function Foot() {
           <Link to="/404">学习步骤</Link>
           <Link to="/404">众说t-io</Link>
           <Link to="/404">授权协议</Link>
-          <Link to="/404">捐赠</Link>
+          <Link to="/donation">捐赠</Link>
         </div>
         <div className={styles.copyright}>
           <span

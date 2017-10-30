@@ -26,9 +26,7 @@ class CasePage extends React.Component {
   render() {
     return (
       <div className={styles.container}>
-        <div className={styles.bcolor}>
-
-        </div>
+        <div className={styles.bcolor} />
         <div className={styles.main}>
           {
           this.state.list.map((item) => {
