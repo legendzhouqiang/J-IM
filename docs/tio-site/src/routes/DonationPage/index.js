@@ -1,10 +1,10 @@
 import React from 'react';
-// import { Pagination } from 'antd';
+import { Pagination } from 'antd';
 import classnames from 'classnames';
 import { connect } from 'dva';
 import styles from './index.less';
 import DonationItem from './DonationItem';
-
+import { donationPage } from '../../services/donation';
 
 class DonationPage extends React.Component {
 
@@ -12,13 +12,17 @@ class DonationPage extends React.Component {
     super(props);
     this.state = {
       pageNumber: 1,
-      pageSize: 10,
-      totalRow: 100,
+      pageSize: 5,
+      totalRow: 0,
       list: [],
     };
   }
   componentWillMount() {
-
+    this.queryDonationPage(this.state.pageNumber, this.state.pageSize);
+  }
+  async queryDonationPage(page, pageSize) {
+    const { data } = await donationPage(page, pageSize);
+    this.setState(data);
   }
 
   render() {
@@ -51,7 +55,21 @@ class DonationPage extends React.Component {
           </div>
         </div>
         <div className={styles.donationlist} >
-          <DonationItem />
+          {
+          this.state.list.map((item) => {
+            return <DonationItem key={item.id} {...item} />;
+          })
+          }
+          <Pagination
+            style={{ textAlign: 'right', padding: '22px' }}
+            showSizeChanger
+            showQuickJumper
+            current={this.state.pageNumber}
+            pageSize={this.state.pageSize}
+            total={this.state.totalRow}
+            onChange={this.queryDonationPage.bind(this)}
+            onShowSizeChange={this.queryDonationPage.bind(this)}
+          />
         </div>
       </div>
     );
