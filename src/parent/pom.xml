@@ -34,12 +34,15 @@
 	</modules>
 
 	<properties>
-		<tio-core.version>2.0.1.v20171015-RELEASE</tio-core.version>
+		<tio-utils.version>2.0.1.v20171015-RELEASE</tio-utils.version>
+		<tio-core.version>${tio-utils.version}</tio-core.version>
+		<tio-flash-policy-server.version>${tio-utils.version}</tio-flash-policy-server.version>
+		
 		<tio-http.version>0.0.3-tio-http</tio-http.version>
 		<tio-websocket.version>0.0.3-tio-websocket</tio-websocket.version>
 		<tio-live.version>0.0.3-tio-live</tio-live.version>
 		<tio-bs.version>0.0.3-tio-bs</tio-bs.version>
-		<tio-utils.version>2.0.1.v20171015-RELEASE</tio-utils.version>
+		
 
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -104,6 +107,12 @@
 				<groupId>org.t-io</groupId>
 				<artifactId>tio-core</artifactId>
 				<version>${tio-core.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.t-io</groupId>
+				<artifactId>tio-flash-policy-server</artifactId>
+				<version>${tio-flash-policy-server.version}</version>
 			</dependency>
 
 			<dependency>

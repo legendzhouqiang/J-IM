@@ -65,7 +65,7 @@ public class Groups {
 				channelContexts = new SetWithLock<>(new HashSet<ChannelContext>());
 				map.put(groupid, channelContexts);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
 			lock1.unlock();
@@ -76,7 +76,7 @@ public class Groups {
 			try {
 				lock11.lock();
 				channelContexts.getObj().add(channelContext);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			} finally {
 				lock11.unlock();
@@ -92,7 +92,7 @@ public class Groups {
 				groups = new SetWithLock<>(new HashSet<String>());
 			}
 			channelmap.getObj().put(channelContext, groups);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
 			lock2.unlock();
@@ -103,7 +103,7 @@ public class Groups {
 			try {
 				lock22.lock();
 				groups.getObj().add(groupid);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			} finally {
 				lock22.unlock();
@@ -181,7 +181,7 @@ public class Groups {
 				Map<ChannelContext, SetWithLock<String>> m = channelmap.getObj();
 				set = m.get(channelContext);
 				m.remove(channelContext);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			} finally {
 				lock.unlock();
@@ -197,7 +197,7 @@ public class Groups {
 						if (groupListener != null) {
 							try {
 								groupListener.onAfterUnbind(channelContext, groupid);
-							} catch (Exception e) {
+							} catch (Throwable e) {
 								log.error(e.toString(), e);
 							}
 						}
@@ -205,7 +205,7 @@ public class Groups {
 					}
 				}
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		}
 	}
@@ -232,7 +232,7 @@ public class Groups {
 			try {
 				lock1.lock();
 				set.getObj().remove(channelContext);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			} finally {
 				lock1.unlock();
@@ -243,7 +243,7 @@ public class Groups {
 				try {
 					lock2.lock();
 					groupmap.getObj().remove(groupid);
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					log.error(e.toString(), e);
 				} finally {
 					lock2.unlock();

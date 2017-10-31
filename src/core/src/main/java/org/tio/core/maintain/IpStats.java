@@ -37,75 +37,75 @@ public class IpStats {
 	/**
 	 * key: 时长，单位：秒
 	 */
-	public final Map<Long, GuavaCache> map = new HashMap<>();
+	public final Map<Long, GuavaCache> cacheMap = new HashMap<>();
 
-	public final List<Long> list = new ArrayList<>();
+	public final List<Long> durationList = new ArrayList<>();
 
-	public IpStats(GroupContext groupContext, IpStatListener ipStatListener, Long[] ipStatDurations) {
+	public IpStats(GroupContext groupContext, IpStatListener ipStatListener, Long[] durations) {
 		this.groupContext = groupContext;
 		this.groupContextId = groupContext.getId();
-		if (ipStatDurations != null) {
-			for (Long ipStatDuration : ipStatDurations) {
-				addMonitor(ipStatDuration, ipStatListener);
+		if (durations != null) {
+			for (Long duration : durations) {
+				addDuration(duration, ipStatListener);
 			}
 		}
 	}
 
 	/**
 	 * 添加监控时段
-	 * @param ipStatDuration 单位：秒
+	 * @param duration 单位：秒
 	 * @param ipStatListener 可以为null
 	 * @author: tanyaowu
 	 */
-	public void addMonitor(Long ipStatDuration, IpStatListener ipStatListener) {
+	public void addDuration(Long duration, IpStatListener ipStatListener) {
 		@SuppressWarnings("unchecked")
-		GuavaCache guavaCache = GuavaCache.register(getCacheName(ipStatDuration), ipStatDuration, null, new IpStatRemovalListener(groupContext, ipStatListener));
-		map.put(ipStatDuration, guavaCache);
-		list.add(ipStatDuration);
+		GuavaCache guavaCache = GuavaCache.register(getCacheName(duration), duration, null, new IpStatRemovalListener(groupContext, ipStatListener));
+		cacheMap.put(duration, guavaCache);
+		durationList.add(duration);
 	}
 
 	/**
 	 * 添加监控时段
-	 * @param ipStatDurations 单位：秒
+	 * @param durations 单位：秒
 	 * @param ipStatListener 可以为null
 	 * @author: tanyaowu
 	 */
-	public void addMonitors(Long[] ipStatDurations, IpStatListener ipStatListener) {
-		if (ipStatDurations != null) {
-			for (Long ipStatDuration : ipStatDurations) {
-				addMonitor(ipStatDuration, ipStatListener);
+	public void addDurations(Long[] durations, IpStatListener ipStatListener) {
+		if (durations != null) {
+			for (Long duration : durations) {
+				addDuration(duration, ipStatListener);
 			}
 		}
 	}
 
 	/**
 	 * 删除监控时间段
-	 * @param ipStatDuration
+	 * @param duration
 	 * @author: tanyaowu
 	 */
-	public void removeMonitor(Long ipStatDuration) {
-		clear(ipStatDuration);
-		map.remove(ipStatDuration);
-		list.remove(ipStatDuration);
+	public void removeMonitor(Long duration) {
+		clear(duration);
+		cacheMap.remove(duration);
+		durationList.remove(duration);
 	}
 
 	/**
 	 * 
-	 * @param ipStatDuration
+	 * @param duration
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public String getCacheName(Long ipStatDuration) {
+	public String getCacheName(Long duration) {
 		String cacheName = CACHE_NAME + "_" + this.groupContextId + "_";
-		return cacheName + ipStatDuration;
+		return cacheName + duration;
 	}
 
 	/**
 	 * 清空监控数据
 	 * @author: tanyaowu
 	 */
-	public void clear(Long ipStatDuration) {
-		GuavaCache guavaCache = map.get(ipStatDuration);
+	public void clear(Long duration) {
+		GuavaCache guavaCache = cacheMap.get(duration);
 		if (guavaCache == null) {
 			return;
 		}
@@ -114,28 +114,28 @@ public class IpStats {
 
 	/**
 	 * 根据ip获取IpStat，如果缓存中不存在，则创建
-	 * @param ipStatDuration
+	 * @param duration
 	 * @param ip
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public IpStat get(Long ipStatDuration, String ip) {
-		return get(ipStatDuration, ip, true);
+	public IpStat get(Long duration, String ip) {
+		return get(duration, ip, true);
 	}
 
 	/**
 	 * 根据ip获取IpStat，如果缓存中不存在，则根据forceCreate的值决定是否创建
-	 * @param ipStatDuration
+	 * @param duration
 	 * @param ip
 	 * @param forceCreate
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public IpStat get(Long ipStatDuration, String ip, boolean forceCreate) {
+	public IpStat get(Long duration, String ip, boolean forceCreate) {
 		if (StringUtils.isBlank(ip)) {
 			return null;
 		}
-		GuavaCache guavaCache = map.get(ipStatDuration);
+		GuavaCache guavaCache = cacheMap.get(duration);
 		if (guavaCache == null) {
 			return null;
 		}
@@ -145,7 +145,7 @@ public class IpStats {
 			synchronized (this) {
 				ipStat = (IpStat) guavaCache.get(ip);
 				if (ipStat == null) {
-					ipStat = new IpStat(ip, ipStatDuration);
+					ipStat = new IpStat(ip, duration);
 					guavaCache.put(ip, ipStat);
 				}
 			}
@@ -158,8 +158,8 @@ public class IpStats {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public ConcurrentMap<String, Serializable> map(Long ipStatDuration) {
-		GuavaCache guavaCache = map.get(ipStatDuration);
+	public ConcurrentMap<String, Serializable> map(Long duration) {
+		GuavaCache guavaCache = cacheMap.get(duration);
 		if (guavaCache == null) {
 			return null;
 		}
@@ -172,8 +172,8 @@ public class IpStats {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public Long size(Long ipStatDuration) {
-		GuavaCache guavaCache = map.get(ipStatDuration);
+	public Long size(Long duration) {
+		GuavaCache guavaCache = cacheMap.get(duration);
 		if (guavaCache == null) {
 			return null;
 		}
@@ -185,8 +185,8 @@ public class IpStats {
 	 * @return
 	 * @author: tanyaowu
 	 */
-	public Collection<Serializable> values(Long ipStatDuration) {
-		GuavaCache guavaCache = map.get(ipStatDuration);
+	public Collection<Serializable> values(Long duration) {
+		GuavaCache guavaCache = cacheMap.get(duration);
 		if (guavaCache == null) {
 			return null;
 		}

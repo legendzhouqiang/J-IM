@@ -63,7 +63,7 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 		while ((p = msgQueue.poll()) != null) {
 			try {
 				channelContext.processAfterSent(p, false);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			}
 		}
@@ -169,7 +169,10 @@ public class SendRunnable extends AbstractQueueRunnable<Object> {
 			return;
 		}
 
-		byteBuffer.flip();
+		if (byteBuffer.position() != 0) {
+			byteBuffer.flip();
+		}
+		
 		AsynchronousSocketChannel asynchronousSocketChannel = channelContext.getAsynchronousSocketChannel();
 		WriteCompletionHandler writeCompletionHandler = channelContext.getWriteCompletionHandler();
 		try {

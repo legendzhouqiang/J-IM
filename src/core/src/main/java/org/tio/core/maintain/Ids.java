@@ -44,7 +44,7 @@ public class Ids {
 			lock.lock();
 			m.put(key, channelContext);
 			//			channelContext.setId(id);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -72,7 +72,7 @@ public class Ids {
 		try {
 			lock.lock();
 			return m.get(key);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -80,7 +80,7 @@ public class Ids {
 	}
 
 	/**
-	 * @return the map
+	 * @return the cacheMap
 	 */
 	public MapWithLock<String, ChannelContext> getMap() {
 		return map;
@@ -106,7 +106,7 @@ public class Ids {
 		try {
 			lock.lock();
 			m.remove(key);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();

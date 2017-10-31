@@ -5,22 +5,22 @@ import org.tio.http.common.HttpResponse;
 import org.tio.http.common.RequestLine;
 
 /**
- *
- * @author tanyaowu
- *
+ * http请求处理者
+ * @author tanyaowu 
+ * 2017年8月30日 上午9:22:50
  */
 public interface HttpRequestHandler {
 	/**
-	 *
+	 * 处理请求
 	 * @param packet
-	 * @return
+	 * @return 可以为null
 	 * @throws Exception
 	 * @author tanyaowu
 	 */
 	public HttpResponse handler(HttpRequest packet) throws Exception;
 
 	/**
-	 *
+	 * 响应404
 	 * @param request
 	 * @param requestLine
 	 * @param channelContext
@@ -30,7 +30,7 @@ public interface HttpRequestHandler {
 	public HttpResponse resp404(HttpRequest request, RequestLine requestLine);
 
 	/**
-	 *
+	 * 响应500
 	 * @param request
 	 * @param requestLine
 	 * @param throwable

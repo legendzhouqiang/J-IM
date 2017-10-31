@@ -34,7 +34,7 @@ public class AioUtils {
 				if (isopen) {
 					try {
 						Aio.close(channelContext, "asynchronousSocketChannel is open, but channelContext isClosed: " + isClosed + ", isRemoved: " + isRemoved);
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
 				}

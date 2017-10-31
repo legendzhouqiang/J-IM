@@ -63,7 +63,7 @@ public class RedisExpireUpdateTask {
 							//							expireVo.getExpirable().expire(expireVo.getExpire(), TimeUnit.SECONDS);
 						}
 						set.clear();
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						log.error(e.getMessage(), e);
 					} finally {
 						writeLock.unlock();

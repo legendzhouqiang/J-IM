@@ -368,7 +368,7 @@ public class HttpRequestDecoder {
 			requestLine.setLine(line);
 
 			return requestLine;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(channelContext.toString(), e);
 			throw new AioDecodeException(e);
 		}

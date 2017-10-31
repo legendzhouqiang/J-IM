@@ -45,7 +45,7 @@ public class MapWithLockPropSupport implements IPropSupport {
 		try {
 			lock.lock();
 			m.clear();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -71,7 +71,7 @@ public class MapWithLockPropSupport implements IPropSupport {
 		//			lock.lock();
 		//			Object ret = m.get(key);
 		//			return ret;
-		//		} catch (Exception e) {
+		//		} catch (Throwable e) {
 		//			throw e;
 		//		} finally {
 		//			lock.unlock();
@@ -100,7 +100,7 @@ public class MapWithLockPropSupport implements IPropSupport {
 		try {
 			lock.lock();
 			m.remove(key);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -121,7 +121,7 @@ public class MapWithLockPropSupport implements IPropSupport {
 		try {
 			lock.lock();
 			m.put(key, value);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();

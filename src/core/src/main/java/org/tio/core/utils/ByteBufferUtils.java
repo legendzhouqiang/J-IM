@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tio.core.exception.LengthOverflowException;
 
 /**
@@ -12,6 +14,9 @@ import org.tio.core.exception.LengthOverflowException;
  * 2017年10月19日 上午9:41:00
  */
 public class ByteBufferUtils {
+	@SuppressWarnings("unused")
+	private static Logger log = LoggerFactory.getLogger(ByteBufferUtils.class);
+
 	/**
 	 *
 	 * @param byteBuffer1
@@ -94,6 +99,38 @@ public class ByteBufferUtils {
 		return -1;
 	}
 
+	/**
+	 * 
+	 * @param buffer
+	 * @param endChar 结束
+	 * @param maxlength
+	 * @return
+	 * @throws LengthOverflowException
+	 * @author tanyaowu
+	 */
+	public static int lineEnd(ByteBuffer buffer, char endChar, int maxlength) throws LengthOverflowException {
+		//		int startPosition = buffer.position();
+		int count = 0;
+//		int i = 0;
+		while (buffer.hasRemaining()) {
+			byte b = buffer.get();
+			count++;
+			if (count > maxlength) {
+				throw new LengthOverflowException("maxlength is " + maxlength);
+			}
+//			if (i == 22) {
+//				log.error("{}-{}", (char)b, b);
+//			}
+//			log.error("{}、{}-{}", i++, (char)b, b);
+			
+			if ((char)b == endChar) {
+				int endPosition = buffer.position();
+				return endPosition - 1;
+			}
+		}
+		return -1;
+	}
+
 	public static byte[] readBytes(ByteBuffer buffer, int length) {
 		byte[] ab = new byte[length];
 		buffer.get(ab);
@@ -123,6 +160,32 @@ public class ByteBufferUtils {
 		//		boolean canEnd = false;
 		int startPosition = buffer.position();
 		int endPosition = lineEnd(buffer, maxlength);
+
+		if (endPosition > startPosition) {
+			byte[] bs = new byte[endPosition - startPosition];
+			System.arraycopy(buffer.array(), startPosition, bs, 0, bs.length);
+			if (StringUtils.isNoneBlank(charset)) {
+				try {
+					return new String(bs, charset);
+				} catch (UnsupportedEncodingException e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+				return new String(bs);
+			}
+
+		} else if (endPosition == -1) {
+			return null;
+		} else if (endPosition == startPosition) {
+			return "";
+		}
+		return null;
+	}
+
+	public static String readLine(ByteBuffer buffer, String charset, char endChar, Integer maxlength) throws LengthOverflowException {
+		//		boolean canEnd = false;
+		int startPosition = buffer.position();
+		int endPosition = lineEnd(buffer, endChar, maxlength);
 
 		if (endPosition > startPosition) {
 			byte[] bs = new byte[endPosition - startPosition];

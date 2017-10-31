@@ -59,7 +59,7 @@ public abstract class AbstractSynRunnable implements ISynRunnable {
 
 		try {
 			runTask();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
 			writeLock.unlock();

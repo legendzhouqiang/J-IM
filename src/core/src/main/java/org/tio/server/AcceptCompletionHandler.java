@@ -23,7 +23,7 @@ import org.tio.utils.SystemTimer;
  */
 public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, AioServer> {
 
-	private static Logger log = LoggerFactory.getLogger(AioServer.class);
+	private static Logger log = LoggerFactory.getLogger(AcceptCompletionHandler.class);
 
 	public AcceptCompletionHandler() {
 	}
@@ -48,7 +48,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 //				ipStat.getRequestCount().incrementAndGet();
 //			}
 			
-			List<Long> list = serverGroupContext.ipStats.list;
+			List<Long> list = serverGroupContext.ipStats.durationList;
 			for (Long v : list) {
 				IpStat ipStat = (IpStat) serverGroupContext.ipStats.get(v, clientIp);
 				ipStat.getRequestCount().incrementAndGet();
@@ -86,7 +86,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			serverGroupContext.ips.bind(channelContext);
 			try {
 				serverAioListener.onAfterConnected(channelContext, true, false);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			}
 
@@ -97,7 +97,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 				readByteBuffer.limit(readByteBuffer.capacity());
 				asynchronousSocketChannel.read(readByteBuffer, readByteBuffer, readCompletionHandler);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error("", e);
 		} finally {
 			if (aioServer.isWaitingStop()) {

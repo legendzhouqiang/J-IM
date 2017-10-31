@@ -1,13 +1,10 @@
 package org.tio.core.stat;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.Lock;
 
 import org.tio.utils.SystemTimer;
-import org.tio.utils.lock.MapWithLock;
 
 import com.xiaoleilu.hutool.date.BetweenFormater;
 import com.xiaoleilu.hutool.date.BetweenFormater.Level;
@@ -107,7 +104,7 @@ public class IpStat implements java.io.Serializable {
 //					atomicInteger = new AtomicInteger();
 //					activatedCount.getObj().put(ip, atomicInteger);
 //				}
-//			} catch (Exception e) {
+//			} catch (Throwable e) {
 //				throw e;
 //			} finally {
 //				lock.unlock();
@@ -121,7 +118,7 @@ public class IpStat implements java.io.Serializable {
 //		try {
 //			lock.lock();
 //			activatedCount.getObj().remove(ip);
-//		} catch (Exception e) {
+//		} catch (Throwable e) {
 //			throw e;
 //		} finally {
 //			lock.unlock();

@@ -116,7 +116,7 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 
 				ReconnConf.put(channelContext);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
 			if (attachment.getCountDownLatch() != null) {
@@ -125,7 +125,7 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 
 			try {
 				clientAioListener.onAfterConnected(channelContext, isConnected, isReconnect);
-			} catch (Exception e1) {
+			} catch (Throwable e1) {
 				log.error(e1.toString(), e1);
 			}
 		}

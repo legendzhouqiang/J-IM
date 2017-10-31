@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
  * 2017年8月22日 下午2:17:55
  */
 public class LayuiPage {
+	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(LayuiPage.class);
 
 	public static LayuiPage fail() {

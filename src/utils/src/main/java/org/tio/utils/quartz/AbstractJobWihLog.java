@@ -38,7 +38,7 @@ public abstract class AbstractJobWihLog implements Job {
 			run(context);
 		} catch (JobExecutionException e) {
 			throw e;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		}
 		long end = SystemTimer.currentTimeMillis();

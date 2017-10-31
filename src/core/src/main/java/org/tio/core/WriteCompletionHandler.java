@@ -128,7 +128,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 		
 //		GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
 		
-		List<Long> list = groupContext.ipStats.list;
+		List<Long> list = groupContext.ipStats.durationList;
 		
 		
 		
@@ -197,7 +197,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 			if (!isSentSuccess) {
 				Aio.close(channelContext, throwable, "写数据返回:" + result);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
 
@@ -228,7 +228,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 		try {
 			channelContext.traceClient(ChannelAction.AFTER_SEND, packet, null);
 			channelContext.processAfterSent(obj, isSentSuccess);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		}
 

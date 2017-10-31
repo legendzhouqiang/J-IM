@@ -85,7 +85,7 @@ public class HttpResponseEncoder {
 			String headerString = sb.toString();
 			httpResponse.setHeaderString(headerString);
 			headerBytes = headerString.getBytes(httpResponse.getCharset());
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
 

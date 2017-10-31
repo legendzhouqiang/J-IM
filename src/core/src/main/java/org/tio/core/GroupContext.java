@@ -131,7 +131,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	public GroupContext(SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		super();
 		this.id = ID_ATOMIC.incrementAndGet() + "";
-		this.ipBlacklist = new IpBlacklist(id);
+		this.ipBlacklist = new IpBlacklist(id, this);
 		this.ipStats = new IpStats(this, null, null);
 		this.tioExecutor = tioExecutor;
 		if (this.tioExecutor == null) {

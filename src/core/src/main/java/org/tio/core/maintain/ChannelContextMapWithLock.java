@@ -16,9 +16,9 @@ public class ChannelContextMapWithLock {
 	private MapWithLock<Integer, Packet> map = new MapWithLock<>(new HashMap<Integer, Packet>());
 
 	/**
-	 * Gets the map.
+	 * Gets the cacheMap.
 	 *
-	 * @return the map
+	 * @return the cacheMap
 	 */
 	public MapWithLock<Integer, Packet> getMap() {
 		return map;
@@ -35,7 +35,7 @@ public class ChannelContextMapWithLock {
 			lock.lock();
 			Map<Integer, Packet> m = map.getObj();
 			m.put(synSeq, packet);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -49,7 +49,7 @@ public class ChannelContextMapWithLock {
 			Map<Integer, Packet> m = map.getObj();
 			Packet packet = m.remove(synSeq);
 			return packet;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();

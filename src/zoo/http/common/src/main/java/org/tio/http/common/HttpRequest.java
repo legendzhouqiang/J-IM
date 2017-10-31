@@ -13,6 +13,7 @@ import org.tio.http.common.HttpConst.RequestBodyFormat;
 import org.tio.http.common.session.HttpSession;
 
 import com.xiaoleilu.hutool.util.ArrayUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  *
@@ -57,6 +58,9 @@ public class HttpRequest extends HttpPacket {
 
 	private HttpConfig httpConfig;
 
+	private String domain = null;
+	private String host = null;
+
 	/**
 	 *
 	 *
@@ -98,16 +102,37 @@ public class HttpRequest extends HttpPacket {
 	 * @author: tanyaowu
 	 */
 	public String getUserAgent() {
-		return this.headers.get(org.tio.http.common.HttpConst.RequestHeaderKey.User_Agent);
+		return this.headers.get(HttpConst.RequestHeaderKey.User_Agent);
 	}
 
 	/**
-	 * 获取请求头中的host字段
+	 * 获取请求头中的host字段，形如：www.t-io.org:8080, www.t-io.org等值
 	 * @return
 	 * @author: tanyaowu
 	 */
 	public String getHost() {
-		return this.headers.get(org.tio.http.common.HttpConst.RequestHeaderKey.Host);
+		if (host != null) {
+			return host;
+		}
+		
+		host = this.headers.get(HttpConst.RequestHeaderKey.Host);
+		return host;
+	}
+
+	/**
+	 * 根据host字段，获取去除端口的纯域名部分的值，形如：www.t-io.org, t-io.org等值
+	 * @return
+	 * @author tanyaowu
+	 */
+	public String getDomain() {
+		if (domain != null) {
+			return domain;
+		}
+		if (StrUtil.isBlank(getHost())) {
+			return null;
+		}
+		domain = StrUtil.subBefore(getHost(), ":", false);
+		return domain;
 	}
 
 	/**

@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DefaultThreadFactory implements ThreadFactory {
 
-	/** The map of name and thread factory. */
+	/** The cacheMap of name and thread factory. */
 	private static Map<String, DefaultThreadFactory> mapOfNameAndThreadFactory = new HashMap<>();
 
-	/** The map of name and atomic integer. */
+	/** The cacheMap of name and atomic integer. */
 	private static Map<String, AtomicInteger> mapOfNameAndAtomicInteger = new HashMap<>();
 
 	public static DefaultThreadFactory getInstance(String threadName) {

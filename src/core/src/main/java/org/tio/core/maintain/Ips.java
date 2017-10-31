@@ -64,7 +64,7 @@ public class Ips {
 				channelContexts = new SetWithLock<>(new HashSet<ChannelContext>());
 				map.put(ip, channelContexts);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
 			lock1.unlock();
@@ -75,7 +75,7 @@ public class Ips {
 		try {
 			lock11.lock();
 			channelContexts.getObj().add(channelContext);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
 			lock11.unlock();
@@ -149,14 +149,14 @@ public class Ips {
 					try {
 						lock2.lock();
 						ipmap.getObj().remove(ip);
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					} finally {
 						lock2.unlock();
 					}
 				}
 				
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			} finally {
 				lock1.unlock();

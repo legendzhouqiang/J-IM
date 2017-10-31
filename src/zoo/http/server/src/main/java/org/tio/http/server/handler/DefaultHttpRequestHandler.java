@@ -4,6 +4,7 @@ import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.http.common.Cookie;
 import org.tio.http.common.HttpConfig;
@@ -26,15 +28,21 @@ import org.tio.http.server.listener.HttpServerInterceptor;
 import org.tio.http.server.listener.HttpSessionListener;
 import org.tio.http.server.mvc.Routes;
 import org.tio.http.server.session.SessionCookieDecorator;
+import org.tio.http.server.stat.ip.path.IpAccessStat;
+import org.tio.http.server.stat.ip.path.IpPathAccessStat;
+import org.tio.http.server.stat.ip.path.IpPathAccessStatListener;
+import org.tio.http.server.stat.ip.path.IpPathAccessStats;
 import org.tio.http.server.util.ClassUtils;
+import org.tio.http.server.util.IpUtils;
 import org.tio.http.server.util.Resps;
+import org.tio.utils.SystemTimer;
 import org.tio.utils.cache.guava.GuavaCache;
 
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.io.FileUtil;
-import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  *
@@ -77,14 +85,16 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	private HttpServerInterceptor httpServerInterceptor;
 
 	private HttpSessionListener httpSessionListener;
-	
+
 	private SessionCookieDecorator sessionCookieDecorator;
 
+	private IpPathAccessStats ipPathAccessStats;
+
 	private GuavaCache staticResCache;
-	
+
 	private String contextPath;
 	private int contextPathLength = 0;
-	private String suffix;	
+	private String suffix;
 	private int suffixLength = 0;
 
 	//	private static String randomCookieValue() {
@@ -101,22 +111,22 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		if (httpConfig == null) {
 			throw new RuntimeException("httpConfig can not be null");
 		}
-		this.contextPath=httpConfig.getContextPath();
-		this.suffix=httpConfig.getSuffix();
-		
+		this.contextPath = httpConfig.getContextPath();
+		this.suffix = httpConfig.getSuffix();
+
 		if (StringUtils.isNotBlank(contextPath)) {
 			contextPathLength = contextPath.length();
 		}
 		if (StringUtils.isNotBlank(suffix)) {
 			suffixLength = suffix.length();
 		}
-		
+
 		this.httpConfig = httpConfig;
 
 		if (httpConfig.getMaxLiveTimeOfStaticRes() > 0) {
 			staticResCache = GuavaCache.register(STATIC_RES_CONTENT_CACHENAME, (long) httpConfig.getMaxLiveTimeOfStaticRes(), null);
 		}
-		
+
 		this.routes = routes;
 	}
 
@@ -133,6 +143,8 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		}
 		return httpSession;
 	}
+	
+
 
 	/**
 	 * @return the httpConfig
@@ -145,7 +157,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		return httpServerInterceptor;
 	}
 
-	private Cookie getSessionCookie(HttpRequest request, HttpConfig httpConfig) throws ExecutionException {
+	public static Cookie getSessionCookie(HttpRequest request, HttpConfig httpConfig) {
 		Cookie sessionCookie = request.getCookie(httpConfig.getSessionCookieName());
 		return sessionCookie;
 	}
@@ -157,31 +169,88 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		return staticResCache;
 	}
 
+	/**
+	 * 检查域名是否可以访问本站
+	 * @param request
+	 * @return
+	 * @author tanyaowu
+	 */
+	private boolean checkDomain(HttpRequest request) {
+		String[] allowDomains = httpConfig.getAllowDomains();
+		if (allowDomains == null || allowDomains.length == 0) {
+			return true;
+		}
+		String host = request.getHost();
+		if (ArrayUtil.contains(allowDomains, host)) {
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public HttpResponse handler(HttpRequest request) throws Exception {
+		if (!checkDomain(request)) {
+			Aio.remove(request.getChannelContext(), "过来的域名[" + request.getDomain() + "]不对");
+			return null;
+		}
+
 		HttpResponse ret = null;
 		RequestLine requestLine = request.getRequestLine();
 		String path = requestLine.getPath();
-		
+
 		if (StringUtils.isNotBlank(contextPath)) {
 			if (StringUtils.startsWith(path, contextPath)) {
 				path = StringUtils.substring(path, contextPathLength);
 			} else {
-//				Aio.remove(request.getChannelContext(), "请求路径不合法，必须以" + contextPath + "开头：" + requestLine.getLine());
-//				return null;
+				//				Aio.remove(request.getChannelContext(), "请求路径不合法，必须以" + contextPath + "开头：" + requestLine.getLine());
+				//				return null;
 			}
 		}
-		
+
 		if (StringUtils.isNotBlank(suffix)) {
 			if (StringUtils.endsWith(path, suffix)) {
 				path = StringUtils.substring(path, 0, path.length() - suffixLength);
 			} else {
-//				Aio.remove(request.getChannelContext(), "请求路径不合法，必须以" + suffix + "结尾：" + requestLine.getLine());
-//				return null;
+				//				Aio.remove(request.getChannelContext(), "请求路径不合法，必须以" + suffix + "结尾：" + requestLine.getLine());
+				//				return null;
 			}
 		}
 		requestLine.setPath(path);
-		
+
+		if (ipPathAccessStats != null) {
+			String ip = IpUtils.getRealIp(request);
+			List<Long> list = ipPathAccessStats.durationList;
+
+			Cookie cookie = getSessionCookie(request, httpConfig);
+
+			for (Long duration : list) {
+				IpAccessStat ipAccessStat = ipPathAccessStats.get(duration, ip);//.get(duration, ip, path);//.get(v, channelContext.getClientNode().getIp());
+
+				
+				ipAccessStat.count.incrementAndGet();
+				ipAccessStat.setLastAccessTime(SystemTimer.currentTimeMillis());
+
+				IpPathAccessStat ipPathAccessStat = ipAccessStat.get(path);
+				ipPathAccessStat.count.incrementAndGet();
+				ipPathAccessStat.setLastAccessTime(SystemTimer.currentTimeMillis());
+
+				if (cookie == null) {
+					ipAccessStat.noSessionCount.incrementAndGet();
+					ipPathAccessStat.noSessionCount.incrementAndGet();
+				} else {
+					ipAccessStat.sessionIds.add(cookie.getValue());
+				}
+
+				IpPathAccessStatListener ipPathAccessStatListener = ipPathAccessStats.getListener(duration);
+				if (ipPathAccessStatListener != null) {
+					boolean isContinue = ipPathAccessStatListener.onChanged(request, ip, path, ipAccessStat, ipPathAccessStat);
+					if (!isContinue) {
+						return null;
+					}
+				}
+			}
+		}
+
 		try {
 
 			processCookieBeforeHandler(request, requestLine);
@@ -279,7 +348,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 									}
 								}
 							}
-						} catch (Exception e) {
+						} catch (Throwable e) {
 							log.error(e.toString(), e);
 						} finally {
 							i++;
@@ -373,7 +442,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 			ret = resp404(request, requestLine);//Resps.html(request, "404--并没有找到你想要的内容", httpConfig.getCharset());
 			return ret;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logError(request, requestLine, e);
 			ret = resp500(request, requestLine, e);//Resps.html(request, "500--服务器出了点故障", httpConfig.getCharset());
 			return ret;
@@ -384,7 +453,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					if (httpServerInterceptor != null) {
 						httpServerInterceptor.doAfterHandler(request, requestLine, ret);
 					}
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					logError(request, requestLine, e);
 				}
 
@@ -397,14 +466,14 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 				//						GuavaCache guavaCache = GuavaCache.getCache(STATIC_RES_CACHENAME);
 				//						guavaCache.put(requestLine.getPath(), ret);
 				//					}
-				//				} catch (Exception e) {
+				//				} catch (Throwable e) {
 				//					logError(request, requestLine, e);
 				//				}
 			}
 		}
 	}
 
-	private void logError(HttpRequest request, RequestLine requestLine, Exception e) {
+	private void logError(HttpRequest request, RequestLine requestLine, Throwable e) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\r\n").append("remote  :").append(request.getRemote());
 		sb.append("\r\n").append("request :").append(requestLine.getLine());
@@ -429,30 +498,34 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 			}
 		}
 	}
-	
+
+	/**
+	 * 
+	 * @param request
+	 * @param httpSession
+	 * @param httpResponse
+	 * @return
+	 * @author tanyaowu
+	 */
 	private Cookie createSessionCookie(HttpRequest request, HttpSession httpSession, HttpResponse httpResponse) {
 		String sessionId = httpSession.getId();
-		String host = request.getHost();
-		String domain = domainFromHost(host);
-		
+		//		String host = request.getHost();
+		String domain = request.getDomain();
+
 		String name = httpConfig.getSessionCookieName();
 		long maxAge = httpConfig.getSessionTimeout();
 		//				maxAge = Long.MAX_VALUE; //把过期时间掌握在服务器端
 
 		Cookie sessionCookie = new Cookie(domain, name, sessionId, maxAge);
-		
+
 		if (sessionCookieDecorator != null) {
 			sessionCookieDecorator.decorate(sessionCookie);
 		}
 		httpResponse.addCookie(sessionCookie);
 
 		httpConfig.getSessionStore().put(sessionId, httpSession);
-		
+
 		return sessionCookie;
-	}
-	
-	private static String domainFromHost(String host) {
-		return StrUtil.subBefore(host, ":", false);
 	}
 
 	private void processCookieBeforeHandler(HttpRequest request, RequestLine requestLine) throws ExecutionException {
@@ -521,6 +594,14 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 	public void setSessionCookieDecorator(SessionCookieDecorator sessionCookieDecorator) {
 		this.sessionCookieDecorator = sessionCookieDecorator;
+	}
+
+	public IpPathAccessStats getIpPathAccessStats() {
+		return ipPathAccessStats;
+	}
+
+	public void setIpPathAccessStats(IpPathAccessStats ipPathAccessStats) {
+		this.ipPathAccessStats = ipPathAccessStats;
 	}
 
 }

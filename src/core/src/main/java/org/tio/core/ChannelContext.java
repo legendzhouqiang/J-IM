@@ -323,14 +323,14 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 				log.debug("{} 已经发送 {}", this, packet.logstr());
 			}
 			groupContext.getAioListener().onAfterSent(this, packet, isSentSuccess == null ? false : isSentSuccess);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		}
 
 		if (packet.getPacketListener() != null) {
 			try {
 				packet.getPacketListener().onAfterSent(this, packet, isSentSuccess);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			}
 		}
@@ -372,7 +372,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		if (this.clientNode != null) {
 			try {
 				groupContext.clientNodeMap.remove(this);
-			} catch (Exception e1) {
+			} catch (Throwable e1) {
 				log.error(e1.toString(), e1);
 			}
 		}
@@ -382,7 +382,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		if (this.clientNode != null && !Objects.equals(UNKNOWN_ADDRESS_IP, this.clientNode.getIp())) {
 			try {
 				groupContext.clientNodeMap.put(this);
-			} catch (Exception e1) {
+			} catch (Throwable e1) {
 				log.error(e1.toString(), e1);
 			}
 		}

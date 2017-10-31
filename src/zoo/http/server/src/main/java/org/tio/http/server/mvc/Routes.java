@@ -167,7 +167,7 @@ public class Routes {
 							pathClassMap.put(beanPath, classWithAnnotation);
 							classPathMap.put(classWithAnnotation, beanPath);
 						}
-					} catch (Exception e) {
+					} catch (Throwable e) {
 
 						log.error(e.toString(), e);
 					}
@@ -217,7 +217,7 @@ public class Routes {
 						pathMethodstrMap.put(completeMethodPath, matchingClass.getName() + "." + method.getName() + "(" + ArrayUtil.join(parameterNames, ",") + ")");
 						methodParamnameMap.put(method, parameterNames);
 						methodBeanMap.put(method, bean);
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
 				}

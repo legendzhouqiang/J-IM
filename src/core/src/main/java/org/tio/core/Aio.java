@@ -29,7 +29,8 @@ import org.tio.utils.thread.ThreadUtils;
  *
  * @author tanyaowu
  */
-public abstract class Aio {
+public class Aio {
+	private Aio() {}
 
 
 	/** The log. */
@@ -67,7 +68,7 @@ public abstract class Aio {
 				return false;
 			}
 			return set.getObj().contains(group);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 			return false;
 		} finally {
@@ -528,7 +529,7 @@ public abstract class Aio {
 			} else {
 				return true;
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 			return false;
 		} finally {
@@ -845,7 +846,7 @@ public abstract class Aio {
 			} else {
 				return true;
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 			return false;
 		} finally {
@@ -915,7 +916,7 @@ public abstract class Aio {
 					}
 				}
 				return ret;
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			} finally {
 				readLock.unlock();
@@ -959,7 +960,7 @@ public abstract class Aio {
 					}
 				}
 				return ret;
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			} finally {
 				readLock.unlock();
@@ -1002,7 +1003,7 @@ public abstract class Aio {
 					log.error(e.toString(), e);
 				}
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
 			Packet respPacket = waitingResps.remove(synSeq);

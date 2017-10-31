@@ -27,31 +27,38 @@ public class IpBlacklist {
 
 	private String cacheName = null;
 	private GuavaCache cache = null;
+	
+	private GroupContext groupContext;
 
-	public IpBlacklist(String id) {
+	public IpBlacklist(String id, GroupContext groupContext) {
 		this.id = id;
+		this.groupContext = groupContext;
 		this.cacheName = CACHE_NAME + this.id;
 		this.cache = GuavaCache.register(this.cacheName, TIME_TO_LIVE_SECONDS, TIME_TO_IDLE_SECONDS, null);
 	}
 
 	
-	public void add(GroupContext groupContext, String ip) {
+	public boolean add(String ip) {
 		//先添加到黑名单列表
 //		Lock lock = setWithLock.getLock().writeLock();
 //		try {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
 //			m.add(ip);
-//		} catch (Exception e) {
+//		} catch (Throwable e) {
 //			throw e;
 //		} finally {
 //			lock.unlock();
 //		}
 		
+		if (isInBlacklist(ip)) {
+			return false;
+		}
 		cache.put(ip, SystemTimer.currentTimeMillis());
 
 		//再删除相关连接
 		Aio.remove(groupContext, ip, "ip[" + ip + "]被加入了黑名单");
+		return true;
 	}
 
 	public void clear() {
@@ -60,7 +67,7 @@ public class IpBlacklist {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
 //			m.clear();
-//		} catch (Exception e) {
+//		} catch (Throwable e) {
 //			throw e;
 //		} finally {
 //			lock.unlock();
@@ -77,7 +84,7 @@ public class IpBlacklist {
 //			Set<String> copyObj = new HashSet<>();
 //			copyObj.addAll(m);
 //			return copyObj;
-//		} catch (Exception e) {
+//		} catch (Throwable e) {
 //			throw e;
 //		} finally {
 //			lock.unlock();
@@ -107,7 +114,7 @@ public class IpBlacklist {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
 //			return m.contains(ip);
-//		} catch (Exception e) {
+//		} catch (Throwable e) {
 //			throw e;
 //		} finally {
 //			lock.unlock();
@@ -128,7 +135,7 @@ public class IpBlacklist {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
 //			return m.remove(ip);
-//		} catch (Exception e) {
+//		} catch (Throwable e) {
 //			throw e;
 //		} finally {
 //			lock.unlock();
@@ -143,7 +150,7 @@ public class IpBlacklist {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
 //			return m.size();
-//		} catch (Exception e) {
+//		} catch (Throwable e) {
 //			throw e;
 //		} finally {
 //			lock.unlock();

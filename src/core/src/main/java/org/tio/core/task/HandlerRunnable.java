@@ -66,7 +66,7 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 				channelContext.traceClient(ChannelAction.AFTER_HANDLER, packet, null);
 			}
 			//			ret++;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.toString(), e);
 			//			return ret;
 		} finally {
@@ -86,7 +86,7 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 //				ipStat.getHandledBytes().addAndGet(packet.getByteCount());
 //			}
 			
-			List<Long> list = groupContext.ipStats.list;
+			List<Long> list = groupContext.ipStats.durationList;
 			for (Long v : list) {
 				IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
 				ipStat.getHandledPackets().incrementAndGet();

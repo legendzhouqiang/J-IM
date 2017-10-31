@@ -141,14 +141,14 @@ public class DecodeRunnable implements Runnable {
 //						ipStat.getReceivedPackets().incrementAndGet();
 //					}
 					
-					List<Long> list = groupContext.ipStats.list;
+					List<Long> list = groupContext.ipStats.durationList;
 					for (Long v : list) {
 						IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
 						ipStat.getReceivedPackets().incrementAndGet();
 					}
 					
-//					List<Long> list = groupContext.ips.list;
-//					for (Long v : list) {
+//					List<Long> durationList = groupContext.ips.list;
+//					for (Long v : durationList) {
 //						IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
 //						ipStat.getReceivedPackets().incrementAndGet();
 //
@@ -166,7 +166,7 @@ public class DecodeRunnable implements Runnable {
 							log.debug("{} 收到消息 {}", channelContext, packet.logstr());
 						}
 						aioListener.onAfterReceived(channelContext, packet, len);
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
 					handler(channelContext, packet, len);
@@ -197,7 +197,7 @@ public class DecodeRunnable implements Runnable {
 //			}
 			
 			GroupContext groupContext = channelContext.getGroupContext();
-			List<Long> list = groupContext.ipStats.list;
+			List<Long> list = groupContext.ipStats.durationList;
 			for (Long v : list) {
 				IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
 				ipStat.getDecodeErrorCount().incrementAndGet();

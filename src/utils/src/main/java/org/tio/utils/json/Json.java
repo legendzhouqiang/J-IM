@@ -44,7 +44,7 @@ public class Json {
 
 			T t = JSON.parseObject(jsonString, tt);
 			return t;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -52,7 +52,7 @@ public class Json {
 	public static String toFormatedJson(Object bean) {
 		try {
 			return JSON.toJSONString(bean, mapping, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.PrettyFormat);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -60,7 +60,7 @@ public class Json {
 	public static String toJson(Object bean) {
 		try {
 			return JSON.toJSONString(bean, mapping, SerializerFeature.DisableCircularReferenceDetect);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -73,7 +73,7 @@ public class Json {
 				return JSON.toJSONString(bean, mapping, SerializerFeature.DisableCircularReferenceDetect);
 			}
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
 	}

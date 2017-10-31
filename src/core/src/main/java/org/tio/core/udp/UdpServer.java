@@ -46,7 +46,7 @@ public class UdpServer {
 				DatagramPacket datagramPacket = new DatagramPacket(data, data.length, new InetSocketAddress(udpPacket.getRemote().getIp(), udpPacket.getRemote().getPort()));
 				try {
 					datagramSocket.send(datagramPacket);
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					log.error(e.toString(), e);
 				}
 
@@ -151,7 +151,7 @@ public class UdpServer {
 						UdpPacket udpPacket = new UdpPacket(data, remote);
 
 						handlerQueue.put(udpPacket);
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
 				}

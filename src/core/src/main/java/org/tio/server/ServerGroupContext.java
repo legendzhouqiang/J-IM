@@ -170,7 +170,7 @@ public class ServerGroupContext extends GroupContext {
 										serverGroupStat.getSentBytes().get(),
 										serverGroupStat.getBytesPerTcpReceive(), 
 										serverGroupStat.getPacketsPerTcpReceive(), 
-										Json.toJson(ServerGroupContext.this.ipStats.list));
+										Json.toJson(ServerGroupContext.this.ipStats.durationList));
 							}
 
 							//打印各集合信息
@@ -200,7 +200,7 @@ public class ServerGroupContext extends GroupContext {
 								long iv = end - start1;
 								log.info("{}, 检查心跳, 共{}个连接, 取锁耗时{}ms, 循环耗时{}ms, 心跳超时时间:{}ms", ServerGroupContext.this.name, count, iv1, iv, heartbeatTimeout);
 							}
-						} catch (Exception e) {
+						} catch (Throwable e) {
 							log.error("", e);
 						}
 					}

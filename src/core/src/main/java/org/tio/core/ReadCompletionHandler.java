@@ -59,7 +59,7 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 //				ipStat.getReceivedBytes().addAndGet(result);
 //				ipStat.getReceivedTcps().incrementAndGet();
 //			}
-			List<Long> list = groupContext.ipStats.list;
+			List<Long> list = groupContext.ipStats.durationList;
 			for (Long v : list) {
 				IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
 				ipStat.getReceivedBytes().addAndGet(result);

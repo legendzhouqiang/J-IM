@@ -11,6 +11,7 @@ import org.tio.core.stat.GroupStat;
  */
 public class ServerGroupStat extends GroupStat {
 
+	private static final long serialVersionUID = -139100692961946342L;
 	/**
 	 * 接受了多少连接
 	 */

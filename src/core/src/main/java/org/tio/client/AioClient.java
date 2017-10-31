@@ -37,7 +37,7 @@ public class AioClient {
 		ClientChannelContext channelContext = null;
 		AioClient aioClient = null;
 
-		//		private static Map<Node, Long> map = new HashMap<>();
+		//		private static Map<Node, Long> cacheMap = new HashMap<>();
 
 		public ReconnRunnable(ClientChannelContext channelContext, AioClient aioClient) {
 			this.channelContext = channelContext;
@@ -74,7 +74,7 @@ public class AioClient {
 
 				if (channelContext.isClosed()) {
 					channelContext.setReconnCount(channelContext.getReconnCount() + 1);
-					//					map.put(channelContext.getServerNode(), SystemTimer.currentTimeMillis());
+					//					cacheMap.put(channelContext.getServerNode(), SystemTimer.currentTimeMillis());
 					return;
 				}
 			} catch (java.lang.Throwable e) {
@@ -373,7 +373,7 @@ public class AioClient {
 								readLock.unlock();
 							}
 							Thread.sleep(heartbeatTimeout / 4);
-						} catch (Exception e) {
+						} catch (Throwable e) {
 							log.error(e.toString(), e);
 						} finally {
 

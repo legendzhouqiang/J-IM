@@ -60,10 +60,10 @@ public class Tokens {
 			}
 			setWithLock.add(channelContext);
 
-			//			map.put(key, channelContext);
+			//			cacheMap.put(key, channelContext);
 
 			channelContext.setToken(token);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -91,7 +91,7 @@ public class Tokens {
 		try {
 			lock.lock();
 			return m.get(key);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -141,7 +141,7 @@ public class Tokens {
 			}
 			
 			
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -185,13 +185,13 @@ public class Tokens {
 				}
 				
 				m.remove(token);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			} finally {
 				writeLock.unlock();
 			}
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();

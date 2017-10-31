@@ -57,7 +57,7 @@ public class ClientNodeMap {
 		try {
 			lock.lock();
 			return m.get(key);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -98,7 +98,7 @@ public class ClientNodeMap {
 		try {
 			lock.lock();
 			m.put(key, channelContext);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -116,7 +116,7 @@ public class ClientNodeMap {
 		try {
 			lock.lock();
 			m.removeValue(channelContext);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();

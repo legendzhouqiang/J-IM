@@ -71,10 +71,14 @@ public class HttpConfig {
 	private String contextPath = "";
 	
 	private String suffix = "";
+	
+	/**
+	 * 允许访问的域名，如果不限制，则为null
+	 */
+	private String[] allowDomains = null;
 
 	/**
 	 * 存放HttpSession对象的cacheName
-
 	 */
 	private String sessionCacheName = SESSION_CACHE_NAME;
 
@@ -306,5 +310,13 @@ public class HttpConfig {
 
 	public String getSuffix() {
 		return suffix;
+	}
+
+	public String[] getAllowDomains() {
+		return allowDomains;
+	}
+
+	public void setAllowDomains(String[] allowDomains) {
+		this.allowDomains = allowDomains;
 	}
 }

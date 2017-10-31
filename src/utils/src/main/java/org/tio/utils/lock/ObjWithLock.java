@@ -1,5 +1,6 @@
 package org.tio.utils.lock;
 
+import java.io.Serializable;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -7,7 +8,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author tanyaowu
  */
-public class ObjWithLock<T> {
+public class ObjWithLock<T> implements Serializable {
+
+	private static final long serialVersionUID = -3048283373239453901L;
 
 	/** The obj. */
 	private T obj = null;

@@ -27,6 +27,11 @@ public class GuavaRedisCache implements ICache {
 
 	private static Logger log = LoggerFactory.getLogger(GuavaRedisCache.class);
 	public static Map<String, GuavaRedisCache> map = new HashMap<>();
+	
+	/**
+	 * 在本地最大的过期时间，这样可以防止内存爆掉，单位：秒
+	 */
+	public static int MAX_EXPIRE_IN_LOCAL = 1800;
 
 	static RTopic<CacheChangedVo> topic;
 
@@ -97,7 +102,17 @@ public class GuavaRedisCache implements ICache {
 				guavaRedisCache = map.get(cacheName);
 				if (guavaRedisCache == null) {
 					RedisCache redisCache = RedisCache.register(redisson, cacheName, timeToLiveSeconds, timeToIdleSeconds);
-					GuavaCache guavaCache = GuavaCache.register(cacheName, timeToLiveSeconds, timeToIdleSeconds);
+					
+					Long timeToLiveSecondsForGuava = timeToLiveSeconds;
+					Long timeToIdleSecondsForGuava = timeToIdleSeconds;
+					
+					if (timeToLiveSecondsForGuava != null) {
+						timeToLiveSecondsForGuava = Math.min(timeToLiveSecondsForGuava, MAX_EXPIRE_IN_LOCAL);
+					}
+					if (timeToIdleSecondsForGuava != null) {
+						timeToIdleSecondsForGuava = Math.min(timeToIdleSecondsForGuava, MAX_EXPIRE_IN_LOCAL);
+					}
+					GuavaCache guavaCache = GuavaCache.register(cacheName, timeToLiveSecondsForGuava, timeToIdleSecondsForGuava);
 
 					guavaRedisCache = new GuavaRedisCache(cacheName, guavaCache, redisCache);
 					map.put(cacheName, guavaRedisCache);

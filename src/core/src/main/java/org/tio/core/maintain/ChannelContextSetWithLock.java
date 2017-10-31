@@ -19,6 +19,7 @@ public class ChannelContextSetWithLock {
 	private SetWithLock<ChannelContext> setWithLock = new SetWithLock<>(new HashSet<ChannelContext>());
 
 	public void add(ChannelContext channelContext) {
+		@SuppressWarnings("unused")
 		GroupContext groupContext = channelContext.getGroupContext();
 //		if (groupContext.isShortConnection()) {
 //			return;
@@ -30,7 +31,7 @@ public class ChannelContextSetWithLock {
 			lock.lock();
 			Set<ChannelContext> m = setWithLock.getObj();
 			m.add(channelContext);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -42,6 +43,7 @@ public class ChannelContextSetWithLock {
 	}
 
 	public boolean remove(ChannelContext channelContext) {
+		@SuppressWarnings("unused")
 		GroupContext groupContext = channelContext.getGroupContext();
 //		if (groupContext.isShortConnection()) {
 //			return true;
@@ -54,7 +56,7 @@ public class ChannelContextSetWithLock {
 			Set<ChannelContext> m = setWithLock.getObj();
 			boolean ret = m.remove(channelContext);
 			return ret;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();
@@ -68,7 +70,7 @@ public class ChannelContextSetWithLock {
 			lock.lock();
 			Set<ChannelContext> m = setWithLock.getObj();
 			return m.size();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			lock.unlock();

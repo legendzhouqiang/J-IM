@@ -58,7 +58,7 @@ public class CloseRunnable implements Runnable {
 				if (asynchronousSocketChannel != null && asynchronousSocketChannel.isOpen()) {
 					try {
 						asynchronousSocketChannel.close();
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
 				}
@@ -141,8 +141,8 @@ public class CloseRunnable implements Runnable {
 //						ipStat.getActivatedCount().decrementAndGet();
 //					}
 					
-//					List<Long> list = groupContext.ips.list;
-//					for (Long v : list) {
+//					List<Long> durationList = groupContext.ips.list;
+//					for (Long v : durationList) {
 //						IpStat ipStat = (IpStat) channelContext.getGroupContext().ips.get(v, channelContext.getClientNode().getIp());
 //						ipStat.getActivatedCount().decrementAndGet();
 //					}
@@ -171,7 +171,7 @@ public class CloseRunnable implements Runnable {
 						channelContext.setRemoved(isRemove);
 						channelContext.getGroupContext().getGroupStat().getClosed().incrementAndGet();
 						channelContext.getStat().setTimeClosed(SystemTimer.currentTimeMillis());
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
 
@@ -190,7 +190,7 @@ public class CloseRunnable implements Runnable {
 						ReconnConf.put(clientChannelContext);
 					}
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(throwable.toString(), e);
 			} finally {
 				writeLock.unlock();

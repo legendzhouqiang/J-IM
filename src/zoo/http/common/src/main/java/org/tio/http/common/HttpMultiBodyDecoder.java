@@ -308,7 +308,7 @@ public class HttpMultiBodyDecoder {
 			header.setFilename(filename);
 			header.setContentType(contentType);
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(channelContext.toString(), e);
 			throw new AioDecodeException(e.toString());
 		}

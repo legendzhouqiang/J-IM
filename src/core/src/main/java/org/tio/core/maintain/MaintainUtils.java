@@ -39,7 +39,7 @@ public class MaintainUtils {
 			groupContext.ids.unbind(channelContext);
 
 			close(channelContext);
-		} catch (Exception e1) {
+		} catch (Throwable e1) {
 			log.error(e1.toString(), e1);
 		}
 	}
