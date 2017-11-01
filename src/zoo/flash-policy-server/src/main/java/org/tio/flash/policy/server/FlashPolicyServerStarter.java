@@ -60,13 +60,13 @@ public class FlashPolicyServerStarter {
 	}
 	
 	/**
-	 * 不建议用这个方法启动，这个启动会再创建一个线程池。建议用org.tio.flash.policy.server.FlashPolicyServerStarter.start(String, Integer, SynThreadPoolExecutor, ThreadPoolExecutor)
+	 * 
 	 * @param ip
 	 * @param port
 	 * @author tanyaowu
 	 */
 	public static void start(String ip, Integer port) {
-		start(ip, port, null, null);
+		start(ip, port, Threads.tioExecutor, Threads.groupExecutor);
 	}
 
 	public static void main(String[] args) throws IOException {

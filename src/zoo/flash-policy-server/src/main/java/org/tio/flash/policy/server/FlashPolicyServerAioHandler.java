@@ -1,6 +1,5 @@
 package org.tio.flash.policy.server;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 import org.slf4j.Logger;
@@ -69,13 +68,9 @@ public class FlashPolicyServerAioHandler implements ServerAioHandler {
 	}
 
 	public static byte[] RESPONSE_BYTES;
-	
+
 	static {
-		try {
-			RESPONSE_BYTES = ("<cross-domain-policy><allow-access-from domain=\"*\" to-ports=\"*\" /></cross-domain-policy>\0").getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			log.error(e.toString(), e);
-		}
+		RESPONSE_BYTES = ("<cross-domain-policy><allow-access-from domain=\"*\" to-ports=\"*\" /></cross-domain-policy>\0").getBytes();
 	}
 
 	/**
@@ -89,7 +84,7 @@ public class FlashPolicyServerAioHandler implements ServerAioHandler {
 	@Override
 	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
 		ByteBuffer ret = ByteBuffer.wrap(RESPONSE_BYTES);
-//		ret.position(ret.limit());
+		//		ret.position(ret.limit());
 		return ret;
 	}
 
