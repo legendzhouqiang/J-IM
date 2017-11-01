@@ -72,21 +72,7 @@ public class FlashPolicyServerAioHandler implements ServerAioHandler {
 	
 	static {
 		try {
-			byte[] bs = ("<cross-domain-policy>"
-					+ "<site-control permitted-cross-domain-policies='master-only'/>"
-					+ "<allow-access-from domain='*' to-ports='*'/></cross-domain-policy>")
-					.getBytes("UTF-8");
-			
-//			byte[] bs = ("<cross-domain-policy><allow-access-from domain=\"*\" to-ports=\"*\" /></cross-domain-policy>").getBytes("UTF-8");
-			byte endByte = 0x00;
-			RESPONSE_BYTES = new byte[bs.length + 1];
-			System.arraycopy(bs, 0, RESPONSE_BYTES, 0, bs.length);
-			RESPONSE_BYTES[bs.length] = endByte;
-			
-			
-		     
-		
-			
+			RESPONSE_BYTES = ("<cross-domain-policy><allow-access-from domain=\"*\" to-ports=\"*\" /></cross-domain-policy>\0").getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			log.error(e.toString(), e);
 		}
