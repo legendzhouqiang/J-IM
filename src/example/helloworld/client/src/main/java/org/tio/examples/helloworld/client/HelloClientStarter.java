@@ -18,7 +18,7 @@ import org.tio.examples.helloworld.common.HelloPacket;
  */
 public class HelloClientStarter {
 	//服务器节点
-	public static Node serverNode = new Node("127.0.0.1", Const.PORT);
+	public static Node serverNode = new Node(Const.SERVER, Const.PORT);
 
 	//handler, 包括编码、解码、消息处理
 	public static ClientAioHandler aioClientHandler = new HelloClientAioHandler();
@@ -39,7 +39,7 @@ public class HelloClientStarter {
 	 * 启动程序入口
 	 */
 	public static void main(String[] args) throws Exception {
-		clientGroupContext.setHeartbeatTimeout(org.tio.examples.helloworld.common.Const.TIMEOUT);
+		clientGroupContext.setHeartbeatTimeout(Const.TIMEOUT);
 		aioClient = new AioClient(clientGroupContext);
 		clientChannelContext = aioClient.connect(serverNode);
 		//连上后，发条消息玩玩
