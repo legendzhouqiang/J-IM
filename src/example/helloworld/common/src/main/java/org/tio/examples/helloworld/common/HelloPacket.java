@@ -3,9 +3,7 @@ package org.tio.examples.helloworld.common;
 import org.tio.core.intf.Packet;
 
 /**
- *
  * @author tanyaowu
- *
  */
 public class HelloPacket extends Packet {
 	private static final long serialVersionUID = -172060606924066412L;
