@@ -1,0 +1,398 @@
+var highTime = 0; //指定div的发光次数
+var highDivClass = ''; //指定发光的div
+var player = null;
+var articleShow = [];
+var showDivID = 0;
+$(document).ready(function($) {
+	//注册统一的添加信息函数
+	if($('.actionadd').length > 0) {
+		var optionAdd = {
+			success: addSuccess,
+			beforeSubmit: addBefore
+		};
+		$('.actionadd').ajaxForm(optionAdd);
+	}
+	if($('.getverify').length > 0) {
+		getVerify();
+	}
+	if($('.purchased').length > 0) {
+		buyGuide();
+	}
+	$('.wxpay').click(function() {
+		getWxQrcode();
+	});
+	//添加一个gotop
+	if(thisName == 'index' || thisName == 'handbook' || thisName == 'article') {
+		$('body').append('<div class="gotop button button-primary button-box button-giant"><i class="glyphicon glyphicon-chevron-up"></i></div>')
+		$('.gotop').click(function() {
+			$('body,html').animate({
+				scrollTop: 0
+			}, 300);
+		});
+	}
+	checkLeftTitle();
+	//判断打开的地址是否需要滚动
+	var url = window.location.href;
+	var urlArr = url.split('#');
+	if(urlArr.length == 2) {
+		windowScroll(urlArr[1]);
+	}
+	$('.class_two_title').click(function() {
+		showClassTwo($(this).attr('data-id'));
+	});
+	if(classTowId > 0) {
+		showClassTwo(classTowId);
+	}
+	$('.delorder').click(function() {
+		delOrder($(this).attr('data-id'));
+	});
+	//
+	if($('pre').length > 0) {
+		$('pre').show();
+	}
+	if($('pre').length > 0) {
+		$('pre').addClass('prettyprint lang-html linenums');
+		PR.prettyPrint();
+	}
+	var word=getQueryString('word');
+	if(word){
+		searchArticle(word);
+	}
+	
+});
+$(window).scroll(function() {
+	if(thisName == 'index' || thisName == 'handbook' || thisName == 'article') {
+		var sc = $(window).scrollTop();
+		var rwidth = $('.head').width() - $('.gotop').width() - 20;
+		var rheight = $(window).height() + $(document).scrollTop();
+		if(sc > 0) {
+			$('.gotop').css('display', 'block');
+			$('.gotop').css('left', rwidth + 'px');
+			$('.gotop').css('top', (rheight - 130) + 'px');
+		} else {
+			$('.gotop').css('display', 'none');
+		}
+	}
+});
+
+function showClassTwo(id) {
+	$('.article_title').hide();
+	$('.class_two_' + id + ' .article_title').show();
+}
+
+function checkLeftTitle() {
+	if($('.left-tab').length == 0) {
+		return;
+	}
+	var wh = $(window).height();
+	var th = $('.left-tab').height();
+	var hh = $('.concon').height();
+	if(th > hh) {
+		hh = wh;
+		if(hh < wh) {
+			hh = wh - 80;
+		} else {
+			hh -= 5;
+		}
+		$('.left-tab').css('height', hh + 'px');
+	}
+	$('.left-tab').addClass('scrollbar');
+}
+//统一的添加前判断
+function addBefore() {
+	if(thisName != '') {
+		return eval('check' + thisName + '()');
+	}
+}
+//统一的添加完成后调用
+function addSuccess(data) {
+	if(data) {
+		if(data) {
+			if(data['state'] != 'error') {
+				//提交成功
+				if(orderSuccess) {
+					ordersuccess(data['data']);
+				} else if(thisName != '') {
+					eval('success' + thisName + '(' + data['data'] + ')');
+				}
+			} else {
+				goto(false, data['data']);
+			}
+		} else {
+			goto(false, '服务器端故障，请稍后再试');
+		}
+	}
+}
+//统一的添加完成后调用
+var disabled = false;
+var timeMax = 60;
+
+function getVerify() {
+	$('.getverify').click(function() {
+		if(disabled) {
+			return;
+		}
+		var mobile = $('#mobile').val();
+		if(!mobile) {
+			goto(false, '请填写手机号码');
+			return;
+		}
+		if(!checkMobile(mobile)) {
+			goto(false, '请填写正确的手机号码');
+			return;
+		}
+		disabled = true;
+		$('.getverify').attr('class', 'getverify btn btn-default');
+		timeMax = 60;
+		timeJj();
+		ajax(verifyUrl, {
+			mobile: mobile
+		}, function(data) {
+			goto(false, '已发送，请注意查收');
+			$('.verify').show();
+		});
+	});
+}
+
+function timeJj() {
+	if(timeMax <= 0) {
+		$('.getverify').attr('class', 'getverify btn btn-info');
+		disabled = false;
+		$('.getverify').html('点击可以重新发送');
+		return;
+	}
+	$('.getverify').html(timeMax + '秒后可以重新发送');
+	timeMax--;
+	setTimeout('timeJj()', 1000);
+}
+//提交订单后
+
+
+function successloginAdd(data) {
+	window.location.href = myUrl;
+}
+
+//购买引导
+
+//滚动到指定位置
+
+function windowScroll(div) {
+
+	highDivClass = $('.' + div)
+	var top = highDivClass.offset().top;
+	$('body,html').animate({
+		scrollTop: top - 100
+	}, 300);
+	highTime = 0;
+	highDIV();
+	layer.tips('您的朋友向您推荐了这个区域的内容', highDivClass, {
+		tips: [4, '#a40a03'],
+		time: 10000
+	});
+}
+
+function highDIV() {
+	//highDivClass.css('color','red');
+	if(highTime % 2 == 1) {
+		highDivClass.css('background-color', '#dddfe0');
+	} else {
+		highDivClass.css('background-color', '#f0f1f2');
+	}
+	highTime++
+	if(highTime < 10) {
+		window.setTimeout('highDIV()', 300);
+	} else {
+		highDivClass.css('background-color', '#f0f1f2');
+	}
+}
+
+function delOrder(id) {
+	ajax(delOrderUrl, {
+		id: id
+	}, function(data) {
+		if(data) {
+			goto(false, '删除成功');
+			window.setTimeout(function() {
+				window.location.href = window.location.href;
+			}, 1000);
+		}
+	})
+}
+
+function loadedHandler() {
+	for(var i = 0; i < article.length; i++) {
+		articleShow.push(false);
+	}
+	player.addListener('time', timeHandler);
+}
+
+function timeHandler(t) {
+	var nowI = -1;
+	var i = 0
+	for(i = 0; i < article.length; i++) {
+		if(t > article[i]['time']) {
+			nowI = i;
+		}
+	}
+	if(nowI > -1 && articleShow[nowI] == false) {
+		for(i = 0; i < articleShow.length; i++) {
+			if(i != nowI) {
+				articleShow[i] = false;
+			} else {
+				articleShow[i] = true;
+			}
+		}
+		showDivID = article[nowI]['id'];
+		if($('.p_' + showDivID).css('display') == 'none') {
+			ajax(articleUrl, {
+				id: showDivID
+			}, function(data) {
+				$('.p_' + showDivID).show();
+				$('.p_' + showDivID).html(data);
+				newElement(article[nowI]['title']);
+			});
+		} else {
+			newElement(article[nowI]['title']);
+		}
+	}
+}
+
+function gotoNowDiv() {
+	//滚动到指定位置
+	player.videoPause();
+	highDivClass = $('.p_' + showDivID)
+	var top = highDivClass.offset().top;
+	$('body,html').animate({
+		scrollTop: top - 100
+	}, 300);
+	highTime = 0;
+	highDIV();
+}
+var elementTemp = null; //保存元件
+function newElement(title) {
+	if(elementTemp != null) {
+		deleteElement()
+	}
+	var attribute = {
+		list: [ //list=定义元素列表
+			{
+				type: 'text', //说明是文本
+				text: '点击查看《' + title + '》的文字说明', //文本内容
+				color: '0xFFFFFF', //文本颜色
+				size: 14, //文本字体大小，单位：px
+				font: '"Microsoft YaHei", YaHei, "微软雅黑", SimHei,"\5FAE\8F6F\96C5\9ED1", "黑体",Arial', //文本字体
+				leading: 30, //文字行距
+				alpha: 1, //文本透明度(0-1)
+				paddingLeft: 10, //文本内左边距离
+				paddingRight: 1, //文本内右边距离
+				paddingTop: 0, //文本内上边的距离
+				paddingBottom: 0, //文本内下边的距离
+				marginLeft: 3, //文本离左边的距离
+				marginRight: 3, //文本离右边的距离
+				marginTop: 3, //文本离上边的距离
+				marginBottom: 3, //文本离下边的距离
+				backgroundColor: '0x000000', //文本的背景颜色
+				backAlpha: 0, //文本的背景透明度(0-1)
+				backRadius: 20, //文本的背景圆角弧度
+				clickEvent: 'javaScript->gotoNowDiv'
+			},
+			{
+				type: 'image', //定义元素类型：只有二种类型，image=使用图片，text=文本
+				file: closeImg, //图片地址
+				radius: 23, //图片圆角弧度
+				width: 23, //定义图片宽，必需要定义
+				height: 23, //定义图片高，必需要定义
+				alpha: 1, //图片透明度(0-1)
+				marginLeft: 3, //图片离左边的距离
+				marginRight: 6, //图片离右边的距离
+				marginTop: 5, //图片离上边的距离
+				marginBottom: 3, //图片离下边的距离
+				clickEvent: "javaScript->deleteElement"
+			}
+		],
+		//x: 10, //元件x轴坐标，注意，如果定义了position就没有必要定义x,y的值了，x,y支持数字和百分比，使用百分比时请使用单引号，比如'50%'
+		//y: 50, //元件y轴坐标
+		position: [2, 1], //位置[x轴对齐方式（0=左，1=中，2=右），y轴对齐方式（0=上，1=中，2=下），x轴偏移量（不填写或null则自动判断，第一个值为0=紧贴左边，1=中间对齐，2=贴合右边），y轴偏移量（不填写或null则自动判断，0=紧贴上方，1=中间对齐，2=紧贴下方）]
+		alpha: 1, //元件的透明度
+		backgroundColor: '0x035CB0', //元件的背景色
+		backAlpha: 1, //元件的背景透明度(0-1)
+		backRadius: 35 //元件的背景圆角弧度
+	}
+	elementTemp = player.addElement(attribute);
+	var danmuS = player.getElement(elementTemp);
+	var obj = {
+		element: elementTemp,
+		parameter: 'x',
+		static: true, //是否禁止其它属性，true=是，即当x(y)(alpha)变化时，y(x)(x,y)在播放器尺寸变化时不允许变化
+		effect: 'None.easeOut',
+		start: '100%',
+		end: player.getMetaDate()['width'] - danmuS['width'],
+		speed: 1,
+		overStop: true,
+		pauseStop: true,
+		callBack: 'deleteChild'
+	};
+	var danmuAnimate = player.animate(obj);
+}
+
+function deleteElement() {
+	if(elementTemp != null) {
+		player.deleteElement(elementTemp);
+		elementTemp = null;
+	}
+}
+
+function getQueryString(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	var r = window.location.search.substr(1).match(reg);
+	if(r != null) return unescape(r[2]);
+	return null;
+}
+function searchArticle(word){
+	var w=decodeURI(decodeURI(word));
+	$('.concon').html('<h1>正在搜索关键字："'+w+'"</h1>');
+	$.ajax({
+		url: 'article.json',
+		type:'post',
+		dataType: 'json',
+		success: function(data){
+			if(data){
+				var html='';
+				for(var i=0;i<data.length;i++){
+					var title=data[i]['title'];
+					var tags=data[i]['tags'];
+					var arr=title.split(w);
+					var tagsArr=tags.split(w);
+					if(arr.length>1 || tagsArr.length>1){
+						html+='<h4>'+data[i]['cname']+'：<a href="'+data[i]['id']+'.html">'+title+'</a></h4>';
+					}
+				}
+				if(html){
+					$('.concon').html('<h1>已搜索到包含关键字"'+w+'"的内容，如下：</h1>'+html);
+				}
+				else{
+					$('.concon').html($('.concon').html()+'<h4>本次没有搜索到内容</h4>');
+				}
+			}
+		}
+	});
+}
+function searchSuccess(){
+	$('#word').val(encodeURI(encodeURI($('#word').val())));
+	return false;
+}
+function opengz(){
+	layer.open({
+		  type: 1
+		  ,title:'购买规则'
+		  ,area: '500px'
+		  ,offset: 't' //具体配置参考：offset参数项
+		  ,content: '<div style="padding: 20px 80px;"><p>在购买本站的任何商品或任何服务时请务必详细阅读以下规则。</p><p>一：在购买任何商品或任何服务时需充分详细阅读本规则后请选中“我已阅读并同意《购买规则》”。</p><p>二：在点击“我已阅读并同意《购买规则》”后本站默认您已认真阅读并对此规则无异议且同意本规则的所有条款。</p><p>三：本站任何商品或任何服务均为一次性消费商品，在购买后即为默认已发货并且使用。不支持退货，换货，退款。</p><p>四：关于视频教程的特别说明：视频教程有效期为6个小时，即从购买后第一次观看开始计时的6小时内可以随意多次观看。超过6小时需重新购买。</p></div>'
+		  ,btn: '我已认真阅读规则'
+		  ,btnAlign: 'c' //按钮居中
+		  ,shade: 0.3 //不显示遮罩
+		  ,yes: function(){
+		    layer.closeAll();
+		  }
+		});
+}

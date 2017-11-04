@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://www.ckplayer.com/manualX/23.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<title>调用播放器时的属性列表及相关说明-ckplayer帮助手册</title>
+		<meta name="keywords" content="flv,f4v,mp4,hlv,rtmp,html5,m3u8,播放器,视频流,网页视频播放器,ckplayer,ckplayer官网">
+		<meta name="description" content="调用播放器时的属性列表及相关说明,ckplayer,支持http协议下的flv,f4v,mp4,支持rtmp视频流和rtmp视频回放，支持m3u8格式，是你做视频直播，视频点播的理想播放器 ">
+		<meta name="author" content="ckplayer,超酷网页视频播放器">
+		<meta name="copyright" content="ckplayer,超酷网页视频播放器">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+		<meta http-equiv="X-UA-Compatible" content="IE=9">
+		<script type="text/javascript">
+			var webPath='';
+			var thisName ='';
+			var orderSuccess=false;//如果该变量=true，则提交表单后统一处理
+			var verifyUrl='/ajax/sendverify.html';
+			var orderUrl='/index/order/id/.id..html';
+			var classTowId=0;
+		</script>
+		<script type="text/javascript" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/jquery-1.11.3.min.js.下载"></script>
+		<script type="text/javascript" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/jquery.form.min.js.下载"></script>
+		<script type="text/javascript" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/layer.js.下载"></script><link rel="stylesheet" href="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/layer.css" id="layui_layer_skinlayercss" style="">
+		<script type="text/javascript" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/prettify.js.下载"></script>
+		<script type="text/javascript" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/lang-css.js.下载"></script>
+		<script type="text/javascript" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/index.js.下载"></script>
+		<script type="text/javascript" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/pc.js.下载"></script>
+		<script type="text/javascript" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/checkAdd.js.下载"></script>
+		<link href="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/kkpager_blue.css" rel="stylesheet" type="text/css">
+		<link href="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/bootstrap.min.css" rel="stylesheet" type="text/css">
+		<link href="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/buttons.css" rel="stylesheet" type="text/css">
+		<link href="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/css.css" rel="stylesheet" type="text/css">
+		<link href="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/desert.css" rel="stylesheet" type="text/css">
+		
+	<script type="text/javascript">
+		thisName = 'article';
+		classTowId=parseInt('17');
+	</script>
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+	   	<script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+	   	<script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+	</head>
+
+	<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div>
+		<div class="container-fluid tophead">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-8 col-lg-9">
+					<div class="logo">
+						<img src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/logo.jpg">
+					</div>
+					<div class="logotab btn btn-link">
+						当前版本(version)：X						
+					</div>
+				</div>
+				<div class="rightsearch col-xs-12 col-sm-6 col-md-4 col-lg-3">
+					<form class="form-inline" action="http://www.ckplayer.com/manualX/search.html" method="get" onsubmit="searchSuccess()">
+					  <div class="form-group">
+					    <div class="input-group">
+					      	<div class="input-group-addon">搜索：</div>
+					      	<input type="text" class="form-control" id="word" name="word" value="" placeholder="请输入关键字">
+					      	<div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+					    </div>
+					  </div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="headtab col-xs-12 col-sm-8 col-md-8">
+					<a href="http://www.ckplayer.com/">首页</a>
+					<a href="http://www.ckplayer.com/down/">下载</a>
+					<a href="http://www.ckplayer.com/manualX/">手册</a>
+					<a href="http://manual.ckplayer.com/">视频教程</a>
+					<a href="http://bbs.ckplayer.com/" target="_blank">论坛</a>
+				</div>
+				<div class="headtabright col-xs-12 col-sm-4 col-md-4">
+					<a href="http://manual.ckplayer.com/index/buyguide.html">商业服务</a>
+					<a href="http://www.ckplayer.com/xtool.html">加密转码</a>
+					<a href="http://www.ckplayer.com/metadata.html">分析视频</a>
+					<a href="http://www.ckplayer.com/xtoolimg.html">图片合并</a>
+					<a href="http://manual.ckplayer.com/user.html"><i class="glyphicon glyphicon-user"></i>我</a>				</div>
+			</div>
+		</div>
+		
+	<div class="container-fluid padding-top-10 head">
+		<div class="row">
+			<div class="left-tab col-xs-12 col-sm-4 col-md-2 scrollbar">
+				<!--左边导航开始-->
+				<div class="class_one">
+						<div class="class_one_title">软件介绍</div>
+						<div class="class_two class_two_10">
+								<div class="class_two_title" data-id="10">免费使用</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/6.html">
+											免费使用申明																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/7.html">
+																							注意事项										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/8.html">
+																							功能简介										</a>
+									</div>							</div><div class="class_two class_two_11">
+								<div class="class_two_title" data-id="11">环境要求</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/9.html">
+											网站环境																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/10.html">
+											支持的平台																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/11.html">
+											支持的视频格式																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/12.html">
+											移动端注意事项																						</a>
+									</div>							</div>					</div><div class="class_one">
+						<div class="class_one_title">安装调用</div>
+						<div class="class_two class_two_14">
+								<div class="class_two_title" data-id="14">文件结构</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/72.html">
+																							文件结构说明										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/73.html">
+											crossdomain.xml																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/74.html">
+											ckplayer.js																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/75.html">
+											ckplayer.xml																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/76.html">
+																							[语言配置文件]language.xml文件说明										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/77.html">
+											style.xml																						</a>
+									</div>							</div><div class="class_two class_two_15">
+								<div class="class_two_title" data-id="15">播放器调用方式</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/13.html">
+																							标准调用方式										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/14.html">
+																							简单调用ckplayer.swf										</a>
+									</div>							</div><div class="class_two class_two_16">
+								<div class="class_two_title" data-id="16">视频地址形式</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/15.html">
+																							普通视频地址										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/16.html">
+																							指定视频格式										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/18.html">
+											页面地址调用																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/19.html">
+											普通页调用形式																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/20.html">
+											JSON调用-兼容形式																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/21.html">
+											JSON调用-非兼容																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/22.html">
+											视频地址加密																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/71.html">
+																							支持清晰度-兼容										</a>
+									</div>							</div>					</div><div class="class_one">
+						<div class="class_one_title">功能配置</div>
+						<div class="class_two class_two_17">
+								<div class="class_two_title" data-id="17">播放配置</div>
+								<div class="article_title" style="display: block;">
+										<a href="http://www.ckplayer.com/manualX/17.html">
+											配置说明																						</a>
+									</div><div class="article_title" style="display: block;">
+										<a href="http://www.ckplayer.com/manualX/23.html">
+											属性列表																						</a>
+									</div><div class="article_title" style="display: block;">
+										<a href="http://www.ckplayer.com/manualX/25.html">
+											广告设置																						</a>
+									</div>							</div><div class="class_two class_two_18">
+								<div class="class_two_title" data-id="18">功能配置</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/24.html">
+											配置说明																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/30.html">
+																							设置鼠标样式										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/31.html">
+											调节进度限制																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/32.html">
+											回播功能																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/33.html">
+											m3u8清晰度配置																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/34.html">
+																							m3u8视频文件加密										</a>
+									</div>							</div><div class="class_two class_two_19">
+								<div class="class_two_title" data-id="19">风格配置</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/36.html">
+											风格配置说明																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/27.html">
+																							修改logo										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/29.html">
+																							修改loading										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/35.html">
+											增加下一个功能																						</a>
+									</div>							</div><div class="class_two class_two_13">
+								<div class="class_two_title" data-id="13">加密功能</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/68.html">
+																							视频地址加密										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/69.html">
+																							视频文件加密										</a>
+									</div>							</div>					</div><div class="class_one">
+						<div class="class_one_title">播放器和网页交互</div>
+						<div class="class_two class_two_20">
+								<div class="class_two_title" data-id="20">javascript-API</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/37.html">
+											使用说明																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/38.html">
+											示例代码																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/39.html">
+											JSAPI控制函数列表																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/40.html">
+											JSAPI监听函数列表																						</a>
+									</div>							</div><div class="class_two class_two_21">
+								<div class="class_two_title" data-id="21">使用示例</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/41.html">
+																							监听元数据										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/42.html">
+											监听错误																						</a>
+									</div>							</div>					</div><div class="class_one">
+						<div class="class_one_title">向播放器添加插件</div>
+						<div class="class_two class_two_22">
+								<div class="class_two_title" data-id="22">增加功能</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/60.html">
+											使用说明																						</a>
+									</div>							</div><div class="class_two class_two_23">
+								<div class="class_two_title" data-id="23">actionscript3.0-API</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/61.html">
+																							插件制作										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/62.html">
+											示例																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/63.html">
+																							AS3API控制函数列表										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/64.html">
+																							AS3API监听函数列表										</a>
+									</div>							</div><div class="class_two class_two_24">
+								<div class="class_two_title" data-id="24">插件制作示例</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/65.html">
+																							监听动作插件										</a>
+									</div>							</div>					</div><div class="class_one">
+						<div class="class_one_title">视频/视频服务器</div>
+						<div class="class_two class_two_25">
+								<div class="class_two_title" data-id="25">视频相关</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/47.html">
+											mp4正确转码																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/48.html">
+																							给flv添加关键帧										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/49.html">
+											视频随意拖动																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/58.html">
+											ffmpeg的安装和使用																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/59.html">
+											元数据移到前面																						</a>
+									</div>							</div><div class="class_two class_two_26">
+								<div class="class_two_title" data-id="26">服务器相关</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/43.html">
+											IIS支持视频播放																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/44.html">
+											IIS-MP4随意拖动																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/45.html">
+											apache支持视频																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/46.html">
+											nginx支持视频																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/50.html">
+											推荐：云转码软件																						</a>
+									</div>							</div>					</div><div class="class_one">
+						<div class="class_one_title">常见问题</div>
+						<div class="class_two class_two_27">
+								<div class="class_two_title" data-id="27">播放器</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/51.html">
+											出错解决方案																						</a>
+									</div>							</div><div class="class_two class_two_28">
+								<div class="class_two_title" data-id="28">视频</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/52.html">
+											有声音无画面																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/53.html">
+											不能边加载边播放																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/54.html">
+											视频不能播放																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/55.html">
+											跳转时间不正确																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/56.html">
+											m3u8视频问题																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/78.html">
+											地址里包含&amp;符号																						</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/79.html">
+											m3u8默认暂停无效																						</a>
+									</div>							</div><div class="class_two class_two_29">
+								<div class="class_two_title" data-id="29">其它</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/57.html">
+											js不能控制全屏																						</a>
+									</div>							</div>					</div><div class="class_one">
+						<div class="class_one_title">修改右键</div>
+						<div class="class_two class_two_30">
+								<div class="class_two_title" data-id="30">修改右键</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/66.html">
+																							免费修改右键										</a>
+									</div><div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/67.html">
+											付费修改																						</a>
+									</div>							</div><div class="class_two class_two_31">
+								<div class="class_two_title" data-id="31">修改/增加右键菜单</div>
+								<div class="article_title" style="display: none;">
+										<a href="http://www.ckplayer.com/manualX/70.html">
+																							修改，添加右键										</a>
+									</div>							</div>					</div>				<!--左边导航结束-->
+			</div>
+			<div class="col-xs-12 col-sm-8 col-md-10 concon">
+				<h1>调用播放器时的属性列表及相关说明</h1>
+					<div class="manualyytf">
+						<!-- 广告位：手册A1 -->
+						<script>
+						(function() {
+						    var s = "_" + Math.random().toString(36).slice(2);
+						    document.write('<div id="' + s + '"></div>');
+						    (window.slotbydup=window.slotbydup || []).push({
+						        id: '4779963',
+						        container: s,
+						        size: '960,60',
+						        display: 'inlay-fix'
+						    });
+						})();
+						</script><div id="_fba38lvztgl"><iframe id="iframe4779963_0" name="iframe4779963_0" onload="BAIDU_SSP_renderFrame(&#39;4779963_0&#39;, this);" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/saved_resource.html" width="960" height="60" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:60px" allowtransparency="true"></iframe></div>
+						<script src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/os.js.下载"></script><script charset="utf-8" src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/mcam"></script>
+					</div>
+										<div class="tabtitle">在查阅该文之前需要了解的内容如下：</div>
+						<h4><a href="http://www.ckplayer.com/manualX/17.html">调用播放器时的配置说明</a></h4>					<div class="tabtitle">正文：</div>
+					<div class="content laycode">
+												<p>
+	在页面中调用播放器的主要代码形式如下：</p><pre class="brush:html;toolbar:false prettyprint lang-html linenums prettyprinted" style="display: block;"><ol class="linenums"><li class="L0"><span class="pln">var&nbsp;videoObject&nbsp;=&nbsp;{};</span></li><li class="L1"><span class="pln">var&nbsp;player=new&nbsp;ckplayer(videoObject);</span></li></ol></pre><p>
+	videoObject是一个对象，本文将列出该对象所有属性及属性的意义，注：是否必需指的是调用播放器时该属性是不是必需要设置</p><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">container</span></td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性类型：</td><td style="word-break: break-all;">
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					播放器窗口的idName或className</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td style="word-break: break-all;">
+					必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					自定义</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					播放器所放置容器的idName（前面需加#，如container:'#video'），或className（前面需加.，如container:'.video'）</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">variable</span></td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性类型：</td><td style="word-break: break-all;">
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					调用播放器的函数名称</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td style="word-break: break-all;">
+					必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					自定义</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					该属性主要提供给flashplayer播放器使用，flashplayer在需要和调用函数交互时会使用到</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">video</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					string/array/object</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					定义播放地址，关于这个属性的详细说明可查看“安装调用-&gt;视频地址形式”</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td style="word-break: break-all;">
+					必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					该属性定义视频地址。可以是字符形式，可以是数组形式或对象形式，关于这个属性的使用可以参考手册中的以下内容：<br><a href="http://www.ckplayer.com/manualX/15.html" target="_self">普通视频地址</a><br><a href="http://www.ckplayer.com/manualX/16.html" target="_self">指定视频格式</a><br><a href="http://www.ckplayer.com/manualX/18.html" target="_self">页面地址调用</a><br><a href="http://www.ckplayer.com/manualX/19.html" target="_self">普通页调用形式</a><br><a href="http://www.ckplayer.com/manualX/20.html" target="_self">JSON调用-兼容形式</a><br><a href="http://www.ckplayer.com/manualX/21.html" target="_self">JSON调用-非兼容</a><br><a href="http://www.ckplayer.com/manualX/22.html" target="_self">视频地址加密</a></td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">unescape</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					Boolean</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					播放地址是否需要使用解码，比如你的视频地址里包含“,”，播放器默认会认为该地址是多段视频地址组合而成的。此时你需要对该地址进行UrlEncode编码并同时设置unescape:true</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td style="word-break: break-all;">
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;"><br></td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">autoplay</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					boolean</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					是否自动播放</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					false</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					false=默认暂停，true=默认播放，该属性还涉及到默认是否加载视频，可以在ckplayer.js或ckplayer.xml里找到节点config的autoLoad节点设置</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">loop</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					boolean</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					播放结束后是否循环播放</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					false</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					false=播放结束后暂停，true=播放结束后重新播放</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">volume</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					number</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					初始音量</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					0.8</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					初始化播放器的音量，如果静音，则设置成0，数值为0-1之间的小数</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">poster</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					封面图片</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					定义播放器默认暂停时显示的一张图片地址。</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">live</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					boolean</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					是否是直播视频</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					false</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					false=点播/直播回看，true=直播视频</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">seek</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					int</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					默认跳转时间</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					0</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					视频开始播放时要跳转的时间，该值主要用来做跳过片头等功能</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">duration</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					int</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					显示总时间</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					0</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					视频在默认不加载的情况下显示总时间</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">preview</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					object</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					预览图片地址</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					该属性定义播放器预览图片，属性类型为一个对象，对象里包含二个属性：file（array）：定义预览图片的地址数组，scale（int）：定义截图时间间隔，单位：秒。<br>示例如下：<pre class="brush:html;toolbar:false prettyprint lang-html linenums prettyprinted" style="display: block;"><ol class="linenums"><li class="L0"><span class="pln">preview:{</span></li><li class="L1"><span class="pln">&nbsp;&nbsp;&nbsp;&nbsp;file:['01.jpg','02.jpg'],</span></li><li class="L2"><span class="pln">&nbsp;&nbsp;&nbsp;&nbsp;scale:2</span></li><li class="L3"><span class="pln">}</span></li></ol></pre>如果不想用对象传递，也可以用字符传递，示例如下：<br>preview:'01.jpg,02.jpg',<br>previewscale:2,</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">promptSpot</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					array</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					提示点</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					显示在播放器进度栏上的提示点，数组形式，数组里的数据是对象形式，各个对象有二个属性，分别是words：提示点的文字，time：提示点时间。<br>示例如下：<br><pre class="brush:html;toolbar:false prettyprint lang-html linenums prettyprinted" style="display: block;"><ol class="linenums"><li class="L0"><span class="pln">promptSpot:[</span></li><li class="L1"><span class="pln">&nbsp;&nbsp;{</span></li><li class="L2"><span class="pln">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;words:'提示点文字01',</span></li><li class="L3"><span class="pln">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time:16</span></li><li class="L4"><span class="pln">&nbsp;&nbsp;&nbsp;},</span></li><li class="L5"><span class="pln">&nbsp;&nbsp;{</span></li><li class="L6"><span class="pln">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;words:'提示点文字02',</span></li><li class="L7"><span class="pln">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time:60</span></li><li class="L8"><span class="pln">&nbsp;&nbsp;&nbsp;}</span></li><li class="L9"><span class="pln">]</span></li></ol></pre>如果不需要使用对象传递，也可以用字符串形式的，示例如下（注意，s要小字）：<br>promptspot:'提示点01,提示点02',<br>promptspottime:'16,60',</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">cktrack</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					字幕文件</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					定义字幕文件的路径，仅支持一个字幕文件，但字幕文件里支持多行。如果你有多个字幕文件，请合并成一个。</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">loaded</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					播放器加载后触发的函数</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					播放器加载成功后（并非视频加载成功）所要回调的js函数</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">debug</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					boolean</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					是否启用调试模式，正式使用时请设置为false</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					false</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					该功能虽然兼容与html5及flashplayer，但主要是用于在flashplayer里使用。</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">flashplayer</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					boolean</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					是否强制使用flashplayer播放</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					false</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					flase=播放器自动判断，优先使用html5播放器，true=仅使用flashplayer播放</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">config</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					指定配置函数（文件）</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					ckplayerConfig（ckplayer.xml）</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					当在js环境中调用时，此处指定函数名称，当使用ckplayer.xml调用时，可以指定路径</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">rotation</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					int</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					默认旋转的角度</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					0</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					该功能只支持90，180，270，-90，-180，-270。如果视频的所在域相对于播放器域没有权限，则不能使用该属性</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adfront</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					前置广告文件路径列表</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					支持swf,png,jpg,gif,mp4,flv,f4v，多个广告用英文逗号隔开</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adfrontlink</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					前置广告的链接地址</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					该属性和adfront对应（即多个时用竖线隔开）。如果adfront是swf有自己的链接地址时，则对应的adfronglink设置成空即可</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adfronttime</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					前置广告每个广告的播放时长</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无<br></td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					需和adfront对应。如果是视频广告并且必需强制播放完视频，则可以配置文件里进行设置，配置文件的设置可以查看“功能配置-&gt;功能配置”相关文章</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adpause</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					暂停广告文件路径列表</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					支持swf,gif,png,jpg，不支持视频广告，请务必注意，多个用英文逗号隔开</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adpauselink</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					暂停广告的链接地址</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					需和adpause对应，如果是swf，则留空</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adpausetime</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					暂停广告如果是多个的话需要设置每个广告的播放时长</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					需要adpause对应。如果暂停广告仅有一个则不需要设置</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adinsert</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					插入广告文件路径列表</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					支持swf,jpg,jpeg,png,gif,flv,f4v,mp4，播放器播放到指定时间开始播放的广告。多个广告需用英文逗号隔开。每次播放将播放完全部广告</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adinsertlink</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					插入广告的链接地址</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td>
+					html5,flashplayer</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					插入广告的链接地址，需要adinsert对应，swf广告不需要链接地址时可以留空</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adinserttime</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					插入广告列表的每个广告对应的播放时间列表</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					时间需要adinsert对应。如果是视频广告并且必需强制播放完视频，则可以配置文件里进行设置，配置文件的设置可以查看“功能配置-&gt;功能配置”相关文章</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">inserttime</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					插入广告所要插入的时间点列表</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					在视频播放过程的指定时间点进行播放。要在多点插入请用英文逗号隔开，时间设置支持固定时间，单位秒，如在100秒和200秒时播放插入广告则：inserttime:'100,200'，如果需要在视频播放到1/4和1/2时插入广告，则：inserttime:'25%,50%'。</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adend</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					结尾广告文件路径列表</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					视频播放结束播放的广告，支持swf,jpg,jpeg,png,gif,flv,f4v,mp4，要求可参考前置广告的设置</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adendlink</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					结尾广告链接地址</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					参考前置广告adfrontlink的要求</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">adendtime</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					结尾广告单个广告对应的时间列表</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					参考前置广告adfrontime的要求</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">advertisements</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					广告配置文件的路径，使用该属性时，则上面对于广告的配置全部无效。建议使用该属性对广告单独进行配置管理</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					如果你需使用广告，强制建议使用这属性进行配置。因为支持的功能远多于上述如adfront,adpause等属性的配置。有关于advertisements属性的使用，请查看：<a href="http://www.ckplayer.com/manualX/25.html" target="_self">播放器广告单独配置</a></td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">securetoken</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					rtmp协议直播时是否需要进行secureToken验证，如果使用，该属性设置为验证字符串</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;"><br></td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">fcsubscribe</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td style="word-break: break-all;">
+					boolean</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					rtmp协议直播时是否需要进行FCSubscribe验证</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					false</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;"><br></td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">username</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					rtmp协议直播时采用secureToken或FCSubscribe验证时的用户名</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td><br></td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">password</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					rtmp协议直播时采用secureToken或FCSubscribe验证时的密码</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td><br></td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">front</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					在html5环境中点击上一集按钮触发的函数名称</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					html5</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right" style="word-break: break-all;">
+					属性说明：</td><td style="word-break: break-all;">
+					仅支持html5环境，flashplayer环境中的上一集下一集按钮的动作需要在风格文件style.xml里进行设置</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">next</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					在html5环境中点击下一集按钮触发的函数名称</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					html5</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					仅支持html5环境，flashplayer环境中的上一集下一集按钮的动作需要在风格文件style.xml里进行设置</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">crossorigin</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					在html5环境中跨域截图功能，需要设置该属性，同时视频所有域需要有相应权限</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					html5</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					仅支持html5环境</td></tr></tbody></table></div><div class="attribute"><table class="table table-bordered table-hover"><tbody><tr class="firstRow"><td rowspan="1" colspan="2" style="word-break: break-all;"><span class="attribute-title">crossdomain</span></td></tr><tr><td class="text-right">
+					属性类型：</td><td>
+					string</td></tr><tr><td class="text-right">
+					功能说明：</td><td style="word-break: break-all;">
+					flashplayer环境指定跨域策略文件地址，比如跨域截图时需要</td></tr><tr><td class="text-right" width="130">
+					是否必需：</td><td>
+					非必需</td></tr><tr><td class="text-right">
+					兼容环境：</td><td style="word-break: break-all;">
+					flashplayer</td></tr><tr><td class="text-right">
+					默认值：</td><td style="word-break: break-all;">
+					无</td></tr><tr><td class="text-right">
+					属性说明：</td><td style="word-break: break-all;">
+					仅支持flashplayer环境</td></tr></tbody></table></div>											</div>
+					
+						
+					<div class="tabtitle">建议了解以下相关内容：</div>
+						<h4><a href="http://www.ckplayer.com/manualX/25.html">播放器广告单独文件配置说明</a></h4><h4><a href="http://www.ckplayer.com/manualX/71.html">支持清晰度-兼容</a></h4>							</div>
+		</div>
+	</div>
+
+
+		<div class="container-fluid copy padding-top-20">
+			<div class="row">
+				Powered by ckplayer.com<br>
+Copyright©ckplayer，2011-2017( <a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备11026158号</a> )<span style="display:none;"><script src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/stat.php" language="JavaScript"></script><script src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/core.php" charset="utf-8" type="text/javascript"></script><script src="./调用播放器时的属性列表及相关说明-ckplayer帮助手册_files/online_v3.php" charset="utf-8" type="text/javascript"></script><a href="http://www.cnzz.com/stat/website.php?web_id=3514729" target="_blank">站长统计</a></span>
+			</div>
+		</div>
+	
+
+<div class="gotop button button-primary button-box button-giant" style="display: block; left: 1783px; top: 4019px;"><i class="glyphicon glyphicon-chevron-up"></i></div></body></html>
