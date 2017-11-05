@@ -29,7 +29,18 @@ class DonationPage extends React.Component {
     return (
       <div className={styles.container}>
         <div className={styles.top}>
-          头部
+          <div className={styles.total} >
+            <div className={styles.totalTitle}>
+              情怀捐赠
+            </div>
+            <div className={styles.totalMonery}>
+              收到<span>2986</span>元捐赠
+            </div>
+          </div>
+          <div className={styles.qrcode} >
+            <img src="ali_300px-11.png" alt="" />
+            <img src="wechat_300px-11.png" alt="" />
+          </div>
         </div>
         <div className={styles.ranking} >
           <div className={classnames({ [styles.rankingItem]: true, [styles.one]: true })} >
