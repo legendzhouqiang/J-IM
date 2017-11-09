@@ -1,4 +1,4 @@
-package org.tio.http.server.util;
+package org.tio.http.common.utils;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

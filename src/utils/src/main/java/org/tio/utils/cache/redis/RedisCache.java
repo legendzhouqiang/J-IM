@@ -37,7 +37,7 @@ public class RedisCache implements ICache {
 	}
 
 	public static String keyPrefix(String cacheName) {
-		return cacheName + "_";
+		return cacheName + ":";
 	}
 
 	public static void main(String[] args) {

@@ -83,7 +83,7 @@ public class IpStats {
 	 * @param duration
 	 * @author: tanyaowu
 	 */
-	public void removeMonitor(Long duration) {
+	public void removeDuration(Long duration) {
 		clear(duration);
 		cacheMap.remove(duration);
 		durationList.remove(duration);

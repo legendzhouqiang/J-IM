@@ -24,8 +24,9 @@ import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.RequestLine;
 import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.common.session.HttpSession;
-import org.tio.http.server.listener.HttpServerInterceptor;
-import org.tio.http.server.listener.HttpSessionListener;
+import org.tio.http.common.utils.IpUtils;
+import org.tio.http.server.intf.HttpServerInterceptor;
+import org.tio.http.server.intf.HttpSessionListener;
 import org.tio.http.server.mvc.Routes;
 import org.tio.http.server.session.SessionCookieDecorator;
 import org.tio.http.server.stat.ip.path.IpAccessStat;
@@ -33,7 +34,6 @@ import org.tio.http.server.stat.ip.path.IpPathAccessStat;
 import org.tio.http.server.stat.ip.path.IpPathAccessStatListener;
 import org.tio.http.server.stat.ip.path.IpPathAccessStats;
 import org.tio.http.server.util.ClassUtils;
-import org.tio.http.server.util.IpUtils;
 import org.tio.http.server.util.Resps;
 import org.tio.utils.SystemTimer;
 import org.tio.utils.cache.guava.GuavaCache;
@@ -357,12 +357,14 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					obj = method.invoke(bean, paramValues);
 				}
 
+				
 				if (obj instanceof HttpResponse) {
 					ret = (HttpResponse) obj;
 					return ret;
 				} else {
 					if (obj == null) {
-						ret = Resps.txt(request, "");//.json(request, obj + "");
+						//ret = Resps.txt(request, "");//.json(request, obj + "");
+						return null;
 					} else {
 						ret = Resps.json(request, obj);
 					}

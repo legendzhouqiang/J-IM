@@ -37,12 +37,12 @@
 		<tio-utils.version>2.0.1.v20171015-RELEASE</tio-utils.version>
 		<tio-core.version>${tio-utils.version}</tio-core.version>
 		<tio-flash-policy-server.version>${tio-utils.version}</tio-flash-policy-server.version>
-		
+
 		<tio-http.version>0.0.3-tio-http</tio-http.version>
 		<tio-websocket.version>0.0.3-tio-websocket</tio-websocket.version>
 		<tio-live.version>0.0.3-tio-live</tio-live.version>
 		<tio-bs.version>0.0.3-tio-bs</tio-bs.version>
-		
+
 
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -51,8 +51,8 @@
 		<maven.version>3.5.0</maven.version>
 
 		<mysql.driver.version>5.1.44</mysql.driver.version>
-		<druid.version>1.1.4</druid.version>
-		<jfinal.version>3.2</jfinal.version>
+		<druid.version>1.1.5</druid.version>
+		<jfinal.version>3.3</jfinal.version>
 
 		<logback.version>1.2.3</logback.version>
 		<slf4j.version>1.7.25</slf4j.version>
@@ -72,8 +72,10 @@
 		<protobuf-java-format.version>1.4</protobuf-java-format.version>
 
 		<protostuff.version>1.6.0</protostuff.version>
-		<redisson.version>3.5.4</redisson.version>
+		<redisson.version>3.5.5</redisson.version>
 		<jodd.version>3.9.1</jodd.version>
+		<quartz.version>2.3.0</quartz.version>
+
 
 	</properties>
 
@@ -414,13 +416,31 @@
 			<dependency>
 				<groupId>org.quartz-scheduler</groupId>
 				<artifactId>quartz</artifactId>
-				<version>2.3.0</version>
+				<version>${quartz.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.quartz-scheduler</groupId>
 				<artifactId>quartz-jobs</artifactId>
-				<version>2.3.0</version>
+				<version>${quartz.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>de.ruedigermoeller</groupId>
+				<artifactId>fst</artifactId>
+				<version>2.54</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.github.lukehutch</groupId>
+				<artifactId>fast-classpath-scanner</artifactId>
+				<version>2.4.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thoughtworks.paranamer</groupId>
+				<artifactId>paranamer</artifactId>
+				<version>2.5.2</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 

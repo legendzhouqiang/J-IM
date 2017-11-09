@@ -11,6 +11,7 @@ import org.tio.core.ChannelContext;
 import org.tio.core.Node;
 import org.tio.http.common.HttpConst.RequestBodyFormat;
 import org.tio.http.common.session.HttpSession;
+import org.tio.http.common.utils.IpUtils;
 
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -60,6 +61,7 @@ public class HttpRequest extends HttpPacket {
 
 	private String domain = null;
 	private String host = null;
+	private String clientIp = null;
 
 	/**
 	 *
@@ -118,6 +120,19 @@ public class HttpRequest extends HttpPacket {
 		host = this.headers.get(HttpConst.RequestHeaderKey.Host);
 		return host;
 	}
+	
+	/**
+	 * 获取真实的客户端ip
+	 * @return
+	 * @author tanyaowu
+	 */
+	public String getClientIp() {
+		if (clientIp == null) {
+			clientIp = IpUtils.getRealIp(this);
+		}		
+		return clientIp;
+	}
+	
 
 	/**
 	 * 根据host字段，获取去除端口的纯域名部分的值，形如：www.t-io.org, t-io.org等值

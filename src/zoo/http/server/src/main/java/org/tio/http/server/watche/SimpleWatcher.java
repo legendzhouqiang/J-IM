@@ -23,7 +23,7 @@ public class SimpleWatcher implements Watcher {
 			}
 
 			@Override
-			public Class type() {
+			public Class<?> type() {
 				return null;
 			}
 		});

@@ -11,6 +11,7 @@ import com.xiaoleilu.hutool.util.ClassUtil;
  * 2017年7月26日 下午6:46:11
  */
 public class ClassUtils {
+	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(ClassUtils.class);
 
 	public static boolean isSimpleTypeOrArray(Class<?> clazz) {

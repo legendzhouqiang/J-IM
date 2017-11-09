@@ -114,11 +114,19 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	@Override
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
 		HttpRequest request = (HttpRequest) packet;
+		String ip = request.getClientIp();
+		
+		if (channelContext.getGroupContext().ipBlacklist.isInBlacklist(ip)) {
+			Aio.remove(channelContext, ip + "在黑名单中");
+			return;
+		}
+		
 		HttpResponse httpResponse = requestHandler.handler(request);
 		if (httpResponse != null) {
 			Aio.send(channelContext, httpResponse);
 		} else {
 			log.info("{}, {}, handler return null, request line: {}", channelContext.getGroupContext().getName(), channelContext.toString(), request.getRequestLine().getLine());
+			Aio.remove(channelContext, "handler return null");
 		}
 	}
 

@@ -13,6 +13,7 @@ import org.tio.http.common.HttpRequest;
  * 2017年8月18日 下午5:47:00
  */
 public class HttpServerUtils {
+	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(HttpServerUtils.class);
 
 	/**
