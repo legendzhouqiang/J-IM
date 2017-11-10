@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)https://xuexb.com/post/nginx-url-rewrite.html -->
+<html lang="zh-CN" class=" pc"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"><title>nginx配置url重写 - 前端小武的博客</title>   <link rel="icon" href="https://xuexb.com/favicon.ico"> <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://xuexb.com/rss.html"><link rel="search" type="application/opensearchdescription+xml" href="https://xuexb.com/content-search.xml" title="前端小武的博客"> <link rel="canonical" href="https://xuexb.com/post/nginx-url-rewrite.html"><link rel="miphtml" href="https://mip.xuexb.com/post/nginx-url-rewrite.html"><link rel="amphtml" href="https://amp.xuexb.com/post/nginx-url-rewrite.html">  <link rel="stylesheet" href="./nginx配置url重写 - 前端小武的博客_files/all.css" data-ls="css" inline=""> <style>#sidebar {
+    background-position: center top;
+}
+
+@media screen and (min-width: 769px) {
+.toc {
+    float: right;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, .8);
+    border: 1px solid #ccc;
+    padding: 0 10px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+ }#sidebar{ background-image:url('//static.cdn.xuexb.com/image/bj.jpg?imageslim');background-size:cover; }#sidebar .profile span,#sidebar .buttons li a,#sidebar .buttons li a:hover{color:#ffffff }</style> </head><body> <nav id="sidebar" class="behavior_1"> <div class="wrap"> <div class="profile"> <a href="https://xuexb.com/"> <img src="./nginx配置url重写 - 前端小武的博客_files/logo.jpg" alt="前端小武的博客"> </a> <span>前端小武的博客</span></div> <ul class="buttons">  <li> <a href="https://xuexb.com/" title="首页"> <i class="iconfont icon-home"></i> <span>首页</span></a>  </li><li> <a href="https://xuexb.com/archives/" title="归档"> <i class="iconfont icon-archive"></i> <span>归档</span></a>  </li><li> <a href="https://xuexb.com/tags" title="标签"> <i class="iconfont icon-tags"></i> <span>标签</span></a>  </li><li> <a href="https://xuexb.com/links" title="友链"> <i class="iconfont icon-link"></i> <span>友链</span></a>  </li><li> <a href="https://xuexb.com/post/xiaowu.html" title="关于"> <i class="iconfont icon-user"></i> <span>关于</span></a>  </li></ul> <ul class="buttons"> <li>  <a class="inline" rel="nofollow" target="_blank" href="https://github.com/xuexb/"> <i class="iconfont icon-github-v" title="GitHub"></i></a>   <a class="inline" href="http://www.linkedin.com/in/xieyaowu/"> <i class="iconfont icon-linkedin" title="谢耀武的Linkedin"></i></a> <a class="inline" href="https://xuexb.com/rss.html"> <i class="iconfont icon-rss-v" title="RSS"></i></a> <a class="inline" href="https://xuexb.com/search.html"> <i class="iconfont icon-search" title="站内搜索"></i></a> </li></ul></div></nav> <div id="header"> <div class="btn-bar"><i></i></div> <h1><a href="https://xuexb.com/">前端小武的博客</a></h1> <a class="me" href="https://xuexb.com/post/xiaowu.html"><img src="./nginx配置url重写 - 前端小武的博客_files/logo.jpg" alt="前端小武的博客"></a></div> <div id="sidebar-mask"></div> <div id="main">  <div id="page-post"> <article class="post detail"> <div class="meta"> <div class="date">07月22, 2016</div> <div class="comment"> <a href="https://xuexb.com/post/nginx-url-rewrite.html#comments">0 comments</a></div></div> <h1 class="title">nginx配置url重写</h1> <div class="entry-content"> <div class="toc"><ul>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#rewrite">rewrite</a><ul>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-f2b">语法</a></li>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-d79">简单例子</a><ul>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-b30">last和break的区别</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-621">if判断</a><ul>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-f2b">语法</a></li>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-9be">内置的全局变量</a></li>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-8cb">例子</a></li>
+</ul>
+</li>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#location">location</a><ul>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-f2b">语法</a></li>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-ee8">优先级</a></li>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#toc-a46">例子 - 假地址掩饰真地址</a></li>
+<li><a href="https://xuexb.com/post/nginx-url-rewrite.html#link">link</a></li>
+</ul>
+</li>
+</ul>
+</div><p>url重写是指通过配置conf文件，以让网站的url中达到某种状态时则定向/跳转到某个规则，比如常见的伪静态、301重定向、浏览器定向等</p>
+<h2><a id="rewrite" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#rewrite"></a>rewrite</h2>
+<h3><a id="toc-f2b" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-f2b"></a>语法</h3>
+<p>在配置文件的<code>server</code>块中写，如：</p>
+<pre><code class="hljs lang-undefined firekylin-code"><ul><li><span class="line-num" data-line="1"></span>server {</li><li><span class="line-num" data-line="2"></span>    rewrite 规则 定向路径 重写类型;</li><li><span class="line-num" data-line="3"></span>}</li></ul></code></pre>
+<ul>
+<li>规则：可以是字符串或者正则来表示想匹配的目标url</li>
+<li>定向路径：表示匹配到规则后要定向的路径，如果规则里有正则，则可以使用<code>$index</code>来表示正则里的捕获分组</li>
+<li>重写类型：<ul>
+<li>last ：相当于Apache里德(L)标记，表示完成rewrite，浏览器地址栏URL地址不变</li>
+<li>break；本条规则匹配完成后，终止匹配，不再匹配后面的规则，浏览器地址栏URL地址不变</li>
+<li>redirect：返回302临时重定向，浏览器地址会显示跳转后的URL地址</li>
+<li>permanent：返回301永久重定向，浏览器地址栏会显示跳转后的URL地址</li>
+</ul>
+</li>
+</ul>
+<!--more-->
+<h3><a id="toc-d79" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-d79"></a>简单例子</h3>
+<pre><code class="hljs lang-undefined firekylin-code"><ul><li><span class="line-num" data-line="1"></span>server {</li><li><span class="line-num" data-line="2"></span>    # 访问 /last.html 的时候，页面内容重写到 /index.html 中</li><li><span class="line-num" data-line="3"></span>    rewrite /last.html /index.html last;</li><li><span class="line-num" data-line="4"></span></li><li><span class="line-num" data-line="5"></span>    # 访问 /break.html 的时候，页面内容重写到 /index.html 中，并停止后续的匹配</li><li><span class="line-num" data-line="6"></span>    rewrite /break.html /index.html break;</li><li><span class="line-num" data-line="7"></span></li><li><span class="line-num" data-line="8"></span>    # 访问 /redirect.html 的时候，页面直接302定向到 /index.html中</li><li><span class="line-num" data-line="9"></span>    rewrite /redirect.html /index.html redirect;</li><li><span class="line-num" data-line="10"></span></li><li><span class="line-num" data-line="11"></span>    # 访问 /permanent.html 的时候，页面直接301定向到 /index.html中</li><li><span class="line-num" data-line="12"></span>    rewrite /permanent.html /index.html permanent;</li><li><span class="line-num" data-line="13"></span></li><li><span class="line-num" data-line="14"></span>    # 把 /html/*.html =&gt; /post/*.html ，301定向</li><li><span class="line-num" data-line="15"></span>    rewrite ^/html/(.+?).html$ /post/$1.html permanent;</li><li><span class="line-num" data-line="16"></span></li><li><span class="line-num" data-line="17"></span>    # 把 /search/key =&gt; /search.html?keyword=key</li><li><span class="line-num" data-line="18"></span>    rewrite ^/search\/([^\/]+?)(\/|$) /search.html?keyword=$1 permanent;</li><li><span class="line-num" data-line="19"></span>}</li></ul></code></pre>
+<h4><a id="toc-b30" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-b30"></a>last和break的区别</h4>
+<p>因为301和302不能简单的只返回状态码，还必须有重定向的URL，这就是return指令无法返回301,302的原因了。这里 last 和 break 区别有点难以理解：</p>
+<ul>
+<li>last一般写在server和if中，而break一般使用在location中</li>
+<li>last不终止重写后的url匹配，即新的url会再从server走一遍匹配流程，而break终止重写后的匹配</li>
+<li>break和last都能组织继续执行后面的rewrite指令</li>
+</ul>
+<p>在<code>location</code>里一旦返回<code>break</code>则直接生效并停止后续的匹配<code>location</code></p>
+<pre><code class="hljs lang-undefined firekylin-code"><ul><li><span class="line-num" data-line="1"></span>server {</li><li><span class="line-num" data-line="2"></span>    location / {</li><li><span class="line-num" data-line="3"></span>        rewrite /last/ /q.html last;</li><li><span class="line-num" data-line="4"></span>        rewrite /break/ /q.html break;</li><li><span class="line-num" data-line="5"></span>    }</li><li><span class="line-num" data-line="6"></span></li><li><span class="line-num" data-line="7"></span>    location = /q.html {</li><li><span class="line-num" data-line="8"></span>        return 400;</li><li><span class="line-num" data-line="9"></span>    }</li><li><span class="line-num" data-line="10"></span>}</li></ul></code></pre>
+<ul>
+<li>访问<code>/last/</code>时重写到<code>/q.html</code>，然后使用新的<code>uri</code>再匹配，正好匹配到<code>locatoin = /q.html</code>然后返回了<code>400</code></li>
+<li>访问<code>/break</code>时重写到<code>/q.html</code>，由于返回了<code>break</code>，则直接停止了</li>
+</ul>
+<h2><a id="toc-621" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-621"></a>if判断</h2>
+<p>只是上面的简单重写很多时候满足不了需求，比如需要判断当文件不存在时、当路径包含xx时等条件，则需要用到<code>if</code></p>
+<h3><a id="toc-f2b" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-f2b"></a>语法</h3>
+<pre><code class="hljs lang-undefined firekylin-code"><ul><li><span class="line-num" data-line="1"></span>if (表达式) {</li><li><span class="line-num" data-line="2"></span>}</li></ul></code></pre>
+<ul>
+<li>当表达式只是一个变量时，如果值为空或任何以0开头的字符串都会当做false</li>
+<li>直接比较变量和内容时，使用=或!=</li>
+<li>~正则表达式匹配，~*不区分大小写的匹配，!~区分大小写的不匹配</li>
+</ul>
+<p>一些内置的条件判断：</p>
+<ul>
+<li>-f和!-f用来判断是否存在文件</li>
+<li>-d和!-d用来判断是否存在目录</li>
+<li>-e和!-e用来判断是否存在文件或目录</li>
+<li>-x和!-x用来判断文件是否可执行</li>
+</ul>
+<h3><a id="toc-9be" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-9be"></a>内置的全局变量</h3>
+<pre><code class="hljs lang-gams firekylin-code"><ul><li><span class="line-num" data-line="1"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$args</span> ：这个变量等于请求行中的参数，同$query_string</span></li><li><span class="line-num" data-line="2"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$content</span>_length ： 请求头中的Content-length字段。</span></li><li><span class="line-num" data-line="3"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$content</span>_type ： 请求头中的Content-Type字段。</span></li><li><span class="line-num" data-line="4"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$document</span>_root ： 当前请求在root指令中指定的值。</span></li><li><span class="line-num" data-line="5"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$host</span> ： 请求主机头字段，否则为服务器名称。</span></li><li><span class="line-num" data-line="6"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$http</span>_user_agent ： 客户端agent信息</span></li><li><span class="line-num" data-line="7"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$http</span>_cookie ： 客户端cookie信息</span></li><li><span class="line-num" data-line="8"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$limit</span>_rate ： 这个变量可以限制连接速率。</span></li><li><span class="line-num" data-line="9"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$request</span>_method ： 客户端请求的动作，通常为GET或POST。</span></li><li><span class="line-num" data-line="10"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$remote</span>_addr ： 客户端的IP地址。</span></li><li><span class="line-num" data-line="11"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$remote</span>_port ： 客户端的端口。</span></li><li><span class="line-num" data-line="12"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$remote</span>_user ： 已经经过Auth Basic Module验证的用户名。</span></li><li><span class="line-num" data-line="13"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$request</span>_filename ： 当前请求的文件路径，由root或alias指令与URI请求生成。</span></li><li><span class="line-num" data-line="14"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$scheme</span> ： HTTP方法（如http，https）。</span></li><li><span class="line-num" data-line="15"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$server</span>_protocol ： 请求使用的协议，通常是HTTP/1.0或HTTP/1.1。</span></li><li><span class="line-num" data-line="16"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$server</span>_addr ： 服务器地址，在完成一次系统调用后可以确定这个值。</span></li><li><span class="line-num" data-line="17"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$server</span>_name ： 服务器名称。</span></li><li><span class="line-num" data-line="18"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$server</span>_port ： 请求到达服务器的端口号。</span></li><li><span class="line-num" data-line="19"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$request</span>_uri ： 包含请求参数的原始URI，不包含主机名，如：”/foo/bar.php?arg=baz”。</span></li><li><span class="line-num" data-line="20"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$uri</span> ： 不带请求参数的当前URI，$uri不包含主机名，如”/foo/bar.html”。</span></li><li><span class="line-num" data-line="21"></span><span class="hljs-meta"><span class="hljs-meta-keyword">$document</span>_uri ： 与$uri相同。</span></li></ul><b class="name">gams</b></code></pre><p>如：</p>
+<pre><code class="hljs lang-stylus firekylin-code"><ul><li><span class="line-num" data-line="1"></span>访问链接是：http:<span class="hljs-comment">//localhost:88/test1/test2/test.php </span></li><li><span class="line-num" data-line="2"></span>网站路径是：/var/www/<span class="hljs-selector-tag">html</span></li><li><span class="line-num" data-line="3"></span></li><li><span class="line-num" data-line="4"></span><span class="hljs-variable">$host</span>：localhost</li><li><span class="line-num" data-line="5"></span><span class="hljs-variable">$server_port</span>：<span class="hljs-number">88</span></li><li><span class="line-num" data-line="6"></span><span class="hljs-variable">$request_uri</span>：http:<span class="hljs-comment">//localhost:88/test1/test2/test.php</span></li><li><span class="line-num" data-line="7"></span><span class="hljs-variable">$document_uri</span>：/test1/test2/test<span class="hljs-selector-class">.php</span></li><li><span class="line-num" data-line="8"></span><span class="hljs-variable">$document_root</span>：/var/www/<span class="hljs-selector-tag">html</span></li><li><span class="line-num" data-line="9"></span><span class="hljs-variable">$request_filename</span>：/var/www/html/test1/test2/test<span class="hljs-selector-class">.php</span></li></ul><b class="name">stylus</b></code></pre><h3><a id="toc-8cb" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-8cb"></a>例子</h3>
+<pre><code class="hljs lang-undefined firekylin-code"><ul><li><span class="line-num" data-line="1"></span># 如果文件不存在则返回400</li><li><span class="line-num" data-line="2"></span>if (!-f $request_filename) {</li><li><span class="line-num" data-line="3"></span>    return 400;</li><li><span class="line-num" data-line="4"></span>}</li><li><span class="line-num" data-line="5"></span></li><li><span class="line-num" data-line="6"></span># 如果host不是xuexb.com，则301到xuexb.com中</li><li><span class="line-num" data-line="7"></span>if ( $host != 'xuexb.com' ){</li><li><span class="line-num" data-line="8"></span>    rewrite ^/(.*)$ https://xuexb.com/$1 permanent;</li><li><span class="line-num" data-line="9"></span>}</li><li><span class="line-num" data-line="10"></span></li><li><span class="line-num" data-line="11"></span># 如果请求类型不是POST则返回405</li><li><span class="line-num" data-line="12"></span>if ($request_method = POST) {</li><li><span class="line-num" data-line="13"></span>    return 405;</li><li><span class="line-num" data-line="14"></span>}</li><li><span class="line-num" data-line="15"></span></li><li><span class="line-num" data-line="16"></span># 如果参数中有 a=1 则301到指定域名</li><li><span class="line-num" data-line="17"></span>if ($args ~ a=1) {</li><li><span class="line-num" data-line="18"></span>    rewrite ^ http://example.com/ permanent;</li><li><span class="line-num" data-line="19"></span>}</li></ul></code></pre>
+<p>在某种场景下可结合<code>location</code>规则来使用，如：</p>
+<pre><code class="hljs lang-undefined firekylin-code"><ul><li><span class="line-num" data-line="1"></span># 访问 /test.html 时</li><li><span class="line-num" data-line="2"></span>location = /test.html {</li><li><span class="line-num" data-line="3"></span>    # 默认值为xiaowu</li><li><span class="line-num" data-line="4"></span>    set $name xiaowu;</li><li><span class="line-num" data-line="5"></span></li><li><span class="line-num" data-line="6"></span>    # 如果参数中有 name=xx 则使用该值</li><li><span class="line-num" data-line="7"></span>    if ($args ~* name=(\w+?)(&amp;|$)) {</li><li><span class="line-num" data-line="8"></span>        set $name $1;</li><li><span class="line-num" data-line="9"></span>    }</li><li><span class="line-num" data-line="10"></span></li><li><span class="line-num" data-line="11"></span>    # 301</li><li><span class="line-num" data-line="12"></span>    rewrite ^ /$name.html permanent;</li><li><span class="line-num" data-line="13"></span>}</li></ul></code></pre>
+<p>上面表示：</p>
+<ul>
+<li>/test.html =&gt; /xiaowu.html</li>
+<li>/test.html?name=ok =&gt; /ok.html?name=ok</li>
+</ul>
+<h2><a id="location" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#location"></a>location</h2>
+<h3><a id="toc-f2b" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-f2b"></a>语法</h3>
+<p>在<code>server</code>块中使用，如：</p>
+<pre><code class="hljs lang-undefined firekylin-code"><ul><li><span class="line-num" data-line="1"></span>server {</li><li><span class="line-num" data-line="2"></span>    location 表达式 {</li><li><span class="line-num" data-line="3"></span>    }</li><li><span class="line-num" data-line="4"></span>}</li></ul></code></pre>
+<p>location表达式类型</p>
+<ul>
+<li>如果直接写一个路径，则匹配该路径下的</li>
+<li>~ 表示执行一个正则匹配，区分大小写</li>
+<li>~* 表示执行一个正则匹配，不区分大小写</li>
+<li>^~ 表示普通字符匹配。使用前缀匹配。如果匹配成功，则不再匹配其他location。</li>
+<li>= 进行普通字符精确匹配。也就是完全匹配。</li>
+</ul>
+<h3><a id="toc-ee8" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-ee8"></a>优先级</h3>
+<ol>
+<li>等号类型（=）的优先级最高。一旦匹配成功，则不再查找其他匹配项。</li>
+<li>^~类型表达式。一旦匹配成功，则不再查找其他匹配项。</li>
+<li>正则表达式类型（~ ~*）的优先级次之。如果有多个location的正则能匹配的话，则使用正则表达式最长的那个。</li>
+<li>常规字符串匹配类型。按前缀匹配。</li>
+</ol>
+<h3><a id="toc-a46" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#toc-a46"></a>例子 - 假地址掩饰真地址</h3>
+<pre><code class="hljs lang-nginx firekylin-code"><ul><li><span class="line-num" data-line="1"></span><span class="hljs-section">server</span> {</li><li><span class="line-num" data-line="2"></span>    <span class="hljs-comment"># 用 xxoo_admin 来掩饰 admin</span></li><li><span class="line-num" data-line="3"></span>    <span class="hljs-attribute">location</span> / {</li><li><span class="line-num" data-line="4"></span>        <span class="hljs-comment"># 使用break拿一旦匹配成功则忽略后续location</span></li><li><span class="line-num" data-line="5"></span>        <span class="hljs-attribute">rewrite</span> /xxoo_admin /admin <span class="hljs-literal">break</span>;</li><li><span class="line-num" data-line="6"></span>    }</li><li><span class="line-num" data-line="7"></span></li><li><span class="line-num" data-line="8"></span>    <span class="hljs-comment"># 访问真实地址直接报没权限</span></li><li><span class="line-num" data-line="9"></span>    <span class="hljs-attribute">location</span> /admin {</li><li><span class="line-num" data-line="10"></span>        <span class="hljs-attribute">return</span> <span class="hljs-number">403</span>;</li><li><span class="line-num" data-line="11"></span>    }</li><li><span class="line-num" data-line="12"></span>}</li></ul><b class="name">nginx</b></code></pre>
+<h3><a id="link" class="anchor" href="https://xuexb.com/post/nginx-url-rewrite.html#link"></a>link</h3>
+<ul>
+<li><a href="http://www.linuxeye.com/configuration/2657.html">Nginx location在配置中的优先级</a></li>
+<li><a href="http://github.com/xuexb/learn-nginx">学习安装配置nginx - @xuexb/learn-nginx</a></li>
+</ul>
+ </div> <p>本文链接：<a href="https://xuexb.com/post/nginx-url-rewrite.html">https://xuexb.com/post/nginx-url-rewrite.html</a></p> <p>-- <acronym title="End of File">EOF</acronym> --</p> <div class="post-info"> <p> 发表于 <i>2016-07-22 00:10:06</i>  ，添加在分类  <a href="https://xuexb.com/cate/houduanjishu"> <code class="notebook">后端技术</code></a>  下   ，并被添加「  <a href="https://xuexb.com/tag/nginx"> <code class="notebook">nginx</code></a>  <a href="https://xuexb.com/tag/proxy"> <code class="notebook">proxy</code></a>  <a href="https://xuexb.com/tag/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"> <code class="notebook">反向代理</code></a>  <a href="https://xuexb.com/tag/rewrite"> <code class="notebook">rewrite</code></a>  <a href="https://xuexb.com/tag/url%E9%87%8D%E5%86%99"> <code class="notebook">url重写</code></a>  」标签  ，最后修改于 <i>2017-04-19 11:57:01</i></p>  </div>  <p class="expire-tips">提醒: 本文最后更新于&nbsp;200&nbsp;天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>  </article>  <nav class="pagination">  <a href="https://xuexb.com/post/wang-zhan-jia-gou-cong-wu-dao-you.html" class="prev">« 网站架构-从无到有</a>   <a href="https://xuexb.com/post/zaoduke-tongshuo.html" class="next">同说@小武：跨界的成长 »</a>  </nav>   <div id="comments" data-type="disqus" data-thread-key="f0393909589ba8d82f7286f5609c44fd" data-url="https://xuexb.com/post/nginx-url-rewrite.html"> <h1 class="title">Comments</h1>   <div id="disqus_thread" data-url="https://xuexb.com/post/nginx-url-rewrite.html" data-identifier="f0393909589ba8d82f7286f5609c44fd" data-name="xuexb"> 评论加载中... <br> <br> 注：如果长时间无法加载，请针对 disq.us | disquscdn.com | disqus.com 启用代理。 </div>   </div>  </div>  <footer id="footer" class="inner"> © 2011-2017&nbsp;-&nbsp; 前端小武的博客   &nbsp;-&nbsp;<a target="_blank" rel="nofollow" class="external beian" href="http://www.miitbeian.gov.cn/">冀ICP备15021942号-1</a>    <br> Powered by&nbsp;<a target="_blank" href="https://thinkjs.org/">ThinkJS</a>&nbsp;&amp;&nbsp;<a target="_blank" rel="nofollow" class="external" href="https://firekylin.org/">FireKylin v0.15.6 改</a> <br><a href="https://cache.xuexb.com/"><img src="./nginx配置url重写 - 前端小武的博客_files/cache-HIT-brightgreen.svg"></a> </footer></div><script src="./nginx配置url重写 - 前端小武的博客_files/hm.js.下载"></script><script src="./nginx配置url重写 - 前端小武的博客_files/firekylin.js.下载" data-ls="js" inline=""></script>  <div style="display:none;"><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?9e2b145b1229bd71028c43933c167d30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>  </body></html>
