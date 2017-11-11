@@ -8,7 +8,7 @@ function DonationItem(props) {
       <div className={styles.info} >
         <div>
           <span className={styles.name} >{props.name}</span>
-          <span className={styles.website} >{props.url ? `(${props.url})` : ''}</span>
+          <span className={styles.website} >{props.url ? <a href={props.url} target='_blank'>  {props.url}  </a> : ''}</span>
         </div>
         <div className={styles.message}>
           {props.leavemsg ? `“${props.leavemsg}”` : <span>人好话不多，这位侠客什么都没留下</span>}

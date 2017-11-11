@@ -31,37 +31,37 @@ class DonationPage extends React.Component {
         <div className={styles.top}>
           <div className={styles.total} >
             <div className={styles.totalTitle}>
-              情怀捐赠
+              人傻钱多
             </div>
             <div className={styles.totalMonery}>
-              收到<span>2986</span>元捐赠
+              收到<span>2968.88</span>元捐赠
             </div>
           </div>
           <div className={styles.qrcode} >
-            <img src="ali_300px-11.png" alt="" />
-            <img src="wechat_300px-11.png" alt="" />
+            <img src="ali_300px-1.png" alt="" />
+            <img src="wechat_300px-1.png" alt="" />
           </div>
         </div>
         <div className={styles.ranking} >
           <div className={classnames({ [styles.rankingItem]: true, [styles.one]: true })} >
             <div className={styles.icon} />
             <div className={styles.info} >
-              <div className={styles.name}>闲心</div>
-              <div className={styles.donation}>总捐赠：768元</div>
+              <div className={styles.name}>贤心（layui作者）</div>
+              <div className={styles.donation}>总捐赠：768</div>
             </div>
           </div>
           <div className={classnames({ [styles.rankingItem]: true, [styles.two]: true })} >
             <div className={styles.icon} />
             <div className={styles.info} >
               <div className={styles.name}>YY守护天使YY</div>
-              <div className={styles.donation}>总捐赠：365元</div>
+              <div className={styles.donation}>总捐赠：365</div>
             </div>
           </div>
           <div className={classnames({ [styles.rankingItem]: true, [styles.three]: true })}>
             <div className={styles.icon} />
             <div className={styles.info} >
-              <div className={styles.name}>贝密游戏</div>
-              <div className={styles.donation}>总捐赠：200元</div>
+              <div className={styles.name}>贝密游戏&优客服作者</div>
+              <div className={styles.donation}>总捐赠：200</div>
             </div>
           </div>
         </div>
