@@ -31,7 +31,7 @@ class DonationPage extends React.Component {
         <div className={styles.top}>
           <div className={styles.total} >
             <div className={styles.totalTitle}>
-              人傻钱多
+              人"傻"钱多
             </div>
             <div className={styles.totalMonery}>
               收到<span>2968.88</span>元捐赠
