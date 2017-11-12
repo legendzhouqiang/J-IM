@@ -45,7 +45,7 @@ class DonationPage extends React.Component {
         </div>
         <div className={styles.ranking} >
           <div className={classnames({ [styles.rankingItem]: true, [styles.one]: true })} >
-          <a href="https://gitee.com/sentsin/layui" target="_blank"><div className={styles.icon} /></a>
+          <a href="https://gitee.com/sentsin/layui" target="_blank"><div className={styles.icon} ><img src="/img/xianxin.jpg" style={{width:'100%', height:'100%', borderRadius:'50%'}}/></div></a>
             <div className={styles.info} >
               <div className={styles.name}>贤心（layui作者）</div>
               <div className={styles.donation}>"支持t-io"</div>
@@ -53,14 +53,14 @@ class DonationPage extends React.Component {
           </div>
           
           <div className={classnames({ [styles.rankingItem]: true, [styles.three]: true })}>
-          <a href="https://gitee.com/beimigame/beimi" target="_blank"><div className={styles.icon} /></a>
+          <a href="https://gitee.com/beimigame/beimi" target="_blank"><div className={styles.icon} ><img src="/img/beimi.jpeg" style={{width:'100%', height:'100%', borderRadius:'50%'}}/></div></a>
             <div className={styles.info} >
               <div className={styles.name}>贝密游戏&优客服作者</div>
               <div className={styles.donation}></div>
             </div>
           </div>
           <div className={classnames({ [styles.rankingItem]: true, [styles.two]: true })} >
-          <a href="https://gitee.com/loolly/hutool" target="_blank"><div className={styles.icon} /></a>
+          <a href="https://gitee.com/loolly/hutool" target="_blank"><div className={styles.icon} ><img src="/img/luxiaolei.jpg" style={{width:'100%', height:'100%', borderRadius:'50%'}}/></div></a>
             <div className={styles.info} >
               <div className={styles.name}>路小磊(hutool作者)</div>
               <div className={styles.donation}>"感谢您的开源项目！"</div>
