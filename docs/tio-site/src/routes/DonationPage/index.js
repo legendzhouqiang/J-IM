@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import styles from './index.less';
 import DonationItem from './DonationItem';
 import { donationPage } from '../../services/donation';
+import logo from '../../assets/logo.jpg';
 
 class DonationPage extends React.Component {
 
@@ -31,7 +32,7 @@ class DonationPage extends React.Component {
         <div className={styles.top}>
           <div className={styles.total} >
             <div className={styles.totalTitle}>
-              "傻"人
+            钱多人"傻"
             </div>
             <div className={styles.totalMonery}>
               共收到<span>55</span>笔捐赠
@@ -47,7 +48,7 @@ class DonationPage extends React.Component {
           <a href="https://gitee.com/sentsin/layui" target="_blank"><div className={styles.icon} /></a>
             <div className={styles.info} >
               <div className={styles.name}>贤心（layui作者）</div>
-              <div className={styles.donation}>感谢对t-io的支持</div>
+              <div className={styles.donation}>"支持t-io"</div>
             </div>
           </div>
           
@@ -55,14 +56,14 @@ class DonationPage extends React.Component {
           <a href="https://gitee.com/beimigame/beimi" target="_blank"><div className={styles.icon} /></a>
             <div className={styles.info} >
               <div className={styles.name}>贝密游戏&优客服作者</div>
-              <div className={styles.donation}>感谢对t-io的支持</div>
+              <div className={styles.donation}></div>
             </div>
           </div>
           <div className={classnames({ [styles.rankingItem]: true, [styles.two]: true })} >
           <a href="https://gitee.com/loolly/hutool" target="_blank"><div className={styles.icon} /></a>
             <div className={styles.info} >
               <div className={styles.name}>路小磊(hutool作者)</div>
-              <div className={styles.donation}>感谢对t-io的支持</div>
+              <div className={styles.donation}>"感谢您的开源项目！"</div>
             </div>
           </div>
         </div>
