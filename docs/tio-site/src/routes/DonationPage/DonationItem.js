@@ -17,7 +17,7 @@ function DonationItem(props) {
       <div className={styles.donation}>
         <span className={styles.payicon} />
         <span className={styles.monery} >
-          {props.amount}元
+          {props.amount}缘
         </span>
       </div>
       <div className={styles.more}>
