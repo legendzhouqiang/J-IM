@@ -31,10 +31,10 @@ class DonationPage extends React.Component {
         <div className={styles.top}>
           <div className={styles.total} >
             <div className={styles.totalTitle}>
-              人"傻"钱多
+              "傻"人
             </div>
             <div className={styles.totalMonery}>
-              收到<span>2968.88</span>元捐赠
+              共收到<span>55</span>笔捐赠
             </div>
           </div>
           <div className={styles.qrcode} >
@@ -44,24 +44,25 @@ class DonationPage extends React.Component {
         </div>
         <div className={styles.ranking} >
           <div className={classnames({ [styles.rankingItem]: true, [styles.one]: true })} >
-            <div className={styles.icon} />
+          <a href="https://gitee.com/sentsin/layui" target="_blank"><div className={styles.icon} /></a>
             <div className={styles.info} >
               <div className={styles.name}>贤心（layui作者）</div>
-              <div className={styles.donation}>总捐赠：768</div>
+              <div className={styles.donation}>感谢对t-io的支持</div>
+            </div>
+          </div>
+          
+          <div className={classnames({ [styles.rankingItem]: true, [styles.three]: true })}>
+          <a href="https://gitee.com/beimigame/beimi" target="_blank"><div className={styles.icon} /></a>
+            <div className={styles.info} >
+              <div className={styles.name}>贝密游戏&优客服作者</div>
+              <div className={styles.donation}>感谢对t-io的支持</div>
             </div>
           </div>
           <div className={classnames({ [styles.rankingItem]: true, [styles.two]: true })} >
-            <div className={styles.icon} />
+          <a href="https://gitee.com/loolly/hutool" target="_blank"><div className={styles.icon} /></a>
             <div className={styles.info} >
-              <div className={styles.name}>YY守护天使YY</div>
-              <div className={styles.donation}>总捐赠：365</div>
-            </div>
-          </div>
-          <div className={classnames({ [styles.rankingItem]: true, [styles.three]: true })}>
-            <div className={styles.icon} />
-            <div className={styles.info} >
-              <div className={styles.name}>贝密游戏&优客服作者</div>
-              <div className={styles.donation}>总捐赠：200</div>
+              <div className={styles.name}>路小磊(hutool作者)</div>
+              <div className={styles.donation}>感谢对t-io的支持</div>
             </div>
           </div>
         </div>
