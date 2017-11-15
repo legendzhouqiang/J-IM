@@ -1,4 +1,4 @@
-call mvn clean package
+call mvn -Dmaven.test.skip=true clean package
 
 
 pause

@@ -35,14 +35,20 @@ import org.tio.http.server.stat.ip.path.IpPathAccessStatListener;
 import org.tio.http.server.stat.ip.path.IpPathAccessStats;
 import org.tio.http.server.util.ClassUtils;
 import org.tio.http.server.util.Resps;
+import org.tio.http.server.view.freemarker.FreemarkerConfig;
 import org.tio.utils.SystemTimer;
 import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.freemarker.FreemarkerUtils;
 
 import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
+
+import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.template.Configuration;
+import jodd.io.FileNameUtil;
 
 /**
  *
@@ -97,6 +103,11 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	private String suffix;
 	private int suffixLength = 0;
 
+	/**
+	 * 临时支持freemarker，主要用于开发环境中的前端开发，暂时不重点作为tio-http-server功能
+	 */
+	private FreemarkerConfig freemarkerConfig;
+
 	//	private static String randomCookieValue() {
 	//		return RandomUtil.randomUUID();
 	//	}
@@ -143,8 +154,6 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		}
 		return httpSession;
 	}
-	
-
 
 	/**
 	 * @return the httpConfig
@@ -226,7 +235,6 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 			for (Long duration : list) {
 				IpAccessStat ipAccessStat = ipPathAccessStats.get(duration, ip);//.get(duration, ip, path);//.get(v, channelContext.getClientNode().getIp());
 
-				
 				ipAccessStat.count.incrementAndGet();
 				ipAccessStat.setLastAccessTime(SystemTimer.currentTimeMillis());
 
@@ -275,7 +283,11 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 			path = requestLine.getPath();
 
-			Method method = routes.pathMethodMap.get(path);
+			Method method = null;
+			if (routes != null) {
+				method = routes.pathMethodMap.get(path);
+			}
+			
 			if (method != null) {
 				String[] paramnames = routes.methodParamnameMap.get(method);
 				Class<?>[] parameterTypes = method.getParameterTypes();
@@ -357,7 +369,6 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					obj = method.invoke(bean, paramValues);
 				}
 
-				
 				if (obj instanceof HttpResponse) {
 					ret = (HttpResponse) obj;
 					return ret;
@@ -395,20 +406,36 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					ret.addHeaders(headers);
 					return ret;
 				} else {
-					String pageRoot = httpConfig.getPageRoot();
+					File pageRoot = httpConfig.getPageRoot();
 					if (pageRoot != null) {
-						String root = FileUtil.getAbsolutePath(pageRoot);
-						File file = new File(root + path);
+//						String root = FileUtil.getAbsolutePath(pageRoot);
+						File file = new File(pageRoot + path);
 						if (!file.exists() || file.isDirectory()) {
 							if (StringUtils.endsWith(path, "/")) {
 								path = path + "index.html";
 							} else {
 								path = path + "/index.html";
 							}
-							file = new File(root, path);
+							file = new File(pageRoot, path);
 						}
 
 						if (file.exists()) {
+							if (freemarkerConfig != null) {
+								Configuration configuration = freemarkerConfig.getConfiguration();
+								Object model = freemarkerConfig.getModelMaker().maker(request);
+								if (configuration != null) {
+									TemplateLoader templateLoader = configuration.getTemplateLoader();//FileTemplateLoader
+									if (templateLoader instanceof FileTemplateLoader) {
+										String filePath = file.getCanonicalPath();
+										String pageRootPath = httpConfig.getPageRoot().getCanonicalPath();
+										String template = StringUtils.substring(filePath, pageRootPath.length());
+										String retStr = FreemarkerUtils.generateStringByFile(template, configuration, model);
+										ret = Resps.file(request, retStr.getBytes(configuration.getDefaultEncoding()), FileNameUtil.getExtension(file.getName()));
+										return ret;
+									}
+								}
+							}
+
 							ret = Resps.file(request, file);
 							ret.setStaticRes(true);
 
@@ -605,5 +632,12 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	public void setIpPathAccessStats(IpPathAccessStats ipPathAccessStats) {
 		this.ipPathAccessStats = ipPathAccessStats;
 	}
+	
+	public FreemarkerConfig getFreemarkerConfig() {
+		return freemarkerConfig;
+	}
 
+	public void setFreemarkerConfig(FreemarkerConfig freemarkerConfig) {
+		this.freemarkerConfig = freemarkerConfig;
+	}
 }

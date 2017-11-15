@@ -6,6 +6,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 import org.apache.commons.lang3.StringUtils;
+import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpRequest;
 
 /**
@@ -55,16 +56,23 @@ public class IpUtils {
 	 * @author tanyaowu
 	 */
 	public static String getRealIp(HttpRequest request) {
-		String ip = request.getHeader("x-forwarded-for");
-		if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("proxy-client-ip");
+		HttpConfig httpConfig = request.getHttpConfig();
+		if(httpConfig.isProxied()) {
+			String ip = request.getHeader("x-forwarded-for");
+			if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+				ip = request.getHeader("proxy-client-ip");
+			}
+			if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+				ip = request.getHeader("wl-proxy-client-ip");
+			}
+			if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+				ip = request.getRemote().getIp();
+			}
+			return ip;
+		} else {
+			return request.getRemote().getIp();
 		}
-		if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("wl-proxy-client-ip");
-		}
-		if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getRemote().getIp();
-		}
-		return ip;
+		
+		
 	}
 }

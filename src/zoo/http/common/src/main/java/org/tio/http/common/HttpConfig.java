@@ -1,8 +1,14 @@
 package org.tio.http.common;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.common.session.id.ISessionIdGenerator;
 import org.tio.utils.cache.ICache;
+
+import com.xiaoleilu.hutool.io.FileUtil;
 
 /**
  * @author tanyaowu
@@ -103,13 +109,18 @@ public class HttpConfig {
 	private ISessionIdGenerator sessionIdGenerator;
 	
 	private HttpRequestHandler httpRequestHandler;
+	
+	/**
+	 * 是否被代理
+	 */
+	private boolean isProxied = false;
 
 	/**
 	 * 示例：
 	 * 1、classpath中：page
 	 * 2、绝对路径：/page
 	 */
-	private String pageRoot = null;//FileUtil.getAbsolutePath("page");//"/page";
+	private File pageRoot = null;//FileUtil.getAbsolutePath("page");//"/page";
 
 	//	/**
 	//	 * @return the httpSessionManager
@@ -187,7 +198,7 @@ public class HttpConfig {
 	/**
 	 * @return the pageRoot
 	 */
-	public String getPageRoot() {
+	public File getPageRoot() {
 		return pageRoot;
 	}
 
@@ -258,9 +269,18 @@ public class HttpConfig {
 	 * 
 	 * @param pageRoot
 	 * @author tanyaowu
+	 * @throws IOException 
 	 */
-	public void setPageRoot(String pageRoot) {
-		this.pageRoot = pageRoot;//FileUtil.getAbsolutePath(root);//"/page";;
+	public void setPageRoot(String pageRoot) throws IOException {
+		if (pageRoot == null) {
+			return;
+		}
+		
+		if (StringUtils.startsWithIgnoreCase(pageRoot, "classpath:")) {
+			this.pageRoot = new File(FileUtil.getAbsolutePath(pageRoot));
+		} else {
+			this.pageRoot = new File(pageRoot);
+		}
 	}
 
 	/**
@@ -318,5 +338,19 @@ public class HttpConfig {
 
 	public void setAllowDomains(String[] allowDomains) {
 		this.allowDomains = allowDomains;
+	}
+
+	/**
+	 * @return the isProxied
+	 */
+	public boolean isProxied() {
+		return isProxied;
+	}
+
+	/**
+	 * @param isProxied the isProxied to set
+	 */
+	public void setProxied(boolean isProxied) {
+		this.isProxied = isProxied;
 	}
 }

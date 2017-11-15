@@ -85,8 +85,9 @@ public class HttpServerStarter {
 	 * @param scanPackages
 	 * @param httpServerInterceptor
 	 * @author tanyaowu
+	 * @throws IOException 
 	 */
-	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor) {
+	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor) throws IOException {
 		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, null, null, null);
 	}
 
@@ -99,8 +100,9 @@ public class HttpServerStarter {
 	 * @param httpServerInterceptor
 	 * @param sessionStore
 	 * @author tanyaowu
+	 * @throws IOException 
 	 */
-	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore) {
+	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore) throws IOException {
 		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, sessionStore, null, null);
 	}
 
@@ -116,9 +118,10 @@ public class HttpServerStarter {
 	 * @param tioExecutor
 	 * @param groupExecutor
 	 * @author tanyaowu
+	 * @throws IOException 
 	 */
 	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore,
-			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
 		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, null, sessionStore, tioExecutor, groupExecutor);
 	}
 	
@@ -135,9 +138,10 @@ public class HttpServerStarter {
 	 * @param tioExecutor
 	 * @param groupExecutor
 	 * @author tanyaowu
+	 * @throws IOException 
 	 */
 	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, HttpSessionListener httpSessionListener, ICache sessionStore,
-			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
 		int port = serverPort;
 
 		httpConfig = new HttpConfig(port, null, contextPath, null);

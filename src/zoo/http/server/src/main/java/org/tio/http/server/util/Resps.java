@@ -109,10 +109,10 @@ public class Resps {
 	 * @author: tanyaowu
 	 */
 	public static HttpResponse file(HttpRequest request, String path, HttpConfig httpConfig) throws IOException {
-		String pageRoot = httpConfig.getPageRoot();
+		File pageRoot = httpConfig.getPageRoot();
 		if (pageRoot != null) {
-			String root = FileUtil.getAbsolutePath(pageRoot);
-			File file = new File(root + path);
+//			String root = FileUtil.getAbsolutePath(pageRoot);
+			File file = new File(pageRoot + path);
 			if (!file.exists()) {
 				return resp404(request, request.getRequestLine(), httpConfig);
 			}
@@ -131,12 +131,12 @@ public class Resps {
 	 * @author: tanyaowu
 	 */
 	public static HttpResponse resp404(HttpRequest request, RequestLine requestLine, HttpConfig httpConfig) {
-		String pageRoot = httpConfig.getPageRoot();
+		File pageRoot = httpConfig.getPageRoot();
 		
 		if (pageRoot != null) {
 			String file404 = httpConfig.getPage404();
-			String root = FileUtil.getAbsolutePath(pageRoot);
-			File file = new File(root + file404);
+//			String root = FileUtil.getAbsolutePath(pageRoot);
+			File file = new File(pageRoot + file404);
 			if (file.exists()) {
 				HttpResponse ret = Resps.redirect(request, file404 + "?tio_initpath=" + requestLine.getPathAndQuery());
 				return ret;
@@ -147,6 +147,28 @@ public class Resps {
 		ret.setStatus(HttpResponseStatus.C404);
 		return ret;
 	}
+	
+//	/**
+//	 * 
+//	 * @param newPath
+//	 * @param request
+//	 * @return
+//	 * @throws Exception
+//	 * @author tanyaowu
+//	 */
+//	public static HttpResponse forward(String newPath, HttpRequest request) throws Exception {
+//		RequestLine requestLine  = request.getRequestLine();
+//		HttpConfig httpConfig = request.getHttpConfig();
+//		
+//		httpConfig.getContextPath()
+//		
+//		if (newPath != null) {
+//			requestLine.setPath(newPath);
+//		}
+//		
+//		HttpRequestHandler httpRequestHandler = request.getHttpConfig().getHttpRequestHandler();
+//		return httpRequestHandler.handler(request);
+//	}
 
 	/**
 	 * 
@@ -158,12 +180,12 @@ public class Resps {
 	 * @author: tanyaowu
 	 */
 	public static HttpResponse resp500(HttpRequest request, RequestLine requestLine, HttpConfig httpConfig, Throwable throwable) {
-		String pageRoot = httpConfig.getPageRoot();
+		File pageRoot = httpConfig.getPageRoot();
 		
 		if (pageRoot != null) {
 			String file500 = httpConfig.getPage500();
-			String root = FileUtil.getAbsolutePath(pageRoot);
-			File file = new File(root + file500);
+//			String root = FileUtil.getAbsolutePath(pageRoot);
+			File file = new File(pageRoot + file500);
 			if (file.exists()) {
 				HttpResponse ret = Resps.redirect(request, file500 + "?tio_initpath=" + requestLine.getPathAndQuery());
 				return ret;
