@@ -7,8 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xiaoleilu.hutool.util.ZipUtil;
-
 /**
  *
  * @author tanyaowu
@@ -85,6 +83,15 @@ public class HttpResponse extends HttpPacket {
 		//		addHeader(HttpConst.ResponseHeaderKey.Date, DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis()));
 		//		addHeader(HttpConst.ResponseHeaderKey.Date, new Date().toGMTString());
 	}
+	
+	/**
+	 * 获取"Content-Type"头部内容
+	 * @return
+	 * @author tanyaowu
+	 */
+	public String getContentType() {
+		return this.headers.get(HttpConst.RequestHeaderKey.Content_Type);
+	}
 
 	public boolean addCookie(Cookie cookie) {
 		if (cookies == null) {
@@ -121,7 +128,7 @@ public class HttpResponse extends HttpPacket {
 	/**
 	 * @return the request
 	 */
-	public HttpRequest getHttpRequestPacket() {
+	public HttpRequest getHttpRequest() {
 		return request;
 	}
 
@@ -132,20 +139,7 @@ public class HttpResponse extends HttpPacket {
 		return status;
 	}
 
-	private void gzip(HttpRequest request) {
-		if (request.getIsSupportGzip()) {
-			byte[] bs = this.getBody();
-			if (bs.length >= 600) {
-				byte[] bs2 = ZipUtil.gzip(bs);
-				if (bs2.length < bs.length) {
-					this.body = bs2;
-					this.addHeader(HttpConst.ResponseHeaderKey.Content_Encoding, "gzip");
-				}
-			}
-		} else {
-			log.info("{} 竟然不支持gzip, {}", request.getChannelContext(), request.getHeader(HttpConst.RequestHeaderKey.User_Agent));
-		}
-	}
+
 
 	/**
 	 * @return the isStaticRes
@@ -168,16 +162,6 @@ public class HttpResponse extends HttpPacket {
 
 	public void setBody(byte[] body, HttpRequest request) {
 		this.body = body;
-	}
-
-	/**
-	 * @param body the body to set
-	 */
-	public void setBodyAndGzip(byte[] body, HttpRequest request) {
-		this.body = body;
-		if (body != null) {
-			gzip(request);
-		}
 	}
 
 	/**

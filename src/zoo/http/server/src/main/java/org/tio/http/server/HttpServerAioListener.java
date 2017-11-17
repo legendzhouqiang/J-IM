@@ -10,6 +10,7 @@ import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.intf.Packet;
 import org.tio.http.common.HttpConst;
+import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 import org.tio.server.intf.ServerAioListener;
 
@@ -143,12 +144,13 @@ public class HttpServerAioListener implements ServerAioListener {
 		//		}
 
 		HttpResponse httpResponse = (HttpResponse) packet;
-		//		HttpRequestPacket request = httpResponse.getHttpRequestPacket();
 
 		String Connection = httpResponse.getHeader(HttpConst.ResponseHeaderKey.Connection);
 		// 现在基本都是1.1了，所以用close来判断
 		if (StringUtils.equalsIgnoreCase(Connection, HttpConst.ResponseHeaderValue.Connection.close)) {
-			Aio.remove(channelContext, "onAfterSent");
+			HttpRequest request = httpResponse.getHttpRequest();
+			String line = request.getRequestLine().getLine();
+			Aio.remove(channelContext, "onAfterSent, " + line);
 		}
 	}
 

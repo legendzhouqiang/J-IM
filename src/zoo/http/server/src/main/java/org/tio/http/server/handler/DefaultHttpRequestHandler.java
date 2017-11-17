@@ -44,6 +44,7 @@ import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ZipUtil;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -195,6 +196,31 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		}
 		return false;
 	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @author tanyaowu
+	 */
+	private static void gzip(HttpRequest request, HttpResponse response) {
+		if (response == null) {
+			return;
+		}
+		
+		if (request.getIsSupportGzip()) {
+			byte[] bs = response.getBody();
+			if (bs.length >= 600) {
+				byte[] bs2 = ZipUtil.gzip(bs);
+				if (bs2.length < bs.length) {
+					response.setBody(bs2, request);
+					response.addHeader(HttpConst.ResponseHeaderKey.Content_Encoding, "gzip");
+				}
+			}
+		} else {
+			log.info("{} 竟然不支持gzip, {}", request.getChannelContext(), request.getHeader(HttpConst.RequestHeaderKey.User_Agent));
+		}
+	}
 
 	@Override
 	public HttpResponse handler(HttpRequest request) throws Exception {
@@ -287,7 +313,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 			if (routes != null) {
 				method = routes.pathMethodMap.get(path);
 			}
-			
+
 			if (method != null) {
 				String[] paramnames = routes.methodParamnameMap.get(method);
 				Class<?>[] parameterTypes = method.getParameterTypes();
@@ -408,7 +434,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 				} else {
 					File pageRoot = httpConfig.getPageRoot();
 					if (pageRoot != null) {
-//						String root = FileUtil.getAbsolutePath(pageRoot);
+						//						String root = FileUtil.getAbsolutePath(pageRoot);
 						File file = new File(pageRoot + path);
 						if (!file.exists() || file.isDirectory()) {
 							if (StringUtils.endsWith(path, "/")) {
@@ -421,17 +447,25 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 						if (file.exists()) {
 							if (freemarkerConfig != null) {
-								Configuration configuration = freemarkerConfig.getConfiguration();
-								Object model = freemarkerConfig.getModelMaker().maker(request);
-								if (configuration != null) {
-									TemplateLoader templateLoader = configuration.getTemplateLoader();//FileTemplateLoader
-									if (templateLoader instanceof FileTemplateLoader) {
-										String filePath = file.getCanonicalPath();
-										String pageRootPath = httpConfig.getPageRoot().getCanonicalPath();
-										String template = StringUtils.substring(filePath, pageRootPath.length());
-										String retStr = FreemarkerUtils.generateStringByFile(template, configuration, model);
-										ret = Resps.file(request, retStr.getBytes(configuration.getDefaultEncoding()), FileNameUtil.getExtension(file.getName()));
-										return ret;
+								String extension = FileNameUtil.getExtension(file.getName());
+								if (ArrayUtil.contains(freemarkerConfig.getSuffixes(), extension)) {
+									Configuration configuration = freemarkerConfig.getConfiguration();
+									Object model = freemarkerConfig.getModelMaker().maker(request);
+									if (configuration != null) {
+										TemplateLoader templateLoader = configuration.getTemplateLoader();//FileTemplateLoader
+										if (templateLoader instanceof FileTemplateLoader) {
+											try {
+												String filePath = file.getCanonicalPath();
+												String pageRootPath = httpConfig.getPageRoot().getCanonicalPath();
+												String template = StringUtils.substring(filePath, pageRootPath.length());
+												String retStr = FreemarkerUtils.generateStringByFile(template, configuration, model);
+												ret = Resps.file(request, retStr.getBytes(configuration.getDefaultEncoding()), extension);
+												return ret;
+											} catch (Exception e) {
+												//freemarker编译异常的全部走普通view
+												log.error(e.toString());
+											}
+										}
 									}
 								}
 							}
@@ -484,6 +518,8 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					}
 				} catch (Throwable e) {
 					logError(request, requestLine, e);
+				} finally {
+					gzip(request, ret);
 				}
 
 				//				try {
@@ -632,7 +668,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	public void setIpPathAccessStats(IpPathAccessStats ipPathAccessStats) {
 		this.ipPathAccessStats = ipPathAccessStats;
 	}
-	
+
 	public FreemarkerConfig getFreemarkerConfig() {
 		return freemarkerConfig;
 	}

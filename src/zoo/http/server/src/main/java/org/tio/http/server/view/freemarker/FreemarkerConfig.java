@@ -14,13 +14,18 @@ public class FreemarkerConfig {
 	
 	private Configuration configuration;
 	
-	public FreemarkerConfig(Configuration configuration, ModelMaker modelMaker) {
+	private ModelMaker modelMaker;
+	
+	private String[] suffixes = null;
+	
+	public FreemarkerConfig(Configuration configuration, ModelMaker modelMaker, String[] suffixes) {
 		super();
 		this.configuration = configuration;
 		this.modelMaker = modelMaker;
+		this.setSuffixes(suffixes);
 	}
 
-	private ModelMaker modelMaker;
+	
 
 	public Configuration getConfiguration() {
 		return configuration;
@@ -51,5 +56,23 @@ public class FreemarkerConfig {
 	 */
 	public static void main(String[] args) {
 
+	}
+
+
+
+	/**
+	 * @return the suffixes
+	 */
+	public String[] getSuffixes() {
+		return suffixes;
+	}
+
+
+
+	/**
+	 * @param suffixes the suffixes to set
+	 */
+	public void setSuffixes(String[] suffixes) {
+		this.suffixes = suffixes;
 	}
 }

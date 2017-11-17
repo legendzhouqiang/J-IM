@@ -39,7 +39,7 @@ public class HttpRequestDecoder {
 	/**
 	 * 头部，每行最大的字节数
 	 */
-	public static final int MAX_LENGTH_OF_LINE = 1024;
+	public static final int MAX_LENGTH_OF_LINE = 2048;
 
 	public static HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
 		int initPosition = buffer.position();

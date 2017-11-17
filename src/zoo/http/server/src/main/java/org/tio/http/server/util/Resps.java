@@ -207,7 +207,7 @@ public class Resps {
 	 */
 	public static HttpResponse fileWithContentType(HttpRequest request, byte[] bodyBytes, String contentType) {
 		HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
-		ret.setBodyAndGzip(bodyBytes, request);
+		ret.setBody(bodyBytes, request);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Content_Type, contentType);
 		return ret;
 	}
@@ -222,7 +222,7 @@ public class Resps {
 	 */
 	public static HttpResponse fileWithHeaders(HttpRequest request, byte[] bodyBytes, Map<String, String> headers, HttpConfig httpConfig) {
 		HttpResponse ret = new HttpResponse(request, httpConfig);
-		ret.setBodyAndGzip(bodyBytes, request);
+		ret.setBody(bodyBytes, request);
 		ret.addHeaders(headers);
 		return ret;
 	}
@@ -356,7 +356,7 @@ public class Resps {
 		HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
 		if (bodyString != null) {
 			try {
-				ret.setBodyAndGzip(bodyString.getBytes(charset), request);
+				ret.setBody(bodyString.getBytes(charset), request);
 			} catch (UnsupportedEncodingException e) {
 				log.error(e.toString(), e);
 			}
