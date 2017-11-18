@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { connect } from 'dva';
 import styles from './index.less';
 import DonationItem from './DonationItem';
-import { donationPage } from '../../services/donation';
+import {totalAmount, donationPage} from '../../services/donation';
 import logo from '../../assets/logo.jpg';
 
 class DonationPage extends React.Component {
@@ -20,10 +20,25 @@ class DonationPage extends React.Component {
   }
   componentWillMount() {
     this.queryDonationPage(this.state.pageNumber, this.state.pageSize);
+    this.querytotalAmount();
   }
   async queryDonationPage(page, pageSize) {
     const { data } = await donationPage(page, pageSize);
+
+    console.log(data);
+    
+    const xx = await totalAmount();
+    console.log(xx.data);
+    this.state.totalAmount = xx.data;
+    console.log(this.state.totalAmount);
+
     this.setState(data);
+
+    
+
+  }
+  async querytotalAmount() {
+    
   }
 
   render() {
@@ -32,10 +47,10 @@ class DonationPage extends React.Component {
         <div className={styles.top}>
           <div className={styles.total} >
             <div className={styles.totalTitle}>
-            钱多人"傻"
+            人"傻"者捐
             </div>
             <div className={styles.totalMonery}>
-              共收到<span>55</span>笔捐赠
+              已收到<span>{this.state.totalRow}</span>笔爱心捐赠，合计<span>{this.state.totalAmount}</span>RMB
             </div>
           </div>
           <div className={styles.qrcode} >

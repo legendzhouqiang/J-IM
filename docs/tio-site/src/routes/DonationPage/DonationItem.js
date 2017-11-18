@@ -4,7 +4,9 @@ import styles from './DonationItem.less';
 function DonationItem(props) {
   return (
     <div className={styles.item}>
-      <div className={styles.icon} />
+      <div className={styles.icon} >
+        <img src={props.avatar ? props.avatar : '/img/1.png'} style={{width: '100%', height: '100%', borderRadius: '50%'}}/>
+      </div>
       <div className={styles.info} >
         <div>
           <span className={styles.name} >{props.name}</span>
@@ -25,7 +27,9 @@ function DonationItem(props) {
           {props.time}
         </div>
         <div className={styles.tags} >
-          <span>待完善</span>
+          {props.tag1 ? <span>{props.tag1}</span> : ''}
+          {props.tag2 ? <span>{props.tag2}</span> : ''}
+          {props.tag3 ? <span>{props.tag3}</span> : ''}
         </div>
       </div>
     </div>
