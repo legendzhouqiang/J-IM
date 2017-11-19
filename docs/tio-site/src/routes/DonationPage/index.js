@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { connect } from 'dva';
 import styles from './index.less';
 import DonationItem from './DonationItem';
-import {totalAmount, donationPage} from '../../services/donation';
+import { totalAmount, donationPage, selectDonateTitle } from '../../services/donation';
 import logo from '../../assets/logo.jpg';
 
 class DonationPage extends React.Component {
@@ -13,44 +13,61 @@ class DonationPage extends React.Component {
     super(props);
     this.state = {
       pageNumber: 1,
-      pageSize: 5,
+      pageSize: 3,
       totalRow: 0,
       list: [],
+      donateTitles: [{}, {}, {}],
+      donateTitleIndex: 1
     };
-  }
-  componentWillMount() {
+    console.log("constructor");
     this.queryDonationPage(this.state.pageNumber, this.state.pageSize);
-    this.querytotalAmount();
   }
-  async queryDonationPage(page, pageSize) {
-    const { data } = await donationPage(page, pageSize);
 
-    console.log(data);
-    
-    const xx = await totalAmount();
-    console.log(xx.data);
-    this.state.totalAmount = xx.data;
-    console.log(this.state.totalAmount);
+  componentWillMount() {
+    console.log("componentWillMount");
+
+    setInterval( () => {
+      // let yy = selectDonateTitle(this.state.donateTitleIndex++);
+      // this.state.donateTitles = yy.data;
+    }, 5000);
+
+  }
+
+
+
+  async queryDonationPage(pageNumber, pageSize) {
+    const { data } = await donationPage(pageNumber, pageSize);
 
     this.setState(data);
 
-    
+    let xx = await totalAmount();
+    this.state.totalAmount = xx.data;
 
-  }
-  async querytotalAmount() {
-    
+    let yy = await selectDonateTitle(this.state.donateTitleIndex++);
+    this.state.donateTitles = yy.data;
+
+
+    this.setState(data);
+
+    console.log(this.state.donateTitles[0].link);
+
+
+
+
+
   }
 
   render() {
     return (
       <div className={styles.container}>
+
         <div className={styles.top}>
           <div className={styles.total} >
             <div className={styles.totalTitle}>
-            人"傻"者捐
+              开源情怀，不以数计
             </div>
             <div className={styles.totalMonery}>
-              已收到<span>{this.state.totalRow}</span>笔爱心捐赠，合计<span>{this.state.totalAmount}</span>RMB
+              已收到<span>{this.state.totalRow}</span>笔捐赠，合计<span>{this.state.totalAmount}</span>RMB
             </div>
           </div>
           <div className={styles.qrcode} >
@@ -60,33 +77,36 @@ class DonationPage extends React.Component {
         </div>
         <div className={styles.ranking} >
           <div className={classnames({ [styles.rankingItem]: true, [styles.one]: true })} >
-          <a href="https://gitee.com/sentsin/layui" target="_blank"><div className={styles.icon} ><img src="/img/xianxin.jpg" style={{width:'100%', height:'100%', borderRadius:'50%'}}/></div></a>
+            <a href={this.state.donateTitles[0].link} target="_blank"><div className={styles.icon} ><img src={this.state.donateTitles[0].avatar} style={{ width: '100%', height: '100%', borderRadius: '50%' }} /></div></a>
             <div className={styles.info} >
-              <div className={styles.name}>贤心（layui作者）</div>
-              <div className={styles.donation}>"支持t-io"</div>
+              <div className={styles.name}>{this.state.donateTitles[0].name}</div>
+              <div className={styles.donation}>{this.state.donateTitles[0].text}</div>
             </div>
           </div>
-          
-          <div className={classnames({ [styles.rankingItem]: true, [styles.three]: true })}>
-          <a href="https://gitee.com/beimigame/beimi" target="_blank"><div className={styles.icon} ><img src="/img/beimi.jpeg" style={{width:'100%', height:'100%', borderRadius:'50%'}}/></div></a>
+
+          <div className={classnames({ [styles.rankingItem]: true, [styles.three]: true })} >
+            <a href={this.state.donateTitles[1].link} target="_blank"><div className={styles.icon} ><img src={this.state.donateTitles[1].avatar} style={{ width: '100%', height: '100%', borderRadius: '50%' }} /></div></a>
             <div className={styles.info} >
-              <div className={styles.name}>贝密游戏&优客服作者</div>
-              <div className={styles.donation}></div>
+              <div className={styles.name}>{this.state.donateTitles[1].name}</div>
+              <div className={styles.donation}>{this.state.donateTitles[1].text}</div>
             </div>
           </div>
+
           <div className={classnames({ [styles.rankingItem]: true, [styles.two]: true })} >
-          <a href="https://gitee.com/loolly/hutool" target="_blank"><div className={styles.icon} ><img src="/img/luxiaolei.jpg" style={{width:'100%', height:'100%', borderRadius:'50%'}}/></div></a>
+            <a href={this.state.donateTitles[2].link} target="_blank"><div className={styles.icon} ><img src={this.state.donateTitles[2].avatar} style={{ width: '100%', height: '100%', borderRadius: '50%' }} /></div></a>
             <div className={styles.info} >
-              <div className={styles.name}>路小磊(hutool作者)</div>
-              <div className={styles.donation}>"感谢您的开源项目！"</div>
+              <div className={styles.name}>{this.state.donateTitles[2].name}</div>
+              <div className={styles.donation}>{this.state.donateTitles[2].text}</div>
             </div>
           </div>
+
+
         </div>
         <div className={styles.donationlist} >
           {
-          this.state.list.map((item) => {
-            return <DonationItem key={item.id} {...item} />;
-          })
+            this.state.list.map((item) => {
+              return <DonationItem key={item.id} {...item} />;
+            })
           }
           <Pagination
             style={{ textAlign: 'right', padding: '22px' }}

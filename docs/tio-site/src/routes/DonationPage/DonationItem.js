@@ -1,11 +1,26 @@
 import React from 'react';
 import styles from './DonationItem.less';
 
+function formatCoin(waytype) {
+  switch (waytype) {
+    case 1:
+      { return "码"; }
+    case 2:
+      { return "微"; }
+    case 3:
+      { return "支"; }
+    case 4:
+      { return "红"; }
+    default:
+      { return "未"; }
+  }
+}
+
 function DonationItem(props) {
   return (
     <div className={styles.item}>
       <div className={styles.icon} >
-        <img src={props.avatar ? props.avatar : '/img/1.png'} style={{width: '100%', height: '100%', borderRadius: '50%'}}/>
+        <img src={props.avatar ? props.avatar : '/img/1.png'} style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
       </div>
       <div className={styles.info} >
         <div>
@@ -17,9 +32,11 @@ function DonationItem(props) {
         </div>
       </div>
       <div className={styles.donation}>
-        <span className={styles.payicon} />
+        <span className={styles.payicon} title={props.way} >
+          {formatCoin(props.waytype)}
+        </span>
         <span className={styles.monery} >
-          {props.amount}缘
+          {props.amount}
         </span>
       </div>
       <div className={styles.more}>

@@ -17,7 +17,12 @@ export async function donationPage(pageNumber = 1, pageSize = 10) {
   });
 }
 
-
+export async function selectDonateTitle(index = 1) {
+  return request({
+    method: 'get',
+    url: `${basePath}/donate/selectDonateTitle?index=${index}`,
+  });
+}
 
 
 
