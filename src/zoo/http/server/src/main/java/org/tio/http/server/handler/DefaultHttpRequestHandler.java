@@ -210,7 +210,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		
 		if (request.getIsSupportGzip()) {
 			byte[] bs = response.getBody();
-			if (bs.length >= 600) {
+			if (bs != null && bs.length >= 600) {
 				byte[] bs2 = ZipUtil.gzip(bs);
 				if (bs2.length < bs.length) {
 					response.setBody(bs2, request);

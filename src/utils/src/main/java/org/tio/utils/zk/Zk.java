@@ -36,7 +36,7 @@ public class Zk {
 
 	private static final String CHARSET = "utf-8";
 
-	static CuratorFramework zkclient = null;
+	public static CuratorFramework zkclient = null;
 	//		static String nameSpace = "php";
 	//	static {
 	//		String zkhost = "192.168.1.41:2181";//AppConfig.getInstance().getString("zk.address", null);//"192.168.1.41:2181";//ZK host
@@ -59,10 +59,11 @@ public class Zk {
 
 	/**
 	 * 
-	 * @param address 形如：192.168.1.41:2181
-	 * @author: tanyaowu
+	 * @param address
+	 * @param clientDecorator
+	 * @author tanyaowu
 	 */
-	public static void init(String address) {
+	public static void init(String address, ClientDecorator clientDecorator) {
 		//		String zkhost = "192.168.1.41:2181";//AppConfig.getInstance().getString("zk.address", null);//"192.168.1.41:2181";//ZK host
 		//		zkhost = AppConfig.getInstance().getString("zk.address", null);
 
@@ -74,10 +75,21 @@ public class Zk {
 		RetryPolicy rp = new ExponentialBackoffRetry(500, Integer.MAX_VALUE);//Retry mechanism
 		Builder builder = CuratorFrameworkFactory.builder().connectString(address).connectionTimeoutMs(5000).sessionTimeoutMs(5000).retryPolicy(rp);
 		//				builder.namespace(nameSpace);
-		CuratorFramework zclient = builder.build();
-		zkclient = zclient;
+		zkclient = builder.build();
+		
+		if (clientDecorator != null) {
+			clientDecorator.decorate(zkclient);
+		}
 
-		zkclient.start();
+//		zkclient.start();
+	}
+	
+	/**
+	 * Start the client. Most mutator methods will not work until the client is started
+	 * @author tanyaowu
+	 */
+	public static void start() {
+		Zk.zkclient.start();
 	}
 
 	public static void main(String[] args) throws Exception {
