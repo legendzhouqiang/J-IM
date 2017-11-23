@@ -33,7 +33,7 @@ public class QuartzUtils {
 	/**
 	 * 默认的配置文件
 	 */
-	private static final String DEFAULT_FILE = "/config/tio-quartz.properties";
+	private static final String DEFAULT_FILE = "classpath:config/tio-quartz.properties";
 
 	private static String file = DEFAULT_FILE;
 
