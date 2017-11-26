@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import styles from './index.less';
 import DonationItem from './DonationItem';
 import { totalAmount, donationPage, selectDonateTitle } from '../../services/donation';
-import logo from '../../assets/logo.jpg';
+// import logo from '../../assets/logo.jpg';
 
 class DonationPage extends React.Component {
 
@@ -17,22 +17,20 @@ class DonationPage extends React.Component {
       totalRow: 0,
       list: [],
       donateTitles: [{}, {}, {}],
-      donateTitleIndex: 1
+      donateTitleIndex: 1,
     };
-    console.log("constructor");
+    console.log('constructor');
     this.queryDonationPage(this.state.pageNumber, this.state.pageSize);
   }
 
   componentWillMount() {
-    console.log("componentWillMount");
+    console.log('componentWillMount');
 
-    setInterval( () => {
+    setInterval(() => {
       // let yy = selectDonateTitle(this.state.donateTitleIndex++);
       // this.state.donateTitles = yy.data;
     }, 5000);
-
   }
-
 
 
   async queryDonationPage(pageNumber, pageSize) {
@@ -40,21 +38,13 @@ class DonationPage extends React.Component {
 
     this.setState(data);
 
-    let xx = await totalAmount();
+    const xx = await totalAmount();
     this.state.totalAmount = xx.data;
-
-    let yy = await selectDonateTitle(this.state.donateTitleIndex++);
+    this.state.donateTitleIndex = this.state.donateTitleIndex + 1;
+    const yy = await selectDonateTitle(this.state.donateTitleIndex);
     this.state.donateTitles = yy.data;
-
-
     this.setState(data);
-
     console.log(this.state.donateTitles[0].link);
-
-
-
-
-
   }
 
   render() {
