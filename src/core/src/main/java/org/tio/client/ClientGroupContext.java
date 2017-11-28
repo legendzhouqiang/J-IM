@@ -1,5 +1,7 @@
 package org.tio.client;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioHandler;
@@ -8,6 +10,7 @@ import org.tio.core.GroupContext;
 import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.AioListener;
 import org.tio.core.stat.GroupStat;
+import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
  *
@@ -36,15 +39,26 @@ public class ClientGroupContext extends GroupContext {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param aioHandler
 	 * @param aioListener
-	 * @param reconnConf 不需要自动重连就传null
-	 * @author tanyaowu
+	 * @param reconnConf 不用框架自动重连，就传null
 	 */
 	public ClientGroupContext(ClientAioHandler aioHandler, ClientAioListener aioListener, ReconnConf reconnConf) {
-		super();
-
+		this(aioHandler, aioListener, reconnConf, null, null);
+	}
+	
+	/**
+	 * 
+	 * @param aioHandler
+	 * @param aioListener
+	 * @param reconnConf 不用框架自动重连，就传null
+	 * @param tioExecutor
+	 * @param groupExecutor
+	 */
+	public ClientGroupContext(ClientAioHandler aioHandler, ClientAioListener aioListener, ReconnConf reconnConf, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		super(tioExecutor, groupExecutor);
+		
 		this.setClientAioHandler(aioHandler);
 		this.setClientAioListener(aioListener);
 
