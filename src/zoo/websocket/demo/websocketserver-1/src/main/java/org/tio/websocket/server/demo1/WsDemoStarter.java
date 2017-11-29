@@ -2,8 +2,6 @@ package org.tio.websocket.server.demo1;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tio.server.ServerGroupContext;
 import org.tio.websocket.server.WsServerStarter;
 
@@ -12,8 +10,6 @@ import org.tio.websocket.server.WsServerStarter;
  * 2017年6月28日 下午5:34:04
  */
 public class WsDemoStarter {
-	private static Logger log = LoggerFactory.getLogger(WsDemoStarter.class);
-
 	/**
 	 * @param args
 	 * @author tanyaowu
@@ -24,9 +20,8 @@ public class WsDemoStarter {
 		appStarter.start();
 	}
 
-	private WsServerStarter wsServerStarter;
-//	private WsDemoMsgHandler wsMsgHandler;
 	private ServerGroupContext serverGroupContext;
+	private WsServerStarter wsServerStarter;
 
 	/**
 	 *
@@ -37,14 +32,6 @@ public class WsDemoStarter {
 		serverGroupContext = wsServerStarter.getServerGroupContext();
 	}
 
-	public WsServerStarter getWsServerStarter() {
-		return wsServerStarter;
-	}
-
-	public void start() throws IOException {
-		wsServerStarter.start();
-	}
-
 	/**
 	 * @return the serverGroupContext
 	 */
@@ -52,4 +39,11 @@ public class WsDemoStarter {
 		return serverGroupContext;
 	}
 
+	public WsServerStarter getWsServerStarter() {
+		return wsServerStarter;
+	}
+
+	public void start() throws IOException {
+		wsServerStarter.start();
+	}
 }
