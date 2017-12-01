@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.http.common.HttpConfig;
+import org.tio.utils.SystemTimer;
 
 /**
  *
@@ -21,6 +22,8 @@ public class HttpSession implements java.io.Serializable {
 	private Map<String, Serializable> data = new ConcurrentHashMap<>();
 
 	private String id = null;
+	
+	private long createTime = SystemTimer.currentTimeMillis();
 
 	/**
 	 * 此处空的构造函数必须要有
@@ -120,5 +123,13 @@ public class HttpSession implements java.io.Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public long getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
 	}
 }

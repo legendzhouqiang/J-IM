@@ -27,6 +27,7 @@ import org.tio.http.common.session.HttpSession;
 import org.tio.http.common.utils.IpUtils;
 import org.tio.http.server.intf.HttpServerInterceptor;
 import org.tio.http.server.intf.HttpSessionListener;
+import org.tio.http.server.intf.ThrowableHandler;
 import org.tio.http.server.mvc.Routes;
 import org.tio.http.server.session.SessionCookieDecorator;
 import org.tio.http.server.stat.ip.path.IpAccessStat;
@@ -92,6 +93,8 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	private HttpServerInterceptor httpServerInterceptor;
 
 	private HttpSessionListener httpSessionListener;
+	
+	private ThrowableHandler throwableHandler;
 
 	private SessionCookieDecorator sessionCookieDecorator;
 
@@ -587,6 +590,8 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 			sessionCookieDecorator.decorate(sessionCookie);
 		}
 		httpResponse.addCookie(sessionCookie);
+		httpResponse.addCookie(sessionCookie);
+		httpResponse.addCookie(sessionCookie);
 
 		httpConfig.getSessionStore().put(sessionId, httpSession);
 
@@ -617,6 +622,9 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 	@Override
 	public HttpResponse resp500(HttpRequest request, RequestLine requestLine, Throwable throwable) {
+		if (throwableHandler != null) {
+			return throwableHandler.handler(request, requestLine, throwable);
+		}
 		return Resps.resp500(request, requestLine, httpConfig, throwable);
 	}
 
@@ -675,5 +683,13 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 	public void setFreemarkerConfig(FreemarkerConfig freemarkerConfig) {
 		this.freemarkerConfig = freemarkerConfig;
+	}
+
+	public ThrowableHandler getThrowableHandler() {
+		return throwableHandler;
+	}
+
+	public void setThrowableHandler(ThrowableHandler throwableHandler) {
+		this.throwableHandler = throwableHandler;
 	}
 }

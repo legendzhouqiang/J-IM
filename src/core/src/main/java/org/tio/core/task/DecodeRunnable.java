@@ -19,11 +19,10 @@ import org.tio.core.utils.ByteBufferUtils;
 import org.tio.utils.SystemTimer;
 
 /**
- * 解码
+ * 解码任务对象，一个连接对应一个本对象
  *
  * @author 谭耀武
  * 2012-08-09
- *
  */
 public class DecodeRunnable implements Runnable {
 	private static final Logger log = LoggerFactory.getLogger(DecodeRunnable.class);
@@ -36,13 +35,11 @@ public class DecodeRunnable implements Runnable {
 	 * @author tanyaowu
 	 */
 	public static void handler(ChannelContext channelContext, Packet packet, int byteCount) {
-
 		GroupContext groupContext = channelContext.getGroupContext();
 		PacketHandlerMode packetHandlerMode = groupContext.getPacketHandlerMode();
 
 		HandlerRunnable handlerRunnable = channelContext.getHandlerRunnable();
 		if (packetHandlerMode == PacketHandlerMode.QUEUE) {
-
 			handlerRunnable.addMsg(packet);
 			groupContext.getTioExecutor().execute(handlerRunnable);
 		} else {
@@ -125,36 +122,14 @@ public class DecodeRunnable implements Runnable {
 					int afterDecodePosition = byteBuffer.position();
 					int len = afterDecodePosition - initPosition;
 
-					//					if (len == 0)
-					//					{
-					//						String logstr = channelContext + "解码成功, " + packet.logstr() + "," + byteBuffer + " 但是却只消耗了0字节, 这有可能会导致死循环. " + ThreadUtils.stackTrace();
-					//						log.error(logstr);
-					//					}
-
 					channelContext.getGroupContext().getGroupStat().getReceivedPackets().incrementAndGet();
 					channelContext.getStat().getReceivedPackets().incrementAndGet();
-					//					channelContext.getIpStat().getReceivedPackets().incrementAndGet();
 
-//					GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
-//					for (GuavaCache guavaCache : caches) {
-//						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
-//						ipStat.getReceivedPackets().incrementAndGet();
-//					}
-					
 					List<Long> list = groupContext.ipStats.durationList;
 					for (Long v : list) {
-						IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+						IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
 						ipStat.getReceivedPackets().incrementAndGet();
 					}
-					
-//					List<Long> durationList = groupContext.ips.list;
-//					for (Long v : durationList) {
-//						IpStat ipStat = (IpStat) groupContext.ips.get(v, channelContext.getClientNode().getIp());
-//						ipStat.getReceivedPackets().incrementAndGet();
-//
-//					}
-					
-					
 
 					channelContext.traceClient(ChannelAction.RECEIVED, packet, null);
 
@@ -187,23 +162,14 @@ public class DecodeRunnable implements Runnable {
 				}
 			}
 		} catch (AioDecodeException e) {
-			//			log.error(channelContext.toString() + "解码异常", e);
 			Aio.close(channelContext, e, "解码异常:" + e.getMessage());
-			//			int errorCount = channelContext.getIpStat().getDecodeErrorCount().incrementAndGet();
-//			GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
-//			for (GuavaCache guavaCache : caches) {
-//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
-//				ipStat.getDecodeErrorCount().incrementAndGet();
-//			}
 			
 			GroupContext groupContext = channelContext.getGroupContext();
 			List<Long> list = groupContext.ipStats.durationList;
 			for (Long v : list) {
-				IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+				IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
 				ipStat.getDecodeErrorCount().incrementAndGet();
 			}
-			
-			
 			return;
 		}
 	}
