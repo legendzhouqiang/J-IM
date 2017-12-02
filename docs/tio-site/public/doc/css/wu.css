@@ -5,9 +5,9 @@
 body { font:12px/1.2em Microsoft YaHei;}
 
 a,
-a:link { color:#000; text-decoration:none; outline:none;}
+a:link { text-decoration:none; outline:none;}
 a:hover,
-a:focus { text-decoration:none; color:#39f;}
+a:focus { text-decoration:none; }
 
 .pd3 { padding:3px;}
 .pd5 { padding:5px;}

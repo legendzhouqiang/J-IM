@@ -1,142 +1,251 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="All Rights Reserved, Copyright (C) 2013, Wuyeguo, Ltd." />
-<title>t-io文档</title>
-<link rel="stylesheet" type="text/css" href="/doc/easyui/1.3.4/themes/default/easyui.css" />
-<link rel="stylesheet" type="text/css" href="/doc/css/wu.css" />
-<link rel="stylesheet" type="text/css" href="/doc/css/icon.css" />
-<script type="text/javascript" src="/doc/js/jquery-1.8.0.min.js"></script>
-<script type="text/javascript" src="/doc/easyui/1.3.4/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="/doc/easyui/1.3.4/locale/easyui-lang-zh_CN.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="copyright" content="All Rights Reserved, Copyright (C) 2013, Wuyeguo, Ltd." />
+	<title>t-io文档</title>
+	<link rel="stylesheet" type="text/css" href="/doc/easyui/1.3.4/themes/metro/easyui.css" />
+
+	<link rel="stylesheet" type="text/css" href="/doc/css/icon.css" />
+	<link rel="stylesheet" type="text/css" href="/doc/css/wu.css" />
+	<link rel="stylesheet" type="text/css" href="/doc/css/doc.css" />
+	<script type="text/javascript" src="/doc/js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="/doc/easyui/1.3.4/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="/doc/easyui/1.3.4/locale/easyui-lang-zh_CN.js"></script>
 </head>
+
 <body class="easyui-layout">
 	<!-- begin of header -->
-	<div class="wu-header" data-options="region:'north',border:false,split:true">
-    	<div class="wu-header-left">
-        	<h1>t-io文档</h1>
-        </div>
-        <div class="wu-header-right">
-        	
-        </div>
-    </div>
-    <!-- end of header -->
-    <!-- begin of sidebar -->
-	<div class="wu-sidebar" data-options="region:'west',split:true,border:true,title:''"> 
-    	<div class="easyui-accordion" data-options="border:false,fit:true"> 
-        	<ol class="easyui-tree wu-side-tree">
-				<li ><a href="javascript:void(0)"  data-link="temp/layout-2.html" iframe="0">t-io简介</a></li>
-				<li ><a href="javascript:void(0)"  data-link="temp/layout-3.html" iframe="0">前提知识</a></li>
-				<li ><a href="javascript:void(0)"  data-link="temp/layout-3.html" iframe="0">用helloworld入门</a></li>
-				<li ><a href="javascript:void(0)"  data-link="temp/layout-3.html" iframe="0">用showcase进阶</a></li>
-				<li ><a href="javascript:void(0)"  data-link="temp/layout-3.html" iframe="0">常用API和技巧</a></li>
+
+	<!-- end of header -->
+	<!-- begin of sidebar -->
+	<div class="wu-sidebar" data-options="region:'west',split:true,border:true,title:''">
+		<div class="easyui-accordion" data-options="border:false,fit:true">
+			<ol class="easyui-tree wu-side-tree">
+				<li>
+					<a href="javascript:void(0)" data-link="/temp/xxx.html" iframe="0">t-io简介</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)" data-link="/doc/temp/pre.html" iframe="0">前提知识</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)" data-link="/doc/temp/api-thought.html" iframe="0">API思维导图</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)" data-link="/doc/temp/core-class.html" iframe="0">几个关键的类</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)" data-link="/doc/temp/hello.html" iframe="0">helloworld入门</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)" data-link="/doc/temp/showcase.html" iframe="0">showcase进阶</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)" data-link="/doc/temp/api.html" iframe="0">常用API和技巧</a>
+				</li>
 			</ol>
-            
-        </div>
-    </div>	
-    <!-- end of sidebar -->    
-    <!-- begin of main -->
-    <div class="wu-main" data-options="region:'center'">
-        <div id="wu-tabs" class="easyui-tabs" data-options="border:false,fit:true">  
-            <div title="首页" data-options=""></div>
-        </div>
-    </div>
-    <!-- end of main --> 
-    <!-- begin of footer -->
-	<div class="wu-footer" data-options="region:'south',border:true,split:true">
-    	&copy; 2013 Wu All Rights Reserved
-    </div>
-    <!-- end of footer -->  
-    <script type="text/javascript">
-		$(function(){
-			$('.wu-side-tree a').bind("click",function(){
+
+		</div>
+	</div>
+	<!-- end of sidebar -->
+	<!-- begin of main -->
+	<div class="wu-main" data-options="region:'center'">
+		<div id="wu-tabs" class="easyui-tabs" data-options="border:false,fit:true">
+			<div title="t-io简介" data-options="" style="padding:5px;">
+				<div style='color:#dddddd'>免责声明：几乎所有文档都是作者业余编写，样式可能丑了点，如引起您的不适恕不赔偿！</div>
+				<div class='doc_container'>t-io是一个网络框架，从这一点来说是有点像netty的，但t-io的特点在于，它不仅仅是一个网络框架，
+					<span class='strong'>因为它为常见和网络相关的业务（如IM、消息推送、RPC、监控）提供了近乎于现成的解决方案</span>，即开箱即用的API，简单列举如下
+					<ol>
+						<li>
+							一个连接绑定userid（一个userid可以绑定多个连接，用于多端登录，可双向查找）
+						</li>
+						<li>
+							一个连接绑定token（一个token可以绑定多个连接，用于多端登录，可双向查找）
+						</li>
+						<li>
+							一个连接绑定群组（用于推送消息、IM中的群聊）
+						</li>
+						<li>
+							提供了各种各样的发送消息API，这些API都位于Aio.java中，譬如异步发送的都是以send开头的方法
+							<div class="img">
+								<img src="/doc/images/send.png" />
+							</div>
+							阻塞发送的都是以bSend开头的方法
+							<div>
+								<img src="/doc/images/bsend.png" />
+							</div>
+							业务上同步发送的都是以synSend开头的方法（所谓业务上的同步发送，是指发送方发了一条A过去，需要等到对方回一个A++才继续往下执行代码，这个常用于RPC开发中）
+							<div>
+								<img src="/doc/images/syn.png" />
+							</div>
+						</li>
+
+						<li>
+							提供了各种各样和业务数据绑定的API，这些API都位于Aio.java中，和业务数据绑定都是以bind开头的方法
+							<div>
+								<img src="/doc/images/bind.png" />
+							</div>
+							和业务数据解绑都是以unbind开头的方法
+							<div>
+								<img src="/doc/images/unbind.png" />
+							</div>
+						</li>
+
+						<li>
+							提供了各种各样查找连接的API，这些API都位于Aio.java中，都是以get开头的
+							<div>
+								<img src="/doc/images/get.png" />
+							</div>
+						</li>
+
+						<li>
+							其它各种API不一一列举，可以去看一下Aio.java
+							<div>
+								<img src="/doc/images/all.png" />
+							</div>
+						</li>
+						<li>
+							提供了最强级别的监控和统计API，应用层只需要调用API就能拿到这些监控数据，方便反黑（tio官网当年被黑，在查找凶手的过程中，这些监控API提供了汗马功劳）
+							<br> 针对连接的数据监控
+							<div>
+								<img src="/doc/images/stat-1.png" />
+							</div>
+							<div>
+								<img src="/doc/images/stat-2.png" />
+							</div>
+							针对ip的数据监控
+							<div>
+								<img src="/doc/images/ipstat-1.png" />
+							</div>
+							<div>
+								<img src="/doc/images/ipstat-2.png" />
+							</div>
+							针对port（一组连接）的数据监控
+							<div>
+								<img src="/doc/images/gropustat-1.png" />
+							</div>
+							<div>
+								<img src="/doc/images/groupstat-2.png" />
+							</div>
+						</li>
+
+						<li>
+							内置心跳检查功能，省去业务端去编写定时任务检查无良连接
+						</li>
+						<li>
+							内置心跳发送功能
+						</li>
+						<li>
+							内置断链重边功能（不要小看这个功能，貌似这这个功能花了作者不少时间，注：不止是单个连接的自动重连，是所有连接的自动重连，在实现这个功能时需要考虑很多因素）
+						</li>
+						<li>
+							极其震撼的性能，那个每秒发送500万条聊天消息的测试当年引起了极大争议，我也就不再描述了，看看用户的一则测试报告吧：
+							<a target="_blank" href="https://my.oschina.net/u/2369298/blog/915435">t-io 30W长连接并发压力测试报告</a>，为了避免各种上争议，t-io官方以后将不再进行测试数据公布，因为t-io不是一个商业框架，而是开源的！
+						</li>
+					</ol>
+					还没完，基于t-io，目前已经有可用的
+					<span class='strong'>tio-http-server、tio-websocket-server、tio-im</span>等生态组件，这些组件可以直接享用前面提到的那些API，让开发人员更灵活地把控每个交互细节。除些之外，tio在开发某些功能中抽象出了如
+					<span class='strong'>两级缓存、定时任务</span>等小工具，方便大家使用，此处不一一列举。
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end of main -->
+	<!-- begin of footer -->
+
+	<!-- end of footer -->
+	<script type="text/javascript">
+		$(function () {
+			$('.wu-side-tree a').bind("click", function () {
 				var title = $(this).text();
 				var url = $(this).attr('data-link');
 				var iconCls = $(this).attr('data-icon');
-				var iframe = $(this).attr('iframe')==1?true:false;
-				addTab(title,url,iconCls,iframe);
-			});	
+				var iframe = $(this).attr('iframe') == 1 ? true : false;
+				addTab(title, url, iconCls, iframe);
+			});
 		})
-		
+
 		/**
 		* Name 载入树形菜单 
 		*/
 		$('#wu-side-tree').tree({
-			url:'temp/menu.php',
-			cache:false,
-			onClick:function(node){
+			url: 'temp/menu.php',
+			cache: false,
+			onClick: function (node) {
 				var url = node.attributes['url'];
-				if(url==null || url == ""){
+				if (url == null || url == "") {
 					return false;
 				}
-				else{
+				else {
 					addTab(node.text, url, '', node.attributes['iframe']);
 				}
 			}
 		});
-		
+
 		/**
 		* Name 选项卡初始化
 		*/
 		$('#wu-tabs').tabs({
-			tools:[{
-				iconCls:'icon-reload',
-				border:false,
-				handler:function(){
+			tools: [{
+				iconCls: 'icon-reload',
+				border: false,
+				handler: function () {
 					$('#wu-datagrid').datagrid('reload');
 				}
 			}]
 		});
-			
+
 		/**
 		* Name 添加菜单选项
 		* Param title 名称
 		* Param href 链接
 		* Param iconCls 图标样式
 		* Param iframe 链接跳转方式（true为iframe，false为href）
-		*/	
-		function addTab(title, href, iconCls, iframe){
+		*/
+		function addTab(title, href, iconCls, iframe) {
 			var tabPanel = $('#wu-tabs');
-			if(!tabPanel.tabs('exists',title)){
-				var content = '<iframe scrolling="auto" frameborder="0"  src="'+ href +'" style="width:100%;height:100%;"></iframe>';
-				if(iframe){
-					tabPanel.tabs('add',{
-						title:title,
-						content:content,
-						iconCls:iconCls,
-						fit:true,
-						cls:'pd3',
-						closable:true
+			if (!tabPanel.tabs('exists', title)) {
+				var content = '<iframe scrolling="auto" frameborder="0"  src="' + href + '" style="width:100%;height:100%;"></iframe>';
+				if (iframe) {
+					tabPanel.tabs('add', {
+						title: title,
+						content: content,
+						iconCls: iconCls,
+						fit: true,
+						cls: 'pd3',
+						closable: true
 					});
 				}
-				else{
-					tabPanel.tabs('add',{
-						title:title,
-						href:href,
-						iconCls:iconCls,
-						fit:true,
-						cls:'pd3',
-						closable:true
+				else {
+					tabPanel.tabs('add', {
+						title: title,
+						href: href,
+						iconCls: iconCls,
+						fit: true,
+						cls: 'pd3',
+						closable: true
 					});
 				}
 			}
-			else
-			{
-				tabPanel.tabs('select',title);
+			else {
+				tabPanel.tabs('select', title);
 			}
 		}
 		/**
 		* Name 移除菜单选项
 		*/
-		function removeTab(){
+		function removeTab() {
 			var tabPanel = $('#wu-tabs');
 			var tab = tabPanel.tabs('getSelected');
-			if (tab){
+			if (tab) {
 				var index = tabPanel.tabs('getTabIndex', tab);
 				tabPanel.tabs('close', index);
 			}
 		}
 	</script>
 </body>
+
 </html>
