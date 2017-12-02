@@ -1,4 +1,5 @@
-## **t-io: 不仅仅是百万级即时通讯框架**
+## **t-io: 让网络编程更轻松和有趣**
+
 [![image](https://gitee.com/tywo45/t-io/raw/master/docs/logo/preview.png)](https://gitee.com/tywo45/t-io)
 
 
