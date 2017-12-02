@@ -19,7 +19,7 @@ class DocPage extends React.Component {
   render() {
     return (
       <div className={styles.container} >
-        <iframe src='/doc/index.html' style={{ width: "100%", height: "830px", border:"none" }} frameborder="0" border="0" marginwidth="0" marginheight="0"  allowtransparency="yes"></iframe>
+        <iframe src='/doc/index.html' style={{ width: "100%", height: "760px", border:"none" }} frameborder="0" border="0" marginwidth="0" marginheight="0"  allowtransparency="yes"></iframe>
       </div>
     );
   }

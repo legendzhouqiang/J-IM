@@ -37,7 +37,7 @@ function IndexPage() {
         </div>
         <div className={styles.saying}>
           <div className={styles.saycontent} >
-            <img src="/touxiangpng.png" alt="" /> <span className={styles.name}>谭耀武</span> <span className={styles.ps} >t-io创始人</span>
+            <img src="/touxiangpng.png" alt="" /> <span className={styles.name}>talent tan</span> <span className={styles.ps} >t-io创始人</span>
           </div>
         </div>
       </div>

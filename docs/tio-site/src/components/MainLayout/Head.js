@@ -17,10 +17,7 @@ function Head() {
           <NavLink to="/donation" activeClassName={styles.active}>捐赠</NavLink>
         </div>
         
-        <div className={styles.userInfo} >
-          <Link to="/login" >登录</Link>
-          <Link to="/register" >注册</Link>
-        </div>
+        
       </div>
     </div>
   );
