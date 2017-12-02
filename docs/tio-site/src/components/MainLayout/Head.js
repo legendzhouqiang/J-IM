@@ -12,8 +12,8 @@ function Head() {
         <div className={styles.topnav}>
           <NavLink to="/" exact activeClassName={styles.active}>首页</NavLink>
           <NavLink to="/case" activeClassName={styles.active}>案例</NavLink>
-          <a href="/doc/index.html" target='_blank'>文档</a>
-          <a href="https://www.oschina.net/question/tag/t-io" target='_blank'>提问</a>
+          <NavLink to="/doc" activeClassName={styles.active}>文档</NavLink>
+          <NavLink to="/qa" activeClassName={styles.active}>提问</NavLink>
           <NavLink to="/donation" activeClassName={styles.active}>捐赠</NavLink>
         </div>
         
