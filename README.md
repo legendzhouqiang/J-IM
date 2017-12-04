@@ -1,6 +1,6 @@
 ## **t-io: 让网络编程更轻松和有趣**
 
-[![image](https://gitee.com/tywo45/t-io/raw/master/docs/logo/preview.png)](https://gitee.com/tywo45/t-io)
+[![image](https://gitee.com/tywo45/t-io/raw/master/docs/logo/preview.png)](http://www.t-io.org/#/doc)
 
 
 
