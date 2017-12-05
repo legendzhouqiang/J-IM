@@ -1,6 +1,7 @@
 package org.tio.http.server.intf;
 
 import org.tio.http.common.HttpConfig;
+import org.tio.http.common.HttpRequest;
 import org.tio.http.common.session.HttpSession;
 
 /**
@@ -10,9 +11,10 @@ import org.tio.http.common.session.HttpSession;
 public interface HttpSessionListener {
 	/**
 	 * 
+	 * @param request
 	 * @param session
-	 * @author: tanyaowu
+	 * @param httpConfig
 	 */
-	public void doAfterCreated(HttpSession session, HttpConfig httpConfig);
+	public void doAfterCreated(HttpRequest request, HttpSession session, HttpConfig httpConfig);
 
 }

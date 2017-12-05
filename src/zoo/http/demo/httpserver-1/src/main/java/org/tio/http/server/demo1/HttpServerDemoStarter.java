@@ -37,7 +37,7 @@ public class HttpServerDemoStarter {
 		
 		JsonInit.init();
 
-		JfinalInit.init();
+//		JfinalInit.init();
 		
 		HttpServerInit.init();
 	}

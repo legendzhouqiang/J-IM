@@ -154,7 +154,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		String sessionId = httpConfig.getSessionIdGenerator().sessionId(httpConfig, request);
 		HttpSession httpSession = new HttpSession(sessionId);
 		if (httpSessionListener != null) {
-			httpSessionListener.doAfterCreated(httpSession, httpConfig);
+			httpSessionListener.doAfterCreated(request, httpSession, httpConfig);
 		}
 		return httpSession;
 	}
@@ -589,8 +589,6 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		if (sessionCookieDecorator != null) {
 			sessionCookieDecorator.decorate(sessionCookie);
 		}
-		httpResponse.addCookie(sessionCookie);
-		httpResponse.addCookie(sessionCookie);
 		httpResponse.addCookie(sessionCookie);
 
 		httpConfig.getSessionStore().put(sessionId, httpSession);
