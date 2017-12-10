@@ -1,13 +1,89 @@
-
+.normal{
+  background-color: #ffffff;
+}
 .overview{
   height: 620px;
+  box-sizing: border-box;
+  padding-top: 100px;
   /* Rectangle: */
   /* Rectangle: */
   background-image: radial-gradient(49% 55%, #499DF5 56%, #1E8AE0 87%);
-
+  display: flex;
+  // justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  .iconBlock{
+    height: 250px;
+    margin-bottom: 56px;
+  }
+  .title1{
+    font-size:30px;
+    color: #FFFFFF;
+    margin-bottom: 35px;
+  }
+  .title2{
+    font-size:18px;
+    color: #FFFFFF;
+    margin-bottom: 14px;
+  }
+  .title3{
+    font-size:14px;
+    color: #FFFFFF;
+    margin-bottom: 14px;
+  }
 }
 .trait{
+  display: flex;
+  justify-content: center;
   height: 800px;
+  background-image: url('/ditu2.png');
+  background-repeat:no-repeat;
+  padding-top: 135px;
+  // background-position:center;
+  .traitImg{
+    width: 495px;
+    img{
+      margin-top: 78px;
+    }
+  }
+  .traitInfo{
+    width: 495px;
+    .traitInfoTitle{
+      font-size:28px;
+      color: #333333;
+      margin-bottom: 32px;
+    }
+    .traitInfoItem{
+      position: relative;
+      padding-left: 50px;
+
+      &::before{
+        content: '1';
+        position: absolute;
+        font-size:70px;
+        font-family:ArialMT;
+        color: #148EFF;
+        left: 0;
+      }
+      &:nth-of-type(3)::before{
+        content: '2';
+      }
+      &:nth-of-type(4)::before{
+        content: '3';
+      }
+      .itemTitle{
+        color: #149EFF;
+        font-size:16px;
+        margin-bottom: 21px;
+      }
+      .itemInfo{
+        color:#666666;
+        font-size:14px;
+        line-height:24px;
+        margin-bottom: 63px;
+      }
+    }
+  }
 }
 .project{
   height: 800px;

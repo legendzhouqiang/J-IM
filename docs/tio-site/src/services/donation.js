@@ -23,8 +23,3 @@ export async function selectDonateTitle(index = 1) {
     url: `${basePath}/donate/selectDonateTitle?index=${index}`,
   });
 }
-
-
-
-
-
