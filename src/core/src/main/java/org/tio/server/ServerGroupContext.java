@@ -166,7 +166,7 @@ public class ServerGroupContext extends GroupContext {
 										serverGroupStat.getReceivedPackets().get(), 
 										serverGroupStat.getReceivedBytes().get(),
 										serverGroupStat.getHandledPacket().get(), 
-										serverGroupStat.getSentPacket().get(), 
+										serverGroupStat.getSentPackets().get(), 
 										serverGroupStat.getSentBytes().get(),
 										serverGroupStat.getBytesPerTcpReceive(), 
 										serverGroupStat.getPacketsPerTcpReceive(), 

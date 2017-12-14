@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelAction;
 import org.tio.core.ReadCompletionHandler;
+import org.tio.core.ssl.SslUtils;
 import org.tio.core.stat.IpStat;
 import org.tio.server.intf.ServerAioListener;
 import org.tio.utils.SystemTimer;
@@ -63,7 +64,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 //				IpStat ipStat = (IpStat) guavaCache.get(clientIp);
 //				ipStat.getActivatedCount().incrementAndGet();
 //			}
-//			for (Long v : list) {
+//			for (Long v : durationList) {
 //				IpStat ipStat = (IpStat) serverGroupContext.ips.get(v, clientIp);
 //				IpStat.getActivatedCount().incrementAndGet();
 //			}
@@ -84,11 +85,15 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			
 			serverGroupContext.connecteds.add(channelContext);
 			serverGroupContext.ips.bind(channelContext);
-			try {
-				serverAioListener.onAfterConnected(channelContext, true, false);
-			} catch (Throwable e) {
-				log.error(e.toString(), e);
+			
+			if (!SslUtils.isSsl(channelContext)) {
+				try {
+					serverAioListener.onAfterConnected(channelContext, true, false);
+				} catch (Throwable e) {
+					log.error(e.toString(), e);
+				}
 			}
+			
 
 			if (!aioServer.isWaitingStop()) {
 				ReadCompletionHandler readCompletionHandler = channelContext.getReadCompletionHandler();

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioListener;
 import org.tio.core.Node;
 import org.tio.core.ReadCompletionHandler;
+import org.tio.core.ssl.SslUtils;
 import org.tio.utils.SystemTimer;
 
 /**
@@ -86,7 +87,7 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 
 				attachment.setChannelContext(channelContext);
 
-//				clientGroupContext.ips.bind(channelContext);
+				//				clientGroupContext.ips.bind(channelContext);
 				clientGroupContext.connecteds.add(channelContext);
 
 				ReadCompletionHandler readCompletionHandler = channelContext.getReadCompletionHandler();
@@ -124,7 +125,19 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 			}
 
 			try {
-				clientAioListener.onAfterConnected(channelContext, isConnected, isReconnect);
+				channelContext.setReconnect(isReconnect);
+				
+				if (SslUtils.isSsl(channelContext)) {
+					if (isConnected) {
+						channelContext.getSslFacadeContext().beginHandshake();
+					} else {
+						clientAioListener.onAfterConnected(channelContext, isConnected, isReconnect);
+					}
+				} else {
+					clientAioListener.onAfterConnected(channelContext, isConnected, isReconnect);
+				}
+				
+				
 			} catch (Throwable e1) {
 				log.error(e1.toString(), e1);
 			}

@@ -11,10 +11,11 @@ import java.util.List;
 public class Page<T> implements Serializable {
 
 	private static final long serialVersionUID = 6551482606063638959L;
-	private List<T> pageData = null; //当前页的数据
-	private Integer pageIndex; //当前页码，从1开始，如果值小于等于0，则视为1
+	private List<T> list = null; //当前页的数据
+	private Integer pageNumber; //当前页码，从1开始，如果值小于等于0，则视为1
 	private Integer pageSize; //每页记录数
-	private Integer recordCount; //总条数
+	private Integer totalRow; //总条数
+	private Integer totalPage; //总页数
 
 	public Page() {
 
@@ -28,37 +29,60 @@ public class Page<T> implements Serializable {
 	 * @param recordCount
 	 * @author tanyaowu
 	 */
-	public Page(List<T> pageData, Integer pageIndex, Integer pageSize, Integer recordCount) {
-		this.pageData = pageData;
-		this.pageIndex = pageIndex;
+	public Page(List<T> pageData, Integer pageNumber, Integer pageSize, Integer totalRow) {
+		this.list = pageData;
+		this.pageNumber = pageNumber;
 		this.pageSize = pageSize;
-		this.recordCount = recordCount;
+		this.totalRow = totalRow;
 	}
 
-	/**
-	 * @return the pageData
-	 */
-	public List<T> getPageData() {
-		return pageData;
+	public List<T> getList() {
+		return list;
 	}
 
-	public int getPageIndex() {
-		return pageIndex;
+	public void setList(List<T> list) {
+		this.list = list;
 	}
 
-	public int getPageSize() {
+	public Integer getPageNumber() {
+		return pageNumber;
+	}
+
+	public void setPageNumber(Integer pageNumber) {
+		this.pageNumber = pageNumber;
+	}
+
+	public Integer getPageSize() {
 		return pageSize;
 	}
 
-	public int getRecordCount() {
-		return recordCount;
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
 
-	/**
-	 * @param pageData the pageData to set
-	 */
-	public void setPageData(List<T> pageData) {
-		this.pageData = pageData;
+	public Integer getTotalRow() {
+		return totalRow;
 	}
 
+	public void setTotalRow(Integer totalRow) {
+		this.totalRow = totalRow;
+	}
+
+	public Integer getTotalPage() {
+		Double result = Math.ceil(((double)(totalRow) /pageSize));
+		totalPage = result.intValue();
+		return totalPage;
+	}
+
+	public void setTotalPage(Integer totalPage) {
+		this.totalPage = totalPage;
+	}
+
+	public boolean isFirstPage() {
+		return pageNumber <= 1;
+	}
+	
+	public boolean isLastPage() {
+		return pageNumber >= getTotalPage();
+	}
 }

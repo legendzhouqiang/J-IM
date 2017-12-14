@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.WriteCompletionHandler.WriteCompletionVo;
 import org.tio.core.intf.Packet;
-import org.tio.core.intf.PacketWithMeta;
+import org.tio.core.intf.Packet.Meta;
 import org.tio.core.stat.ChannelStat;
 import org.tio.core.stat.GroupStat;
 import org.tio.core.stat.IpStat;
@@ -125,72 +125,53 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 		//		AioListener aioListener = groupContext.getAioListener();
 		boolean isSentSuccess = result > 0;
 
-		
-//		GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
-		
+		//		GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
+
 		List<Long> list = groupContext.ipStats.durationList;
-		
-		
-		
+
 		if (isSentSuccess) {
 			groupStat.getSentBytes().addAndGet(result);
 			channelStat.getSentBytes().addAndGet(result);
-//			channelContext.getIpStat().getSentBytes().addAndGet(result);
-			
-//			for (GuavaCache guavaCache : caches) {
-//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
-//				ipStat.getSentBytes().addAndGet(result);
-//			}
+			//			channelContext.getIpStat().getSentBytes().addAndGet(result);
+
+			//			for (GuavaCache guavaCache : caches) {
+			//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+			//				ipStat.getSentBytes().addAndGet(result);
+			//			}
 			for (Long v : list) {
 				IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
 				ipStat.getSentBytes().addAndGet(result);
 			}
-			
+
 		}
 
-		int packetCount = 0;
+//		int packetCount = 0;
 		try {
 			boolean isPacket = attachment instanceof Packet;
-			boolean isPacketWithMeta = !isPacket && attachment instanceof PacketWithMeta;
-
-			if (isPacket || isPacketWithMeta) {
+			if (isPacket) {
 				if (isSentSuccess) {
-					groupStat.getSentPacket().incrementAndGet();
-					channelStat.getSentPackets().incrementAndGet();
-//					channelContext.getIpStat().getSentPackets().incrementAndGet();
 
-//					for (GuavaCache guavaCache : caches) {
-//						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
-//						ipStat.getSentPackets().incrementAndGet();
-//					}
-					
+					//					channelContext.getIpStat().getSentPackets().incrementAndGet();
+
+					//					for (GuavaCache guavaCache : caches) {
+					//						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
+					//						ipStat.getSentPackets().incrementAndGet();
+					//					}
+
 					for (Long v : list) {
 						IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
 						ipStat.getSentPackets().incrementAndGet();
 					}
 				}
-				handleOne(result, throwable, attachment, isSentSuccess);
+				handleOne(result, throwable, (Packet)attachment, isSentSuccess);
 			} else {
 				List<?> ps = (List<?>) attachment;
-				if (isSentSuccess) {
-					packetCount = ps.size();
-					groupStat.getSentPacket().addAndGet(packetCount);
-					channelStat.getSentPackets().addAndGet(packetCount);
-//					channelContext.getIpStat().getSentPackets().addAndGet(packetCount);
-					
-//					for (GuavaCache guavaCache : caches) {
-//						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
-//						ipStat.getSentPackets().addAndGet(packetCount);
-//					}
-					
-					for (Long v : list) {
-						IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
-						ipStat.getSentPackets().addAndGet(packetCount);
-					}
-				}
+//				if (isSentSuccess) {
+//					packetCount = ps.size();
+//				}
 
 				for (Object obj : ps) {
-					handleOne(result, throwable, obj, isSentSuccess);
+					handleOne(result, throwable, (Packet)obj, isSentSuccess);
 				}
 			}
 
@@ -212,22 +193,30 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 	 * @param isSentSuccess
 	 * @author tanyaowu
 	 */
-	public void handleOne(Integer result, Throwable throwable, Object obj, Boolean isSentSuccess) {
-		Packet packet = null;
-		PacketWithMeta packetWithMeta = null;
-
-		boolean isPacket = obj instanceof Packet;
-		if (isPacket) {
-			packet = (Packet) obj;
-		} else {
-			packetWithMeta = (PacketWithMeta) obj;
-			packetWithMeta.setIsSentSuccess(isSentSuccess);
-			packet = packetWithMeta.getPacket();
+	public void handleOne(Integer result, Throwable throwable, Packet packet, Boolean isSentSuccess) {
+		Meta meta = packet.getMeta();
+		
+		if (meta != null) {
+			meta.setIsSentSuccess(isSentSuccess);
 		}
 
 		try {
 			channelContext.traceClient(ChannelAction.AFTER_SEND, packet, null);
-			channelContext.processAfterSent(obj, isSentSuccess);
+			channelContext.processAfterSent(packet, isSentSuccess);
+
+			GroupContext groupContext = channelContext.getGroupContext();
+			GroupStat groupStat = groupContext.getGroupStat();
+			ChannelStat channelStat = channelContext.getStat();
+
+			List<Long> list = groupContext.ipStats.durationList;
+			for (Long v : list) {
+				IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
+				ipStat.getSentPackets().incrementAndGet();
+			}
+
+			groupStat.getSentPackets().incrementAndGet();
+			channelStat.getSentPackets().incrementAndGet();
+
 		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		}

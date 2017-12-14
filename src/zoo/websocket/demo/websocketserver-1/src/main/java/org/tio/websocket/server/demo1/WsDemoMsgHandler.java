@@ -23,6 +23,7 @@ public class WsDemoMsgHandler implements IWsMsgHandler {
 	 */
 	@Override
 	public HttpResponse handshake(HttpRequest request, HttpResponse httpResponse, ChannelContext channelContext) throws Exception {
+		request.getClientIp();
 		return httpResponse;
 	}
 
@@ -33,6 +34,7 @@ public class WsDemoMsgHandler implements IWsMsgHandler {
 	public Object onBytes(WsRequest wsRequest, byte[] bytes, ChannelContext channelContext) throws Exception {
 		String ss = new String(bytes, "utf-8");
 		log.info("收到byte消息:{},{}", bytes, ss);
+		channelContext.getClientNode().getIp();
 
 		//		byte[] bs1 = "收到byte消息".getBytes("utf-8");
 		ByteBuffer buffer = ByteBuffer.allocate(bytes.length);

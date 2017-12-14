@@ -24,6 +24,7 @@ import org.tio.core.maintain.IpStats;
 import org.tio.core.maintain.Ips;
 import org.tio.core.maintain.Tokens;
 import org.tio.core.maintain.Users;
+import org.tio.core.ssl.SslConfig;
 import org.tio.core.stat.GroupStat;
 import org.tio.utils.prop.MapWithLockPropSupport;
 import org.tio.utils.thread.pool.DefaultThreadFactory;
@@ -62,6 +63,8 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	private ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
 
 	private boolean isShortConnection = false;
+	
+	private SslConfig sslConfig = null;
 
 	/**
 	 * 心跳超时时间(单位: 毫秒)，如果用户不希望框架层面做心跳相关工作，请把此值设为0或负数
@@ -109,7 +112,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	/**
 	 * packet编码成bytebuffer时，是否与ChannelContext相关，false: packet编码与ChannelContext无关
 	 */
-	private boolean isEncodeCareWithChannelContext = true;
+//	private boolean isEncodeCareWithChannelContext = true;
 
 	protected String id;
 
@@ -268,9 +271,9 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	/**
 	 * @return the isEncodeCareWithChannelContext
 	 */
-	public boolean isEncodeCareWithChannelContext() {
-		return isEncodeCareWithChannelContext;
-	}
+//	public boolean isEncodeCareWithChannelContext() {
+//		return isEncodeCareWithChannelContext;
+//	}
 
 	/**
 	 * @return the isShortConnection
@@ -305,9 +308,9 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	/**
 	 * @param isEncodeCareWithChannelContext the isEncodeCareWithChannelContext to set
 	 */
-	public void setEncodeCareWithChannelContext(boolean isEncodeCareWithChannelContext) {
-		this.isEncodeCareWithChannelContext = isEncodeCareWithChannelContext;
-	}
+//	public void setEncodeCareWithChannelContext(boolean isEncodeCareWithChannelContext) {
+//		this.isEncodeCareWithChannelContext = isEncodeCareWithChannelContext;
+//	}
 
 	/**
 	 * @param groupListener the groupListener to set
@@ -360,5 +363,13 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	 */
 	public void setTioUuid(TioUuid tioUuid) {
 		this.tioUuid = tioUuid;
+	}
+
+	public SslConfig getSslConfig() {
+		return sslConfig;
+	}
+
+	public void setSslConfig(SslConfig sslConfig) {
+		this.sslConfig = sslConfig;
 	}
 }

@@ -1,14 +1,19 @@
 package org.tio.core.intf;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author tanyaowu
  * 2017年4月1日 上午9:34:59
  */
-public class Packet implements java.io.Serializable {
+public class Packet implements java.io.Serializable, Cloneable {
+	private static Logger log = LoggerFactory.getLogger(Packet.class);
 
 	private static final long serialVersionUID = 5275372187150637318L;
 
@@ -24,6 +29,13 @@ public class Packet implements java.io.Serializable {
 
 	private boolean isBlockSend = false;
 	
+	private Meta meta = null;
+
+	/**
+	 * 有些包是由很多个bytebuffer组成的，用于分包发送等操作
+	 */
+//	private boolean isFinished = true;
+
 	/**
 	 * 消息是否是另外一台机器通过topic转过来的，如果是就不要死循环地再一次转发啦
 	 * 这个属性是tio内部使用，业务层的用户请务使用
@@ -39,6 +51,29 @@ public class Packet implements java.io.Serializable {
 	 * 预编码过的bytebuffer，如果此值不为null，框架则会忽略原来的encode()而直接用此值
 	 */
 	private ByteBuffer preEncodedByteBuffer = null;
+
+	/**
+	 * 是否已经进行ssl加密过
+	 */
+	private boolean isSslEncrypted = false;
+
+	@Override
+	public Packet clone() {
+		try {
+			Packet ret = (Packet) super.clone();
+			ret.setPreEncodedByteBuffer(null);
+			ret.setSslEncrypted(false);
+			return ret;
+		} catch (CloneNotSupportedException e) {
+			log.error("", e);
+			return null;
+		}
+	}
+
+	/**
+	 * 最原始的Packet对象
+	 */
+	//	private Packet initPacket = null;
 
 	/**
 	 * @return the byteCount
@@ -148,6 +183,57 @@ public class Packet implements java.io.Serializable {
 
 	public void setFromCluster(boolean isFromCluster) {
 		this.isFromCluster = isFromCluster;
+	}
+
+	public boolean isSslEncrypted() {
+		return isSslEncrypted;
+	}
+
+	public void setSslEncrypted(boolean isSslEncrypted) {
+		this.isSslEncrypted = isSslEncrypted;
+	}
+
+//	public boolean isFinished() {
+//		return isFinished;
+//	}
+//
+//	public void setFinished(boolean isFinished) {
+//		this.isFinished = isFinished;
+//	}
+
+	//	public Packet getInitPacket() {
+	//		return initPacket;
+	//	}
+	//
+	//	public void setInitPacket(Packet initPacket) {
+	//		this.initPacket = initPacket;
+	//	}
+	
+	public Meta getMeta() {
+		return meta;
+	}
+
+	public void setMeta(Meta meta) {
+		this.meta = meta;
+	}
+
+	public static class Meta {
+		private Boolean isSentSuccess = new Boolean(false);
+		private CountDownLatch countDownLatch = null;
+		public Boolean getIsSentSuccess() {
+			return isSentSuccess;
+		}
+		public void setIsSentSuccess(Boolean isSentSuccess) {
+			this.isSentSuccess = isSentSuccess;
+		}
+		public CountDownLatch getCountDownLatch() {
+			return countDownLatch;
+		}
+		public void setCountDownLatch(CountDownLatch countDownLatch) {
+			this.countDownLatch = countDownLatch;
+		}
+		
+		
 	}
 
 }

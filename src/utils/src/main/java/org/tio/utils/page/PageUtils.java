@@ -17,42 +17,42 @@ public class PageUtils {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(PageUtils.class);
 
-	public static <T> Page<T> fromList(List<T> list, int pageIndex, int pageSize) {
+	public static <T> Page<T> fromList(List<T> list, int pageNumber, int pageSize) {
 		if (list == null) {
 			return null;
 		}
 
-		Page<T> page = pre(list, pageIndex, pageSize);
+		Page<T> page = pre(list, pageNumber, pageSize);
 
-		List<T> pageData = page.getPageData();
+		List<T> pageData = page.getList();
 		if (pageData == null) {
 			return page;
 		}
 
-		int startIndex = Math.min((page.getPageIndex() - 1) * page.getPageSize(), list.size());
-		int endIndex = Math.min(page.getPageIndex() * page.getPageSize(), list.size());
+		int startIndex = Math.min((page.getPageNumber() - 1) * page.getPageSize(), list.size());
+		int endIndex = Math.min(page.getPageNumber() * page.getPageSize(), list.size());
 
 		for (int i = startIndex; i < endIndex; i++) {
 			pageData.add(list.get(i));
 		}
-		page.setPageData(pageData);
+		page.setList(pageData);
 		return page;
 	}
 
-	public static <T> Page<T> fromSet(Set<T> set, int pageIndex, int pageSize) {
+	public static <T> Page<T> fromSet(Set<T> set, int pageNumber, int pageSize) {
 		if (set == null) {
 			return null;
 		}
 
-		Page<T> page = pre(set, pageIndex, pageSize);
+		Page<T> page = pre(set, pageNumber, pageSize);
 
-		List<T> pageData = page.getPageData();
+		List<T> pageData = page.getList();
 		if (pageData == null) {
 			return page;
 		}
 
-		int startIndex = Math.min((page.getPageIndex() - 1) * page.getPageSize(), set.size());
-		int endIndex = Math.min(page.getPageIndex() * page.getPageSize(), set.size());
+		int startIndex = Math.min((page.getPageNumber() - 1) * page.getPageSize(), set.size());
+		int endIndex = Math.min(page.getPageNumber() * page.getPageSize(), set.size());
 
 		int i = 0;
 		for (T t : set) {
@@ -68,11 +68,11 @@ public class PageUtils {
 			i++;
 			continue;
 		}
-		page.setPageData(pageData);
+		page.setList(pageData);
 		return page;
 	}
 
-	public static <T> Page<T> fromSetWithLock(ObjWithLock<Set<T>> setWithLock, int pageIndex, int pageSize) {
+	public static <T> Page<T> fromSetWithLock(ObjWithLock<Set<T>> setWithLock, int pageNumber, int pageSize) {
 		if (setWithLock == null) {
 			return null;
 		}
@@ -80,20 +80,20 @@ public class PageUtils {
 		try {
 			lock.lock();
 			Set<T> set = setWithLock.getObj();
-			return fromSet(set, pageIndex, pageSize);
+			return fromSet(set, pageNumber, pageSize);
 		} finally {
 			lock.unlock();
 		}
 
 	}
 
-	private static <T> Page<T> pre(java.util.Collection<T> list, int pageIndex, int pageSize) {
+	private static <T> Page<T> pre(java.util.Collection<T> list, int pageNumber, int pageSize) {
 		if (list == null) {
-			return new Page<>(null, pageIndex, pageSize, 0);
+			return new Page<>(null, pageNumber, pageSize, 0);
 		}
 
 		pageSize = processPageSize(pageSize);
-		pageIndex = processPageIndex(pageIndex);
+		pageNumber = processpageNumber(pageNumber);
 
 		int recordCount = list.size();
 		if (pageSize > recordCount) {
@@ -101,12 +101,12 @@ public class PageUtils {
 		}
 
 		List<T> pageData = new ArrayList<>(pageSize);
-		Page<T> ret = new Page<>(pageData, pageIndex, pageSize, recordCount);
+		Page<T> ret = new Page<>(pageData, pageNumber, pageSize, recordCount);
 		return ret;
 	}
 
-	private static int processPageIndex(int pageIndex) {
-		return pageIndex <= 0 ? 1 : pageIndex;
+	private static int processpageNumber(int pageNumber) {
+		return pageNumber <= 0 ? 1 : pageNumber;
 	}
 
 	private static int processPageSize(int pageSize) {

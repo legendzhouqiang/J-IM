@@ -144,6 +144,8 @@ public class DecodeRunnable implements Runnable {
 					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
+					
+					log.info("{}, 解包获得一个packet:{}", channelContext, packet.logstr());
 					handler(channelContext, packet, len);
 
 					int remainingLength = byteBuffer.limit() - byteBuffer.position();

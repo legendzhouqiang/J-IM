@@ -91,7 +91,9 @@ public class RedisCache implements ICache {
 		long start = SystemTimer.currentTimeMillis();
 		
 		RKeys keys = redisson.getKeys();
-		keys.deleteByPattern(keyPrefix(cacheName) + "*");
+		
+//		keys.deleteByPattern(keyPrefix(cacheName) + "*");
+		keys.deleteByPatternAsync(keyPrefix(cacheName) + "*");
 		
 		long end = SystemTimer.currentTimeMillis();
 		long iv = end - start;

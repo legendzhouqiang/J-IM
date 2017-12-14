@@ -51,7 +51,7 @@
 		<maven.version>3.5.0</maven.version>
 
 		<mysql.driver.version>5.1.44</mysql.driver.version>
-		<druid.version>1.1.5</druid.version>
+		<druid.version>1.1.6</druid.version>
 		<jfinal.version>3.3</jfinal.version>
 
 		<logback.version>1.2.3</logback.version>
@@ -65,14 +65,14 @@
 		<commons-compress.version>1.15</commons-compress.version>
 		<fastjson.version>1.2.41</fastjson.version>
 		<testng.version>6.11</testng.version>
-		<hutool.version>3.2.1</hutool.version>
+		<hutool.version>3.2.2</hutool.version>
 
 		<protobuf-java.version>3.5.0</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<protobuf-java-format.version>1.4</protobuf-java-format.version>
 
 		<protostuff.version>1.6.0</protostuff.version>
-		<redisson.version>3.5.5</redisson.version>
+		<redisson.version>3.5.6</redisson.version>
 		<jodd.version>3.9.1</jodd.version>
 		<quartz.version>2.3.0</quartz.version>
 
@@ -381,7 +381,7 @@
 			<dependency>
 				<groupId>nl.basjes.parse.useragent</groupId>
 				<artifactId>yauaa</artifactId>
-				<version>3.1</version>
+				<version>3.3</version>
 			</dependency>
 
 			<dependency>
@@ -405,7 +405,7 @@
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-text</artifactId>
-				<version>1.1</version>
+				<version>1.2</version>
 			</dependency>
 
 			<dependency>
@@ -461,7 +461,7 @@
 			<dependency>
 				<groupId>com.aliyun</groupId>
 				<artifactId>aliyun-java-sdk-live</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.aliyun.oss</groupId>

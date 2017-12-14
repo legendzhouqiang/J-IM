@@ -267,7 +267,7 @@ public class HttpConfig {
 
 	/**
 	 * 
-	 * @param pageRoot
+	 * @param pageRoot 如果是以"classpath:"开头，则从classpath中查找，否则视为普通的文件路径
 	 * @author tanyaowu
 	 * @throws IOException 
 	 */

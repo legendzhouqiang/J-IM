@@ -33,6 +33,11 @@ import org.tio.utils.thread.pool.SynThreadPoolExecutor;
  * 2017年4月1日 上午9:29:58
  */
 public class AioClient {
+	/**
+	 * 自动重连任务
+	 * @author tanyw
+	 *
+	 */
 	private static class ReconnRunnable implements Runnable {
 		ClientChannelContext channelContext = null;
 		AioClient aioClient = null;
@@ -362,7 +367,7 @@ public class AioClient {
 						if (log.isInfoEnabled()) {
 							log.info("[{}]: curr:{}, closed:{}, received:({}p)({}b), handled:{}, sent:({}p)({}b)", id, set.size(), clientGroupStat.getClosed().get(),
 									clientGroupStat.getReceivedPackets().get(), clientGroupStat.getReceivedBytes().get(), clientGroupStat.getHandledPacket().get(),
-									clientGroupStat.getSentPacket().get(), clientGroupStat.getSentBytes().get());
+									clientGroupStat.getSentPackets().get(), clientGroupStat.getSentBytes().get());
 						}
 
 					} catch (Throwable e) {

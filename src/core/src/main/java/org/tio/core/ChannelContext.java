@@ -14,11 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.tio.core.intf.Packet;
-import org.tio.core.intf.PacketWithMeta;
+import org.tio.core.intf.Packet.Meta;
+import org.tio.core.ssl.SslFacadeContext;
+import org.tio.core.ssl.SslUtils;
 import org.tio.core.stat.ChannelStat;
 import org.tio.core.task.DecodeRunnable;
 import org.tio.core.task.HandlerRunnable;
 import org.tio.core.task.SendRunnable;
+import org.tio.server.ServerGroupContext;
 import org.tio.utils.json.Json;
 import org.tio.utils.prop.MapWithLockPropSupport;
 
@@ -42,6 +45,8 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	private boolean isTraceClient = false;
 
 	private boolean isTraceSynPacket = false;
+	
+	private boolean isReconnect = false;
 
 	//	private MapWithLock<String, Object> props = null;//
 
@@ -56,10 +61,12 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	private ReadCompletionHandler readCompletionHandler = null;//new ReadCompletionHandler(this);
 	private WriteCompletionHandler writeCompletionHandler = null;//new WriteCompletionHandler(this);
 
+	private SslFacadeContext sslFacadeContext;
+
 	private int reconnCount = 0;//连续重连次数，连接成功后，此值会被重置0
 
 	private String userid;
-	
+
 	private String token;
 
 	private boolean isWaitingClose = false;
@@ -92,6 +99,19 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	public ChannelContext(GroupContext groupContext, AsynchronousSocketChannel asynchronousSocketChannel) {
 		super();
 		init(groupContext, asynchronousSocketChannel);
+
+		if (groupContext.getSslConfig() != null) {
+			try {
+				SslFacadeContext sslFacadeContext = new SslFacadeContext(this);
+				if (groupContext instanceof ServerGroupContext) {
+					sslFacadeContext.beginHandshake();
+				}
+			} catch (Exception e) {
+				log.error("在开始SSL握手时发生了异常", e);
+				Aio.close(this, "在开始SSL握手时发生了异常" + e.getMessage());
+				return;
+			}
+		}
 	}
 
 	private void assignAnUnknownClientNode() {
@@ -261,7 +281,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		this.setAsynchronousSocketChannel(asynchronousSocketChannel);
 		this.readCompletionHandler = new ReadCompletionHandler(this);
 		this.writeCompletionHandler = new WriteCompletionHandler(this);
-//		this.ipStat = groupContext.ips.get(getClientNode().getIp());
+		//		this.ipStat = groupContext.ips.get(getClientNode().getIp());
 	}
 
 	/**
@@ -305,24 +325,33 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	 * @param isSentSuccess
 	 * @author tanyaowu
 	 */
-	public void processAfterSent(Object obj, Boolean isSentSuccess) {
-		Packet packet = null;
-		PacketWithMeta packetWithMeta = null;
-		boolean isPacket = obj instanceof Packet;
-		if (isPacket) {
-			packet = (Packet) obj;
-		} else {
-			packetWithMeta = (PacketWithMeta) obj;
-			packet = packetWithMeta.getPacket();
-			CountDownLatch countDownLatch = packetWithMeta.getCountDownLatch();
+	public void processAfterSent(Packet packet, Boolean isSentSuccess) {
+
+//		if (isPacket) {
+//			packet = (Packet) obj;
+//		} else {
+//			packetWithMeta = (PacketWithMeta) obj;
+//			packet = packetWithMeta.getPacket();
+//			CountDownLatch countDownLatch = packetWithMeta.getCountDownLatch();
+//			traceBlockPacket(SynPacketAction.BEFORE_DOWN, packet, countDownLatch, null);
+//			countDownLatch.countDown();
+//		}
+		Meta meta = packet.getMeta();
+		if (meta != null) {
+			CountDownLatch countDownLatch = meta.getCountDownLatch();
 			traceBlockPacket(SynPacketAction.BEFORE_DOWN, packet, countDownLatch, null);
 			countDownLatch.countDown();
 		}
+		
+		
 		try {
 			if (log.isDebugEnabled()) {
 				log.debug("{} 已经发送 {}", this, packet.logstr());
 			}
-			groupContext.getAioListener().onAfterSent(this, packet, isSentSuccess == null ? false : isSentSuccess);
+
+			if (this.getSslFacadeContext() == null || this.getSslFacadeContext().isHandshakeCompleted()) {
+				groupContext.getAioListener().onAfterSent(this, packet, isSentSuccess == null ? false : isSentSuccess);
+			}
 		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		}
@@ -483,7 +512,12 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	@Override
 	public String toString() {
-		return this.getClientNode().toString();
+		if (SslUtils.isSsl(this)) {
+			return this.getClientNode().toString() + ", SslShakehanded:" + this.getSslFacadeContext().isHandshakeCompleted();
+		} else {
+			return this.getClientNode().toString();
+		}
+		
 	}
 
 	/**
@@ -543,6 +577,22 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public SslFacadeContext getSslFacadeContext() {
+		return sslFacadeContext;
+	}
+
+	public void setSslFacadeContext(SslFacadeContext sslFacadeContext) {
+		this.sslFacadeContext = sslFacadeContext;
+	}
+
+	public boolean isReconnect() {
+		return isReconnect;
+	}
+
+	public void setReconnect(boolean isReconnect) {
+		this.isReconnect = isReconnect;
 	}
 
 }

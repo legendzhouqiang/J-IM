@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.intf.Packet;
-import org.tio.core.intf.PacketWithMeta;
+import org.tio.core.intf.Packet.Meta;
 import org.tio.core.maintain.ChannelContextMapWithLock;
 import org.tio.core.task.SendRunnable;
 import org.tio.utils.lock.MapWithLock;
@@ -78,9 +78,9 @@ public class Aio {
 	
 	/**
 	 * 群组有多少个连接
+	 * @param groupContext
 	 * @param group
 	 * @return
-	 * @author tanyaowu
 	 */
 	public static int groupCount(GroupContext groupContext, String group) {
 		SetWithLock<ChannelContext> setWithLock = groupContext.groups.clients(groupContext, group);
@@ -482,7 +482,7 @@ public class Aio {
 					countDownLatch.countDown();
 				}
 				if (channelContext != null) {
-					log.error("{}, isClosed:{}, isRemoved:{}, stack:{} ", channelContext, channelContext.isClosed(), channelContext.isRemoved(), ThreadUtils.stackTrace());
+					log.error("can send data, {}, isClosed:{}, isRemoved:{}, stack:{} ", channelContext, channelContext.isClosed(), channelContext.isRemoved(), ThreadUtils.stackTrace());
 				}
 				return false;
 			}
@@ -490,13 +490,14 @@ public class Aio {
 			boolean isSingleBlock = countDownLatch != null && packetSendMode == PacketSendMode.SINGLE_BLOCK;
 
 			SendRunnable sendRunnable = channelContext.getSendRunnable();
-			PacketWithMeta packetWithMeta = null;
 			boolean isAdded = false;
 			if (countDownLatch == null) {
 				isAdded = sendRunnable.addMsg(packet);
 			} else {
-				packetWithMeta = new PacketWithMeta(packet, countDownLatch);
-				isAdded = sendRunnable.addMsg(packetWithMeta);
+				Meta meta = new Meta();
+				meta.setCountDownLatch(countDownLatch);
+				packet.setMeta(meta);
+				isAdded = sendRunnable.addMsg(packet);
 			}
 
 			if (!isAdded) {
@@ -518,19 +519,19 @@ public class Aio {
 					//log.error("{} after await, packet:{}, countDownLatch:{}", channelContext, packet.logstr(), countDownLatch);
 
 					if (!awaitFlag) {
-						log.error("{} 阻塞发送超时, timeout:{}s, packet:{}", channelContext, timeout, packet.logstr());
+						log.error("{}, 阻塞发送超时, timeout:{}s, packet:{}", channelContext, timeout, packet.logstr());
 					}
 				} catch (InterruptedException e) {
 					log.error(e.toString(), e);
 				}
 
-				Boolean isSentSuccess = packetWithMeta.getIsSentSuccess();
+				Boolean isSentSuccess = packet.getMeta().getIsSentSuccess();
 				return isSentSuccess;
 			} else {
 				return true;
 			}
 		} catch (Throwable e) {
-			log.error(e.toString(), e);
+			log.error(channelContext + ", " + e.toString(), e);
 			return false;
 		} finally {
 			//			if (isSingleBlock)
@@ -790,10 +791,10 @@ public class Aio {
 				log.debug("{}, 集合为空", groupContext.getName());
 				return false;
 			}
-			if (!groupContext.isEncodeCareWithChannelContext()) {
-				ByteBuffer byteBuffer = groupContext.getAioHandler().encode(packet, groupContext, null);
-				packet.setPreEncodedByteBuffer(byteBuffer);
-			}
+//			if (!groupContext.isEncodeCareWithChannelContext()) {
+//				ByteBuffer byteBuffer = groupContext.getAioHandler().encode(packet, groupContext, null);
+//				packet.setPreEncodedByteBuffer(byteBuffer);
+//			}
 
 			CountDownLatch countDownLatch = null;
 			if (isBlock) {

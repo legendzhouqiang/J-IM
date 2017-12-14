@@ -61,7 +61,7 @@ public class GroupStat implements java.io.Serializable  {
 	/**
 	 * 发送了的消息包数
 	 */
-	private AtomicLong sentPacket = new AtomicLong();
+	private AtomicLong sentPackets = new AtomicLong();
 
 	/**
 	 * 发送了的字节数
@@ -113,8 +113,8 @@ public class GroupStat implements java.io.Serializable  {
 	/**
 	 * @return the sentPacket
 	 */
-	public AtomicLong getSentPacket() {
-		return sentPacket;
+	public AtomicLong getSentPackets() {
+		return sentPackets;
 	}
 
 	/**

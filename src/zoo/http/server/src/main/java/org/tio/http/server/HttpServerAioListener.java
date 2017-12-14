@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.intf.Packet;
+import org.tio.core.ssl.SslFacadeContext;
 import org.tio.http.common.HttpConst;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
@@ -143,14 +144,17 @@ public class HttpServerAioListener implements ServerAioListener {
 		//			CommandStat.getCount(packet.getCommand()).sent.incrementAndGet();
 		//		}
 
-		HttpResponse httpResponse = (HttpResponse) packet;
+		SslFacadeContext sslFacadeContext = channelContext.getSslFacadeContext();
+		if ((sslFacadeContext == null || sslFacadeContext.isHandshakeCompleted()) && packet instanceof HttpResponse) {
+			HttpResponse httpResponse = (HttpResponse) packet;
 
-		String Connection = httpResponse.getHeader(HttpConst.ResponseHeaderKey.Connection);
-		// 现在基本都是1.1了，所以用close来判断
-		if (StringUtils.equalsIgnoreCase(Connection, HttpConst.ResponseHeaderValue.Connection.close)) {
-			HttpRequest request = httpResponse.getHttpRequest();
-			String line = request.getRequestLine().getLine();
-			Aio.remove(channelContext, "onAfterSent, " + line);
+			String Connection = httpResponse.getHeader(HttpConst.ResponseHeaderKey.Connection);
+			// 现在基本都是1.1了，所以用close来判断
+			if (StringUtils.equalsIgnoreCase(Connection, HttpConst.ResponseHeaderValue.Connection.close)) {
+				HttpRequest request = httpResponse.getHttpRequest();
+				String line = request.getRequestLine().getLine();
+				Aio.remove(channelContext, "onAfterSent, " + line);
+			}
 		}
 	}
 

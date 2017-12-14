@@ -10,6 +10,8 @@ import org.tio.client.ClientChannelContext;
 import org.tio.client.ReconnConf;
 import org.tio.core.intf.AioListener;
 import org.tio.core.maintain.MaintainUtils;
+import org.tio.core.ssl.SslFacadeContext;
+import org.tio.core.ssl.SslUtils;
 import org.tio.utils.SystemTimer;
 
 /**
@@ -36,7 +38,18 @@ public class CloseRunnable implements Runnable {
 	public CloseRunnable(ChannelContext channelContext, Throwable throwable, String remark, boolean isNeedRemove) {
 		this.channelContext = channelContext;
 		this.throwable = throwable;
-		this.remark = remark;
+		
+		if (SslUtils.isSsl(channelContext)) {
+			if (remark == null) {
+				this.remark = "isHandshakeCompleted:" + channelContext.getSslFacadeContext().isHandshakeCompleted();
+			} else {
+				this.remark = remark + "。isHandshakeCompleted:" + channelContext.getSslFacadeContext().isHandshakeCompleted();
+			}
+		} else {
+			this.remark = remark;
+		}
+		
+		
 		this.isNeedRemove = isNeedRemove;
 	}
 
@@ -79,6 +92,11 @@ public class CloseRunnable implements Runnable {
 				} else {
 					isRemove = true;
 				}
+			}
+			
+			SslFacadeContext sslFacadeContext = channelContext.getSslFacadeContext();
+			if (sslFacadeContext != null) {
+				sslFacadeContext.setHandshakeCompleted(false);
 			}
 
 			try {

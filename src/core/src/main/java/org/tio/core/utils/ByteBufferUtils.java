@@ -59,6 +59,58 @@ public class ByteBufferUtils {
 	}
 
 	/**
+	 * 
+	 * @param src
+	 * @param unitSize 每个单元的大小
+	 * @return 如果不需要拆分，则返回null
+	 */
+	public static ByteBuffer[] split(ByteBuffer src, int unitSize) {
+		int limit = src.limit();
+		if (unitSize >= limit) {
+			return null;//new ByteBuffer[] { src };
+		}
+
+//		return null;
+
+		int size =  (int)(Math.ceil((double) src.limit() / (double) unitSize));
+		ByteBuffer[] ret = new ByteBuffer[size];
+		int srcIndex = 0;
+		for (int i = 0; i < size; i++) {
+			int bufferSize = unitSize;
+			if (i == size - 1) {
+				bufferSize = src.limit() % unitSize;
+			}
+			
+			byte[] dest = new byte[bufferSize];
+			System.arraycopy(src.array(), srcIndex, dest, 0, dest.length);
+			srcIndex = srcIndex + bufferSize;
+			
+			ret[i] = ByteBuffer.wrap(dest);
+			ret[i].position(0);
+			ret[i].limit(ret[i].capacity());
+		}
+		
+		return ret;
+	}
+	
+	
+//	public static Packet[] split(Packet packet, int unitSize) {
+//		
+//	}
+
+	public static void main(String[] args) {
+		System.out.println(Math.ceil((double) 3 / (double) 2));
+		System.out.println(Math.ceil((double) 6 / (double) 2));
+		System.out.println(Math.ceil((double) 7 / (double) 2));
+		
+		
+		System.out.println((int)Math.ceil((double) 4434 / (double) 3000));
+		
+		System.out.println(7 % 4);
+
+	}
+
+	/**
 	 *
 	 * @param buffer
 	 * @return
@@ -111,19 +163,19 @@ public class ByteBufferUtils {
 	public static int lineEnd(ByteBuffer buffer, char endChar, int maxlength) throws LengthOverflowException {
 		//		int startPosition = buffer.position();
 		int count = 0;
-//		int i = 0;
+		//		int i = 0;
 		while (buffer.hasRemaining()) {
 			byte b = buffer.get();
 			count++;
 			if (count > maxlength) {
 				throw new LengthOverflowException("maxlength is " + maxlength);
 			}
-//			if (i == 22) {
-//				log.error("{}-{}", (char)b, b);
-//			}
-//			log.error("{}、{}-{}", i++, (char)b, b);
-			
-			if ((char)b == endChar) {
+			//			if (i == 22) {
+			//				log.error("{}-{}", (char)b, b);
+			//			}
+			//			log.error("{}、{}-{}", i++, (char)b, b);
+
+			if ((char) b == endChar) {
 				int endPosition = buffer.position();
 				return endPosition - 1;
 			}
