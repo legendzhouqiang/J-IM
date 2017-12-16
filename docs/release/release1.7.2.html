@@ -1,0 +1,47 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+周一才发布的1.7.1，这么快就发布1.7.2，那肯定是出事了----<span style="color:#E53333;"><strong>常在河边走，这回湿鞋了</strong></span><span style="color:#E53333;"><strong>，</strong></span><strong><span style="color:#E53333;">使用1.7.1的朋友请务必升级到1.7.2</span></strong>。
+<ul>
+    <li>
+        <h2>
+            <strong>更新说明</strong>
+        </h2>
+        <ul>
+            <li>
+                maven上传乌龙：上传了tio-core却没有上传tio-parent，幸好大家及时发现并反馈，否则本地真不容易发现。
+            </li>
+            <li>
+                <span style="color:#E53333;">jdk版本继续支持1.7</span>：升级到1.8后，私下反馈问题以及在项目主页上留言的比预期的要来得多和来得早，所以继续支持1.7，升级到1.8的时间再定
+            </li>
+            <li>
+                ChannelContext的id初始化时机不正确
+            </li>
+            <li>
+                补上群友要求加的org.tio.core.intf.AioListener.onBeforeClose(ChannelContext, Throwable, String, boolean)，<span style="color:#E53333;"><strong>所以如果你实现了这个接口，记得补一下这个方法，否则编译报错</strong></span>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <h2>
+            <strong>最新maven坐标</strong>
+        </h2>
+        <div style="font-size:18px;color:#63d1c3;background-color:#204f5d;padding:10px;border:1px solid #999;margin:10px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-core&lt;/artifactId&gt;
+    &lt;version&gt;1.7.2.v20170705-RELEASE&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+    </li>
+    <li>
+        <h2>
+            <strong>压轴说明</strong>
+        </h2>
+        <ul>
+            <li>
+                <strong><span style="color:#E53333;">用1.7.1版本的朋友，请务必升级到这个版本!!!</span></strong>
+            </li>
+        </ul>
+    </li>
+</ul>

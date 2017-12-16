@@ -1,0 +1,161 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+
+t-io 2.0.0发布----法网天眼第一版
+
+
+
+<ul>
+    <li>
+	
+		<h2>
+			 <strong>简单回顾并留念一下t-io 1.x版本</strong>
+		</h2>
+		<ul>
+			<li>2017年4月1号，t-io正式上传至码云，最初让大家记住的可能是那个每秒可收发500万条聊天消息的性能数据吧，测试代码仍然完整地保留在1.6.9的分支版，欢迎随时考证</li>
+			<li>2017年5月1号左右，t-io在码云上的star破千，截止目前star已经超过2000多，pull量接近9000，download接近6000。得到大量真实用户的肯定！
+			<div>
+				<a href="https://git.oschina.net/tywo45/t-io" target="_blank">
+					<img src="https://git.oschina.net/tywo45/t-io/raw/master/docs/release/img/2.0.0/1.png">
+				</a>
+			</div>
+			</li>
+			<li>2017年6月6号，@openSeLi 同学发布<a href="https://my.oschina.net/u/2369298/blog/915435" target="_blank">t-io 30W长连接并发压力测试报告</a></li>
+			
+			<li>根据平时QQ及社区的咨询，t-io生产项目的案例数估计在100左右(官网只收集存储了部分热心用户的案例，很多用户是不反馈或者是怕反馈的，就像我们在大量使用fastjson，但并不是每个人都会反馈案例到温少那)，涉及游戏、物联网、IM聊天、数据采集、实时监控等领域</li>
+		</ul>
+	</li>
+	
+	<li>
+        <h2>
+            <strong>2.0.0更新说明</strong>
+        </h2>
+        <ul>
+            <li>
+                1.x用户大量吐槽的那3个泛型，已经全部拿掉，就感觉是丢了一个大包袱
+            </li>
+            <li>
+                内置强大的监控功能----架构师眼中的<strong>法网天眼</strong>。最接近TCP层的数据监控让访问或攻击一目了然，为应用层防止大流量攻击和慢攻击提供极佳的数据参考，架构师的最爱！
+				<div><img src="https://git.oschina.net/tywo45/t-io/raw/master/docs/monitor/1.png"></div>
+				<div><img src="https://git.oschina.net/tywo45/t-io/raw/master/docs/monitor/2.png"></div>
+            </li>
+            <li>
+                分离出tio-utils项目，用于日常开发
+				<ul>
+					<li>
+						内置简洁易用的二级缓存框架，目前用在tio-httpserver中
+					</li>
+					<li>
+						tio-core大量使用的ObjWithLock也放这了
+					</li>
+					<li>
+						tio-core大量使用的同步安全线程池也放这了
+					</li>
+					<li>
+						内置layui分页适配对象，用于把数据转成layui table需要的格式
+					</li>
+					<li>
+						内置JFinal的record的json转换器，传送门：<a href="https://my.oschina.net/talenttan/blog/1517514" target="_blank">正确Json化JFinal的Record</a>
+					</li>
+				</ul>
+            </li>
+			<li>
+                t-io生态之httpserver
+				<ul>
+					<li>
+						内置简洁省心的httpsession，支持本地session存储、分布式session存储、两级缓存session存储
+					</li>
+					<li>
+						tio-mvc使用简化，通过httprequest即可获取ChannelContext，与tio-core无缝对接
+					</li>
+					<li>
+						静态资源缓存及清空
+					</li>
+					<li>
+						文件上传功能支持(暂时不适合超大文件，或文件密集型的应用)
+					</li>
+				</ul>
+            </li>
+			<li>
+                t-io生态之websocket
+				<ul>
+					<li>
+						使用更简洁，简洁程度，请参考官网提供的例子：<a href="https://git.oschina.net/tywo45/t-io/tree/master/src/zoo/websocket/demo/websocketserver-1" target="_blank">tio websocketserver demo</a>
+					</li>
+					<li>
+						没什么更多好说的了，还是看例子，真的很简单
+					</li>
+				</ul>
+            </li>
+            
+        </ul>
+    </li>
+    <li>
+        <h2>
+            <strong>最新maven坐标</strong>
+        </h2>
+        <li><h3>tio-utils(tio工具类库----tio辅助工程)</h3>
+            <div style="font-size:18px;color:#63d1c3;background-color:#204f5d;padding:10px;border:1px solid #999;margin:10px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-utils&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0.v20170824-RELEASE&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </li>
+		
+		<li><h3>tio-core(tio主工程)</h3>
+            <div style="font-size:18px;color:#63d1c3;background-color:#204f5d;padding:10px;border:1px solid #999;margin:10px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-core&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0.v20170824-RELEASE&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </li>
+		
+		<li><h3>tio-httpserver(用tio-core实现的httpserver----tio生态圈工程)</h3>
+            <div style="font-size:18px;color:#63d1c3;background-color:#204f5d;padding:10px;border:1px solid #999;margin:10px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-http-server&lt;/artifactId&gt;
+    &lt;version&gt;0.0.2-tio-http&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </li>
+
+        <li><h3>tio-websocket-server(用tio-core实现的websocket----tio生态圈工程)</h3>
+            <div style="font-size:18px;color:#63d1c3;background-color:#204f5d;padding:10px;border:1px solid #999;margin:10px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-websocket-server&lt;/artifactId&gt;
+    &lt;version&gt;0.0.2-tio-websocket&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </li>
+		
+		<h2>
+            <strong>tio工程结构请参考</strong>
+        </h2>
+		<div>
+			<a href="https://git.oschina.net/tywo45/t-io" target="_blank">
+				<img src="https://git.oschina.net/tywo45/t-io/raw/master/docs/api/tio-parent.png">
+			</a>
+		</div>
+    </li>
+	
+	 <li>
+	
+		<h2>
+			 <strong>后期预告及说明</strong>
+		</h2>
+		<ul>
+			<li>法网天眼的含义：超强的监控能力，当然目前是第一版，只是有了监控数据，后面会有根据监控数据进行各项反黑措施</li>
+			<li>tio版im，小超同学正在开发，预计一个月内可以放出来，可以拭目以待，跳票的话，大家一起揍他</li>
+			<li>本次发布的是个大版本，后续估计会跟1-3个小版本更新，因为2.0涉及到API的变动，大家催促得紧，所以先发出来，大家用上后，反馈问题并及时修复</li>
+			<li>2.0.0版本尚未发布到中心仓库，家里网络出了点问题，预计明天能发到中心仓库，暂时可以先在码云下载自己安装到本地：<a href="https://git.oschina.net/tywo45/t-io" target="_blank">https://git.oschina.net/tywo45/t-io</a></li>
+		</ul>
+	</li>
+</ul>

@@ -1,0 +1,77 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<a href="https://www.oschina.net/news/86400/t-io-1-7-1" target="_blank">1.7.1版本的新闻中</a>解释了【不仅仅是百万级即时通讯框架】中【不仅仅】的含义，这个版本就是来兑现这个【不仅仅】的
+<ul>
+    <li>
+	
+		<h2>
+			 <strong>特别说明</strong>
+		</h2>
+		t-io官网备案完成: <a href="http://t-io.org" target="_blank">http://t-io.org</a>
+		<ul>
+			<li>主机已经从阿里云的1M,1核,1G迁到由杭州虎牛科技有限公司提供的主机（感谢该公司对开源事业的支持），</li>
+			<li>目前运行在tio-httpserver下，大家可以f12一把看看tio-httpserver有什么不一样的，tio-httpserver正式版还没有发布，有问题欢迎反馈！</li>
+			<li>官网目前是作者自己套的界面，已经在找专业UI重新设计了，改版可期</li>
+			<li>官网的核心部分已经开源，有兴趣可以去看看：<a href="https://git.oschina.net/tywo45/tio-site" target="_blank">https://git.oschina.net/tywo45/tio-site</a></li>
+			
+		</ul>
+	
+	</li>
+	
+	<li>
+        <h2>
+            <strong>更新说明</strong>
+        </h2>
+        <ul>
+            <li>
+                bugfix: java aio WriteCompletionHandler.completed()在各平台表现不一致----centos下并不等发完才回调，而是发了一部分就回调了，这就得在框架层面适配这个问题
+            </li>
+            <li>
+                tio-core内置UDP的支持
+            </li>
+            <li>
+                tio-websocket 发布到中心仓库，版本号：0.0.1-tio-websocket
+            </li>
+            <li>
+                tio-httpserver 发布到中心仓库，版本号：0.0.1-tio-http
+            </li>
+        </ul>
+    </li>
+    <li>
+        <h2>
+            <strong>最新maven坐标</strong>
+        </h2>
+        <li><h3>tio-core</h3> 
+            <div style="font-size:18px;color:#63d1c3;background-color:#204f5d;padding:10px;border:1px solid #999;margin:10px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-core&lt;/artifactId&gt;
+    &lt;version&gt;1.7.3.v20170806-RELEASE&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </li>
+
+        <li><h3>tio-httpserver</h3> 
+            <div style="font-size:18px;color:#63d1c3;background-color:#204f5d;padding:10px;border:1px solid #999;margin:10px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-http-server&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-tio-http&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </li>
+
+        <li><h3>tio-websocket-server</h3> 
+            <div style="font-size:18px;color:#63d1c3;background-color:#204f5d;padding:10px;border:1px solid #999;margin:10px;">
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.t-io&lt;/groupId&gt;
+    &lt;artifactId&gt;tio-websocket-server&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-tio-websocket&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+        </li>
+        
+    </li>
+</ul>
