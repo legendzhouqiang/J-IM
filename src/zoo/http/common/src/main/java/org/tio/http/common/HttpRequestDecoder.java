@@ -3,7 +3,6 @@ package org.tio.http.common;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -113,11 +112,12 @@ public class HttpRequestDecoder {
 		httpRequest.setHeaders(headers);
 		httpRequest.setContentLength(contentLength);
 
+		parseQueryString(httpRequest, firstLine, channelContext);
+		
 		if (contentLength == 0) {
-			if (StringUtils.isNotBlank(firstLine.getQuery())) {
-				Map<String, Object[]> params = decodeParams(firstLine.getQuery(), httpRequest.getCharset(), channelContext);
-				httpRequest.setParams(params);
-			}
+//			if (StringUtils.isNotBlank(firstLine.getQuery())) {
+//				decodeParams(httpRequest.getParams(), firstLine.getQuery(), httpRequest.getCharset(), channelContext);
+//			}
 		} else {
 			bodyBytes = new byte[contentLength];
 			buffer.get(bodyBytes);
@@ -149,9 +149,9 @@ public class HttpRequestDecoder {
 
 	}
 
-	public static Map<String, Object[]> decodeParams(String paramsStr, String charset, ChannelContext channelContext) {
+	public static void decodeParams(Map<String, Object[]> params, String paramsStr, String charset, ChannelContext channelContext) {
 		if (StrUtil.isBlank(paramsStr)) {
-			return Collections.emptyMap();
+			return;
 		}
 
 		//		// 去掉Path部分
@@ -159,7 +159,7 @@ public class HttpRequestDecoder {
 		//		if (pathEndPos > 0) {
 		//			paramsStr = StrUtil.subSuf(paramsStr, pathEndPos + 1);
 		//		}
-		Map<String, Object[]> ret = new HashMap<>();
+//		Map<String, Object[]> ret = new HashMap<>();
 		String[] keyvalues = StringUtils.split(paramsStr, "&");
 		for (String keyvalue : keyvalues) {
 			String[] keyvalueArr = StringUtils.split(keyvalue, "=");
@@ -175,18 +175,18 @@ public class HttpRequestDecoder {
 				log.error(channelContext.toString(), e);
 			}
 
-			Object[] existValue = ret.get(key);
+			Object[] existValue = params.get(key);
 			if (existValue != null) {
 				String[] newExistValue = new String[existValue.length + 1];
 				System.arraycopy(existValue, 0, newExistValue, 0, existValue.length);
 				newExistValue[newExistValue.length - 1] = value;
-				ret.put(key, newExistValue);
+				params.put(key, newExistValue);
 			} else {
 				String[] newExistValue = new String[] { value };
-				ret.put(key, newExistValue);
+				params.put(key, newExistValue);
 			}
 		}
-		return ret;
+		return;
 	}
 
 	/**
@@ -215,6 +215,8 @@ public class HttpRequestDecoder {
 
 		httpRequest.setBody(bodyBytes);
 
+		
+		
 		if (bodyFormat == RequestBodyFormat.MULTIPART) {
 			if (log.isInfoEnabled()) {
 				String bodyString = null;
@@ -230,6 +232,8 @@ public class HttpRequestDecoder {
 
 			}
 
+			
+			
 			//【multipart/form-data; boundary=----WebKitFormBoundaryuwYcfA2AIgxqIxA0】
 			String initboundary = HttpParseUtils.getPerprotyEqualValue(httpRequest.getHeaders(), HttpConst.RequestHeaderKey.Content_Type, "boundary");
 			log.info("{}, initboundary:{}", channelContext, initboundary);
@@ -380,22 +384,32 @@ public class HttpRequestDecoder {
 	 * @author tanyaowu
 	 */
 	private static void parseUrlencoded(HttpRequest httpRequest, RequestLine firstLine, byte[] bodyBytes, String bodyString, ChannelContext channelContext) {
-		String paramStr = "";
-		if (StringUtils.isNotBlank(firstLine.getQuery())) {
-			paramStr += firstLine.getQuery();
-		}
-		if (bodyString != null) {
-			if (paramStr != null) {
-				paramStr += "&";
-			}
-			paramStr += bodyString;
-		}
+//		String paramStr = "";
+//		if (StringUtils.isNotBlank(firstLine.getQuery())) {
+//			paramStr += firstLine.getQuery();
+//		}
+//		if (bodyString != null) {
+//			if (paramStr != null) {
+//				paramStr += "&";
+//			}
+//			paramStr += bodyString;
+//		}
 
-		if (paramStr != null) {
-			Map<String, Object[]> params = decodeParams(paramStr, httpRequest.getCharset(), channelContext);
-			httpRequest.setParams(params);
-			//			log.error("paramStr:{}", paramStr);
-			//			log.error("param:{}", Json.toJson(params));
+		if (StringUtils.isNotBlank(bodyString)) {
+			decodeParams(httpRequest.getParams(), bodyString, httpRequest.getCharset(), channelContext);
+		}
+	}
+	
+	/**
+	 * 解析查询
+	 * @param httpRequest
+	 * @param firstLine
+	 * @param channelContext
+	 */
+	private static void parseQueryString(HttpRequest httpRequest, RequestLine firstLine, ChannelContext channelContext) {
+		String paramStr = firstLine.getQuery();
+		if (StringUtils.isNotBlank(paramStr)) {
+			decodeParams(httpRequest.getParams(), paramStr, httpRequest.getCharset(), channelContext);
 		}
 	}
 

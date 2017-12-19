@@ -6,6 +6,8 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpRequest;
 
@@ -15,6 +17,7 @@ import org.tio.http.common.HttpRequest;
  * 2017年8月10日 下午5:05:49
  */
 public class IpUtils {
+	private static Logger log = LoggerFactory.getLogger(IpUtils.class);
 
 	/**
 	 * 获取本机 ip
@@ -57,7 +60,11 @@ public class IpUtils {
 	 */
 	public static String getRealIp(HttpRequest request) {
 		HttpConfig httpConfig = request.getHttpConfig();
-		if(httpConfig.isProxied()) {
+		if (httpConfig == null) {
+			return request.getRemote().getIp();
+		}
+
+		if (httpConfig.isProxied()) {
 			String ip = request.getHeader("x-forwarded-for");
 			if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
 				ip = request.getHeader("proxy-client-ip");
@@ -67,6 +74,11 @@ public class IpUtils {
 			}
 			if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
 				ip = request.getRemote().getIp();
+			}
+
+			if (StringUtils.contains(ip, ",")) {
+				log.error("ip[{}]", ip);
+				ip = StringUtils.split(ip, ",")[0].trim();
 			}
 			return ip;
 		} else {

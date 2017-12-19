@@ -82,7 +82,7 @@ public class SSLFacade implements ISSLFacade {
 		long seq = sslSeq.incrementAndGet();
 		
 		ByteBuffer src = sslVo.getByteBuffer();
-		ByteBuffer[] byteBuffers = org.tio.core.utils.ByteBufferUtils.split(src, 10240);
+		ByteBuffer[] byteBuffers = org.tio.core.utils.ByteBufferUtils.split(src, 1024 * 100);
 		if (byteBuffers == null) {
 			log.info("{}, 准备, SSL加密{}, 明文:{}", channelContext, channelContext.getId() + "_" + seq, sslVo);
 			SSLEngineResult result = _worker.wrap(sslVo, sslVo.getByteBuffer());

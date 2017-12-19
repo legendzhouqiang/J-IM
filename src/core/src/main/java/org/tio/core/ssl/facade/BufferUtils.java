@@ -8,6 +8,7 @@ public class BufferUtils
     {
         to.put(from);
         to.flip();
+        to.limit(to.capacity());  //added by tanyaowu
     }
 
     public static ByteBuffer slice(ByteBuffer data)

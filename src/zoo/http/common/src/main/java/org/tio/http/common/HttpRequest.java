@@ -41,7 +41,7 @@ public class HttpRequest extends HttpPacket {
 	/**
 	 * 请求参数
 	 */
-	private Map<String, Object[]> params = null;
+	private Map<String, Object[]> params = new HashMap<>();
 	private List<Cookie> cookies = null;
 	private Map<String, Cookie> cookieMap = null;
 	private int contentLength;
@@ -75,9 +75,9 @@ public class HttpRequest extends HttpPacket {
 	}
 
 	public void addParam(String key, Object value) {
-		if (params == null) {
-			params = new HashMap<>();
-		}
+//		if (params == null) {
+//			params = new HashMap<>();
+//		}
 
 		Object[] existValue = params.get(key);
 		if (existValue != null) {

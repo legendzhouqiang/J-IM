@@ -84,12 +84,13 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 				decodeRunnable.setNewByteBuffer(readByteBuffer);
 				decodeRunnable.run();
 			} else {
+				ByteBuffer copiedByteBuffer = null;
 				try {
-					ByteBuffer copiedByteBuffer = ByteBufferUtils.copy(readByteBuffer, 0, readByteBuffer.position());
+					copiedByteBuffer = ByteBufferUtils.copy(readByteBuffer, 0, readByteBuffer.position());
 					log.info("{}, 丢给SslFacade解密:{}", channelContext, copiedByteBuffer);
 					sslFacadeContext.getSslFacade().decrypt(copiedByteBuffer);
-				} catch (SSLException e) {
-					log.error(channelContext + ", " + e.toString(), e);
+				} catch (Exception e) {
+					log.error(channelContext + ", " + e.toString() + copiedByteBuffer, e);
 					Aio.close(channelContext, e, e.toString());
 				}
 			}

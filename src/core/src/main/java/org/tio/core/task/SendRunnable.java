@@ -146,7 +146,7 @@ public class SendRunnable extends AbstractQueueRunnable<Packet> {
 
 		int maxCapacity = 1024 * 100;
 		if (isSsl) {
-			maxCapacity = 1024 * 8;
+//			maxCapacity = 1024 * 8;
 		}
 
 		Packet packet = null;
@@ -183,6 +183,9 @@ public class SendRunnable extends AbstractQueueRunnable<Packet> {
 			}
 		}
 
+		if (allBytebufferCapacity == 0) {
+			return;
+		}
 		ByteBuffer allByteBuffer = ByteBuffer.allocate(allBytebufferCapacity);
 		for (ByteBuffer byteBuffer : byteBuffers) {
 			allByteBuffer.put(byteBuffer);

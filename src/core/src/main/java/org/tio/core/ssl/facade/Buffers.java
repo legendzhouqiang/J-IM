@@ -125,9 +125,14 @@ class Buffers {
 	void prepareForUnwrap(ByteBuffer data) {
 		clear(BufferType.IN_CIPHER, BufferType.IN_PLAIN);
 		if (data != null) {
-			ByteBuffer newBuffer = growIfNecessary(BufferType.IN_CIPHER, data.limit());
-			newBuffer.put(data);
-			newBuffer.flip();
+			try {
+				ByteBuffer newBuffer = growIfNecessary(BufferType.IN_CIPHER, data.limit());
+				newBuffer.put(data);
+				newBuffer.flip();
+			} catch (Exception e) {
+				log.error(e.toString() + ", data: " + data + ", BufferType.IN_CIPHER:" + get(BufferType.IN_CIPHER), e);
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -209,7 +214,7 @@ class Buffers {
 			BufferUtils.copy(get(t), newBuffer);
 			assign(t, newBuffer);
 			ByteBuffer ss = get(t);
-			log.info(ss +"");
+			log.error("size:{}, newbytebuffer:{}", size, ss);
 		} catch (BufferOverflowException e) {
 			throw e;
 		}
