@@ -9,3 +9,14 @@
 1、绑定用户可以一个userid绑定多个channel
 增加org.tio.core.Aio.groupCount(GroupContext, String)
 添加token绑定，大部分时候操作用户是拿token来的s
+
+1、支持SSL
+
+
+t-io 2.0.3发布，SSL来了----王谢堂前燕，已入寻常百姓家！
+
+先补一张性能测试截图（刚刚出来的截图，而且是走的SSL），上次的新闻截图貌似挑错了图，真是不好意思
+https://gitee.com/tywo45/t-io/raw/master/docs/release/img/2.0.3/1.png
+
+本次更新内容
+1、
