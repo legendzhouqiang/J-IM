@@ -93,11 +93,6 @@ public class CloseRunnable implements Runnable {
 					isRemove = true;
 				}
 			}
-			
-			SslFacadeContext sslFacadeContext = channelContext.getSslFacadeContext();
-			if (sslFacadeContext != null) {
-				sslFacadeContext.setHandshakeCompleted(false);
-			}
 
 			try {
 				channelContext.getStat().setTimeClosed(SystemTimer.currentTimeMillis());
