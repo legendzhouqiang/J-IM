@@ -144,7 +144,7 @@ public class DecodeRunnable implements Runnable {
 					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
-					
+
 					log.info("{}, 解包获得一个packet:{}", channelContext, packet.logstr());
 					handler(channelContext, packet, len);
 
@@ -164,8 +164,9 @@ public class DecodeRunnable implements Runnable {
 				}
 			}
 		} catch (AioDecodeException e) {
+			log.error(channelContext + ", " + byteBuffer + ", 解码异常:" + e.toString(), e);
 			Aio.close(channelContext, e, "解码异常:" + e.getMessage());
-			
+
 			GroupContext groupContext = channelContext.getGroupContext();
 			List<Long> list = groupContext.ipStats.durationList;
 			for (Long v : list) {

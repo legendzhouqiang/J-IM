@@ -31,6 +31,7 @@ public class Resps {
 	private static Logger log = LoggerFactory.getLogger(Resps.class);
 
 	/**
+	 * 构建css响应
 	 * Content-Type: text/css; charset=utf-8
 	 * @param request
 	 * @param bodyString
@@ -38,10 +39,11 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse css(HttpRequest request, String bodyString) {
-		return css(request, bodyString, HttpServerUtils.getHttpConfig(request).getCharset());
+		return css(request, bodyString, request.getHttpConfig().getCharset());
 	}
 
 	/**
+	 * 构建css响应
 	 * Content-Type: text/css; charset=utf-8
 	 * @param request
 	 * @param bodyString
@@ -55,14 +57,14 @@ public class Resps {
 	}
 
 	/**
-	 * 根据文件内容创建响应
+	 * 根据byte[]创建响应
 	 * @param request
 	 * @param bodyBytes
-	 * @param extension
+	 * @param extension 后缀，可以为空
 	 * @return
 	 * @author tanyaowu
 	 */
-	public static HttpResponse file(HttpRequest request, byte[] bodyBytes, String extension) {
+	public static HttpResponse bytes(HttpRequest request, byte[] bodyBytes, String extension) {
 		String contentType = null;
 		//		String extension = FilenameUtils.getExtension(filename);
 		if (StringUtils.isNoneBlank(extension)) {
@@ -73,7 +75,7 @@ public class Resps {
 				contentType = "application/octet-stream";
 			}
 		}
-		return fileWithContentType(request, bodyBytes, contentType);
+		return bytesWithContentType(request, bodyBytes, contentType);
 	}
 
 	/**
@@ -94,7 +96,7 @@ public class Resps {
 		byte[] bodyBytes = FileUtil.readBytes(fileOnServer);
 		String filename = fileOnServer.getName();
 		String extension = FileNameUtil.getExtension(filename);
-		ret = file(request, bodyBytes, extension);
+		ret = bytes(request, bodyBytes, extension);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified, lastModified.getTime() + "");
 		return ret;
 	}
@@ -205,8 +207,8 @@ public class Resps {
 	 * @return
 	 * @author tanyaowu
 	 */
-	public static HttpResponse fileWithContentType(HttpRequest request, byte[] bodyBytes, String contentType) {
-		HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
+	public static HttpResponse bytesWithContentType(HttpRequest request, byte[] bodyBytes, String contentType) {
+		HttpResponse ret = new HttpResponse(request);
 		ret.setBody(bodyBytes, request);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Content_Type, contentType);
 		return ret;
@@ -220,8 +222,8 @@ public class Resps {
 	 * @return
 	 * @author tanyaowu
 	 */
-	public static HttpResponse fileWithHeaders(HttpRequest request, byte[] bodyBytes, Map<String, String> headers, HttpConfig httpConfig) {
-		HttpResponse ret = new HttpResponse(request, httpConfig);
+	public static HttpResponse bytesWithHeaders(HttpRequest request, byte[] bodyBytes, Map<String, String> headers) {
+		HttpResponse ret = new HttpResponse(request);
 		ret.setBody(bodyBytes, request);
 		ret.addHeaders(headers);
 		return ret;
@@ -235,7 +237,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse html(HttpRequest request, String bodyString) {
-		HttpConfig httpConfig = HttpServerUtils.getHttpConfig(request);
+		HttpConfig httpConfig = request.getHttpConfig();
 		return html(request, bodyString, httpConfig.getCharset());
 	}
 
@@ -260,7 +262,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse js(HttpRequest request, String bodyString) {
-		return js(request, bodyString, HttpServerUtils.getHttpConfig(request).getCharset());
+		return js(request, bodyString, request.getHttpConfig().getCharset());
 	}
 
 	/**
@@ -284,7 +286,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse json(HttpRequest request, Object body) {
-		return json(request, body, HttpServerUtils.getHttpConfig(request).getCharset());
+		return json(request, body, request.getHttpConfig().getCharset());
 	}
 
 	/**
@@ -325,7 +327,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse redirect(HttpRequest request, String path) {
-		HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
+		HttpResponse ret = new HttpResponse(request);
 		ret.setStatus(HttpResponseStatus.C302);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Location, path);
 		return ret;
@@ -340,7 +342,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse string(HttpRequest request, String bodyString, String Content_Type) {
-		return string(request, bodyString, HttpServerUtils.getHttpConfig(request).getCharset(), Content_Type);
+		return string(request, bodyString, request.getHttpConfig().getCharset(), Content_Type);
 	}
 
 	/**
@@ -353,7 +355,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse string(HttpRequest request, String bodyString, String charset, String Content_Type) {
-		HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
+		HttpResponse ret = new HttpResponse(request);
 		if (bodyString != null) {
 			try {
 				ret.setBody(bodyString.getBytes(charset), request);
@@ -366,7 +368,7 @@ public class Resps {
 	}
 
 	/**
-	 * 尝试返回304
+	 * 尝试返回304，这个会new一个HttpResponse返回
 	 * @param request
 	 * @param lastModifiedOnServer 服务器中资源的lastModified
 	 * @return
@@ -380,12 +382,12 @@ public class Resps {
 				If_Modified_Since_Date = Long.parseLong(If_Modified_Since);
 
 				if (lastModifiedOnServer <= If_Modified_Since_Date) {
-					HttpResponse ret = new HttpResponse(request, HttpServerUtils.getHttpConfig(request));
+					HttpResponse ret = new HttpResponse(request);
 					ret.setStatus(HttpResponseStatus.C304);
 					return ret;
 				}
 			} catch (NumberFormatException e) {
-				log.warn("{}, {}不是整数，浏览器信息:{}", request.getRemote(), If_Modified_Since, request.getHeader(HttpConst.RequestHeaderKey.User_Agent));
+				log.warn("{}, {}不是整数，浏览器信息:{}", request.getRemote(), If_Modified_Since, request.getUserAgent());
 				return null;
 			}
 		}
@@ -401,7 +403,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse txt(HttpRequest request, String bodyString) {
-		return txt(request, bodyString, HttpServerUtils.getHttpConfig(request).getCharset());
+		return txt(request, bodyString, request.getHttpConfig().getCharset());
 	}
 
 	/**

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioListener;
 import org.tio.core.Node;
 import org.tio.core.ReadCompletionHandler;
+import org.tio.core.ssl.SslFacadeContext;
 import org.tio.core.ssl.SslUtils;
 import org.tio.utils.SystemTimer;
 
@@ -129,7 +130,9 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 				
 				if (SslUtils.isSsl(channelContext)) {
 					if (isConnected) {
-						channelContext.getSslFacadeContext().beginHandshake();
+//						channelContext.getSslFacadeContext().beginHandshake();
+						SslFacadeContext sslFacadeContext = new SslFacadeContext(channelContext);
+						sslFacadeContext.beginHandshake();
 					} else {
 						clientAioListener.onAfterConnected(channelContext, isConnected, isReconnect);
 					}

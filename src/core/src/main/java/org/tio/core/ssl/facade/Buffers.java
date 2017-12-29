@@ -213,8 +213,8 @@ class Buffers {
 		try {
 			BufferUtils.copy(get(t), newBuffer);
 			assign(t, newBuffer);
-			ByteBuffer ss = get(t);
-			log.error("size:{}, newbytebuffer:{}", size, ss);
+//			ByteBuffer ss = get(t);
+//			log.error("size:{}, newbytebuffer:{}", size, ss);
 		} catch (BufferOverflowException e) {
 			throw e;
 		}

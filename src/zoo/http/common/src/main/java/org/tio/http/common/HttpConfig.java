@@ -52,6 +52,11 @@ public class HttpConfig {
 	 * 文件上传时，体的最大长度
 	 */
 	public static final int MAX_LENGTH_OF_MULTI_BODY = 1024 * 1024 * 20;
+	
+	/**
+	 * 是否使用session
+	 */
+	private boolean useSession = true;
 
 	/**
 	 * @param args
@@ -352,5 +357,13 @@ public class HttpConfig {
 	 */
 	public void setProxied(boolean isProxied) {
 		this.isProxied = isProxied;
+	}
+
+	public boolean isUseSession() {
+		return useSession;
+	}
+
+	public void setUseSession(boolean useSession) {
+		this.useSession = useSession;
 	}
 }

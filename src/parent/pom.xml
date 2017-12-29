@@ -63,16 +63,16 @@
 		<commons-lang3.version>3.7</commons-lang3.version>
 		<commons-codec.version>1.11</commons-codec.version>
 		<commons-compress.version>1.15</commons-compress.version>
-		<fastjson.version>1.2.42</fastjson.version>
+		<fastjson.version>1.2.44</fastjson.version>
 		<testng.version>6.11</testng.version>
 		<hutool.version>3.2.3</hutool.version>
 
-		<protobuf-java.version>3.5.0</protobuf-java.version>
+		<protobuf-java.version>3.5.1</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<protobuf-java-format.version>1.4</protobuf-java-format.version>
 
 		<protostuff.version>1.6.0</protostuff.version>
-		<redisson.version>3.5.6</redisson.version>
+		<redisson.version>3.5.7</redisson.version>
 		<jodd.version>3.9.1</jodd.version>
 		<quartz.version>2.3.0</quartz.version>
 
@@ -115,6 +115,12 @@
 				<groupId>org.t-io</groupId>
 				<artifactId>tio-flash-policy-server</artifactId>
 				<version>${tio-flash-policy-server.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.t-io</groupId>
+				<artifactId>tio-webpack-core</artifactId>
+				<version>${tio-core.version}</version>
 			</dependency>
 
 			<dependency>
@@ -320,6 +326,12 @@
 			</dependency>
 
 			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.2</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>${commons-lang3.version}</version>
@@ -375,7 +387,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>23.5-jre</version>
+				<version>23.6-jre</version>
 			</dependency>
 
 			<dependency>
@@ -461,7 +473,7 @@
 			<dependency>
 				<groupId>com.aliyun</groupId>
 				<artifactId>aliyun-java-sdk-live</artifactId>
-				<version>3.1.0</version>
+				<version>3.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.aliyun.oss</groupId>

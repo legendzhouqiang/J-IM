@@ -55,4 +55,11 @@ public interface ICache {
 	 * @author tanyaowu
 	 */
 	public void remove(String key);
+
+	/**
+	 * 临时添加一个值，用于防止缓存穿透攻击
+	 * @param key
+	 * @param value
+	 */
+	void putTemporary(String key, Serializable value);
 }

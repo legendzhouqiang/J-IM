@@ -2,6 +2,7 @@ package org.tio.http.server.stat.ip.path;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.tio.utils.SystemTimer;
 
@@ -54,10 +55,17 @@ public class IpPathAccessStat implements Serializable {
 	 */
 	public final AtomicInteger count = new AtomicInteger();
 	
+	/**
+	 * 这个ip访问这个路径给服务器带来的时间消耗，单位：毫秒
+	 */
+	public final AtomicLong timeCost = new AtomicLong();
+	
+	/**
+	 * 不带session的次数
+	 */
 	public final AtomicInteger noSessionCount = new AtomicInteger();
 
 	/**
-	 * 
 	 * @author tanyaowu
 	 */
 	public IpPathAccessStat(Long durationType, String ip, String path) {

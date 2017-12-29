@@ -2,6 +2,7 @@ package org.tio.http.server.view.freemarker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.http.server.view.ModelGenerator;
 
 import freemarker.template.Configuration;
 
@@ -14,11 +15,11 @@ public class FreemarkerConfig {
 	
 	private Configuration configuration;
 	
-	private ModelMaker modelMaker;
+	private ModelGenerator modelMaker;
 	
 	private String[] suffixes = null;
 	
-	public FreemarkerConfig(Configuration configuration, ModelMaker modelMaker, String[] suffixes) {
+	public FreemarkerConfig(Configuration configuration, ModelGenerator modelMaker, String[] suffixes) {
 		super();
 		this.configuration = configuration;
 		this.modelMaker = modelMaker;
@@ -35,11 +36,11 @@ public class FreemarkerConfig {
 		this.configuration = configuration;
 	}
 
-	public ModelMaker getModelMaker() {
+	public ModelGenerator getModelMaker() {
 		return modelMaker;
 	}
 
-	public void setModelMaker(ModelMaker modelMaker) {
+	public void setModelMaker(ModelGenerator modelMaker) {
 		this.modelMaker = modelMaker;
 	}
 

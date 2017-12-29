@@ -229,7 +229,6 @@ public class HttpRequestDecoder {
 						log.error(channelContext.toString(), e);
 					}
 				}
-
 			}
 
 			
@@ -365,6 +364,7 @@ public class HttpRequestDecoder {
 			RequestLine requestLine = new RequestLine();
 			requestLine.setMethod(method);
 			requestLine.setPath(path);
+			requestLine.setInitPath(path);
 			requestLine.setPathAndQuery(pathAndQuerystr);
 			requestLine.setQuery(queryStr);
 			requestLine.setVersion(version);

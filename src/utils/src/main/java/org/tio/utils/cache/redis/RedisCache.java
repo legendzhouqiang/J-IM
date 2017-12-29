@@ -108,8 +108,10 @@ public class RedisCache implements ICache {
 		RBucket<Serializable> bucket = getBucket(key);
 		Serializable ret = bucket.get();
 		if (timeToIdleSeconds != null) {
-			//			bucket.expire(timeout, TimeUnit.SECONDS);
-			RedisExpireUpdateTask.add(cacheName, key, timeout);
+			if (ret != null) {
+//				bucket.expire(timeout, TimeUnit.SECONDS);
+				RedisExpireUpdateTask.add(cacheName, key, timeout);
+			}
 		}
 		return ret;
 	}
@@ -155,6 +157,15 @@ public class RedisCache implements ICache {
 		RBucket<Serializable> bucket = getBucket(key);
 		bucket.set(value, timeout, TimeUnit.SECONDS);
 	}
+	
+	@Override
+	public void putTemporary(String key, Serializable value) {
+		if (StringUtils.isBlank(key)) {
+			return;
+		}
+		RBucket<Serializable> bucket = getBucket(key);
+		bucket.set(value, 10, TimeUnit.SECONDS);
+	}
 
 	@Override
 	public void remove(String key) {
@@ -170,4 +181,6 @@ public class RedisCache implements ICache {
 	public <T> T get(String key, Class<T> clazz) {
 		return (T)get(key);
 	}
+
+	
 }

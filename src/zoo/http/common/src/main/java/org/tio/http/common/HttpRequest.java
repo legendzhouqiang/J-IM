@@ -7,11 +7,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.Node;
 import org.tio.http.common.HttpConst.RequestBodyFormat;
 import org.tio.http.common.session.HttpSession;
 import org.tio.http.common.utils.IpUtils;
+import org.tio.utils.SystemTimer;
 
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -62,6 +64,8 @@ public class HttpRequest extends HttpPacket {
 	private String domain = null;
 	private String host = null;
 	private String clientIp = null;
+	// 该HttpRequest对象的创建时间
+	private long createTime = SystemTimer.currentTimeMillis();
 
 	/**
 	 *
@@ -72,6 +76,21 @@ public class HttpRequest extends HttpPacket {
 	 */
 	public HttpRequest(Node remote) {
 		this.remote = remote;
+	}
+	
+	/**
+	 * 关闭连接
+	 */
+	public void close() {
+		close(null);
+	}
+	
+	/**
+	 * 关闭连接
+	 * @param remark
+	 */
+	public void close(String remark) {
+		Aio.close(channelContext, remark);
 	}
 
 	public void addParam(String key, Object value) {
@@ -462,6 +481,14 @@ public class HttpRequest extends HttpPacket {
 	 */
 	public void setRequestLine(RequestLine requestLine) {
 		this.requestLine = requestLine;
+	}
+
+	public long getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
 	}
 
 	//	/**

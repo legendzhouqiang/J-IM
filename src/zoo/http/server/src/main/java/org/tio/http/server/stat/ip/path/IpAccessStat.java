@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.tio.utils.SystemTimer;
 import org.tio.utils.lock.MapWithLock;
@@ -65,6 +66,11 @@ public class IpAccessStat implements Serializable {
 	 * 这个ip访问的次数
 	 */
 	public final AtomicInteger count = new AtomicInteger();
+	
+	/**
+	 * 这个ip访问给服务器带来的时间消耗，单位：毫秒
+	 */
+	public final AtomicLong timeCost = new AtomicLong();
 	
 	/**
 	 * 不带session的访问次数

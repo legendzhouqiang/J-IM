@@ -285,7 +285,11 @@ public class Zk {
 	 */
 	public static void setData(String path, byte[] bs) throws Exception {
 		if (bs != null) {
-			zkclient.setData().forPath(path, bs);
+			if (Zk.exists(path)) {
+				zkclient.setData().forPath(path, bs);
+			} else {
+				zkclient.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, bs);
+			}
 		}
 	}
 

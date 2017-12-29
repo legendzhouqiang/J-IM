@@ -177,7 +177,7 @@ public class GuavaRedisCache implements ICache {
 			if (ret != null) {
 				guavaCache.put(key, ret);
 			}
-		} else {
+		} else {//在本地就取到数据了，那么需要在redis那定时更新一下过期时间
 			Long timeToIdleSeconds = redisCache.getTimeToIdleSeconds();
 			if (timeToIdleSeconds != null) {
 				RedisExpireUpdateTask.add(cacheName, key, timeToIdleSeconds);
@@ -208,6 +208,16 @@ public class GuavaRedisCache implements ICache {
 		CacheChangedVo cacheChangedVo = new CacheChangedVo(cacheName, key, CacheChangeType.PUT);
 		topic.publish(cacheChangedVo);
 	}
+	
+	@Override
+	public void putTemporary(String key, Serializable value) {
+		guavaCache.putTemporary(key, value);
+		redisCache.putTemporary(key, value);
+		
+		//
+//		CacheChangedVo cacheChangedVo = new CacheChangedVo(cacheName, key, CacheChangeType.PUT);
+//		topic.publish(cacheChangedVo);
+	}
 
 	/**
 	 * @param key
@@ -231,4 +241,6 @@ public class GuavaRedisCache implements ICache {
 	public <T> T get(String key, Class<T> clazz) {
 		return (T)get(key);
 	}
+
+	
 }
