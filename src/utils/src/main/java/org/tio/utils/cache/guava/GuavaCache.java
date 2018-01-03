@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tio.utils.GuavaUtils;
 import org.tio.utils.cache.ICache;
+import org.tio.utils.guava.GuavaUtils;
 
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;

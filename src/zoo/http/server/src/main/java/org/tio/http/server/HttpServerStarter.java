@@ -17,7 +17,7 @@ import org.tio.http.server.mvc.Routes;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
 import org.tio.utils.cache.ICache;
-import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.cache.caffeine.CaffeineCache;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
@@ -219,8 +219,8 @@ public class HttpServerStarter {
 
 	public void start() throws IOException {
 		if (httpConfig.getSessionStore() == null) {
-			GuavaCache guavaCache = GuavaCache.register(httpConfig.getSessionCacheName(), null, httpConfig.getSessionTimeout());
-			httpConfig.setSessionStore(guavaCache);
+			CaffeineCache caffeineCache = CaffeineCache.register(httpConfig.getSessionCacheName(), null, httpConfig.getSessionTimeout());
+			httpConfig.setSessionStore(caffeineCache);
 		}
 
 //		if (httpConfig.getPageRoot() == null) {

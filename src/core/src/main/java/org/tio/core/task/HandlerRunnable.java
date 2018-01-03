@@ -79,8 +79,8 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 //			channelContext.getIpStat().getHandledPackets().incrementAndGet();
 //			channelContext.getIpStat().getHandledBytes().addAndGet(packet.getByteCount());
 			
-//			GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
-//			for (GuavaCache guavaCache : caches) {
+//			CaffeineCache[] caches = channelContext.getGroupContext().ips.getCaches();
+//			for (CaffeineCache guavaCache : caches) {
 //				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
 //				ipStat.getHandledPackets().incrementAndGet();
 //				ipStat.getHandledBytes().addAndGet(packet.getByteCount());

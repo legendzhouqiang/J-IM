@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.cache.IpStatRemovalListener;
 import org.tio.core.stat.IpStat;
 import org.tio.utils.json.Json;
-import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.cache.guava.CaffeineCache;
 import org.tio.utils.time.Time;
 
 /**
@@ -28,13 +28,13 @@ public class Ips {
 	private final static Long timeToIdleSeconds = Time.DAY_1;
 
 	private String cacheName = null;
-	private GuavaCache cache = null;
+	private CaffeineCache cache = null;
 
 	@SuppressWarnings("unchecked")
 	public Ips(String id) {
 		this.id = id;
 		this.cacheName = CACHE_NAME + this.id;
-		this.cache = GuavaCache.register(this.cacheName, timeToLiveSeconds, timeToIdleSeconds, new IpStatRemovalListener());
+		this.cache = CaffeineCache.register(this.cacheName, timeToLiveSeconds, timeToIdleSeconds, new IpStatRemovalListener());
 	}
 
 	/**

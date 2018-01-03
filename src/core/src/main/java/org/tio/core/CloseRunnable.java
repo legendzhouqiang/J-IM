@@ -148,8 +148,8 @@ public class CloseRunnable implements Runnable {
 				try {
 //					channelContext.getIpStat().getActivatedCount().decrementAndGet();
 					
-//					GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
-//					for (GuavaCache guavaCache : caches) {
+//					CaffeineCache[] caches = channelContext.getGroupContext().ips.getCaches();
+//					for (CaffeineCache guavaCache : caches) {
 //						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
 //						ipStat.getActivatedCount().decrementAndGet();
 //					}

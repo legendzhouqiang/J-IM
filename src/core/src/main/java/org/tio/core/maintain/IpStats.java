@@ -15,7 +15,7 @@ import org.tio.core.GroupContext;
 import org.tio.core.cache.IpStatRemovalListener;
 import org.tio.core.intf.IpStatListener;
 import org.tio.core.stat.IpStat;
-import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.cache.caffeine.CaffeineCache;
 
 /**
  *
@@ -33,11 +33,11 @@ public class IpStats {
 	private String groupContextId;
 	private GroupContext groupContext;
 
-	//	private GuavaCache[] caches = null;
+	//	private CaffeineCache[] caches = null;
 	/**
 	 * key: 时长，单位：秒
 	 */
-	public final Map<Long, GuavaCache> cacheMap = new HashMap<>();
+	public final Map<Long, CaffeineCache> cacheMap = new HashMap<>();
 
 	public final List<Long> durationList = new ArrayList<>();
 
@@ -59,8 +59,8 @@ public class IpStats {
 	 */
 	public void addDuration(Long duration, IpStatListener ipStatListener) {
 		@SuppressWarnings("unchecked")
-		GuavaCache guavaCache = GuavaCache.register(getCacheName(duration), duration, null, new IpStatRemovalListener(groupContext, ipStatListener));
-		cacheMap.put(duration, guavaCache);
+		CaffeineCache caffeineCache = CaffeineCache.register(getCacheName(duration), duration, null, new IpStatRemovalListener(groupContext, ipStatListener));
+		cacheMap.put(duration, caffeineCache);
 		durationList.add(duration);
 	}
 
@@ -105,11 +105,11 @@ public class IpStats {
 	 * @author: tanyaowu
 	 */
 	public void clear(Long duration) {
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return;
 		}
-		guavaCache.clear();
+		caffeineCache.clear();
 	}
 
 	/**
@@ -135,18 +135,18 @@ public class IpStats {
 		if (StringUtils.isBlank(ip)) {
 			return null;
 		}
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return null;
 		}
 
-		IpStat ipStat = (IpStat) guavaCache.get(ip);
+		IpStat ipStat = (IpStat) caffeineCache.get(ip);
 		if (ipStat == null && forceCreate) {
 			synchronized (this) {
-				ipStat = (IpStat) guavaCache.get(ip);
+				ipStat = (IpStat) caffeineCache.get(ip);
 				if (ipStat == null) {
 					ipStat = new IpStat(ip, duration);
-					guavaCache.put(ip, ipStat);
+					caffeineCache.put(ip, ipStat);
 				}
 			}
 		}
@@ -159,11 +159,11 @@ public class IpStats {
 	 * @author: tanyaowu
 	 */
 	public ConcurrentMap<String, Serializable> map(Long duration) {
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return null;
 		}
-		ConcurrentMap<String, Serializable> map = guavaCache.asMap();
+		ConcurrentMap<String, Serializable> map = caffeineCache.asMap();
 		return map;
 	}
 
@@ -173,11 +173,11 @@ public class IpStats {
 	 * @author: tanyaowu
 	 */
 	public Long size(Long duration) {
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return null;
 		}
-		return guavaCache.size();
+		return caffeineCache.size();
 	}
 
 	/**
@@ -186,11 +186,11 @@ public class IpStats {
 	 * @author: tanyaowu
 	 */
 	public Collection<Serializable> values(Long duration) {
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return null;
 		}
-		Collection<Serializable> set = guavaCache.asMap().values();
+		Collection<Serializable> set = caffeineCache.asMap().values();
 		return set;
 	}
 

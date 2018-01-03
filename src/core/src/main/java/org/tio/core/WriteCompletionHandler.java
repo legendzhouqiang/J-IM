@@ -125,7 +125,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 		//		AioListener aioListener = groupContext.getAioListener();
 		boolean isSentSuccess = result > 0;
 
-		//		GuavaCache[] caches = channelContext.getGroupContext().ips.getCaches();
+		//		CaffeineCache[] caches = channelContext.getGroupContext().ips.getCaches();
 
 		List<Long> list = groupContext.ipStats.durationList;
 
@@ -134,7 +134,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 			channelStat.getSentBytes().addAndGet(result);
 			//			channelContext.getIpStat().getSentBytes().addAndGet(result);
 
-			//			for (GuavaCache guavaCache : caches) {
+			//			for (CaffeineCache guavaCache : caches) {
 			//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
 			//				ipStat.getSentBytes().addAndGet(result);
 			//			}
@@ -153,7 +153,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 
 					//					channelContext.getIpStat().getSentPackets().incrementAndGet();
 
-					//					for (GuavaCache guavaCache : caches) {
+					//					for (CaffeineCache guavaCache : caches) {
 					//						IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
 					//						ipStat.getSentPackets().incrementAndGet();
 					//					}

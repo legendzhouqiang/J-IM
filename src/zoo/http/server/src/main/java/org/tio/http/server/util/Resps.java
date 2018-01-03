@@ -32,7 +32,7 @@ public class Resps {
 
 	/**
 	 * 构建css响应
-	 * Content-Type: text/css; charset=utf-8
+	 * Content-Type: text/css;charset=utf-8
 	 * @param request
 	 * @param bodyString
 	 * @return
@@ -44,7 +44,7 @@ public class Resps {
 
 	/**
 	 * 构建css响应
-	 * Content-Type: text/css; charset=utf-8
+	 * Content-Type: text/css;charset=utf-8
 	 * @param request
 	 * @param bodyString
 	 * @param charset
@@ -52,7 +52,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse css(HttpRequest request, String bodyString, String charset) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_CSS_CSS.getType() + "; charset=" + charset);
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_CSS_CSS.getType() + ";charset=" + charset);
 		return ret;
 	}
 
@@ -242,7 +242,7 @@ public class Resps {
 	}
 
 	/**
-	 * Content-Type: text/html; charset=utf-8
+	 * Content-Type: text/html;charset=utf-8
 	 * @param request
 	 * @param bodyString
 	 * @param charset
@@ -250,12 +250,12 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse html(HttpRequest request, String bodyString, String charset) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_HTML_HTML.getType() + "; charset=" + charset);
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_HTML_HTML.getType() + ";charset=" + charset);
 		return ret;
 	}
 
 	/**
-	 * Content-Type: application/javascript; charset=utf-8
+	 * Content-Type: application/javascript;charset=utf-8
 	 * @param request
 	 * @param bodyString
 	 * @return
@@ -266,7 +266,7 @@ public class Resps {
 	}
 
 	/**
-	 * Content-Type: application/javascript; charset=utf-8
+	 * Content-Type: application/javascript;charset=utf-8
 	 * @param request
 	 * @param bodyString
 	 * @param charset
@@ -274,12 +274,12 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse js(HttpRequest request, String bodyString, String charset) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.APPLICATION_JAVASCRIPT_JS.getType() + "; charset=" + charset);
+		HttpResponse ret = string(request, bodyString, charset, MimeType.APPLICATION_JAVASCRIPT_JS.getType() + ";charset=" + charset);
 		return ret;
 	}
 
 	/**
-	 * Content-Type: application/json; charset=utf-8
+	 * Content-Type: application/json;charset=utf-8
 	 * @param request
 	 * @param body
 	 * @return
@@ -290,7 +290,7 @@ public class Resps {
 	}
 
 	/**
-	 * Content-Type: application/json; charset=utf-8
+	 * Content-Type: application/json;charset=utf-8
 	 * @param request
 	 * @param body
 	 * @param charset
@@ -300,12 +300,12 @@ public class Resps {
 	public static HttpResponse json(HttpRequest request, Object body, String charset) {
 		HttpResponse ret = null;
 		if (body == null) {
-			ret = string(request, "", charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
+			ret = string(request, "", charset, MimeType.TEXT_PLAIN_JSON.getType() + ";charset=" + charset);
 		} else {
 			if (body.getClass() == String.class || ClassUtil.isBasicType(body.getClass())) {
-				ret = string(request, body + "", charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
+				ret = string(request, body + "", charset, MimeType.TEXT_PLAIN_JSON.getType() + ";charset=" + charset);
 			} else {
-				ret = string(request, Json.toJson(body), charset, MimeType.TEXT_PLAIN_JSON.getType() + "; charset=" + charset);
+				ret = string(request, Json.toJson(body), charset, MimeType.TEXT_PLAIN_JSON.getType() + ";charset=" + charset);
 			}
 		}
 		return ret;
@@ -396,7 +396,7 @@ public class Resps {
 	}
 
 	/**
-	 * Content-Type: text/plain; charset=utf-8
+	 * Content-Type: text/plain;charset=utf-8
 	 * @param request
 	 * @param bodyString
 	 * @return
@@ -407,7 +407,7 @@ public class Resps {
 	}
 
 	/**
-	 * Content-Type: text/plain; charset=utf-8
+	 * Content-Type: text/plain;charset=utf-8
 	 * @param request
 	 * @param bodyString
 	 * @param charset
@@ -415,7 +415,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse txt(HttpRequest request, String bodyString, String charset) {
-		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_TXT.getType() + "; charset=" + charset);
+		HttpResponse ret = string(request, bodyString, charset, MimeType.TEXT_PLAIN_TXT.getType() + ";charset=" + charset);
 		return ret;
 	}
 

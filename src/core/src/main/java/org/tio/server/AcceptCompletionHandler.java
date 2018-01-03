@@ -43,8 +43,8 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			String clientIp = inetSocketAddress.getHostString();
 //			serverGroupContext.ips.get(clientIp).getRequestCount().incrementAndGet();
 			
-//			GuavaCache[] caches = serverGroupContext.ips.getCaches();
-//			for (GuavaCache guavaCache : caches) {
+//			CaffeineCache[] caches = serverGroupContext.ips.getCaches();
+//			for (CaffeineCache guavaCache : caches) {
 //				IpStat ipStat = (IpStat) guavaCache.get(clientIp);
 //				ipStat.getRequestCount().incrementAndGet();
 //			}
@@ -60,7 +60,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			
 			
 //			channelContext.getIpStat().getActivatedCount().incrementAndGet();
-//			for (GuavaCache guavaCache : caches) {
+//			for (CaffeineCache guavaCache : caches) {
 //				IpStat ipStat = (IpStat) guavaCache.get(clientIp);
 //				ipStat.getActivatedCount().incrementAndGet();
 //			}

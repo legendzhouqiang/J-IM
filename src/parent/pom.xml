@@ -64,8 +64,8 @@
 		<commons-codec.version>1.11</commons-codec.version>
 		<commons-compress.version>1.15</commons-compress.version>
 		<fastjson.version>1.2.44</fastjson.version>
-		<testng.version>6.11</testng.version>
-		<hutool.version>3.2.3</hutool.version>
+		<testng.version>6.13.1</testng.version>
+		<hutool.version>3.3.0</hutool.version>
 
 		<protobuf-java.version>3.5.1</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
@@ -75,6 +75,7 @@
 		<redisson.version>3.5.7</redisson.version>
 		<jodd.version>3.9.1</jodd.version>
 		<quartz.version>2.3.0</quartz.version>
+		<caffeine.version>2.6.1</caffeine.version>
 
 
 	</properties>
@@ -457,7 +458,7 @@
 			<dependency>
 				<groupId>io.github.lukehutch</groupId>
 				<artifactId>fast-classpath-scanner</artifactId>
-				<version>2.9.3</version>
+				<version>2.9.4</version>
 			</dependency>
 			<dependency>
 				<groupId>com.thoughtworks.paranamer</groupId>
@@ -493,6 +494,17 @@
 				<version>2.2</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.github.ben-manes.caffeine</groupId>
+				<artifactId>caffeine</artifactId>
+				<version>${caffeine.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.ben-manes.caffeine</groupId>
+				<artifactId>guava</artifactId>
+				<version>${caffeine.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

@@ -4,8 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.GroupContext;
 
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
+import com.github.benmanes.caffeine.cache.RemovalCause;
+import com.github.benmanes.caffeine.cache.RemovalListener;
+
 
 /**
  * @author tanyaowu 
@@ -37,15 +38,27 @@ public class IpPathAccessStatRemovalListener implements RemovalListener {
 
 	}
 
+//	@Override
+//	public void onRemoval(RemovalNotification notification) {
+//		String ip = (String) notification.getKey();
+//		IpAccessStat ipAccessStat = (IpAccessStat) notification.getValue();
+//
+//		if (ipPathAccessStatListener != null) {
+//			ipPathAccessStatListener.onExpired(groupContext, ip, ipAccessStat);
+//		}
+//
+//		//		log.info("ip数据统计[{}]\r\n{}", ip, Json.toFormatedJson(ipAccesspathStat));
+//	}
+
 	@Override
-	public void onRemoval(RemovalNotification notification) {
-		String ip = (String) notification.getKey();
-		IpAccessStat ipAccessStat = (IpAccessStat) notification.getValue();
+	public void onRemoval(Object key, Object value, RemovalCause cause) {
+		String ip = (String) key;
+		IpAccessStat ipAccessStat = (IpAccessStat) value;
 
 		if (ipPathAccessStatListener != null) {
 			ipPathAccessStatListener.onExpired(groupContext, ip, ipAccessStat);
 		}
 
-		//		log.info("ip数据统计[{}]\r\n{}", ip, Json.toFormatedJson(ipAccesspathStat));
+		
 	}
 }

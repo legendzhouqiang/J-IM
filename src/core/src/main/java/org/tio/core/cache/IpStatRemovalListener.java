@@ -6,8 +6,10 @@ import org.tio.core.GroupContext;
 import org.tio.core.intf.IpStatListener;
 import org.tio.core.stat.IpStat;
 
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
+import com.github.benmanes.caffeine.cache.RemovalCause;
+import com.github.benmanes.caffeine.cache.RemovalListener;
+
+
 
 /**
  * @author tanyaowu 
@@ -38,15 +40,26 @@ public class IpStatRemovalListener implements RemovalListener {
 
 	}
 
+//	@Override
+//	public void onRemoval(RemovalNotification notification) {
+//		String ip = (String) notification.getKey();
+//		IpStat ipStat = (IpStat) notification.getValue();
+//
+//		if (ipStatListener != null) {
+//			ipStatListener.onExpired(groupContext, ipStat);
+//		}
+//
+//		//		log.info("ip数据统计[{}]\r\n{}", ip, Json.toFormatedJson(ipStat));
+//	}
+
 	@Override
-	public void onRemoval(RemovalNotification notification) {
-		String ip = (String) notification.getKey();
-		IpStat ipStat = (IpStat) notification.getValue();
+	public void onRemoval(Object key, Object value, RemovalCause cause) {
+		String ip = (String) key;
+		IpStat ipStat = (IpStat) value;
 
 		if (ipStatListener != null) {
 			ipStatListener.onExpired(groupContext, ipStat);
 		}
-
-		//		log.info("ip数据统计[{}]\r\n{}", ip, Json.toFormatedJson(ipStat));
+		
 	}
 }

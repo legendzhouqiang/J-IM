@@ -3,7 +3,7 @@ package org.tio.core.cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.utils.cache.ICache;
-import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.cache.guava.CaffeineCache;
 
 /**
  * @author tanyaowu
@@ -23,10 +23,10 @@ public class Caches {
 		ICache ret = null;
 		//		if (cacheType == CacheType.REDIS) {
 		//			ret = RedisCache.getCache(cacheName);
-		//		} else if (cacheType == CacheType.GUAVA_REDIS) {
-		//			ret = GuavaRedisCache.getCache(cacheName);
+		//		} else if (cacheType == CacheType.CAFFEINE_REDIS) {
+		//			ret = CaffeineRedisCache.getCache(cacheName);
 		//		} else if (cacheType == CacheType.GUAVA) {
-		ret = GuavaCache.getCache(cacheName);
+		ret = CaffeineCache.getCache(cacheName);
 		//		}
 		if (ret == null) {
 			log.error("cacheName[{}]还没注册", cacheName);
@@ -44,10 +44,10 @@ public class Caches {
 
 			//			if (cacheType == CacheType.REDIS) {
 			//				RedisCache.register(RedisUtils.get(), cacheName, timeToLiveSeconds, timeToIdleSeconds);
-			//			} else if (cacheType == CacheType.GUAVA_REDIS) {
-			//				GuavaRedisCache.register(RedisUtils.get(), cacheName, timeToLiveSeconds, timeToIdleSeconds);
+			//			} else if (cacheType == CacheType.CAFFEINE_REDIS) {
+			//				CaffeineRedisCache.register(RedisUtils.get(), cacheName, timeToLiveSeconds, timeToIdleSeconds);
 			//			} else if (cacheType == CacheType.GUAVA) {
-			GuavaCache.register(cacheName, timeToLiveSeconds, timeToIdleSeconds);
+			CaffeineCache.register(cacheName, timeToLiveSeconds, timeToIdleSeconds);
 			//			}
 		}
 

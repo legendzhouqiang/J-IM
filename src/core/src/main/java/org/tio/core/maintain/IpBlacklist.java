@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.tio.core.Aio;
 import org.tio.core.GroupContext;
 import org.tio.utils.SystemTimer;
-import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.cache.caffeine.CaffeineCache;
 import org.tio.utils.time.Time;
 
 /**
@@ -26,7 +26,7 @@ public class IpBlacklist {
 	private final static Long TIME_TO_IDLE_SECONDS = null;
 
 	private String cacheName = null;
-	private GuavaCache cache = null;
+	private CaffeineCache cache = null;
 	
 	private GroupContext groupContext;
 
@@ -34,7 +34,7 @@ public class IpBlacklist {
 		this.id = id;
 		this.groupContext = groupContext;
 		this.cacheName = CACHE_NAME + this.id;
-		this.cache = GuavaCache.register(this.cacheName, TIME_TO_LIVE_SECONDS, TIME_TO_IDLE_SECONDS, null);
+		this.cache = CaffeineCache.register(this.cacheName, TIME_TO_LIVE_SECONDS, TIME_TO_IDLE_SECONDS, null);
 	}
 
 	

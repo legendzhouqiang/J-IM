@@ -6,7 +6,7 @@ package org.tio.core.cache;
  */
 public enum CacheType {
 
-	GUAVA()/**, REDIS(), GUAVA_REDIS()*/;
+	GUAVA()/**, REDIS(), CAFFEINE_REDIS()*/;
 
 	private CacheType() {
 	}

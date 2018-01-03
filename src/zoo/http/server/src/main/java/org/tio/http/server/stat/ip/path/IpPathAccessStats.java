@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.GroupContext;
-import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.cache.caffeine.CaffeineCache;
 
 /**
  * 
@@ -31,12 +31,12 @@ public class IpPathAccessStats {
 	
 	private String groupContextId;
 
-	//	private GuavaCache[] caches = null;
+	//	private CaffeineCache[] caches = null;
 	/**
 	 * key:   时长段，单位：秒
-	 * value: GuavaCache: key: ip, value: IpAccessStat
+	 * value: CaffeineCache: key: ip, value: IpAccessStat
 	 */
-	public final Map<Long, GuavaCache> cacheMap = new HashMap<>();
+	public final Map<Long, CaffeineCache> cacheMap = new HashMap<>();
 
 	/**
 	 * 时长段列表
@@ -70,8 +70,8 @@ public class IpPathAccessStats {
 	 */
 	public void addDuration(Long duration, IpPathAccessStatListener ipPathAccessStatListener) {
 		@SuppressWarnings("unchecked")
-		GuavaCache guavaCache = GuavaCache.register(getCacheName(duration), duration, null, new IpPathAccessStatRemovalListener(groupContext, ipPathAccessStatListener));
-		cacheMap.put(duration, guavaCache);
+		CaffeineCache caffeineCache = CaffeineCache.register(getCacheName(duration), duration, null, new IpPathAccessStatRemovalListener(groupContext, ipPathAccessStatListener));
+		cacheMap.put(duration, caffeineCache);
 		durationList.add(duration);
 		
 		if (ipPathAccessStatListener != null) {
@@ -130,11 +130,11 @@ public class IpPathAccessStats {
 	 * @author: tanyaowu
 	 */
 	public void clear(Long duration) {
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return;
 		}
-		guavaCache.clear();
+		caffeineCache.clear();
 	}
 
 	
@@ -152,18 +152,18 @@ public class IpPathAccessStats {
 			return null;
 		}
 		
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return null;
 		}
 
-		IpAccessStat ipAccessStat = (IpAccessStat) guavaCache.get(ip);
+		IpAccessStat ipAccessStat = (IpAccessStat) caffeineCache.get(ip);
 		if (ipAccessStat == null && forceCreate) {
-			synchronized (guavaCache) {
-				ipAccessStat = (IpAccessStat) guavaCache.get(ip);
+			synchronized (caffeineCache) {
+				ipAccessStat = (IpAccessStat) caffeineCache.get(ip);
 				if (ipAccessStat == null) {
 					ipAccessStat = new IpAccessStat(duration, ip);//new MapWithLock<String, IpPathAccessStat>(new HashMap<>());//new IpPathAccessStat(duration, ip, path);
-					guavaCache.put(ip, ipAccessStat);
+					caffeineCache.put(ip, ipAccessStat);
 				}
 			}
 		}
@@ -190,11 +190,11 @@ public class IpPathAccessStats {
 	 * @author tanyaowu
 	 */
 	public ConcurrentMap<String, Serializable> map(Long duration) {
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return null;
 		}
-		ConcurrentMap<String, Serializable> map = guavaCache.asMap();
+		ConcurrentMap<String, Serializable> map = caffeineCache.asMap();
 		return map;
 	}
 
@@ -204,11 +204,11 @@ public class IpPathAccessStats {
 	 * @author: tanyaowu
 	 */
 	public Long size(Long duration) {
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return null;
 		}
-		return guavaCache.size();
+		return caffeineCache.size();
 	}
 
 	/**
@@ -217,11 +217,11 @@ public class IpPathAccessStats {
 	 * @author: tanyaowu
 	 */
 	public Collection<Serializable> values(Long duration) {
-		GuavaCache guavaCache = cacheMap.get(duration);
-		if (guavaCache == null) {
+		CaffeineCache caffeineCache = cacheMap.get(duration);
+		if (caffeineCache == null) {
 			return null;
 		}
-		Collection<Serializable> set = guavaCache.asMap().values();
+		Collection<Serializable> set = caffeineCache.asMap().values();
 		return set;
 	}
 

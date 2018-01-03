@@ -55,7 +55,7 @@ public class HttpServerUtils {
 				}
 			}
 		} else {
-			log.warn("{}, 不支持gzip, {}", request.getChannelContext(), request.getHeader(HttpConst.RequestHeaderKey.User_Agent));
+			log.warn("{}, 不支持gzip, {}", request.getClientIp(), request.getHeader(HttpConst.RequestHeaderKey.User_Agent));
 		}
 	}
 

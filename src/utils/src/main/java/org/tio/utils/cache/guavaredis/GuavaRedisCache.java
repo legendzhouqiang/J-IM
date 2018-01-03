@@ -12,6 +12,8 @@ import org.redisson.api.RedissonClient;
 import org.redisson.api.listener.MessageListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.utils.cache.CacheChangeType;
+import org.tio.utils.cache.CacheChangedVo;
 import org.tio.utils.cache.ICache;
 import org.tio.utils.cache.guava.GuavaCache;
 import org.tio.utils.cache.redis.RedisCache;
@@ -23,7 +25,7 @@ import org.tio.utils.cache.redis.RedisExpireUpdateTask;
  */
 public class GuavaRedisCache implements ICache {
 
-	public static final String CACHE_CHANGE_TOPIC = "TIO_CACHE_CHANGE_TOPIC";
+	public static final String CACHE_CHANGE_TOPIC = "TIO_CACHE_CHANGE_TOPIC_GUAVA";
 
 	private static Logger log = LoggerFactory.getLogger(GuavaRedisCache.class);
 	public static Map<String, GuavaRedisCache> map = new HashMap<>();
@@ -40,7 +42,7 @@ public class GuavaRedisCache implements ICache {
 	public static GuavaRedisCache getCache(String cacheName) {
 		GuavaRedisCache guavaRedisCache = map.get(cacheName);
 		if (guavaRedisCache == null) {
-			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, timeToLiveSeconds, timeToIdleSeconds)", cacheName, GuavaRedisCache.class.getSimpleName());
+			log.warn("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, timeToLiveSeconds, timeToIdleSeconds)", cacheName, GuavaRedisCache.class.getSimpleName());
 		}
 		return guavaRedisCache;
 	}
@@ -59,14 +61,14 @@ public class GuavaRedisCache implements ICache {
 								return;
 							}
 							if (Objects.equals(CacheChangedVo.CLIENTID, clientid)) {
-								log.info("自己发布的消息,{}", clientid);
+								log.debug("自己发布的消息,{}", clientid);
 								return;
 							}
 
 							String cacheName = cacheChangedVo.getCacheName();
 							GuavaRedisCache guavaRedisCache = GuavaRedisCache.getCache(cacheName);
 							if (guavaRedisCache == null) {
-								log.warn("不能根据cacheName[{}]找到GuavaRedisCache对象", cacheName);
+								log.info("不能根据cacheName[{}]找到GuavaRedisCache对象", cacheName);
 								return;
 							}
 

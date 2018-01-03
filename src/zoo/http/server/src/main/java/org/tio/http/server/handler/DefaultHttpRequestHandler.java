@@ -39,7 +39,7 @@ import org.tio.http.server.util.HttpServerUtils;
 import org.tio.http.server.util.Resps;
 import org.tio.http.server.view.freemarker.FreemarkerConfig;
 import org.tio.utils.SystemTimer;
-import org.tio.utils.cache.guava.GuavaCache;
+import org.tio.utils.cache.caffeine.CaffeineCache;
 import org.tio.utils.freemarker.FreemarkerUtils;
 
 import com.xiaoleilu.hutool.bean.BeanUtil;
@@ -100,7 +100,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 	private IpPathAccessStats ipPathAccessStats;
 
-	private GuavaCache staticResCache;
+	private CaffeineCache staticResCache;
 
 	private String contextPath;
 	private int contextPathLength = 0;
@@ -139,7 +139,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		this.httpConfig = httpConfig;
 
 		if (httpConfig.getMaxLiveTimeOfStaticRes() > 0) {
-			staticResCache = GuavaCache.register(STATIC_RES_CONTENT_CACHENAME, (long) httpConfig.getMaxLiveTimeOfStaticRes(), null);
+			staticResCache = CaffeineCache.register(STATIC_RES_CONTENT_CACHENAME, (long) httpConfig.getMaxLiveTimeOfStaticRes(), null);
 		}
 
 		this.routes = routes;
@@ -178,7 +178,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	/**
 	 * @return the staticResCache
 	 */
-	public GuavaCache getStaticResCache() {
+	public CaffeineCache getStaticResCache() {
 		return staticResCache;
 	}
 
@@ -232,14 +232,14 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		requestLine.setPath(path);
 
 		
-//		GuavaCache contentCache = null;
+//		CaffeineCache contentCache = null;
 		FileCache fileCache = null;
 		File file = null;
 		try {
 			processCookieBeforeHandler(request, requestLine);
 			HttpSession httpSession = request.getHttpSession();//(HttpSession) channelContext.getAttribute();
 
-			//			GuavaCache guavaCache = GuavaCache.getCache(STATIC_RES_CACHENAME);
+			//			CaffeineCache guavaCache = CaffeineCache.getCache(STATIC_RES_CACHENAME);
 			//			ret = (HttpResponse) guavaCache.get(requestLine.getPath());
 			//			if (ret != null) {
 			//				log.info("从缓存中获取响应:{}", requestLine.getPath());
@@ -360,7 +360,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 			} else {
 				
 				if (staticResCache != null) {
-//					contentCache = GuavaCache.getCache(STATIC_RES_CONTENT_CACHENAME);
+//					contentCache = CaffeineCache.getCache(STATIC_RES_CONTENT_CACHENAME);
 					fileCache = (FileCache) staticResCache.get(path);
 				}
 				if (fileCache != null) {
@@ -533,7 +533,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 				//						byte[] encodedBytes = byteBuffer.array();
 				//						ret.setEncodedBytes(encodedBytes);
 
-				//						GuavaCache guavaCache = GuavaCache.getCache(STATIC_RES_CACHENAME);
+				//						CaffeineCache guavaCache = CaffeineCache.getCache(STATIC_RES_CACHENAME);
 				//						guavaCache.put(requestLine.getPath(), ret);
 				//					}
 				//				} catch (Throwable e) {
@@ -650,7 +650,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	/**
 	 * @param staticResCache the staticResCache to set
 	 */
-	public void setStaticResCache(GuavaCache staticResCache) {
+	public void setStaticResCache(CaffeineCache staticResCache) {
 		this.staticResCache = staticResCache;
 	}
 
