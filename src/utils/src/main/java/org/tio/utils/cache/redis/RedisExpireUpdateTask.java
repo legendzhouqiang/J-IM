@@ -57,7 +57,7 @@ public class RedisExpireUpdateTask {
 					try {
 						Set<ExpireVo> set = setWithLock.getObj();
 						for (ExpireVo expireVo : set) {
-							log.info("更新缓存过期时间, cacheName:{}, key:{}, expire:{}", expireVo.getCacheName(), expireVo.getKey(), expireVo.getExpire());
+							log.debug("更新缓存过期时间, cacheName:{}, key:{}, expire:{}", expireVo.getCacheName(), expireVo.getKey(), expireVo.getExpire());
 
 							RedisCache.getCache(expireVo.getCacheName()).getBucket(expireVo.getKey()).expire(expireVo.getExpire(), TimeUnit.SECONDS);
 							//							expireVo.getExpirable().expire(expireVo.getExpire(), TimeUnit.SECONDS);

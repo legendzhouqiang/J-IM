@@ -113,11 +113,11 @@ public class HttpRequestDecoder {
 		httpRequest.setContentLength(contentLength);
 
 		parseQueryString(httpRequest, firstLine, channelContext);
-		
+
 		if (contentLength == 0) {
-//			if (StringUtils.isNotBlank(firstLine.getQuery())) {
-//				decodeParams(httpRequest.getParams(), firstLine.getQuery(), httpRequest.getCharset(), channelContext);
-//			}
+			//			if (StringUtils.isNotBlank(firstLine.getQuery())) {
+			//				decodeParams(httpRequest.getParams(), firstLine.getQuery(), httpRequest.getCharset(), channelContext);
+			//			}
 		} else {
 			bodyBytes = new byte[contentLength];
 			buffer.get(bodyBytes);
@@ -159,7 +159,7 @@ public class HttpRequestDecoder {
 		//		if (pathEndPos > 0) {
 		//			paramsStr = StrUtil.subSuf(paramsStr, pathEndPos + 1);
 		//		}
-//		Map<String, Object[]> ret = new HashMap<>();
+		//		Map<String, Object[]> ret = new HashMap<>();
 		String[] keyvalues = StringUtils.split(paramsStr, "&");
 		for (String keyvalue : keyvalues) {
 			String[] keyvalueArr = StringUtils.split(keyvalue, "=");
@@ -215,27 +215,24 @@ public class HttpRequestDecoder {
 
 		httpRequest.setBody(bodyBytes);
 
-		
-		
 		if (bodyFormat == RequestBodyFormat.MULTIPART) {
 			if (log.isInfoEnabled()) {
 				String bodyString = null;
 				if (bodyBytes != null && bodyBytes.length > 0) {
-					try {
-
-						bodyString = new String(bodyBytes, httpRequest.getCharset());
-						log.info("{} multipart body string\r\n{}", channelContext, bodyString);
-					} catch (UnsupportedEncodingException e) {
-						log.error(channelContext.toString(), e);
+					if (log.isDebugEnabled()) {
+						try {
+							bodyString = new String(bodyBytes, httpRequest.getCharset());
+							log.debug("{} multipart body string\r\n{}", channelContext, bodyString);
+						} catch (UnsupportedEncodingException e) {
+							log.error(channelContext.toString(), e);
+						}
 					}
 				}
 			}
 
-			
-			
 			//【multipart/form-data; boundary=----WebKitFormBoundaryuwYcfA2AIgxqIxA0】
 			String initboundary = HttpParseUtils.getPerprotyEqualValue(httpRequest.getHeaders(), HttpConst.RequestHeaderKey.Content_Type, "boundary");
-			log.info("{}, initboundary:{}", channelContext, initboundary);
+			log.debug("{}, initboundary:{}", channelContext, initboundary);
 			HttpMultiBodyDecoder.decode(httpRequest, firstLine, bodyBytes, initboundary, channelContext);
 		} else {
 			String bodyString = null;
@@ -384,22 +381,22 @@ public class HttpRequestDecoder {
 	 * @author tanyaowu
 	 */
 	private static void parseUrlencoded(HttpRequest httpRequest, RequestLine firstLine, byte[] bodyBytes, String bodyString, ChannelContext channelContext) {
-//		String paramStr = "";
-//		if (StringUtils.isNotBlank(firstLine.getQuery())) {
-//			paramStr += firstLine.getQuery();
-//		}
-//		if (bodyString != null) {
-//			if (paramStr != null) {
-//				paramStr += "&";
-//			}
-//			paramStr += bodyString;
-//		}
+		//		String paramStr = "";
+		//		if (StringUtils.isNotBlank(firstLine.getQuery())) {
+		//			paramStr += firstLine.getQuery();
+		//		}
+		//		if (bodyString != null) {
+		//			if (paramStr != null) {
+		//				paramStr += "&";
+		//			}
+		//			paramStr += bodyString;
+		//		}
 
 		if (StringUtils.isNotBlank(bodyString)) {
 			decodeParams(httpRequest.getParams(), bodyString, httpRequest.getCharset(), channelContext);
 		}
 	}
-	
+
 	/**
 	 * 解析查询
 	 * @param httpRequest

@@ -149,12 +149,7 @@ public class HttpServerStarter {
 		if (sessionStore != null) {
 			httpConfig.setSessionStore(sessionStore);
 		}
-		
-		//		} else {
-		//			httpConfig.setHttpSessionStore(GuavaHttpSessionStore.getInstance(httpConfig.getSessionTimeout()));
-		//		}
 
-		//		String[] scanPackages = new String[] { AppStarter.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
 		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		requestHandler.setHttpServerInterceptor(httpServerInterceptor);

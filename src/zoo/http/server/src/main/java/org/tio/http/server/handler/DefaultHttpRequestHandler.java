@@ -238,13 +238,6 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		try {
 			processCookieBeforeHandler(request, requestLine);
 			HttpSession httpSession = request.getHttpSession();//(HttpSession) channelContext.getAttribute();
-
-			//			CaffeineCache guavaCache = CaffeineCache.getCache(STATIC_RES_CACHENAME);
-			//			ret = (HttpResponse) guavaCache.get(requestLine.getPath());
-			//			if (ret != null) {
-			//				log.info("从缓存中获取响应:{}", requestLine.getPath());
-			//			}
-
 			if (httpServerInterceptor != null) {
 				response = httpServerInterceptor.doBeforeHandler(request, requestLine, response);
 				if (response != null) {
@@ -252,16 +245,12 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 				}
 			}
 			requestLine = request.getRequestLine();
-			//			if (ret != null) {
-			//				return ret;
-			//			}
-
 			path = requestLine.getPath();
 			
 			
 			Method method = null;
 			if (routes != null) {
-				method = routes.pathMethodMap.get(path);
+				method = routes.getMethodByPath(path, request);
 			}
 
 			if (method != null) {
@@ -350,15 +339,17 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					return response;
 				} else {
 					if (obj == null) {
-						//ret = Resps.txt(request, "");//.json(request, obj + "");
-						return null;
+						if (method.getReturnType() == HttpResponse.class) {
+							return null;
+						} else {
+							Resps.json(request, obj);
+						}
 					} else {
 						response = Resps.json(request, obj);
 					}
 					return response;
 				}
 			} else {
-				
 				if (staticResCache != null) {
 //					contentCache = CaffeineCache.getCache(STATIC_RES_CONTENT_CACHENAME);
 					fileCache = (FileCache) staticResCache.get(path);
@@ -521,24 +512,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 							}
 						}
 					}
-					
-					
-					
-					
 				}
-
-				//				try {
-				//					if (ret.isStaticRes() && (ret.getCookies() == null || ret.getCookies().size() == 0)) {
-				//						ByteBuffer byteBuffer = HttpResponseEncoder.encode(ret, channelContext.getGroupContext(), channelContext, true);
-				//						byte[] encodedBytes = byteBuffer.array();
-				//						ret.setEncodedBytes(encodedBytes);
-
-				//						CaffeineCache guavaCache = CaffeineCache.getCache(STATIC_RES_CACHENAME);
-				//						guavaCache.put(requestLine.getPath(), ret);
-				//					}
-				//				} catch (Throwable e) {
-				//					logError(request, requestLine, e);
-				//				}
 			}
 		}
 	}

@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tio.utils.guava.GuavaUtils;
 
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -27,7 +26,7 @@ public class CaffeineUtils {
 	public CaffeineUtils() {
 	}
 
-	private static Logger log = LoggerFactory.getLogger(GuavaUtils.class);
+	private static Logger log = LoggerFactory.getLogger(CaffeineUtils.class);
 
 	/**
 	 *
