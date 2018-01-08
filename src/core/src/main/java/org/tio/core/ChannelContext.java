@@ -47,6 +47,11 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	private boolean isTraceSynPacket = false;
 	
 	private boolean isReconnect = false;
+	
+	/**
+	 * 一个packet所需要的字节数
+	 */
+	private Integer packetNeededLength = null;
 
 	//	private MapWithLock<String, Object> props = null;//
 
@@ -593,6 +598,14 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	public void setReconnect(boolean isReconnect) {
 		this.isReconnect = isReconnect;
+	}
+
+	public Integer getPacketNeededLength() {
+		return packetNeededLength;
+	}
+
+	public void setPacketNeededLength(Integer packetNeededLength) {
+		this.packetNeededLength = packetNeededLength;
 	}
 
 }

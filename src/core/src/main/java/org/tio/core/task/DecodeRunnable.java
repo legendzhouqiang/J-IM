@@ -97,7 +97,17 @@ public class DecodeRunnable implements Runnable {
 			label_2: while (true) {
 				int initPosition = byteBuffer.position();
 				GroupContext groupContext = channelContext.getGroupContext();
-				Packet packet = groupContext.getAioHandler().decode(byteBuffer, channelContext);
+				Packet packet = null;
+				Integer packetNeededLength = channelContext.getPacketNeededLength();
+				if (packetNeededLength != null) {
+					log.info("{}, 解码所需长度:{}", channelContext, packetNeededLength);
+					int readableLength = byteBuffer.limit() - initPosition;
+					if (readableLength >= packetNeededLength) {
+						packet = groupContext.getAioHandler().decode(byteBuffer, channelContext);
+					}
+				} else {
+					packet = groupContext.getAioHandler().decode(byteBuffer, channelContext);
+				}
 
 				if (packet == null)// 数据不够，解不了码
 				{
@@ -108,12 +118,14 @@ public class DecodeRunnable implements Runnable {
 					int len = byteBuffer.limit() - initPosition;
 					log.info("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节", channelContext, decodeFailCount, len);
 					if (decodeFailCount > 5) {
-						log.error("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节，请考虑要不要拉黑这个ip", channelContext, channelStat.getDecodeFailCount(), len);
-
+						if (packetNeededLength == null) {
+							log.warn("{} 解码失败, 本次共失败{}次，参与解码的数据长度共{}字节，请考虑要不要拉黑这个ip", channelContext, decodeFailCount, len);
+						}
 					}
 					return;
 				} else //解码成功
 				{
+					channelContext.setPacketNeededLength(null);
 					channelContext.getStat().setLatestTimeOfReceivedPacket(SystemTimer.currentTimeMillis());
 
 					ChannelStat channelStat = channelContext.getStat();
@@ -145,7 +157,9 @@ public class DecodeRunnable implements Runnable {
 						log.error(e.toString(), e);
 					}
 
-					log.info("{}, 解包获得一个packet:{}", channelContext, packet.logstr());
+					if (log.isDebugEnabled()) {
+						log.debug("{}, 解包获得一个packet:{}", channelContext, packet.logstr());
+					}
 					handler(channelContext, packet, len);
 
 					int remainingLength = byteBuffer.limit() - byteBuffer.position();

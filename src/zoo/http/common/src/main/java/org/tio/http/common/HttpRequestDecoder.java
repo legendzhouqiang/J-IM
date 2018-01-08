@@ -31,17 +31,18 @@ public class HttpRequestDecoder {
 	private static Logger log = LoggerFactory.getLogger(HttpRequestDecoder.class);
 
 	/**
-	 * 头部最多有多少字节
+	 * 头部，最多有多少字节
 	 */
-	public static final int MAX_HEADER_LENGTH = 20480;
+	public static final int MAX_LENGTH_OF_HEADER = 20480;
 
 	/**
 	 * 头部，每行最大的字节数
 	 */
-	public static final int MAX_LENGTH_OF_LINE = 2048;
+	public static final int MAX_LENGTH_OF_HEADERLINE = 2048;
 
 	public static HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
 		int initPosition = buffer.position();
+		int readableLength = buffer.limit() - initPosition;
 		//		int count = 0;
 		Step step = Step.firstline;
 		//		StringBuilder currLine = new StringBuilder();
@@ -54,14 +55,14 @@ public class HttpRequestDecoder {
 		while (buffer.hasRemaining()) {
 			String line;
 			try {
-				line = ByteBufferUtils.readLine(buffer, null, MAX_LENGTH_OF_LINE);
+				line = ByteBufferUtils.readLine(buffer, null, MAX_LENGTH_OF_HEADERLINE);
 			} catch (LengthOverflowException e) {
 				throw new AioDecodeException(e);
 			}
 
 			int newPosition = buffer.position();
-			if (newPosition - initPosition > MAX_HEADER_LENGTH) {
-				throw new AioDecodeException("max http header length " + MAX_HEADER_LENGTH);
+			if (newPosition - initPosition > MAX_LENGTH_OF_HEADER) {
+				throw new AioDecodeException("max http header length " + MAX_LENGTH_OF_HEADER);
 			}
 
 			if (line == null) {
@@ -77,11 +78,14 @@ public class HttpRequestDecoder {
 					contentLength = Integer.parseInt(contentLengthStr);
 				}
 
-				int readableLength = buffer.limit() - buffer.position();
-				if (readableLength >= contentLength) {
+//				int readableLength = buffer.limit() - buffer.position();
+				int headerLength = (buffer.position() - initPosition);
+				int allNeedLength = headerLength + contentLength; //这个packet所需要的字节长度(含头部和体部)
+				if (readableLength >= allNeedLength) {
 					step = Step.body;
 					break;
 				} else {
+					channelContext.setPacketNeededLength(allNeedLength);
 					return null;
 				}
 			} else {

@@ -7,12 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.SSLException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ssl.SslFacadeContext;
-import org.tio.core.ssl.SslVo;
 import org.tio.core.stat.IpStat;
 import org.tio.core.task.DecodeRunnable;
 import org.tio.core.utils.AioUtils;
@@ -98,6 +95,8 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 			//			groupContext.getDecodeExecutor().execute(decodeRunnable);
 		} else if (result == 0) {
 			log.error("{}, 读到的数据长度为0", channelContext);
+			Aio.close(channelContext, null, "读到的数据长度为0");
+			return;
 		} else if (result < 0) {
 			if (result == -1) {
 				Aio.close(channelContext, null, "对方关闭了连接");

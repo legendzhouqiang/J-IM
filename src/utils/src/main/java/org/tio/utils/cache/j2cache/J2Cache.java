@@ -78,7 +78,7 @@ public class J2Cache implements ICache {
 	}
 
 	@Override
-	public Collection keys() {
+	public Collection<String> keys() {
 		CacheChannel cache = getChannel();
 		try {
 			return cache.keys(cacheName);

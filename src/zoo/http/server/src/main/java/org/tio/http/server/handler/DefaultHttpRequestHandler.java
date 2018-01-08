@@ -34,6 +34,10 @@ import org.tio.http.server.stat.ip.path.IpAccessStat;
 import org.tio.http.server.stat.ip.path.IpPathAccessStat;
 import org.tio.http.server.stat.ip.path.IpPathAccessStatListener;
 import org.tio.http.server.stat.ip.path.IpPathAccessStats;
+import org.tio.http.server.stat.token.TokenAccessStat;
+import org.tio.http.server.stat.token.TokenPathAccessStat;
+import org.tio.http.server.stat.token.TokenPathAccessStatListener;
+import org.tio.http.server.stat.token.TokenPathAccessStats;
 import org.tio.http.server.util.ClassUtils;
 import org.tio.http.server.util.HttpServerUtils;
 import org.tio.http.server.util.Resps;
@@ -99,6 +103,8 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	private SessionCookieDecorator sessionCookieDecorator;
 
 	private IpPathAccessStats ipPathAccessStats;
+	
+	private TokenPathAccessStats tokenPathAccessStats;
 
 	private CaffeineCache staticResCache;
 
@@ -482,7 +488,6 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 						Cookie cookie = getSessionCookie(request, httpConfig);
 
-						
 						//添加统计
 						for (Long duration : list) {
 							IpAccessStat ipAccessStat = ipPathAccessStats.get(duration, ip);//.get(duration, ip, path);//.get(v, channelContext.getClientNode().getIp());
@@ -508,6 +513,35 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 								boolean isContinue = ipPathAccessStatListener.onChanged(request, ip, path, ipAccessStat, ipPathAccessStat);
 								if (!isContinue) {
 									return null;
+								}
+							}
+						}
+					}
+					
+					//统计一下访问数据
+					if (tokenPathAccessStats != null) {
+						String token = tokenPathAccessStats.getTokenGetter().getToken(request);
+						if (StringUtils.isNotBlank(token)) {
+							List<Long> list = tokenPathAccessStats.durationList;
+							//添加统计
+							for (Long duration : list) {
+								TokenAccessStat tokenAccessStat = tokenPathAccessStats.get(duration, token);//.get(duration, ip, path);//.get(v, channelContext.getClientNode().getIp());
+
+								tokenAccessStat.count.incrementAndGet();
+								tokenAccessStat.timeCost.addAndGet(iv);
+								tokenAccessStat.setLastAccessTime(SystemTimer.currentTimeMillis());
+
+								TokenPathAccessStat tokenPathAccessStat = tokenAccessStat.get(path);
+								tokenPathAccessStat.count.incrementAndGet();
+								tokenPathAccessStat.timeCost.addAndGet(iv);
+								tokenPathAccessStat.setLastAccessTime(SystemTimer.currentTimeMillis());
+
+								TokenPathAccessStatListener tokenPathAccessStatListener = tokenPathAccessStats.getListener(duration);
+								if (tokenPathAccessStatListener != null) {
+									boolean isContinue = tokenPathAccessStatListener.onChanged(request, token, path, tokenAccessStat, tokenPathAccessStat);
+									if (!isContinue) {
+										return null;
+									}
 								}
 							}
 						}
@@ -673,5 +707,13 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 	public void setThrowableHandler(ThrowableHandler throwableHandler) {
 		this.throwableHandler = throwableHandler;
+	}
+
+	public TokenPathAccessStats getTokenPathAccessStats() {
+		return tokenPathAccessStats;
+	}
+
+	public void setTokenPathAccessStats(TokenPathAccessStats tokenPathAccessStats) {
+		this.tokenPathAccessStats = tokenPathAccessStats;
 	}
 }
