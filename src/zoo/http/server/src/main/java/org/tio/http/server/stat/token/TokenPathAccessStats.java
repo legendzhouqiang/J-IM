@@ -12,6 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.GroupContext;
+import org.tio.http.server.intf.CurrUseridGetter;
+import org.tio.http.server.stat.DefaultStatPathFilter;
+import org.tio.http.server.stat.StatPathFilter;
 import org.tio.utils.cache.caffeine.CaffeineCache;
 
 /**
@@ -28,8 +31,10 @@ public class TokenPathAccessStats {
 	//	private final static Long timeToIdleSeconds = Time.DAY_1;
 
 	private GroupContext groupContext;
-	
+
 	private String groupContextId;
+	
+	private StatPathFilter statPathFilter;
 
 	//	private CaffeineCache[] caches = null;
 	/**
@@ -42,24 +47,35 @@ public class TokenPathAccessStats {
 	 * 时长段列表
 	 */
 	public final List<Long> durationList = new ArrayList<>();
-	
+
 	private final Map<Long, TokenPathAccessStatListener> listenerMap = new HashMap<>();
-	
+
 	private TokenGetter tokenGetter;
+
+	private CurrUseridGetter currUseridGetter;
 
 	/**
 	 * 
+	 * @param statPathFilter
 	 * @param tokenGetter
+	 * @param currUseridGetter
 	 * @param groupContext
 	 * @param tokenPathAccessStatListener
 	 * @param durations
 	 */
-	public TokenPathAccessStats(TokenGetter tokenGetter, GroupContext groupContext, TokenPathAccessStatListener tokenPathAccessStatListener, Long[] durations) {
+	public TokenPathAccessStats(StatPathFilter statPathFilter, TokenGetter tokenGetter, CurrUseridGetter currUseridGetter, GroupContext groupContext, TokenPathAccessStatListener tokenPathAccessStatListener,
+			Long[] durations) {
+		this.statPathFilter = statPathFilter;
+		if (this.statPathFilter == null) {
+			this.statPathFilter = DefaultStatPathFilter.me;
+		}
+		
 		if (tokenGetter == null) {
 			throw new RuntimeException("tokenGetter can not be null");
 		}
-		
+
 		this.tokenGetter = tokenGetter;
+		this.currUseridGetter = currUseridGetter;
 		this.groupContext = groupContext;
 		this.groupContextId = groupContext.getId();
 		if (durations != null) {
@@ -68,16 +84,9 @@ public class TokenPathAccessStats {
 			}
 		}
 	}
-	
-	public TokenPathAccessStats(GroupContext groupContext, TokenPathAccessStatListener tokenPathAccessStatListener, Long[] durations) {
-		this.tokenGetter = DefaultTokenGetter.me;
-		this.groupContext = groupContext;
-		this.groupContextId = groupContext.getId();
-		if (durations != null) {
-			for (Long duration : durations) {
-				addDuration(duration, tokenPathAccessStatListener);
-			}
-		}
+
+	public TokenPathAccessStats(StatPathFilter statPathFilter, CurrUseridGetter currUseridGetter, GroupContext groupContext, TokenPathAccessStatListener tokenPathAccessStatListener, Long[] durations) {
+		this(statPathFilter, DefaultTokenGetter.me, currUseridGetter, groupContext, tokenPathAccessStatListener, durations);
 	}
 
 	/**
@@ -88,15 +97,16 @@ public class TokenPathAccessStats {
 	 */
 	public void addDuration(Long duration, TokenPathAccessStatListener tokenPathAccessStatListener) {
 		@SuppressWarnings("unchecked")
-		CaffeineCache caffeineCache = CaffeineCache.register(getCacheName(duration), duration, null, new TokenPathAccessStatRemovalListener(groupContext, tokenPathAccessStatListener));
+		CaffeineCache caffeineCache = CaffeineCache.register(getCacheName(duration), duration, null,
+				new TokenPathAccessStatRemovalListener(groupContext, tokenPathAccessStatListener));
 		cacheMap.put(duration, caffeineCache);
 		durationList.add(duration);
-		
+
 		if (tokenPathAccessStatListener != null) {
 			listenerMap.put(duration, tokenPathAccessStatListener);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param duration
@@ -155,21 +165,20 @@ public class TokenPathAccessStats {
 		caffeineCache.clear();
 	}
 
-	
-	
 	/**
 	 * 获取TokenAccessStat
 	 * @param duration
 	 * @param token
+	 * @param ip
+	 * @param uid
 	 * @param forceCreate
 	 * @return
-	 * @author tanyaowu
 	 */
-	public TokenAccessStat get(Long duration, String token, boolean forceCreate) {
+	public TokenAccessStat get(Long duration, String token, String ip, String uid, boolean forceCreate) {
 		if (StringUtils.isBlank(token)) {
 			return null;
 		}
-		
+
 		CaffeineCache caffeineCache = cacheMap.get(duration);
 		if (caffeineCache == null) {
 			return null;
@@ -180,24 +189,25 @@ public class TokenPathAccessStats {
 			synchronized (caffeineCache) {
 				tokenAccessStat = (TokenAccessStat) caffeineCache.get(token);
 				if (tokenAccessStat == null) {
-					tokenAccessStat = new TokenAccessStat(duration, token);//new MapWithLock<String, TokenPathAccessStat>(new HashMap<>());//new TokenPathAccessStat(duration, token, path);
+					tokenAccessStat = new TokenAccessStat(duration, token, ip, uid);//new MapWithLock<String, TokenPathAccessStat>(new HashMap<>());//new TokenPathAccessStat(duration, token, path);
 					caffeineCache.put(token, tokenAccessStat);
 				}
 			}
 		}
-		
+
 		return tokenAccessStat;
 	}
-	
+
 	/**
 	 * 获取TokenAccessStat
 	 * @param duration
 	 * @param token
+	 * @param ip
+	 * @param uid
 	 * @return
-	 * @author tanyaowu
 	 */
-	public TokenAccessStat get(Long duration, String token) {
-		return get(duration, token, true);
+	public TokenAccessStat get(Long duration, String token, String ip, String uid) {
+		return get(duration, token, ip, uid, true);
 	}
 
 	/**
@@ -247,8 +257,24 @@ public class TokenPathAccessStats {
 		return tokenGetter;
 	}
 
-//	public void setTokenGetter(TokenGetter tokenGetter) {
-//		this.tokenGetter = tokenGetter;
-//	}
+	public CurrUseridGetter getCurrUseridGetter() {
+		return currUseridGetter;
+	}
+
+	public void setCurrUseridGetter(CurrUseridGetter currUseridGetter) {
+		this.currUseridGetter = currUseridGetter;
+	}
+
+	public StatPathFilter getStatPathFilter() {
+		return statPathFilter;
+	}
+
+	public void setStatPathFilter(StatPathFilter statPathFilter) {
+		this.statPathFilter = statPathFilter;
+	}
+
+	//	public void setTokenGetter(TokenGetter tokenGetter) {
+	//		this.tokenGetter = tokenGetter;
+	//	}
 
 }

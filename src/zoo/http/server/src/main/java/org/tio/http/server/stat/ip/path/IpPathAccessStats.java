@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.GroupContext;
+import org.tio.http.server.stat.DefaultStatPathFilter;
+import org.tio.http.server.stat.StatPathFilter;
 import org.tio.utils.cache.caffeine.CaffeineCache;
 
 /**
@@ -28,8 +30,10 @@ public class IpPathAccessStats {
 	//	private final static Long timeToIdleSeconds = Time.DAY_1;
 
 	private GroupContext groupContext;
-	
+
 	private String groupContextId;
+
+	private StatPathFilter statPathFilter;
 
 	//	private CaffeineCache[] caches = null;
 	/**
@@ -42,7 +46,7 @@ public class IpPathAccessStats {
 	 * 时长段列表
 	 */
 	public final List<Long> durationList = new ArrayList<>();
-	
+
 	private final Map<Long, IpPathAccessStatListener> listenerMap = new HashMap<>();
 
 	/**
@@ -52,7 +56,11 @@ public class IpPathAccessStats {
 	 * @param durations
 	 * @author tanyaowu
 	 */
-	public IpPathAccessStats(GroupContext groupContext, IpPathAccessStatListener ipPathAccessStatListener, Long[] durations) {
+	public IpPathAccessStats(StatPathFilter statPathFilter, GroupContext groupContext, IpPathAccessStatListener ipPathAccessStatListener, Long[] durations) {
+		this.statPathFilter = statPathFilter;
+		if (this.statPathFilter == null) {
+			this.statPathFilter = DefaultStatPathFilter.me;
+		}
 		this.groupContext = groupContext;
 		this.groupContextId = groupContext.getId();
 		if (durations != null) {
@@ -73,12 +81,12 @@ public class IpPathAccessStats {
 		CaffeineCache caffeineCache = CaffeineCache.register(getCacheName(duration), duration, null, new IpPathAccessStatRemovalListener(groupContext, ipPathAccessStatListener));
 		cacheMap.put(duration, caffeineCache);
 		durationList.add(duration);
-		
+
 		if (ipPathAccessStatListener != null) {
 			listenerMap.put(duration, ipPathAccessStatListener);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param duration
@@ -137,8 +145,6 @@ public class IpPathAccessStats {
 		caffeineCache.clear();
 	}
 
-	
-	
 	/**
 	 * 获取IpAccessStat
 	 * @param duration
@@ -151,7 +157,7 @@ public class IpPathAccessStats {
 		if (StringUtils.isBlank(ip)) {
 			return null;
 		}
-		
+
 		CaffeineCache caffeineCache = cacheMap.get(duration);
 		if (caffeineCache == null) {
 			return null;
@@ -167,10 +173,10 @@ public class IpPathAccessStats {
 				}
 			}
 		}
-		
+
 		return ipAccessStat;
 	}
-	
+
 	/**
 	 * 获取IpAccessStat
 	 * @param duration
@@ -225,4 +231,11 @@ public class IpPathAccessStats {
 		return set;
 	}
 
+	public StatPathFilter getStatPathFilter() {
+		return statPathFilter;
+	}
+
+	public void setStatPathFilter(StatPathFilter statPathFilter) {
+		this.statPathFilter = statPathFilter;
+	}
 }

@@ -49,7 +49,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	private boolean isReconnect = false;
 	
 	/**
-	 * 一个packet所需要的字节数
+	 * 一个packet所需要的字节数（用于应用告诉框架，下一次解码所需要的字节长度，省去冗余解码带来的性能损耗）
 	 */
 	private Integer packetNeededLength = null;
 

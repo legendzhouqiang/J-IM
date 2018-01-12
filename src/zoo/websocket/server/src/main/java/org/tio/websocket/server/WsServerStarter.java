@@ -90,9 +90,8 @@ public class WsServerStarter {
 		this.wsMsgHandler = wsMsgHandler;
 		wsServerAioHandler = new WsServerAioHandler(wsServerConfig, wsMsgHandler);
 		wsServerAioListener = new WsServerAioListener();
-		serverGroupContext = new ServerGroupContext(wsServerAioHandler, wsServerAioListener, tioExecutor, groupExecutor);
+		serverGroupContext = new ServerGroupContext("Tio Websocket Server", wsServerAioHandler, wsServerAioListener, tioExecutor, groupExecutor);
 		serverGroupContext.setHeartbeatTimeout(0);
-		serverGroupContext.setName("Tio Websocket Server");
 
 		aioServer = new AioServer(serverGroupContext);
 

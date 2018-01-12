@@ -27,6 +27,7 @@ public class FlashPolicyServerAioHandler implements ServerAioHandler {
 	@Override
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
 		Aio.send(channelContext, FlashPolicyPacket.RESPONSE);
+//		Aio.close(channelContext, "消息发送完毕");
 	}
 
 	public static final String REQUEST_STR = "<policy-file-request/>";

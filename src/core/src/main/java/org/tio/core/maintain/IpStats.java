@@ -45,9 +45,10 @@ public class IpStats {
 		this.groupContext = groupContext;
 		this.groupContextId = groupContext.getId();
 		if (durations != null) {
-			for (Long duration : durations) {
-				addDuration(duration, ipStatListener);
-			}
+//			for (Long duration : durations) {
+//				addDuration(duration, ipStatListener);
+//			}
+			addDurations(durations, ipStatListener);
 		}
 	}
 

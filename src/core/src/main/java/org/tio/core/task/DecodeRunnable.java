@@ -93,8 +93,8 @@ public class DecodeRunnable implements Runnable {
 			return;
 		}
 
-		try {
-			label_2: while (true) {
+		label_2: while (true) {
+			try {
 				int initPosition = byteBuffer.position();
 				GroupContext groupContext = channelContext.getGroupContext();
 				Packet packet = null;
@@ -176,18 +176,21 @@ public class DecodeRunnable implements Runnable {
 						return;
 					}
 				}
-			}
-		} catch (AioDecodeException e) {
-			log.error(channelContext + ", " + byteBuffer + ", 解码异常:" + e.toString(), e);
-			Aio.close(channelContext, e, "解码异常:" + e.getMessage());
+			} catch (Throwable e) {
+				channelContext.setPacketNeededLength(null);
+				log.error(channelContext + ", " + byteBuffer + ", 解码异常:" + e.toString(), e);
+				Aio.close(channelContext, e, "解码异常:" + e.getMessage());
 
-			GroupContext groupContext = channelContext.getGroupContext();
-			List<Long> list = groupContext.ipStats.durationList;
-			for (Long v : list) {
-				IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-				ipStat.getDecodeErrorCount().incrementAndGet();
+				if (e instanceof AioDecodeException) {
+					GroupContext groupContext = channelContext.getGroupContext();
+					List<Long> list = groupContext.ipStats.durationList;
+					for (Long v : list) {
+						IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+						ipStat.getDecodeErrorCount().incrementAndGet();
+					}
+				}
+				return;
 			}
-			return;
 		}
 	}
 

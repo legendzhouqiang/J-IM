@@ -26,7 +26,7 @@ public class HttpConfig {
 	/**
 	 * 存放sessionId的cookie name
 	 */
-	public static final String SESSION_COOKIE_NAME = "big-tio";
+	public static final String SESSION_COOKIE_NAME = "PHPSESSID";
 
 	/**
 	 * session默认的超时时间，单位：秒

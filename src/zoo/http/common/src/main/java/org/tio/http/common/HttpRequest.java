@@ -491,6 +491,13 @@ public class HttpRequest extends HttpPacket {
 		this.createTime = createTime;
 	}
 
+	@Override
+	public String toString() {
+		return this.getHeaderString() + this.getBodyString();//requestLine.getPathAndQuery() + System.lineSeparator() + Json.toFormatedJson(params);
+	}
+	
+	
+
 	//	/**
 	//	 * @return the httpSession
 	//	 */

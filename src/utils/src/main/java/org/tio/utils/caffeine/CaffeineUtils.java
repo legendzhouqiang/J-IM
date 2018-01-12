@@ -61,8 +61,7 @@ public class CaffeineUtils {
 			removalListener = new RemovalListener<K, V>() {
 				@Override
 				public void onRemoval(K key, V value, RemovalCause cause) {
-					log.info(key + " was removed");
-
+					log.info("key:{}, value:{} was removed", key, value);
 				}
 			};
 		}

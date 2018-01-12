@@ -77,15 +77,15 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 
 			ServerChannelContext channelContext = new ServerChannelContext(serverGroupContext, asynchronousSocketChannel);
 			channelContext.setClosed(false);
-			channelContext.setServerNode(aioServer.getServerNode());
-			ServerAioListener serverAioListener = serverGroupContext.getServerAioListener();
 			channelContext.getStat().setTimeFirstConnected(SystemTimer.currentTimeMillis());
+			channelContext.setServerNode(aioServer.getServerNode());
 			
 			channelContext.traceClient(ChannelAction.CONNECT, null, null);
 			
 			serverGroupContext.connecteds.add(channelContext);
 			serverGroupContext.ips.bind(channelContext);
 			
+			ServerAioListener serverAioListener = serverGroupContext.getServerAioListener();
 			if (!SslUtils.isSsl(channelContext)) {
 				try {
 					serverAioListener.onAfterConnected(channelContext, true, false);

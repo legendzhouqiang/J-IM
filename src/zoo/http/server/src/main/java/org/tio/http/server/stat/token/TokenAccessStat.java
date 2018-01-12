@@ -26,7 +26,10 @@ public class TokenAccessStat implements Serializable {
 	private MapWithLock<String, TokenPathAccessStat> tokenPathAccessStatMap = new MapWithLock<>(new HashMap<>());
 	
 	private Long durationType;
-		
+	
+	private String ip;
+	
+	private String uid;
 	/**
 	 * 当前统计了多久，单位：毫秒
 	 */
@@ -94,7 +97,7 @@ public class TokenAccessStat implements Serializable {
 		
 		TokenPathAccessStat tokenPathAccessStat = tokenPathAccessStatMap.get(path);
 		if (tokenPathAccessStat == null && forceCreate) {
-			tokenPathAccessStat = tokenPathAccessStatMap.putIfAbsent(path, new TokenPathAccessStat(durationType, token, path));
+			tokenPathAccessStat = tokenPathAccessStatMap.putIfAbsent(path, new TokenPathAccessStat(durationType, token, path, ip, uid));
 		}
 		
 		return tokenPathAccessStat;
@@ -104,11 +107,14 @@ public class TokenAccessStat implements Serializable {
 	 * 
 	 * @param durationType
 	 * @param token
-	 * @author tanyaowu
+	 * @param ip
+	 * @param uid
 	 */
-	public TokenAccessStat(Long durationType, String token) {
+	public TokenAccessStat(Long durationType, String token, String ip, String uid) {
 		this.durationType = durationType;
 		this.token = token;
+		this.ip = ip;
+		this.setUid(uid);
 	}
 
 	public MapWithLock<String, TokenPathAccessStat> getTokenPathAccessStatMap() {
@@ -143,11 +149,11 @@ public class TokenAccessStat implements Serializable {
 		this.durationType = durationType;
 	}
 
-	public String getIp() {
+	public String getToken() {
 		return token;
 	}
 
-	public void setIp(String token) {
+	public void setToken(String token) {
 		this.token = token;
 	}
 
@@ -165,5 +171,21 @@ public class TokenAccessStat implements Serializable {
 
 	public void setLastAccessTime(long lastAccessTime) {
 		this.lastAccessTime = lastAccessTime;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 }

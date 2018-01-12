@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.utils.cache.ICache;
 
 import net.oschina.j2cache.CacheChannel;
+import net.oschina.j2cache.CacheObject;
 
 /**
  * 红薯家的j2cache
@@ -21,9 +22,8 @@ import net.oschina.j2cache.CacheChannel;
 public class J2Cache implements ICache {
 	private static Logger log = LoggerFactory.getLogger(J2Cache.class);
 
-	
 	private String cacheName = null;
-	
+
 	/**
 	 * 
 	 */
@@ -34,13 +34,13 @@ public class J2Cache implements ICache {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {}
-	
+	public static void main(String[] args) {
+	}
+
 	private static CacheChannel getChannel() {
 		CacheChannel cache = J2Cache.getChannel();
 		return cache;
 	}
-	
 
 	@Override
 	public void clear() {
@@ -57,7 +57,11 @@ public class J2Cache implements ICache {
 	public Serializable get(String key) {
 		CacheChannel cache = getChannel();
 		try {
-			return cache.getRawObject(cacheName, key);
+			CacheObject<Serializable> cacheObject = cache.get(cacheName, key);
+			if (cacheObject != null) {
+				return cacheObject.getValue();
+			}
+			return null;
 		} catch (IOException e) {
 			log.error(e.toString(), e);
 			throw new RuntimeException(e);
@@ -67,14 +71,8 @@ public class J2Cache implements ICache {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T get(String key, Class<T> clazz) {
-		CacheChannel cache = getChannel();
-		try {
-			Serializable ret =  cache.getRawObject(cacheName, key);
-			return (T)ret;
-		} catch (IOException e) {
-			log.error(e.toString(), e);
-			throw new RuntimeException(e);
-		}
+		Serializable ret = get(key);
+		return (T) ret;
 	}
 
 	@Override
@@ -113,7 +111,7 @@ public class J2Cache implements ICache {
 	@Override
 	public void putTemporary(String key, Serializable value) {
 		throw new RuntimeException("不支持缓存穿透");
-		
+
 	}
 
 }

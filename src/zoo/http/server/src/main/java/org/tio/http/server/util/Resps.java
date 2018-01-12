@@ -198,6 +198,20 @@ public class Resps {
 		ret.setStatus(HttpResponseStatus.C500);
 		return ret;
 	}
+	
+//	/**
+//	 * 
+//	 * @param request
+//	 * @param toPath
+//	 * @param throwable
+//	 * @return
+//	 */
+//	public static HttpResponse redirect(HttpRequest request, String toPath, Throwable throwable) {
+//		HttpResponse response = new HttpResponse(request);
+//		response.setStatus(HttpResponseStatus.C301); 
+//	    response.addHeader(HttpConst.ResponseHeaderKey.Location, toPath);
+//		return response;
+//	}
 
 	/**
 	 *

@@ -84,7 +84,7 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 				ByteBuffer copiedByteBuffer = null;
 				try {
 					copiedByteBuffer = ByteBufferUtils.copy(readByteBuffer, 0, readByteBuffer.position());
-					log.info("{}, 丢给SslFacade解密:{}", channelContext, copiedByteBuffer);
+					log.debug("{}, 丢给SslFacade解密:{}", channelContext, copiedByteBuffer);
 					sslFacadeContext.getSslFacade().decrypt(copiedByteBuffer);
 				} catch (Exception e) {
 					log.error(channelContext + ", " + e.toString() + copiedByteBuffer, e);

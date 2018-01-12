@@ -22,7 +22,7 @@ public class IpBlacklist {
 	private String id;
 
 	private final static String CACHE_NAME = "TIO_IP_BLACK_LIST";
-	private final static Long TIME_TO_LIVE_SECONDS = Time.DAY_1;
+	private final static Long TIME_TO_LIVE_SECONDS = Time.MINUTE_1 * 120;
 	private final static Long TIME_TO_IDLE_SECONDS = null;
 
 	private String cacheName = null;
@@ -51,9 +51,9 @@ public class IpBlacklist {
 //			lock.unlock();
 //		}
 		
-		if (isInBlacklist(ip)) {
-			return false;
-		}
+//		if (isInBlacklist(ip)) {
+//			return false;
+//		}
 		cache.put(ip, SystemTimer.currentTimeMillis());
 
 		//再删除相关连接
@@ -76,7 +76,7 @@ public class IpBlacklist {
 		cache.clear();
 	}
 
-	public Collection<String> getCopy() {
+	public Collection<String> getAll() {
 //		Lock lock = setWithLock.getLock().readLock();
 //		try {
 //			lock.lock();

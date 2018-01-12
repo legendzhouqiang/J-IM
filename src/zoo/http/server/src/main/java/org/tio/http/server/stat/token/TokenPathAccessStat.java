@@ -32,6 +32,10 @@ public class TokenPathAccessStat implements Serializable {
 	 * token
 	 */
 	private String token;
+	
+	private String ip;
+	
+	private String uid;
 
 	/**
 	 * 路径
@@ -60,12 +64,19 @@ public class TokenPathAccessStat implements Serializable {
 	
 
 	/**
-	 * @author tanyaowu
+	 * 
+	 * @param durationType
+	 * @param token
+	 * @param path
+	 * @param ip
+	 * @param uid
 	 */
-	public TokenPathAccessStat(Long durationType, String token, String path) {
+	public TokenPathAccessStat(Long durationType, String token, String path, String ip, String uid) {
 		this.durationType = durationType;
 		this.token = token;
 		this.path = path;
+		this.ip = ip;
+		this.uid = uid;
 	}
 	
 	/**
@@ -131,5 +142,21 @@ public class TokenPathAccessStat implements Serializable {
 
 	public void setDuration(long duration) {
 		this.duration = duration;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 }

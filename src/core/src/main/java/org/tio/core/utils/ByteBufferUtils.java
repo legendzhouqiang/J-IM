@@ -18,7 +18,7 @@ public class ByteBufferUtils {
 	private static Logger log = LoggerFactory.getLogger(ByteBufferUtils.class);
 
 	/**
-	 *
+	 * 组合两个bytebuffer，把可读部分的组合成一个新的bytebuffer
 	 * @param byteBuffer1
 	 * @param byteBuffer2
 	 * @return
@@ -36,6 +36,14 @@ public class ByteBufferUtils {
 		return ret;
 	}
 
+	/**
+	 * 
+	 * @param src
+	 * @param srcStartindex
+	 * @param dest
+	 * @param destStartIndex
+	 * @param length
+	 */
 	public static void copy(ByteBuffer src, int srcStartindex, ByteBuffer dest, int destStartIndex, int length) {
 		System.arraycopy(src.array(), srcStartindex, dest.array(), destStartIndex, length);
 	}

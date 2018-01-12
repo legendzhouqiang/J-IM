@@ -1,14 +1,21 @@
 package org.tio.flash.policy.server;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.core.Aio;
+import org.tio.core.ChannelContext;
+import org.tio.core.stat.ChannelStat;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
 import org.tio.server.intf.ServerAioHandler;
 import org.tio.server.intf.ServerAioListener;
+import org.tio.utils.SystemTimer;
+import org.tio.utils.lock.ObjWithLock;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
@@ -31,6 +38,8 @@ public class FlashPolicyServerStarter {
 	//aioServer对象
 	public static AioServer aioServer = null;
 
+	public static int count = 1;
+
 	/**
 	 * 
 	 * @param ip 可以为null
@@ -44,11 +53,8 @@ public class FlashPolicyServerStarter {
 			port = Const.PORT;
 		}
 		aioHandler = new FlashPolicyServerAioHandler();
-
-		serverGroupContext = new ServerGroupContext(aioHandler, aioListener, tioExecutor, groupExecutor);
-
-		serverGroupContext.setHeartbeatTimeout(Const.TIMEOUT);
-
+		serverGroupContext = new ServerGroupContext("tio flash policy server", aioHandler, aioListener, tioExecutor, groupExecutor);
+		serverGroupContext.setHeartbeatTimeout(Const.HEARTBEAT_TIMEOUT);
 		aioServer = new AioServer(serverGroupContext);
 
 		try {
@@ -57,8 +63,10 @@ public class FlashPolicyServerStarter {
 			log.error(e.toString(), e);
 			System.exit(1);
 		}
+
+		checkAllChannels();
 	}
-	
+
 	/**
 	 * 
 	 * @param ip
@@ -69,7 +77,50 @@ public class FlashPolicyServerStarter {
 		start(ip, port, Threads.tioExecutor, Threads.groupExecutor);
 	}
 
+	/**
+	 * 检查所有通道
+	 */
+	private static void checkAllChannels() {
+		Thread thread = new Thread(new CheckRunnable(), "Flash-Policy-Server-" + count++);
+		thread.start();
+
+	}
+
 	public static void main(String[] args) throws IOException {
 	}
 
+	public static class CheckRunnable implements Runnable {
+		@Override
+		public void run() {
+
+			while (true) {
+				try {
+					Thread.sleep(10 * 1000);
+				} catch (InterruptedException e1) {
+					log.error(e1.toString(), e1);
+				}
+
+				ObjWithLock<Set<ChannelContext>> objWithLock = serverGroupContext.connecteds.getSetWithLock();
+				Set<ChannelContext> set = null;
+				ReadLock readLock = objWithLock.getLock().readLock();
+				long now = SystemTimer.currentTimeMillis();
+				try {
+					readLock.lock();
+					set = objWithLock.getObj();
+					for (ChannelContext channelContext : set) {
+						ChannelStat channelStat = channelContext.getStat();
+						Long timeFirstConnected = channelStat.getTimeFirstConnected();
+						long interval = (now - timeFirstConnected);
+						if (interval > 5000) {
+							Aio.remove(channelContext, "已经连上来有" + interval + "ms了，该断开啦");
+						}
+					}
+				} catch (java.lang.Throwable e) {
+					log.error("", e);
+				} finally {
+					readLock.unlock();
+				}
+			}
+		}
+	}
 }

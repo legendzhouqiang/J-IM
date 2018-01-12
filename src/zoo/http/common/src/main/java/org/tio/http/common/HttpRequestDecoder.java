@@ -244,7 +244,9 @@ public class HttpRequestDecoder {
 				try {
 					bodyString = new String(bodyBytes, httpRequest.getCharset());
 					httpRequest.setBodyString(bodyString);
-					log.info("{} body string\r\n{}", channelContext, bodyString);
+					if (log.isInfoEnabled()) {
+						log.info("{} body string\r\n{}", channelContext, bodyString);
+					}
 				} catch (UnsupportedEncodingException e) {
 					log.error(channelContext.toString(), e);
 				}
