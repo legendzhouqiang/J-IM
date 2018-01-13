@@ -1,0 +1,43 @@
+t-io2.0.5发布，倘若百战怯，便无十年归！
+
+最近在社区互动少了些，但t-io的步伐一直没停过，当然社区一些用户说t-io不敢回应某些言论，借此宝地统一回复一下："呵呵"
+
+话不多说，列一下这个版本更新的内容
+
+tio-utils
+1、cache实现增加j2cache版实现（两级缓存）
+2、cache实现增加caffeine版实现
+3、cache实现增加caffeineRedis版实现（两级缓存）
+4、jar升级，fst升到57，hutool升级到3.3.1等
+
+
+
+tio-core
+1、心跳检查时，日志优化，更清晰，感谢：一页子亥
+2、SSL实现优化
+3、优化解码算法，允许应用层设置packeNeededLength，这样在框架层就能事先判断收到的数据是否足够到可以解码，减少不必要的解码操作 
+
+
+
+tio-http-server(内置mvc)
+1、增加initPath，用于记录访问者最原始的path
+2、增加token访问数据的监控和统计（PS:有一个CurrUseridGetter接口提供给应用 ，让应用根据token返回当前用户的userid） 
+3、http请求支持/user/{userid}这样的路径路由，并且没有用正则表达式来匹配
+4、把原来用guava实现的缓存换成caffeine
+5、token监控和ip监控增加StatPathFilter，过滤掉不必要的path统计
+6、基于tio-core的第3点，对tio-http解码算法进行优化，对文件上传时进行长度预判，减少不必要的解码
+7、静态资源缓存实现小幅改动
+
+
+tio-flash-policy-server
+1、FlashPolicyServer优化，去掉框架层的心跳检查，改为自己用定时任务处理未关闭的连接（更安全）
+
+
+最新pom坐标
+<dependency>
+    <groupId>org.t-io</groupId>
+    <artifactId>tio-core</artifactId>
+    <version>2.0.5.v20180115-RELEASE</version>
+</dependency>
+
+其它一些优化，没一一记录，建议更新到最新版（可能有1-2处API没做兼容，但可能你并没有用到那几处API，所以升级几乎是零成本）
