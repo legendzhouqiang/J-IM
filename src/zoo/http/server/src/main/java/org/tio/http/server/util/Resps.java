@@ -18,8 +18,8 @@ import org.tio.http.common.MimeType;
 import org.tio.http.common.RequestLine;
 import org.tio.utils.json.Json;
 
-import com.xiaoleilu.hutool.io.FileUtil;
-import com.xiaoleilu.hutool.util.ClassUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ClassUtil;
 
 import jodd.io.FileNameUtil;
 
@@ -223,7 +223,7 @@ public class Resps {
 	 */
 	public static HttpResponse bytesWithContentType(HttpRequest request, byte[] bodyBytes, String contentType) {
 		HttpResponse ret = new HttpResponse(request);
-		ret.setBody(bodyBytes, request);
+		ret.setBody(bodyBytes);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Content_Type, contentType);
 		return ret;
 	}
@@ -238,7 +238,7 @@ public class Resps {
 	 */
 	public static HttpResponse bytesWithHeaders(HttpRequest request, byte[] bodyBytes, Map<String, String> headers) {
 		HttpResponse ret = new HttpResponse(request);
-		ret.setBody(bodyBytes, request);
+		ret.setBody(bodyBytes);
 		ret.addHeaders(headers);
 		return ret;
 	}
@@ -372,7 +372,7 @@ public class Resps {
 		HttpResponse ret = new HttpResponse(request);
 		if (bodyString != null) {
 			try {
-				ret.setBody(bodyString.getBytes(charset), request);
+				ret.setBody(bodyString.getBytes(charset));
 			} catch (UnsupportedEncodingException e) {
 				log.error(e.toString(), e);
 			}

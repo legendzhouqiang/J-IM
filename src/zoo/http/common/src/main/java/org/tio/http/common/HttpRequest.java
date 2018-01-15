@@ -15,8 +15,8 @@ import org.tio.http.common.session.HttpSession;
 import org.tio.http.common.utils.IpUtils;
 import org.tio.utils.SystemTimer;
 
-import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  *

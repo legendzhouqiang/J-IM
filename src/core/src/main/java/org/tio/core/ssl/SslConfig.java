@@ -13,7 +13,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.xiaoleilu.hutool.io.FileUtil;
+import cn.hutool.core.io.FileUtil;
 
 /**
  * @author tanyw

@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.tio.utils.SystemTimer;
 
-import com.xiaoleilu.hutool.date.BetweenFormater;
-import com.xiaoleilu.hutool.date.BetweenFormater.Level;
+import cn.hutool.core.date.BetweenFormater;
+import cn.hutool.core.date.BetweenFormater.Level;
 
 /**
  * ip访问路径统计

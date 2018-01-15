@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  *
  * @author tanyaowu
@@ -26,6 +27,15 @@ public class HttpResponse extends HttpPacket {
 	 *
 	 */
 	public static void main(String[] args) {
+	}
+	
+	public static HttpResponse cloneResponse(HttpRequest request, HttpResponse response) {
+		HttpResponse cloneResponse = new HttpResponse(request);
+		cloneResponse.setStatus(response.getStatus());
+		cloneResponse.setBody(response.getBody());
+		cloneResponse.setHasGzipped(response.isHasGzipped());
+		cloneResponse.setHeaders(response.getHeaders());
+		return cloneResponse;
 	}
 
 	private HttpResponseStatus status = HttpResponseStatus.C200;
@@ -201,7 +211,7 @@ public class HttpResponse extends HttpPacket {
 		return str;
 	}
 
-	public void setBody(byte[] body, HttpRequest request) {
+	public void setBody(byte[] body) {
 		this.body = body;
 	}
 

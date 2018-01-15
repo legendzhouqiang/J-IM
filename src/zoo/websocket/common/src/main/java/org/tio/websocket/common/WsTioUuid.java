@@ -2,8 +2,8 @@ package org.tio.websocket.common;
 
 import org.tio.core.intf.TioUuid;
 
-import com.xiaoleilu.hutool.lang.Snowflake;
-import com.xiaoleilu.hutool.util.RandomUtil;
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.RandomUtil;
 
 /**
  * @author tanyaowu

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
 import org.tio.core.ssl.SslVo;
 
-import com.xiaoleilu.hutool.util.ArrayUtil;
+import cn.hutool.core.util.ArrayUtil;
 
 class Worker {
 

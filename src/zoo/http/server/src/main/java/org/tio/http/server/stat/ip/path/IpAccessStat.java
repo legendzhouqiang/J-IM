@@ -10,8 +10,8 @@ import org.tio.utils.SystemTimer;
 import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.lock.SetWithLock;
 
-import com.xiaoleilu.hutool.date.BetweenFormater;
-import com.xiaoleilu.hutool.date.BetweenFormater.Level;
+import cn.hutool.core.date.BetweenFormater;
+import cn.hutool.core.date.BetweenFormater.Level;
 
 /**
  * ip访问统计

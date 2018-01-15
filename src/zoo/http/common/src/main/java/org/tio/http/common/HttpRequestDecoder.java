@@ -16,7 +16,7 @@ import org.tio.core.utils.ByteBufferUtils;
 import org.tio.http.common.HttpConst.RequestBodyFormat;
 import org.tio.http.common.utils.HttpParseUtils;
 
-import com.xiaoleilu.hutool.util.StrUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  *

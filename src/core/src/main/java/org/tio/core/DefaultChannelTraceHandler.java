@@ -10,8 +10,8 @@ import org.tio.core.intf.ChannelTraceHandler;
 import org.tio.core.intf.Packet;
 import org.tio.utils.json.Json;
 
-import com.xiaoleilu.hutool.date.DatePattern;
-import com.xiaoleilu.hutool.date.DateTime;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateTime;
 
 /**
  * @author tanyaowu

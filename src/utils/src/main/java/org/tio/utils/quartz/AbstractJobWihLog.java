@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.utils.SystemTimer;
 
-import com.xiaoleilu.hutool.date.DateUtil;
+import cn.hutool.core.date.DateUtil;
 
 /**
  * @author tanyaowu 

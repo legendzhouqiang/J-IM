@@ -65,7 +65,7 @@
 		<commons-compress.version>1.15</commons-compress.version>
 		<fastjson.version>1.2.44</fastjson.version>
 		<testng.version>6.13.1</testng.version>
-		<hutool.version>3.3.1</hutool.version>
+		<hutool.version>4.0.0</hutool.version>
 
 		<protobuf-java.version>3.5.1</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
@@ -73,7 +73,7 @@
 
 		<protostuff.version>1.6.0</protostuff.version>
 		<redisson.version>3.5.7</redisson.version>
-		<jodd.version>3.9.1</jodd.version>
+		<jodd.version>4.0.0</jodd.version>
 		<quartz.version>2.3.0</quartz.version>
 		<caffeine.version>2.6.1</caffeine.version>
 
@@ -205,7 +205,7 @@
 			<dependency>
 				<groupId>net.oschina.j2cache</groupId>
 				<artifactId>j2cache-core</artifactId>
-				<version>2.2.3-release</version>
+				<version>2.2.4-release</version>
 			</dependency>
 
 			<dependency>
@@ -215,13 +215,13 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.xiaoleilu</groupId>
+				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-core</artifactId>
 				<version>${hutool.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>com.xiaoleilu</groupId>
+				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-all</artifactId>
 				<version>${hutool.version}</version>
 			</dependency>
@@ -406,6 +406,11 @@
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-core</artifactId>
+				<version>${jodd.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-bean</artifactId>
 				<version>${jodd.version}</version>
 			</dependency>
 			<dependency>

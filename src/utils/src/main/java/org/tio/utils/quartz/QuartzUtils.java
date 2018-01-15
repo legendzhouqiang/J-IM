@@ -20,7 +20,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xiaoleilu.hutool.setting.dialect.Props;
+import cn.hutool.setting.dialect.Props;
 
 /**
  * 对Quartz的封装, 使用方法见:<a href="https://my.oschina.net/talenttan/blog/1550826">https://my.oschina.net/talenttan/blog/1550826</a>

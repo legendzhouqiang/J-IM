@@ -6,7 +6,7 @@ import org.tio.http.common.HttpConst;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
 
-import com.xiaoleilu.hutool.util.ZipUtil;
+import cn.hutool.core.util.ZipUtil;
 
 /**
  * @author tanyaowu
@@ -49,7 +49,7 @@ public class HttpServerUtils {
 			if (bs != null && bs.length >= 600) {
 				byte[] bs2 = ZipUtil.gzip(bs);
 				if (bs2.length < bs.length) {
-					response.setBody(bs2, request);
+					response.setBody(bs2);
 					response.setHasGzipped(true);
 					response.addHeader(HttpConst.ResponseHeaderKey.Content_Encoding, "gzip");
 				}

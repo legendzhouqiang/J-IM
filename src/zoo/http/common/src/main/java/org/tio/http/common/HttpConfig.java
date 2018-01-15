@@ -5,10 +5,11 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.tio.http.common.handler.HttpRequestHandler;
+import org.tio.http.common.session.HttpSession;
 import org.tio.http.common.session.id.ISessionIdGenerator;
 import org.tio.utils.cache.ICache;
 
-import com.xiaoleilu.hutool.io.FileUtil;
+import cn.hutool.core.io.FileUtil;
 
 /**
  * @author tanyaowu
@@ -37,22 +38,22 @@ public class HttpConfig {
 	 * 默认的静态资源缓存时间，单位：秒
 	 */
 	public static final int MAX_LIVETIME_OF_STATICRES = 60 * 10;
-	
+
 	/**
 	 * 文件上传时，boundary值的最大长度
 	 */
 	public static final int MAX_LENGTH_OF_BOUNDARY = 256;
-	
+
 	/**
 	 * 文件上传时，头部的最大长度
 	 */
 	public static final int MAX_LENGTH_OF_MULTI_HEADER = 128;
-	
+
 	/**
 	 * 文件上传时，体的最大长度
 	 */
 	public static final int MAX_LENGTH_OF_MULTI_BODY = 1024 * 1024 * 20;
-	
+
 	/**
 	 * 是否使用session
 	 */
@@ -78,11 +79,11 @@ public class HttpConfig {
 	private String charset = HttpConst.CHARSET_NAME;
 
 	private ICache sessionStore = null;
-	
+
 	private String contextPath = "";
-	
+
 	private String suffix = "";
-	
+
 	/**
 	 * 允许访问的域名，如果不限制，则为null
 	 */
@@ -112,9 +113,9 @@ public class HttpConfig {
 	private String page500 = "/500.html";
 
 	private ISessionIdGenerator sessionIdGenerator;
-	
+
 	private HttpRequestHandler httpRequestHandler;
-	
+
 	/**
 	 * 是否被代理
 	 */
@@ -150,12 +151,12 @@ public class HttpConfig {
 		if (sessionTimeout != null) {
 			this.sessionTimeout = sessionTimeout;
 		}
-		
+
 		if (contextPath == null) {
 			contextPath = "";
 		}
 		this.contextPath = contextPath;
-		
+
 		if (suffix == null) {
 			suffix = "";
 		}
@@ -280,7 +281,7 @@ public class HttpConfig {
 		if (pageRoot == null) {
 			return;
 		}
-		
+
 		if (StringUtils.startsWithIgnoreCase(pageRoot, "classpath:")) {
 			this.pageRoot = new File(FileUtil.getAbsolutePath(pageRoot));
 		} else {
@@ -365,5 +366,18 @@ public class HttpConfig {
 
 	public void setUseSession(boolean useSession) {
 		this.useSession = useSession;
+	}
+
+	/**
+	 * 根据sessionId获取HttpSession对象
+	 * @param sessionId
+	 * @return
+	 */
+	public HttpSession getHttpSession(String sessionId) {
+		if (StringUtils.isBlank(sessionId)) {
+			return null;
+		}
+		HttpSession httpSession = (HttpSession) getSessionStore().get(sessionId);
+		return httpSession;
 	}
 }

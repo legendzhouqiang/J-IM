@@ -4,8 +4,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 
-import com.xiaoleilu.hutool.io.watch.WatchMonitor;
-import com.xiaoleilu.hutool.io.watch.Watcher;
+import cn.hutool.core.io.watch.WatchMonitor;
+import cn.hutool.core.io.watch.Watcher;
 
 /**
  *

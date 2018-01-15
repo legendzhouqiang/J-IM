@@ -89,7 +89,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
 		</dependency>
 		<dependency>

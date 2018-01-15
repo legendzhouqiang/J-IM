@@ -48,10 +48,10 @@ import org.tio.utils.SystemTimer;
 import org.tio.utils.cache.caffeine.CaffeineCache;
 import org.tio.utils.freemarker.FreemarkerUtils;
 
-import com.xiaoleilu.hutool.bean.BeanUtil;
-import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.ClassUtil;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ClassUtil;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -374,7 +374,9 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 						return response;
 					}
 
-					response = fileCache.cloneResponse(request);
+//					response = fileCache.cloneResponse(request);
+					response = HttpResponse.cloneResponse(request, response);
+					
 					//					log.info("{}, 从缓存获取, 大小: {}", path, response.getBody().length);
 
 					//					response = new HttpResponse(request, httpConfig);
@@ -445,7 +447,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 									HttpResponse responseInCache = new HttpResponse(request);
 									responseInCache.addHeaders(headers);
-									responseInCache.setBody(response.getBody(), request);
+									responseInCache.setBody(response.getBody());
 									responseInCache.setHasGzipped(response.isHasGzipped());
 
 									fileCache = new FileCache(responseInCache, file.lastModified());
