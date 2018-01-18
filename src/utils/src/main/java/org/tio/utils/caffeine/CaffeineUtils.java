@@ -7,11 +7,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.utils.cache.caffeine.DefaultRemovalListener;
 
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.RemovalListener;
 
 /**
@@ -29,8 +29,7 @@ public class CaffeineUtils {
 	private static Logger log = LoggerFactory.getLogger(CaffeineUtils.class);
 
 	/**
-	 *
-	 * @param concurrencyLevel
+	 * @param cacheName
 	 * @param timeToLiveSeconds 设置写缓存后过期时间（单位：秒）
 	 * @param timeToIdleSeconds 设置读缓存后过期时间（单位：秒）
 	 * @param initialCapacity
@@ -38,14 +37,13 @@ public class CaffeineUtils {
 	 * @param recordStats
 	 * @return
 	 */
-	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long timeToLiveSeconds, Long timeToIdleSeconds, Integer initialCapacity,
+	public static <K, V> LoadingCache<K, V> createLoadingCache(String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds, Integer initialCapacity,
 			Integer maximumSize, boolean recordStats) {
-		return createLoadingCache(concurrencyLevel, timeToLiveSeconds, timeToIdleSeconds, initialCapacity, maximumSize, recordStats, null);
+		return createLoadingCache(cacheName, timeToLiveSeconds, timeToIdleSeconds, initialCapacity, maximumSize, recordStats, null);
 	}
 
 	/**
-	 *
-	 * @param concurrencyLevel
+	 * @param cacheName
 	 * @param timeToLiveSeconds 设置写缓存后过期时间（单位：秒）
 	 * @param timeToIdleSeconds 设置读缓存后过期时间（单位：秒）
 	 * @param initialCapacity
@@ -54,16 +52,11 @@ public class CaffeineUtils {
 	 * @param removalListener
 	 * @return
 	 */
-	public static <K, V> LoadingCache<K, V> createLoadingCache(Integer concurrencyLevel, Long timeToLiveSeconds, Long timeToIdleSeconds, Integer initialCapacity,
+	public static <K, V> LoadingCache<K, V> createLoadingCache(String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds, Integer initialCapacity,
 			Integer maximumSize, boolean recordStats, RemovalListener<K, V> removalListener) {
 
 		if (removalListener == null) {
-			removalListener = new RemovalListener<K, V>() {
-				@Override
-				public void onRemoval(K key, V value, RemovalCause cause) {
-					log.info("key:{}, value:{} was removed", key, value);
-				}
-			};
+			removalListener = new DefaultRemovalListener<K, V>(cacheName);
 		}
 
 		Caffeine<K, V> cacheBuilder = Caffeine.newBuilder().removalListener(removalListener);
@@ -113,13 +106,12 @@ public class CaffeineUtils {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Integer concurrencyLevel = 8;
 		Long timeToLiveSeconds = 1L;
 		Long timeToIdleSeconds = null;
 		Integer initialCapacity = 10;
 		Integer maximumSize = 1000;
 		boolean recordStats = false;
-		LoadingCache<String, Object> loadingCache = CaffeineUtils.createLoadingCache(concurrencyLevel, timeToLiveSeconds, timeToIdleSeconds, initialCapacity, maximumSize,
+		LoadingCache<String, Object> loadingCache = CaffeineUtils.createLoadingCache("testCachename", timeToLiveSeconds, timeToIdleSeconds, initialCapacity, maximumSize,
 				recordStats);
 
 		loadingCache.put("1", "11111");

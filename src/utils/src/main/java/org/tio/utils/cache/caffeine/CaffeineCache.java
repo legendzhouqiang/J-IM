@@ -56,17 +56,16 @@ public class CaffeineCache  implements ICache {
 			synchronized (CaffeineCache.class) {
 				CaffeineCache = map.get(cacheName);
 				if (CaffeineCache == null) {
-					Integer concurrencyLevel = 8;
 					Integer initialCapacity = 10;
 					Integer maximumSize = 5000000;
 					boolean recordStats = false;
-					LoadingCache<String, Serializable> loadingCache = CaffeineUtils.createLoadingCache(concurrencyLevel, timeToLiveSeconds, timeToIdleSeconds, initialCapacity,
+					LoadingCache<String, Serializable> loadingCache = CaffeineUtils.createLoadingCache(cacheName, timeToLiveSeconds, timeToIdleSeconds, initialCapacity,
 							maximumSize, recordStats, removalListener);
 					CaffeineCache = new CaffeineCache(loadingCache, loadingCache);
 					map.put(cacheName, CaffeineCache);
 					
 					Integer temporaryMaximumSize = 500000;
-					LoadingCache<String, Serializable> temporaryLoadingCache = CaffeineUtils.createLoadingCache(concurrencyLevel, (Long)null, 10L, initialCapacity,
+					LoadingCache<String, Serializable> temporaryLoadingCache = CaffeineUtils.createLoadingCache(cacheName, (Long)null, 10L, initialCapacity,
 							temporaryMaximumSize, recordStats, removalListener);
 					CaffeineCache temporaryCaffeineCache = new CaffeineCache(loadingCache, temporaryLoadingCache);
 					temporaryMap.put(cacheName, temporaryCaffeineCache);
