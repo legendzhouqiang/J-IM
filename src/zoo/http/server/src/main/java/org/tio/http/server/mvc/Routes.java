@@ -376,12 +376,11 @@ public class Routes {
 	public Method getMethodByPath(String path, HttpRequest request) {
 		Method method = pathMethodMap.get(path);
 		if (method == null) {
-			String[] pathUnitsOfRequest = StringUtils.split(path, "/");
+			String[] pathUnitsOfRequest = StringUtils.split(path, "/");  // "/user/214" -- > ["user", "214"]
 			VariablePathVo[] variablePathVos = variablePathMap.get(pathUnitsOfRequest.length);
 			if (variablePathVos != null) {
 				tag1: for (VariablePathVo variablePathVo : variablePathVos) {
 					PathUnitVo[] pathUnitVos = variablePathVo.getPathUnits();
-					boolean isTheMethod = true;
 					tag2: for (int i = 0; i < pathUnitVos.length; i++) {
 						PathUnitVo pathUnitVo = pathUnitVos[i];
 						String pathUnitOfRequest = pathUnitsOfRequest[i];
@@ -390,16 +389,13 @@ public class Routes {
 							request.addParam(pathUnitVo.getPath(), pathUnitOfRequest);
 						} else {
 							if (!StringUtils.equals(pathUnitVo.getPath(), pathUnitOfRequest)) {
-								isTheMethod = false;
-								break tag2;
+								continue tag1;
 							}
 						}
 					}
 					
-					if (isTheMethod) {
-						method = variablePathVo.getMethod();
-						return method;
-					}
+					method = variablePathVo.getMethod();
+					return method;
 				}
 			}
 			return null;
