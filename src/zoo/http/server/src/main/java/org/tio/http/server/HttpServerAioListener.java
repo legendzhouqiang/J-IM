@@ -160,6 +160,10 @@ public class HttpServerAioListener implements ServerAioListener {
 
 	@Override
 	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
+		HttpRequest request = (HttpRequest)channelContext.getAttribute(HttpServerAioHandler.REQUEST_KEY);
+		if (request != null) {
+			request.setClosed(true);
+		}
 	}
 
 }

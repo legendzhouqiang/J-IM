@@ -34,7 +34,11 @@ public class HttpResponse extends HttpPacket {
 		cloneResponse.setStatus(response.getStatus());
 		cloneResponse.setBody(response.getBody());
 		cloneResponse.setHasGzipped(response.isHasGzipped());
-		cloneResponse.setHeaders(response.getHeaders());
+		cloneResponse.addHeaders(response.getHeaders());
+		
+		if (cloneResponse.getCookies() != null) {
+			cloneResponse.getCookies().clear();
+		}
 		return cloneResponse;
 	}
 
@@ -63,6 +67,15 @@ public class HttpResponse extends HttpPacket {
 	 */
 	private byte[] encodedBytes = null;
 
+	/**
+	 * 忽略ip访问统计
+	 */
+	private boolean skipIpStat = false;
+	/**
+	 * 忽略token访问统计
+	 */
+	private boolean skipTokenStat = false;
+	
 //	/**
 //	 *
 //	 * @param request
@@ -263,5 +276,21 @@ public class HttpResponse extends HttpPacket {
 
 	public void setHasGzipped(boolean hasGzipped) {
 		this.hasGzipped = hasGzipped;
+	}
+
+	public boolean isSkipIpStat() {
+		return skipIpStat;
+	}
+
+	public void setSkipIpStat(boolean skipIpStat) {
+		this.skipIpStat = skipIpStat;
+	}
+
+	public boolean isSkipTokenStat() {
+		return skipTokenStat;
+	}
+
+	public void setSkipTokenStat(boolean skipTokenStat) {
+		this.skipTokenStat = skipTokenStat;
 	}
 }

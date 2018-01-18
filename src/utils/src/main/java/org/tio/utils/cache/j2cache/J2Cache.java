@@ -3,7 +3,6 @@
  */
 package org.tio.utils.cache.j2cache;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -45,27 +44,17 @@ public class J2Cache implements ICache {
 	@Override
 	public void clear() {
 		CacheChannel cache = getChannel();
-		try {
-			cache.clear(cacheName);
-		} catch (IOException e) {
-			log.error(e.toString(), e);
-			throw new RuntimeException(e);
-		}
+		cache.clear(cacheName);
 	}
 
 	@Override
 	public Serializable get(String key) {
 		CacheChannel cache = getChannel();
-		try {
-			CacheObject<Serializable> cacheObject = cache.get(cacheName, key);
-			if (cacheObject != null) {
-				return cacheObject.getValue();
-			}
-			return null;
-		} catch (IOException e) {
-			log.error(e.toString(), e);
-			throw new RuntimeException(e);
+		CacheObject cacheObject = cache.get(cacheName, key);
+		if (cacheObject != null) {
+			return (Serializable) cacheObject.getValue();
 		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -78,34 +67,19 @@ public class J2Cache implements ICache {
 	@Override
 	public Collection<String> keys() {
 		CacheChannel cache = getChannel();
-		try {
-			return cache.keys(cacheName);
-		} catch (IOException e) {
-			log.error(e.toString(), e);
-			throw new RuntimeException(e);
-		}
+		return cache.keys(cacheName);
 	}
 
 	@Override
 	public void put(String key, Serializable value) {
 		CacheChannel cache = getChannel();
-		try {
-			cache.set(cacheName, key, value);
-		} catch (IOException e) {
-			log.error(e.toString(), e);
-			throw new RuntimeException(e);
-		}
+		cache.set(cacheName, key, value);
 	}
 
 	@Override
 	public void remove(String key) {
 		CacheChannel cache = getChannel();
-		try {
-			cache.evict(cacheName, key);
-		} catch (IOException e) {
-			log.error(e.toString(), e);
-			throw new RuntimeException(e);
-		}
+		cache.evict(cacheName, key);
 	}
 
 	@Override

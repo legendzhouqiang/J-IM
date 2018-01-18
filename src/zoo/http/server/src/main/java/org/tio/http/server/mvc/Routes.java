@@ -381,6 +381,7 @@ public class Routes {
 			if (variablePathVos != null) {
 				tag1: for (VariablePathVo variablePathVo : variablePathVos) {
 					PathUnitVo[] pathUnitVos = variablePathVo.getPathUnits();
+					boolean isTheMethod = true;
 					tag2: for (int i = 0; i < pathUnitVos.length; i++) {
 						PathUnitVo pathUnitVo = pathUnitVos[i];
 						String pathUnitOfRequest = pathUnitsOfRequest[i];
@@ -389,12 +390,16 @@ public class Routes {
 							request.addParam(pathUnitVo.getPath(), pathUnitOfRequest);
 						} else {
 							if (!StringUtils.equals(pathUnitVo.getPath(), pathUnitOfRequest)) {
+								isTheMethod = false;
 								break tag2;
 							}
 						}
 					}
-					method = variablePathVo.getMethod();
-					return method;
+					
+					if (isTheMethod) {
+						method = variablePathVo.getMethod();
+						return method;
+					}
 				}
 			}
 			return null;

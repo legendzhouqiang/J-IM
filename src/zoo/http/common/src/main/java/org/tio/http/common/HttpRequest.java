@@ -66,6 +66,8 @@ public class HttpRequest extends HttpPacket {
 	private String clientIp = null;
 	// 该HttpRequest对象的创建时间
 	private long createTime = SystemTimer.currentTimeMillis();
+	
+	private boolean closed = false;
 
 	/**
 	 *
@@ -91,6 +93,7 @@ public class HttpRequest extends HttpPacket {
 	 */
 	public void close(String remark) {
 		Aio.close(channelContext, remark);
+		closed = true;
 	}
 
 	public void addParam(String key, Object value) {
@@ -493,9 +496,20 @@ public class HttpRequest extends HttpPacket {
 
 	@Override
 	public String toString() {
-		return this.getHeaderString() + this.getBodyString();//requestLine.getPathAndQuery() + System.lineSeparator() + Json.toFormatedJson(params);
+		String ret =  this.getHeaderString();
+		if (this.getBodyString() != null) {
+			ret += this.getBodyString();
+		}
+		return ret;//requestLine.getPathAndQuery() + System.lineSeparator() + Json.toFormatedJson(params);
 	}
-	
+
+	public boolean isClosed() {
+		return closed;
+	}
+
+	public void setClosed(boolean closed) {
+		this.closed = closed;
+	}
 	
 
 	//	/**

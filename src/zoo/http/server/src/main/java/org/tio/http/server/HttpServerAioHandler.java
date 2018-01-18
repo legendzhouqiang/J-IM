@@ -24,6 +24,8 @@ import org.tio.server.intf.ServerAioHandler;
  */
 public class HttpServerAioHandler implements ServerAioHandler {
 	private static Logger log = LoggerFactory.getLogger(HttpServerAioHandler.class);
+	
+	public static final String REQUEST_KEY = "tio_request_key";
 
 	/**
 	 * @param args
@@ -75,6 +77,7 @@ public class HttpServerAioHandler implements ServerAioHandler {
 	@Override
 	public HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
 		HttpRequest request = HttpRequestDecoder.decode(buffer, channelContext);
+		channelContext.setAttribute(REQUEST_KEY, request);
 		return request;
 	}
 

@@ -375,6 +375,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					}
 
 //					response = fileCache.cloneResponse(request);
+					response = fileCache.getResponse();
 					response = HttpResponse.cloneResponse(request, response);
 					
 					//					log.info("{}, 从缓存获取, 大小: {}", path, response.getBody().length);
@@ -484,12 +485,12 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					long iv = time - request.getCreateTime(); //本次请求消耗的时间，单位：毫秒
 
 					/////////
-					boolean f = statIpPath(request, path, iv);
+					boolean f = statIpPath(request, response, path, iv);
 					if (!f) {
 						return null;
 					}
 
-					f = statTokenPath(request, path, iv);
+					f = statTokenPath(request, response, path, iv);
 					if (!f) {
 						return null;
 					}
@@ -499,13 +500,18 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	}
 
 	/**
-	 * ipPathAccessStat
+	 * 
 	 * @param request
+	 * @param response
 	 * @param path
 	 * @param iv
 	 * @return
 	 */
-	private boolean statIpPath(HttpRequest request, String path, long iv) {
+	private boolean statIpPath(HttpRequest request, HttpResponse response, String path, long iv) {
+		if (response.isSkipIpStat() || request.isClosed()) {
+			return true;
+		}
+		
 		//统计一下IP访问数据
 		if (ipPathAccessStats != null) {
 			String ip = IpUtils.getRealIp(request);
@@ -528,7 +534,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					ipAccessStat.sessionIds.add(cookie.getValue());
 				}
 
-				if (statPathFilter.filter(path, request)) {
+				if (statPathFilter.filter(path, request, response)) {
 					IpPathAccessStat ipPathAccessStat = ipAccessStat.get(path);
 					ipPathAccessStat.count.incrementAndGet();
 					ipPathAccessStat.timeCost.addAndGet(iv);
@@ -556,11 +562,15 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	/**
 	 * tokenPathAccessStat
 	 * @param request
+	 * @param response
 	 * @param path
 	 * @param iv
 	 * @return
 	 */
-	private boolean statTokenPath(HttpRequest request, String path, long iv) {
+	private boolean statTokenPath(HttpRequest request, HttpResponse response, String path, long iv) {
+		if (response.isSkipTokenStat() || request.isClosed()) {
+			return true;
+		}
 		//统计一下Token访问数据
 		if (tokenPathAccessStats != null) {
 			String token = tokenPathAccessStats.getTokenGetter().getToken(request);
@@ -583,7 +593,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					tokenAccessStat.timeCost.addAndGet(iv);
 					tokenAccessStat.setLastAccessTime(SystemTimer.currentTimeMillis());
 
-					if (statPathFilter.filter(path, request)) {
+					if (statPathFilter.filter(path, request, response)) {
 						TokenPathAccessStat tokenPathAccessStat = tokenAccessStat.get(path);
 						tokenPathAccessStat.count.incrementAndGet();
 						tokenPathAccessStat.timeCost.addAndGet(iv);
