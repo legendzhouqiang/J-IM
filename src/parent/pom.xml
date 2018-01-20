@@ -205,7 +205,7 @@
 			<dependency>
 				<groupId>net.oschina.j2cache</groupId>
 				<artifactId>j2cache-core</artifactId>
-				<version>2.3.3-release</version>
+				<version>2.3.4-release</version>
 			</dependency>
 
 			<dependency>
@@ -469,7 +469,7 @@
 			<dependency>
 				<groupId>io.github.lukehutch</groupId>
 				<artifactId>fast-classpath-scanner</artifactId>
-				<version>2.9.5</version>
+				<version>2.11.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.thoughtworks.paranamer</groupId>
