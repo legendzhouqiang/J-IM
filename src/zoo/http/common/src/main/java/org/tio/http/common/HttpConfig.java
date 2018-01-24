@@ -80,9 +80,20 @@ public class HttpConfig {
 
 	private ICache sessionStore = null;
 
+	/**
+	 * 访问路径前缀，譬如"/api"
+	 */
 	private String contextPath = "";
 
+	/**
+	 * 加后缀，譬如".php"
+	 */
 	private String suffix = "";
+	
+	/**
+	 * 如果访问路径是以"/"结束，则实际访问路径会自动加上welcomeFile，从而变成形如"/index.html"的路径
+	 */
+	private String welcomeFile = "index.html";
 
 	/**
 	 * 允许访问的域名，如果不限制，则为null
@@ -379,5 +390,13 @@ public class HttpConfig {
 		}
 		HttpSession httpSession = (HttpSession) getSessionStore().get(sessionId);
 		return httpSession;
+	}
+
+	public String getWelcomeFile() {
+		return welcomeFile;
+	}
+
+	public void setWelcomeFile(String welcomeFile) {
+		this.welcomeFile = welcomeFile;
 	}
 }

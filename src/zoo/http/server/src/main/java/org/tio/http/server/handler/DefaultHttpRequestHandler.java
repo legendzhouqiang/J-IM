@@ -235,6 +235,12 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 				//				return null;
 			}
 		}
+		
+		if (StringUtils.isNotBlank(httpConfig.getWelcomeFile())) {
+			if (StringUtils.endsWith(path, "/")) {
+				path = path + httpConfig.getWelcomeFile();
+			}
+		}
 		requestLine.setPath(path);
 
 		//		CaffeineCache contentCache = null;
@@ -432,7 +438,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 								if (response.getBody() != null && response.getStatus() == HttpResponseStatus.C200) {
 									String contentType = response.getHeader(HttpConst.ResponseHeaderKey.Content_Type);
 									String contentEncoding = response.getHeader(HttpConst.ResponseHeaderKey.Content_Encoding);
-									String lastModified = response.getHeader(HttpConst.ResponseHeaderKey.Last_Modified);
+									String lastModified = response.getLastModified();//.getHeader(HttpConst.ResponseHeaderKey.Last_Modified);
 
 									Map<String, String> headers = new HashMap<>();
 									if (StringUtils.isNotBlank(contentType)) {
@@ -441,13 +447,16 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 									if (StringUtils.isNotBlank(contentEncoding)) {
 										headers.put(HttpConst.ResponseHeaderKey.Content_Encoding, contentEncoding);
 									}
-									if (StringUtils.isNotBlank(lastModified)) {
-										headers.put(HttpConst.ResponseHeaderKey.Last_Modified, lastModified);
-									}
+//									if (StringUtils.isNotBlank(lastModified)) {
+//										headers.put(HttpConst.ResponseHeaderKey.Last_Modified, lastModified);
+//									}
 									//									headers.put(HttpConst.ResponseHeaderKey.tio_from_cache, "true");
 
 									HttpResponse responseInCache = new HttpResponse(request);
 									responseInCache.addHeaders(headers);
+									if (StringUtils.isNotBlank(lastModified)) {
+										responseInCache.setLastModified(lastModified);
+									}
 									responseInCache.setBody(response.getBody());
 									responseInCache.setHasGzipped(response.isHasGzipped());
 
@@ -632,7 +641,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		String sessionId = null;
 
 		if (cookie == null) {
-			createSessionCookie(request, httpSession, httpResponse);
+			cookie = createSessionCookie(request, httpSession, httpResponse);
 			log.info("{} 创建会话Cookie, {}", request.getChannelContext(), cookie);
 		} else {
 			sessionId = cookie.getValue();

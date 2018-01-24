@@ -224,7 +224,7 @@ public class ByteBufferUtils {
 		if (endPosition > startPosition) {
 			byte[] bs = new byte[endPosition - startPosition];
 			System.arraycopy(buffer.array(), startPosition, bs, 0, bs.length);
-			if (StringUtils.isNoneBlank(charset)) {
+			if (StringUtils.isNotBlank(charset)) {
 				try {
 					return new String(bs, charset);
 				} catch (UnsupportedEncodingException e) {
@@ -250,7 +250,7 @@ public class ByteBufferUtils {
 		if (endPosition > startPosition) {
 			byte[] bs = new byte[endPosition - startPosition];
 			System.arraycopy(buffer.array(), startPosition, bs, 0, bs.length);
-			if (StringUtils.isNoneBlank(charset)) {
+			if (StringUtils.isNotBlank(charset)) {
 				try {
 					return new String(bs, charset);
 				} catch (UnsupportedEncodingException e) {

@@ -297,9 +297,9 @@ public class HttpRequestDecoder {
 		}
 		httpRequest.setBodyFormat(bodyFormat);
 
-		if (StringUtils.isNoneBlank(Content_Type)) {
+		if (StringUtils.isNotBlank(Content_Type)) {
 			String charset = HttpParseUtils.getPerprotyEqualValue(headers, HttpConst.RequestHeaderKey.Content_Type, "charset");
-			if (StringUtils.isNoneBlank(charset)) {
+			if (StringUtils.isNotBlank(charset)) {
 				httpRequest.setCharset(charset);
 			}
 		}

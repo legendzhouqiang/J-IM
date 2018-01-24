@@ -2,6 +2,9 @@ package org.tio.http.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -76,6 +79,8 @@ public class HttpResponse extends HttpPacket {
 	 */
 	private boolean skipTokenStat = false;
 	
+	private String lastModified = null;//HttpConst.ResponseHeaderKey.Last_Modified
+	
 //	/**
 //	 *
 //	 * @param request
@@ -146,6 +151,19 @@ public class HttpResponse extends HttpPacket {
 		//		String xx = DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis());
 		//		addHeader(HttpConst.ResponseHeaderKey.Date, DatePattern.HTTP_DATETIME_FORMAT.format(SystemTimer.currentTimeMillis()));
 		//		addHeader(HttpConst.ResponseHeaderKey.Date, new Date().toGMTString());
+	}
+	
+	public void addHeader(String key, String value) {
+		headers.put(key, value);
+	}
+
+	public void addHeaders(Map<String, String> headers) {
+		if (headers != null) {
+			Set<Entry<String, String>> set = headers.entrySet();
+			for (Entry<String, String> entry : set) {
+				this.addHeader(entry.getKey(), entry.getValue());
+			}
+		}
 	}
 	
 	/**
@@ -292,5 +310,19 @@ public class HttpResponse extends HttpPacket {
 
 	public void setSkipTokenStat(boolean skipTokenStat) {
 		this.skipTokenStat = skipTokenStat;
+	}
+
+	public String getLastModified() {
+//		if (lastModified != null) {
+//			return lastModified;
+//		}
+		return this.getHeader(HttpConst.ResponseHeaderKey.Last_Modified);
+	}
+
+	public void setLastModified(String lastModified) {
+		if (StringUtils.isNotBlank(lastModified)) {
+			this.lastModified = lastModified;
+			this.headers.put(HttpConst.ResponseHeaderKey.Last_Modified, lastModified);
+		}
 	}
 }

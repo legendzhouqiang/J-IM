@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -155,6 +156,18 @@ public class HttpRequest extends HttpPacket {
 		return clientIp;
 	}
 	
+	public void addHeader(String key, String value) {
+		headers.put(key, value);
+	}
+
+	public void addHeaders(Map<String, String> headers) {
+		if (headers != null) {
+			Set<Entry<String, String>> set = headers.entrySet();
+			for (Entry<String, String> entry : set) {
+				this.addHeader(entry.getKey(), entry.getValue());
+			}
+		}
+	}
 
 	/**
 	 * 根据host字段，获取去除端口的纯域名部分的值，形如：www.t-io.org, t-io.org等值
@@ -285,7 +298,7 @@ public class HttpRequest extends HttpPacket {
 	public Boolean getIsSupportGzip() {
 		if (isSupportGzip == null) {
 			String Accept_Encoding = getHeader(HttpConst.RequestHeaderKey.Accept_Encoding);
-			if (StringUtils.isNoneBlank(Accept_Encoding)) {
+			if (StringUtils.isNotBlank(Accept_Encoding)) {
 				String[] ss = StringUtils.split(Accept_Encoding, ",");
 				if (ArrayUtil.contains(ss, "gzip")) {
 					isSupportGzip = true;
@@ -434,7 +447,7 @@ public class HttpRequest extends HttpPacket {
 		}
 
 		//		String Sec_WebSocket_Key = headers.get(HttpConst.RequestHeaderKey.Sec_WebSocket_Key);
-		//		if (StringUtils.isNoneBlank(Sec_WebSocket_Key)) {
+		//		if (StringUtils.isNotBlank(Sec_WebSocket_Key)) {
 		//			ImSessionContext httpSession = channelContext.getAttribute();
 		//			httpSession.setWebsocket(true);
 		//		}

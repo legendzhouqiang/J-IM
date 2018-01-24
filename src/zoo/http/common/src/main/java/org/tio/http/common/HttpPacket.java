@@ -78,19 +78,6 @@ public class HttpPacket extends Packet {
 
 	}
 
-	public void addHeader(String key, String value) {
-		headers.put(key, value);
-	}
-
-	public void addHeaders(Map<String, String> headers) {
-		if (headers != null) {
-			this.headers.putAll(headers);
-		} else {
-			this.headers = new HashMap<>();
-			this.headers.putAll(headers);
-		}
-	}
-
 	/**
 	 * @return the body
 	 */

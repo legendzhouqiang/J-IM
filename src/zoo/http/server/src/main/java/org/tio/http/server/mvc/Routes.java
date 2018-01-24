@@ -266,12 +266,12 @@ public class Routes {
 			log.info("variable path mapping\r\n{}", variablePathMethodstrMapStr);
 
 			try {
-				FileUtil.writeString("/tio_path_class.json", pathClassMapStr, "utf-8");
-				FileUtil.writeString("/tio_path_method.json", pathMethodstrMapStr, "utf-8");
-				FileUtil.writeString("/tio_variablepath_method.json", variablePathMethodstrMapStr, "utf-8");
+				FileUtil.writeString("/tio_mvc_path_class.json", pathClassMapStr, "utf-8");
+				FileUtil.writeString("/tio_mvc_path_method.json", pathMethodstrMapStr, "utf-8");
+				FileUtil.writeString("/tio_mvc_variablepath_method.json", variablePathMethodstrMapStr, "utf-8");
 
 				if (errorStr.length() > 0) {
-					FileUtil.writeString("/tio_mvc_error.txt", errorStr.toString(), "utf-8");
+					FileUtil.writeString("/tio_error_mvc.txt", errorStr.toString(), "utf-8");
 				}
 			} catch (IOException e) {
 				log.error(e.toString(), e);

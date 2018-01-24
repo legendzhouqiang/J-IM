@@ -274,7 +274,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	 */
 	@Override
 	public int hashCode() {
-		if (StringUtils.isNoneBlank(id)) {
+		if (StringUtils.isNotBlank(id)) {
 			return this.id.hashCode();
 		} else {
 			return super.hashCode();

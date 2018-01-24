@@ -77,6 +77,7 @@
 		<quartz.version>2.3.0</quartz.version>
 		<caffeine.version>2.6.1</caffeine.version>
 
+		<binarywang.version>2.9.0</binarywang.version>
 
 	</properties>
 
@@ -540,6 +541,18 @@
 				<artifactId>guava</artifactId>
 				<version>${caffeine.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-mp</artifactId>
+				<version>${binarywang.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-open</artifactId>
+				<version>${binarywang.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 

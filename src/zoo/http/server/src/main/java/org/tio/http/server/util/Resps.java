@@ -67,7 +67,7 @@ public class Resps {
 	public static HttpResponse bytes(HttpRequest request, byte[] bodyBytes, String extension) {
 		String contentType = null;
 		//		String extension = FilenameUtils.getExtension(filename);
-		if (StringUtils.isNoneBlank(extension)) {
+		if (StringUtils.isNotBlank(extension)) {
 			MimeType mimeType = MimeType.fromExtension(extension);
 			if (mimeType != null) {
 				contentType = mimeType.getType();
@@ -97,7 +97,7 @@ public class Resps {
 		String filename = fileOnServer.getName();
 		String extension = FileNameUtil.getExtension(filename);
 		ret = bytes(request, bodyBytes, extension);
-		ret.addHeader(HttpConst.ResponseHeaderKey.Last_Modified, lastModified.getTime() + "");
+		ret.setLastModified(lastModified.getTime() + "");
 		return ret;
 	}
 
@@ -390,7 +390,7 @@ public class Resps {
 	 */
 	public static HttpResponse try304(HttpRequest request, long lastModifiedOnServer) {
 		String If_Modified_Since = request.getHeader(HttpConst.RequestHeaderKey.If_Modified_Since);//If-Modified-Since
-		if (StringUtils.isNoneBlank(If_Modified_Since)) {
+		if (StringUtils.isNotBlank(If_Modified_Since)) {
 			Long If_Modified_Since_Date = null;
 			try {
 				If_Modified_Since_Date = Long.parseLong(If_Modified_Since);
