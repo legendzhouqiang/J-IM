@@ -29,12 +29,16 @@ public class CaffeineCache  implements ICache {
 	
 	public static Map<String, CaffeineCache> temporaryMap = new HashMap<>();
 
-	public static CaffeineCache getCache(String cacheName) {
+	public static CaffeineCache getCache(String cacheName, boolean skipNull) {
 		CaffeineCache CaffeineCache = map.get(cacheName);
-		if (CaffeineCache == null) {
+		if (CaffeineCache == null && !skipNull) {
 			log.error("cacheName[{}]还没注册，请初始化时调用：{}.register(cacheName, timeToLiveSeconds, timeToIdleSeconds)", cacheName, CaffeineCache.class.getSimpleName());
 		}
 		return CaffeineCache;
+	}
+	
+	public static CaffeineCache getCache(String cacheName) {
+		return getCache(cacheName, false);
 	}
 
 	/**

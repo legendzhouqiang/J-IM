@@ -28,22 +28,9 @@ public class HttpServerStarter {
 	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(HttpServerStarter.class);
 
-	/**
-	 * @param args
-	 *
-	 * @author tanyaowu
-	 * @throws IOException
-	 * 2016年11月17日 下午5:59:24
-	 *
-	 */
-	public static void main(String[] args) throws IOException {
-	}
-
 	private HttpConfig httpConfig = null;
 
 	private HttpServerAioHandler httpServerAioHandler = null;
-
-	//	private HttpGroupListener httpGroupListener = null;
 
 	private HttpServerAioListener httpServerAioListener = null;
 

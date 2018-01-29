@@ -63,9 +63,9 @@
 		<commons-lang3.version>3.7</commons-lang3.version>
 		<commons-codec.version>1.11</commons-codec.version>
 		<commons-compress.version>1.15</commons-compress.version>
-		<fastjson.version>1.2.44</fastjson.version>
+		<fastjson.version>1.2.45</fastjson.version>
 		<testng.version>6.13.1</testng.version>
-		<hutool.version>4.0.1</hutool.version>
+		<hutool.version>4.0.3</hutool.version>
 
 		<protobuf-java.version>3.5.1</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
@@ -78,6 +78,8 @@
 		<caffeine.version>2.6.1</caffeine.version>
 
 		<binarywang.version>2.9.0</binarywang.version>
+		<zxing.version>3.3.1</zxing.version>
+
 
 	</properties>
 
@@ -206,7 +208,7 @@
 			<dependency>
 				<groupId>net.oschina.j2cache</groupId>
 				<artifactId>j2cache-core</artifactId>
-				<version>2.3.4-release</version>
+				<version>2.3.7-release</version>
 			</dependency>
 
 			<dependency>
@@ -470,7 +472,7 @@
 			<dependency>
 				<groupId>io.github.lukehutch</groupId>
 				<artifactId>fast-classpath-scanner</artifactId>
-				<version>2.11.0</version>
+				<version>2.12.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.thoughtworks.paranamer</groupId>
@@ -528,6 +530,23 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-configuration2</artifactId>
 				<version>2.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.nutz</groupId>
+				<artifactId>nutz-qrcode</artifactId>
+				<version>1.b.53</version>
+			</dependency>
+
+			<!-- 开源多维码生成工具 -->
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>core</artifactId>
+				<version>${zxing.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>javase</artifactId>
+				<version>${zxing.version}</version>
 			</dependency>
 
 			<dependency>
@@ -880,5 +899,6 @@
 			</distributionManagement>
 		</profile>
 	</profiles>
+
 
 </project>

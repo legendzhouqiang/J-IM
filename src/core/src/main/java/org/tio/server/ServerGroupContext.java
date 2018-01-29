@@ -211,8 +211,8 @@ public class ServerGroupContext extends GroupContext {
 								builder.append("\r\n │ \t └ 等待同步消息响应 :").append(ServerGroupContext.this.waitingResps.getMap().getObj().size());
 
 								builder.append("\r\n ├ 群组");
-								builder.append("\r\n │ \t ├ groupmap  :").append(ServerGroupContext.this.groups.getChannelmap().getObj().size());
-								builder.append("\r\n │ \t └ channelmap:").append(ServerGroupContext.this.groups.getGroupmap().getObj().size());
+								builder.append("\r\n │ \t ├ channelmap  :").append(ServerGroupContext.this.groups.getChannelmap().getObj().size());
+								builder.append("\r\n │ \t └ groupmap:").append(ServerGroupContext.this.groups.getGroupmap().getObj().size());
 								builder.append("\r\n └ 拉黑IP ");
 								builder.append("\r\n   \t └ ").append(Json.toJson(ServerGroupContext.this.ipBlacklist.getAll()));
 

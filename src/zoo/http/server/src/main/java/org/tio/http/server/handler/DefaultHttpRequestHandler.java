@@ -24,7 +24,6 @@ import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.RequestLine;
 import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.common.session.HttpSession;
-import org.tio.http.common.utils.IpUtils;
 import org.tio.http.server.intf.CurrUseridGetter;
 import org.tio.http.server.intf.HttpServerInterceptor;
 import org.tio.http.server.intf.HttpSessionListener;
@@ -52,7 +51,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
-
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
@@ -523,7 +521,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		
 		//统计一下IP访问数据
 		if (ipPathAccessStats != null) {
-			String ip = IpUtils.getRealIp(request);
+			String ip = request.getClientIp();//IpUtils.getRealIp(request);
 			List<Long> list = ipPathAccessStats.durationList;
 
 			Cookie cookie = getSessionCookie(request, httpConfig);
