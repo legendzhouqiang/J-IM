@@ -27,8 +27,6 @@ public class CaffeineCache  implements ICache {
 
 	public static Map<String, CaffeineCache> map = new HashMap<>();
 	
-	public static Map<String, CaffeineCache> temporaryMap = new HashMap<>();
-
 	public static CaffeineCache getCache(String cacheName, boolean skipNull) {
 		CaffeineCache CaffeineCache = map.get(cacheName);
 		if (CaffeineCache == null && !skipNull) {
@@ -55,28 +53,27 @@ public class CaffeineCache  implements ICache {
 	}
 
 	public static CaffeineCache register(String cacheName, Long timeToLiveSeconds, Long timeToIdleSeconds, RemovalListener<String, Serializable> removalListener) {
-		CaffeineCache CaffeineCache = map.get(cacheName);
-		if (CaffeineCache == null) {
+		CaffeineCache caffeineCache = map.get(cacheName);
+		if (caffeineCache == null) {
 			synchronized (CaffeineCache.class) {
-				CaffeineCache = map.get(cacheName);
-				if (CaffeineCache == null) {
+				caffeineCache = map.get(cacheName);
+				if (caffeineCache == null) {
 					Integer initialCapacity = 10;
 					Integer maximumSize = 5000000;
 					boolean recordStats = false;
 					LoadingCache<String, Serializable> loadingCache = CaffeineUtils.createLoadingCache(cacheName, timeToLiveSeconds, timeToIdleSeconds, initialCapacity,
 							maximumSize, recordStats, removalListener);
-					CaffeineCache = new CaffeineCache(loadingCache, loadingCache);
-					map.put(cacheName, CaffeineCache);
 					
 					Integer temporaryMaximumSize = 500000;
 					LoadingCache<String, Serializable> temporaryLoadingCache = CaffeineUtils.createLoadingCache(cacheName, (Long)null, 10L, initialCapacity,
 							temporaryMaximumSize, recordStats, removalListener);
-					CaffeineCache temporaryCaffeineCache = new CaffeineCache(loadingCache, temporaryLoadingCache);
-					temporaryMap.put(cacheName, temporaryCaffeineCache);
+					caffeineCache = new CaffeineCache(loadingCache, temporaryLoadingCache);
+					
+					map.put(cacheName, caffeineCache);
 				}
 			}
 		}
-		return CaffeineCache;
+		return caffeineCache;
 	}
 
 	//

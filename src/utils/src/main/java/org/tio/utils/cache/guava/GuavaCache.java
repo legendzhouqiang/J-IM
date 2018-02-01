@@ -25,8 +25,6 @@ public class GuavaCache implements ICache {
 
 	public static Map<String, GuavaCache> map = new HashMap<>();
 	
-	public static Map<String, GuavaCache> temporaryMap = new HashMap<>();
-
 	public static GuavaCache getCache(String cacheName) {
 		GuavaCache guavaCache = map.get(cacheName);
 		if (guavaCache == null) {
@@ -60,14 +58,12 @@ public class GuavaCache implements ICache {
 					boolean recordStats = false;
 					LoadingCache<String, Serializable> loadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, timeToLiveSeconds, timeToIdleSeconds, initialCapacity,
 							maximumSize, recordStats, removalListener);
-					guavaCache = new GuavaCache(loadingCache, loadingCache);
-					map.put(cacheName, guavaCache);
 					
 					Integer temporaryMaximumSize = 500000;
 					LoadingCache<String, Serializable> temporaryLoadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, (Long)null, 10L, initialCapacity,
 							temporaryMaximumSize, recordStats, removalListener);
-					GuavaCache temporaryGuavaCache = new GuavaCache(loadingCache, temporaryLoadingCache);
-					temporaryMap.put(cacheName, temporaryGuavaCache);
+					guavaCache = new GuavaCache(loadingCache, temporaryLoadingCache);
+					map.put(cacheName, guavaCache);
 				}
 			}
 		}

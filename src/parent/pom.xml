@@ -14,7 +14,7 @@
 
 	<licenses>
 		<license>
-			<name>GNU LESSER GENERAL PUBLIC LICENSE Version 2.1</name>
+			<name>The Apache Software License, Version 2.0</name>
 			<url>https://gitee.com/tywo45/t-io/blob/master/LICENSE</url>
 		</license>
 	</licenses>
@@ -65,20 +65,20 @@
 		<commons-compress.version>1.15</commons-compress.version>
 		<fastjson.version>1.2.45</fastjson.version>
 		<testng.version>6.13.1</testng.version>
-		<hutool.version>4.0.3</hutool.version>
+		<hutool.version>4.0.4</hutool.version>
 
 		<protobuf-java.version>3.5.1</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<protobuf-java-format.version>1.4</protobuf-java-format.version>
 
 		<protostuff.version>1.6.0</protostuff.version>
-		<redisson.version>3.5.7</redisson.version>
-		<jodd.version>4.1.0</jodd.version>
+		<redisson.version>3.6.0</redisson.version>
+		<jodd.version>4.1.2</jodd.version>
 		<quartz.version>2.3.0</quartz.version>
 		<caffeine.version>2.6.1</caffeine.version>
 
 		<binarywang.version>2.9.0</binarywang.version>
-		<zxing.version>3.3.1</zxing.version>
+		<zxing.version>3.3.2</zxing.version>
 
 
 	</properties>
@@ -204,6 +204,12 @@
 				<version>${tio-live.version}</version>
 			</dependency>
 			<!-- tio-live end -->
+
+			<dependency>
+				<groupId>tio-alipay</groupId>
+				<artifactId>alipay-sdk-java</artifactId>
+				<version>20180104135026</version>
+			</dependency>
 
 			<dependency>
 				<groupId>net.oschina.j2cache</groupId>
@@ -513,7 +519,7 @@
 			<dependency>
 				<groupId>com.aliyun</groupId>
 				<artifactId>aliyun-java-sdk-core</artifactId>
-				<version>3.5.0</version>
+				<version>3.5.1</version>
 			</dependency>
 			<dependency>
 				<groupId>com.aliyun</groupId>
@@ -570,6 +576,12 @@
 				<groupId>com.github.binarywang</groupId>
 				<artifactId>weixin-java-open</artifactId>
 				<version>${binarywang.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.wxpay</groupId>
+				<artifactId>WXPay-SDK-Java</artifactId>
+				<version>0.0.4</version>
 			</dependency>
 
 		</dependencies>
