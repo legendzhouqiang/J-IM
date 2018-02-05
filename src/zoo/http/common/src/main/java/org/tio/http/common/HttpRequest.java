@@ -93,8 +93,8 @@ public class HttpRequest extends HttpPacket {
 	 * @param remark
 	 */
 	public void close(String remark) {
-		Aio.close(channelContext, remark);
 		closed = true;
+		Aio.remove(channelContext, remark);
 	}
 
 	public void addParam(String key, Object value) {

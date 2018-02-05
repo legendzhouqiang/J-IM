@@ -12,7 +12,7 @@ import org.tio.http.server.demo1.model.User;
 import org.tio.http.server.util.Resps;
 import org.tio.utils.json.Json;
 
-import com.xiaoleilu.hutool.io.FileUtil;
+import cn.hutool.core.io.FileUtil;
 
 /**
  * @author tanyaowu

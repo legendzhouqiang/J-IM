@@ -403,24 +403,29 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 						}
 
 						if (file.exists()) {
+							//项目中需要，时间支持一下freemarker模板，后面要做模板支持抽象设计
 							if (freemarkerConfig != null) {
 								String extension = FileNameUtil.getExtension(file.getName());
 								if (ArrayUtil.contains(freemarkerConfig.getSuffixes(), extension)) {
 									Configuration configuration = freemarkerConfig.getConfiguration();
-									Object model = freemarkerConfig.getModelMaker().generate(request);
 									if (configuration != null) {
-										TemplateLoader templateLoader = configuration.getTemplateLoader();//FileTemplateLoader
-										if (templateLoader instanceof FileTemplateLoader) {
-											try {
-												String filePath = file.getCanonicalPath();
-												String pageRootPath = httpConfig.getPageRoot().getCanonicalPath();
-												String template = StringUtils.substring(filePath, pageRootPath.length());
-												String retStr = FreemarkerUtils.generateStringByFile(template, configuration, model);
-												response = Resps.bytes(request, retStr.getBytes(configuration.getDefaultEncoding()), extension);
-												return response;
-											} catch (java.lang.Throwable e) {
-												//freemarker编译异常的全部走普通view
-												log.error(file.getCanonicalPath() + ", " + e.toString(), e);
+										Object model = freemarkerConfig.getModelMaker().generate(request);
+										if (request.isClosed()) {
+											return null;
+										} else {
+											TemplateLoader templateLoader = configuration.getTemplateLoader();//FileTemplateLoader
+											if (templateLoader instanceof FileTemplateLoader) {
+												try {
+													String filePath = file.getCanonicalPath();
+													String pageRootPath = httpConfig.getPageRoot().getCanonicalPath();
+													String template = StringUtils.substring(filePath, pageRootPath.length());
+													String retStr = FreemarkerUtils.generateStringByFile(template, configuration, model);
+													response = Resps.bytes(request, retStr.getBytes(configuration.getDefaultEncoding()), extension);
+													return response;
+												} catch (java.lang.Throwable e) {
+													//freemarker编译异常的全部走普通view
+													log.error(file.getCanonicalPath() + ", " + e.toString(), e);
+												}
 											}
 										}
 									}
