@@ -14,12 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.server.annotation.RequestPath;
+import org.tio.http.server.mvc.intf.ControllerFactory;
 import org.tio.utils.json.Json;
 
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
-import cn.hutool.core.util.ArrayUtil;
 
+import cn.hutool.core.util.ArrayUtil;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import io.github.lukehutch.fastclasspathscanner.matchprocessor.ClassAnnotationMatchProcessor;
 import io.github.lukehutch.fastclasspathscanner.matchprocessor.MethodAnnotationMatchProcessor;
@@ -145,12 +146,17 @@ public class Routes {
 
 	/**
 	 * 
-	 * @param contextPath
-	 * @param suffix
 	 * @param scanPackages
-	 * @author tanyaowu
 	 */
 	public Routes(String[] scanPackages) {
+		this(scanPackages, DefaultControllerFactory.me);
+	}
+
+	/**
+	 * 
+	 * @param scanPackages
+	 */
+	public Routes(String[] scanPackages, ControllerFactory controllerFactory) {
 		//		this.scanPackages = scanPackages;
 		//		if (contextPath == null) {
 		//			contextPath = "";
@@ -169,7 +175,7 @@ public class Routes {
 				@Override
 				public void processMatch(Class<?> classWithAnnotation) {
 					try {
-						Object bean = classWithAnnotation.newInstance();
+						Object bean = controllerFactory.getInstance(classWithAnnotation);//classWithAnnotation.newInstance();
 						RequestPath mapping = classWithAnnotation.getAnnotation(RequestPath.class);
 						//						String beanPath = Routes.this.contextPath + mapping.value();
 						String beanPath = mapping.value();
@@ -376,7 +382,7 @@ public class Routes {
 	public Method getMethodByPath(String path, HttpRequest request) {
 		Method method = pathMethodMap.get(path);
 		if (method == null) {
-			String[] pathUnitsOfRequest = StringUtils.split(path, "/");  // "/user/214" -- > ["user", "214"]
+			String[] pathUnitsOfRequest = StringUtils.split(path, "/"); // "/user/214" -- > ["user", "214"]
 			VariablePathVo[] variablePathVos = variablePathMap.get(pathUnitsOfRequest.length);
 			if (variablePathVos != null) {
 				tag1: for (VariablePathVo variablePathVo : variablePathVos) {
@@ -393,7 +399,7 @@ public class Routes {
 							}
 						}
 					}
-					
+
 					method = variablePathVo.getMethod();
 					return method;
 				}
