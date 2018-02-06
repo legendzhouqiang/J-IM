@@ -19,16 +19,8 @@ public class DefaultControllerFactory implements ControllerFactory {
 	private DefaultControllerFactory() {
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-
-	}
-
 	@Override
 	public Object getInstance(Class<?> controllerClazz) throws Exception {
 		return controllerClazz.newInstance();
 	}
-
 }
