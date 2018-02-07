@@ -1,8 +1,12 @@
 package org.tio.http.server.mvc;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -83,23 +87,44 @@ public class Routes {
 	/**
 	 * Method路径映射
 	 * key: /user/update
-	 * value: method
+	 * value: Method
 	 */
 	public Map<String, Method> pathMethodMap = new TreeMap<>();
 	
 	/**
+	 * Method路径映射
+	 * key: /user/update
+	 * value: MethodHandle
+	 */
+	public Map<String, MethodHandle> pathMethodHandleMap = new TreeMap<>();
+	
+	/**
 	 * 方法参数名映射
-	 * key: method
+	 * key: MethodHandle
 	 * value: ["id", "name", "scanPackages"]
 	 */
-	public Map<Method, String[]> methodParamnameMap = new HashMap<>();
+	public Map<MethodHandle, String[]> methodHandleParamnameMap = new HashMap<>();
+	
+	/**
+	 * 方法参数类型映射
+	 * key: MethodHandle
+	 * value: [A.class, B.class]
+	 */
+	public Map<MethodHandle, Class<?>[]> methodHandleParamtypesMap = new HashMap<>();
+	
+	/**
+	 * 方法返回类型映射
+	 * key: MethodHandle
+	 * value: B.class
+	 */
+	public Map<MethodHandle, Class<?>> methodHandleReturntypeMap = new HashMap<>();
 
 	/**
 	 * 方法和对象映射
-	 * key: method
+	 * key: MethodHandle
 	 * value: bean
 	 */
-	public Map<Method, Object> methodBeanMap = new HashMap<>();
+	public Map<MethodHandle, Object> methodHandleBeanMap = new HashMap<>();
 
 	/**
 	 * Method路径映射
@@ -210,29 +235,48 @@ public class Routes {
 						completeMethodPath = beanPath + methodPath;
 					}
 
-					Class<?>[] parameterTypes = matchingMethodOrConstructor.getParameterTypes();
-					Method method;
+					
+					MethodHandle methodHandle;
 					try {
-						method = matchingClass.getMethod(methodName, parameterTypes);
-
-						Paranamer paranamer = new BytecodeReadingParanamer();
-						String[] parameterNames = paranamer.lookupParameterNames(method, false); // will return null if not found
-
-						Method checkMethod = pathMethodMap.get(completeMethodPath);
-						if (checkMethod != null) {
-							log.error("mapping[{}] already exists in method [{}]", completeMethodPath, checkMethod.getDeclaringClass() + "#" + checkMethod.getName());
+					
+						//检查重复
+						Method method = pathMethodMap.get(completeMethodPath);
+						if (method != null) {
+							log.error("mapping[{}] already exists in method [{}]", completeMethodPath, method.getDeclaringClass() + "#" + method.getName());
 							errorStr.append(
-									"mapping[" + completeMethodPath + "] already exists in method [" + checkMethod.getDeclaringClass() + "#" + checkMethod.getName() + "]\r\n\r\n");
+									"mapping[" + completeMethodPath + "] already exists in method [" + method.getDeclaringClass() + "#" + method.getName() + "]\r\n\r\n");
 
 							return;
 						}
-
+						
+						Class<?>[] parameterTypes = matchingMethodOrConstructor.getParameterTypes();
+						method = matchingClass.getMethod(methodName, parameterTypes);
+						Class<?> returnType = method.getReturnType();
+						boolean isStatic = Modifier.isStatic(method.getModifiers());
+						Paranamer paranamer = new BytecodeReadingParanamer();
+						String[] parameterNames = paranamer.lookupParameterNames(method, false); // will return null if not found
+						
+						String methodname = method.getName();
+						MethodHandles.Lookup lookup = MethodHandles.lookup();
+						if (isStatic) {
+							methodHandle = lookup.findStatic(matchingClass, methodname, MethodType.methodType(returnType, parameterTypes));
+						} else {
+							methodHandle = lookup.findVirtual(matchingClass, methodname, MethodType.methodType(returnType, parameterTypes)).bindTo(bean);
+						}
+						
 						pathMethodMap.put(completeMethodPath, method);
+						
+						pathMethodHandleMap.put(completeMethodPath, methodHandle);
 
 						pathMethodstrMap.put(completeMethodPath, methodToStr(method, parameterNames));
 
-						methodParamnameMap.put(method, parameterNames);
-						methodBeanMap.put(method, bean);
+						methodHandleParamnameMap.put(methodHandle, parameterNames);
+						
+						methodHandleParamtypesMap.put(methodHandle, parameterTypes);
+						
+						methodHandleReturntypeMap.put(methodHandle, returnType);
+						
+						methodHandleBeanMap.put(methodHandle, bean);
 					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
@@ -246,7 +290,7 @@ public class Routes {
 			//			log.info("classPathMap scan result :\r\n {}\r\n", Json.toFormatedJson(classPathMap));
 			String pathMethodstrMapStr = Json.toFormatedJson(pathMethodstrMap);
 			log.info("method mapping\r\n{}", pathMethodstrMapStr);
-			//			log.info("methodParamnameMap scan result :\r\n {}\r\n", Json.toFormatedJson(methodParamnameMap));
+			//			log.info("methodHandleParamnameMap scan result :\r\n {}\r\n", Json.toFormatedJson(methodHandleParamnameMap));
 
 			//
 			processVariablePath();
@@ -271,14 +315,14 @@ public class Routes {
 
 	/**
 	 * 处理有变量的路径
-	 * @param pathMethodMap
+	 * @param pathMethodHandleMap
 	 */
 	private void processVariablePath() {
-		Set<Entry<String, Method>> set = pathMethodMap.entrySet();
+		Set<Entry<String, MethodHandle>> set = pathMethodHandleMap.entrySet();
 		//		Set<String> forRemoved = new HashSet<>();
-		for (Entry<String, Method> entry : set) {
+		for (Entry<String, MethodHandle> entry : set) {
 			String path = entry.getKey();
-			Method method = entry.getValue();
+			MethodHandle methodHandle = entry.getValue();
 			if (StringUtils.contains(path, "{") && StringUtils.contains(path, "}")) {
 				String[] pathUnits = StringUtils.split(path, "/");
 				PathUnitVo[] pathUnitVos = new PathUnitVo[pathUnits.length];
@@ -289,7 +333,7 @@ public class Routes {
 					String pathUnit = pathUnits[i];
 					if (StringUtils.contains(pathUnit, "{") || StringUtils.contains(pathUnit, "}")) {
 						if (StringUtils.startsWith(pathUnit, "{") && StringUtils.endsWith(pathUnit, "}")) {
-							String[] xx = methodParamnameMap.get(method);
+							String[] xx = methodHandleParamnameMap.get(methodHandle);
 							String varName = StringUtils.substringBetween(pathUnit, "{", "}");
 							if (ArrayUtil.contains(xx, varName)) {
 								isVarPath = true;
@@ -311,7 +355,7 @@ public class Routes {
 				}
 
 				if (isVarPath) {
-					VariablePathVo variablePathVo = new VariablePathVo(path, method, pathUnitVos);
+					VariablePathVo variablePathVo = new VariablePathVo(path, methodHandle, pathMethodMap.get(path), pathUnitVos);
 					addVariablePathVo(pathUnits.length, variablePathVo);
 				}
 			}
@@ -352,8 +396,8 @@ public class Routes {
 			newExistValue[newExistValue.length - 1] = variablePathVo;
 			variablePathMap.put(pathUnitCount, newExistValue);
 		}
-		variablePathMethodstrMap.put(variablePathVo.getPath(), methodToStr(variablePathVo.getMethod(), methodParamnameMap.get(variablePathVo.getMethod())));
-		//org.tio.http.server.mvc.Routes.methodParamnameMap
+		variablePathMethodstrMap.put(variablePathVo.getPath(), methodToStr(variablePathVo.getMethod(), methodHandleParamnameMap.get(variablePathVo.getMethod())));
+		//org.tio.http.server.mvc.Routes.methodHandleParamnameMap
 	}
 
 	private String methodToStr(Method method, String[] parameterNames) {
@@ -362,9 +406,9 @@ public class Routes {
 	}
 
 	@SuppressWarnings("unused")
-	public Method getMethodByPath(String path, HttpRequest request) {
-		Method method = pathMethodMap.get(path);
-		if (method == null) {
+	public MethodHandle getMethodHandleByPath(String path, HttpRequest request) {
+		MethodHandle methodHandle = pathMethodHandleMap.get(path);
+		if (methodHandle == null) {
 			String[] pathUnitsOfRequest = StringUtils.split(path, "/"); // "/user/214" -- > ["user", "214"]
 			VariablePathVo[] variablePathVos = variablePathMap.get(pathUnitsOfRequest.length);
 			if (variablePathVos != null) {
@@ -383,13 +427,13 @@ public class Routes {
 						}
 					}
 
-					method = variablePathVo.getMethod();
-					return method;
+					methodHandle = variablePathVo.getMethodHandle();
+					return methodHandle;
 				}
 			}
 			return null;
 		} else {
-			return method;
+			return methodHandle;
 		}
 	}
 }
