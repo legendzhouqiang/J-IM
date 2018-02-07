@@ -38,7 +38,7 @@ public class Routes {
 	 * @param initPath
 	 * @return
 	 */
-	private static String formateBeanPath(String initPath) {
+	private static String formatBeanPath(String initPath) {
 		return initPath;
 	}
 
@@ -47,7 +47,7 @@ public class Routes {
 	 * @param initPath
 	 * @return
 	 */
-	private static String formateMethodPath(String initPath) {
+	private static String formatMethodPath(String initPath) {
 		return initPath;
 	}
 
@@ -166,7 +166,7 @@ public class Routes {
 						//							beanUrl = beanUrl + "/";
 						//						}
 
-						beanPath = formateBeanPath(beanPath);
+						beanPath = formatBeanPath(beanPath);
 
 						Object obj = pathBeanMap.get(beanPath);
 						if (obj != null) {
@@ -195,7 +195,7 @@ public class Routes {
 					//					String methodPath = mapping.value() + Routes.this.suffix;
 					String methodPath = mapping.value();
 
-					methodPath = formateMethodPath(methodPath);
+					methodPath = formatMethodPath(methodPath);
 					String beanPath = classPathMap.get(matchingClass);
 
 					if (StringUtils.isBlank(beanPath)) {
