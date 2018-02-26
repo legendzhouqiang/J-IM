@@ -60,7 +60,7 @@ public class GuavaCache implements ICache {
 							maximumSize, recordStats, removalListener);
 					
 					Integer temporaryMaximumSize = 500000;
-					LoadingCache<String, Serializable> temporaryLoadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, (Long)null, 10L, initialCapacity,
+					LoadingCache<String, Serializable> temporaryLoadingCache = GuavaUtils.createLoadingCache(concurrencyLevel, 10L, (Long)null, initialCapacity,
 							temporaryMaximumSize, recordStats, removalListener);
 					guavaCache = new GuavaCache(loadingCache, temporaryLoadingCache);
 					map.put(cacheName, guavaCache);

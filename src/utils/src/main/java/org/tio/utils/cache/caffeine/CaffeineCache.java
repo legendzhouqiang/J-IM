@@ -65,7 +65,7 @@ public class CaffeineCache  implements ICache {
 							maximumSize, recordStats, removalListener);
 					
 					Integer temporaryMaximumSize = 500000;
-					LoadingCache<String, Serializable> temporaryLoadingCache = CaffeineUtils.createLoadingCache(cacheName, (Long)null, 10L, initialCapacity,
+					LoadingCache<String, Serializable> temporaryLoadingCache = CaffeineUtils.createLoadingCache(cacheName, 10L, (Long)null, initialCapacity,
 							temporaryMaximumSize, recordStats, removalListener);
 					caffeineCache = new CaffeineCache(loadingCache, temporaryLoadingCache);
 					
