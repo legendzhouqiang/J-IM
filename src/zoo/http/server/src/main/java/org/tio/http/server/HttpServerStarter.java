@@ -10,13 +10,9 @@ import org.tio.http.common.HttpConfig;
 import org.tio.http.common.HttpUuid;
 import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.common.session.id.impl.UUIDSessionIdGenerator;
-import org.tio.http.server.handler.DefaultHttpRequestHandler;
-import org.tio.http.server.intf.HttpServerInterceptor;
-import org.tio.http.server.intf.HttpSessionListener;
-import org.tio.http.server.mvc.Routes;
+import org.tio.http.server.util.Threads;
 import org.tio.server.AioServer;
 import org.tio.server.ServerGroupContext;
-import org.tio.utils.cache.ICache;
 import org.tio.utils.cache.caffeine.CaffeineCache;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
@@ -61,89 +57,99 @@ public class HttpServerStarter {
 	 * @author tanyaowu
 	 */
 	public HttpServerStarter(HttpConfig httpConfig, HttpRequestHandler requestHandler, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
-		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
-	}
-
-	/**
-	 * @deprecated
-	 * @param pageRoot 如果为null，则不提供静态资源服务
-	 * @param serverPort
-	 * @param contextPath
-	 * @param scanPackages
-	 * @param httpServerInterceptor
-	 * @author tanyaowu
-	 * @throws IOException 
-	 */
-	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor) throws IOException {
-		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, null, null, null);
-	}
-
-	/**
-	 * @deprecated
-	 * @param pageRoot 如果为null，则不提供静态资源服务
-	 * @param serverPort
-	 * @param contextPath
-	 * @param scanPackages
-	 * @param httpServerInterceptor
-	 * @param sessionStore
-	 * @author tanyaowu
-	 * @throws IOException 
-	 */
-	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore) throws IOException {
-		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, sessionStore, null, null);
-	}
-
-	/**
-	 * @deprecated
-	 * pageRoot 如果为null，则不提供静态资源服务
-	 * @param pageRoot
-	 * @param serverPort
-	 * @param contextPath
-	 * @param scanPackages
-	 * @param httpServerInterceptor
-	 * @param sessionStore
-	 * @param tioExecutor
-	 * @param groupExecutor
-	 * @author tanyaowu
-	 * @throws IOException 
-	 */
-	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore,
-			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
-		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, null, sessionStore, tioExecutor, groupExecutor);
-	}
-	
-	/**
-	 * @deprecated
-	 * pageRoot 如果为null，则不提供静态资源服务
-	 * @param pageRoot
-	 * @param serverPort
-	 * @param contextPath
-	 * @param scanPackages
-	 * @param httpServerInterceptor
-	 * @param httpSessionListener
-	 * @param sessionStore
-	 * @param tioExecutor
-	 * @param groupExecutor
-	 * @author tanyaowu
-	 * @throws IOException 
-	 */
-	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, HttpSessionListener httpSessionListener, ICache sessionStore,
-			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
-		int port = serverPort;
-
-		httpConfig = new HttpConfig(port, null, contextPath, null);
-		httpConfig.setPageRoot(pageRoot);
-		if (sessionStore != null) {
-			httpConfig.setSessionStore(sessionStore);
+		if (tioExecutor == null) {
+			tioExecutor = Threads.tioExecutor;
 		}
-
-		Routes routes = new Routes(scanPackages);
-		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
-		requestHandler.setHttpServerInterceptor(httpServerInterceptor);
-		requestHandler.setHttpSessionListener(httpSessionListener);
-
+		
+		if (groupExecutor == null) {
+			groupExecutor = Threads.groupExecutor;
+		}
+		
 		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
 	}
+
+//	/**
+//	 * @deprecated
+//	 * @param pageRoot 如果为null，则不提供静态资源服务
+//	 * @param serverPort
+//	 * @param contextPath
+//	 * @param scanPackages
+//	 * @param httpServerInterceptor
+//	 * @author tanyaowu
+//	 * @throws IOException 
+//	 */
+//	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor) throws IOException {
+//		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, null, null, null);
+//	}
+//
+//	/**
+//	 * @deprecated
+//	 * @param pageRoot 如果为null，则不提供静态资源服务
+//	 * @param serverPort
+//	 * @param contextPath
+//	 * @param scanPackages
+//	 * @param httpServerInterceptor
+//	 * @param sessionStore
+//	 * @author tanyaowu
+//	 * @throws IOException 
+//	 */
+//	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore) throws IOException {
+//		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, sessionStore, null, null);
+//	}
+//
+//	/**
+//	 * @deprecated
+//	 * pageRoot 如果为null，则不提供静态资源服务
+//	 * @param pageRoot
+//	 * @param serverPort
+//	 * @param contextPath
+//	 * @param scanPackages
+//	 * @param httpServerInterceptor
+//	 * @param sessionStore
+//	 * @param tioExecutor
+//	 * @param groupExecutor
+//	 * @author tanyaowu
+//	 * @throws IOException 
+//	 */
+//	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, ICache sessionStore,
+//			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
+//		this(pageRoot, serverPort, contextPath, scanPackages, httpServerInterceptor, null, sessionStore, tioExecutor, groupExecutor);
+//	}
+//	
+//	/**
+//	 * @deprecated
+//	 * pageRoot 如果为null，则不提供静态资源服务
+//	 * @param pageRoot
+//	 * @param serverPort
+//	 * @param contextPath
+//	 * @param scanPackages
+//	 * @param httpServerInterceptor
+//	 * @param httpSessionListener
+//	 * @param sessionStore
+//	 * @param tioExecutor
+//	 * @param groupExecutor
+//	 * @author tanyaowu
+//	 * @throws IOException 
+//	 */
+//	public HttpServerStarter(String pageRoot, int serverPort, String contextPath, String[] scanPackages, HttpServerInterceptor httpServerInterceptor, HttpSessionListener httpSessionListener, ICache sessionStore,
+//			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) throws IOException {
+//		int port = serverPort;
+//
+//		httpConfig = new HttpConfig(port, null, contextPath, null);
+//		httpConfig.setPageRoot(pageRoot);
+//		if (sessionStore != null) {
+//			httpConfig.setSessionStore(sessionStore);
+//		}
+//
+//		Routes routes = new Routes(scanPackages);
+//		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
+//		requestHandler.setHttpServerInterceptor(httpServerInterceptor);
+//		requestHandler.setHttpSessionListener(httpSessionListener);
+//
+//		
+//		
+//		init(httpConfig, requestHandler, tioExecutor, groupExecutor);
+//	}
 
 	/**
 	 * @return the httpConfig
