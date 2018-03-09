@@ -65,15 +65,15 @@
 		<commons-compress.version>1.16.1</commons-compress.version>
 		<fastjson.version>1.2.46</fastjson.version>
 		<testng.version>6.14.2</testng.version>
-		<hutool.version>4.0.5</hutool.version>
+		<hutool.version>4.0.6</hutool.version>
 
 		<protobuf-java.version>3.5.1</protobuf-java.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<protobuf-java-format.version>1.4</protobuf-java-format.version>
 
 		<protostuff.version>1.6.0</protostuff.version>
-		<redisson.version>3.6.1</redisson.version>
-		<jodd.version>4.1.4</jodd.version>
+		<redisson.version>3.6.2</redisson.version>
+		<jodd.version>4.1.5</jodd.version>
 		<quartz.version>2.3.0</quartz.version>
 		<caffeine.version>2.6.2</caffeine.version>
 
@@ -409,7 +409,7 @@
 			<dependency>
 				<groupId>nl.basjes.parse.useragent</groupId>
 				<artifactId>yauaa</artifactId>
-				<version>4.0</version>
+				<version>4.1</version>
 			</dependency>
 
 			<dependency>
@@ -472,7 +472,7 @@
 			<dependency>
 				<groupId>com.github.javen205</groupId>
 				<artifactId>IJPay</artifactId>
-				<version>1.1.1-RELEASE</version>
+				<version>1.1.2</version>
 			</dependency>
 
 			<dependency>
@@ -584,6 +584,25 @@
 				<version>0.0.4</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.apache.curator</groupId>
+				<artifactId>curator-x-discovery</artifactId>
+				<version>4.0.1</version>
+			</dependency>
+
+			<!-- QQ登录 -->
+			<dependency>
+				<groupId>net.gplatform</groupId>
+				<artifactId>Sdk4J</artifactId>
+				<version>2.0</version>
+			</dependency>
+
+			<!-- 微博登录 -->
+			<dependency>
+				<groupId>com.belerweb</groupId>
+				<artifactId>weibo4j-oauth2</artifactId>
+				<version>2.1.1-beta2-3</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -911,6 +930,5 @@
 			</distributionManagement>
 		</profile>
 	</profiles>
-
 
 </project>

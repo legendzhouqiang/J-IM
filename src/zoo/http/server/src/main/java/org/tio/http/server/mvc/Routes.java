@@ -65,6 +65,13 @@ public class Routes {
 	 * value: object
 	 */
 	public Map<String, Object> pathBeanMap = new TreeMap<>();
+	
+	/**
+	 * class和对象映射
+	 * key: UserController.class
+	 * value: UserController.class对应的实例对象
+	 */
+	public static Map<Class<?>, Object> classBeanMap = new HashMap<>();
 	/**
 	 * 路径和class映射
 	 * 只是用来打印的
@@ -174,6 +181,7 @@ public class Routes {
 							errorStr.append("mapping[" + beanPath + "] already exists in class [" + obj.getClass().getName() + "]\r\n\r\n");
 						} else {
 							pathBeanMap.put(beanPath, bean);
+							classBeanMap.put(classWithAnnotation, bean);
 							pathClassMap.put(beanPath, classWithAnnotation);
 							classPathMap.put(classWithAnnotation, beanPath);
 						}
@@ -334,6 +342,17 @@ public class Routes {
 			variablePathMap.put(pathUnitCount, ret);
 		}
 		return ret;
+	}
+	
+	/**
+	 * 根据class获取class对应的bean
+	 * @param <T>
+	 * @param clazz
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getController(Class<T> clazz) {
+		return (T)classBeanMap.get(clazz);
 	}
 
 	/**

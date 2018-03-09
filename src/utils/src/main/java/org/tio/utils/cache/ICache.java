@@ -10,6 +10,11 @@ import java.util.Collection;
 public interface ICache {
 
 	/**
+	 * 在本地最大的过期时间，这样可以防止内存爆掉，单位：秒
+	 */
+	public static int MAX_EXPIRE_IN_LOCAL = 900;
+	
+	/**
 	 *
 	 * 清空所有缓存
 	 * @author tanyaowu
