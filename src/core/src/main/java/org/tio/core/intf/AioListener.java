@@ -10,7 +10,6 @@ import org.tio.core.ChannelContext;
 public interface AioListener {
 	/**
 	 * 连接关闭前后触发本方法
-	 *
 	 * @param channelContext the channelcontext
 	 * @param throwable the throwable 有可能为空
 	 * @param remark the remark 有可能为空
@@ -47,13 +46,11 @@ public interface AioListener {
 	 * @param isSentSuccess true:发送成功，false:发送失败
 	 * @throws Exception
 	 * @author tanyaowu
-	 *
 	 */
 	void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) throws Exception;
 
 	/**
 	 * 连接关闭前触发本方法
-	 *
 	 * @param channelContext the channelcontext
 	 * @param throwable the throwable 有可能为空
 	 * @param remark the remark 有可能为空

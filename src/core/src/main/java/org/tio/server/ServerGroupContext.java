@@ -17,7 +17,7 @@ import org.tio.server.intf.ServerAioHandler;
 import org.tio.server.intf.ServerAioListener;
 import org.tio.utils.SystemTimer;
 import org.tio.utils.json.Json;
-import org.tio.utils.lock.ObjWithLock;
+import org.tio.utils.lock.SetWithLock;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
@@ -105,7 +105,7 @@ public class ServerGroupContext extends GroupContext {
 						log.error(e1.toString(), e1);
 					}
 					long start = SystemTimer.currentTimeMillis();
-					ObjWithLock<Set<ChannelContext>> objWithLock = ServerGroupContext.this.connections.getSetWithLock();
+					SetWithLock<ChannelContext> objWithLock = ServerGroupContext.this.connections;
 					Set<ChannelContext> set = null;
 					ReadLock readLock = objWithLock.getLock().readLock();
 					long start1 = 0;
@@ -203,12 +203,12 @@ public class ServerGroupContext extends GroupContext {
 								
 								builder.append("\r\n ├ 节点统计");
 								builder.append("\r\n │ \t ├ clientNodes :").append(ServerGroupContext.this.clientNodeMap.getMap().getObj().size());
-								builder.append("\r\n │ \t ├ 所有连接               :").append(ServerGroupContext.this.connections.getSetWithLock().getObj().size());
-								builder.append("\r\n │ \t ├ 活动连接               :").append(ServerGroupContext.this.connecteds.getSetWithLock().getObj().size());
-								builder.append("\r\n │ \t ├ 关闭次数               :").append(ServerGroupContext.this.closeds.getSetWithLock().getObj().size());
+								builder.append("\r\n │ \t ├ 所有连接               :").append(ServerGroupContext.this.connections.getObj().size());
+								builder.append("\r\n │ \t ├ 活动连接               :").append(ServerGroupContext.this.connecteds.getObj().size());
+								builder.append("\r\n │ \t ├ 关闭次数               :").append(ServerGroupContext.this.closeds.getObj().size());
 								builder.append("\r\n │ \t ├ 绑定user数         :").append(ServerGroupContext.this.users.getMap().getObj().size());
 								builder.append("\r\n │ \t ├ 绑定token数       :").append(ServerGroupContext.this.tokens.getMap().getObj().size());
-								builder.append("\r\n │ \t └ 等待同步消息响应 :").append(ServerGroupContext.this.waitingResps.getMap().getObj().size());
+								builder.append("\r\n │ \t └ 等待同步消息响应 :").append(ServerGroupContext.this.waitingResps.getObj().size());
 
 								builder.append("\r\n ├ 群组");
 								builder.append("\r\n │ \t ├ channelmap  :").append(ServerGroupContext.this.groups.getChannelmap().getObj().size());

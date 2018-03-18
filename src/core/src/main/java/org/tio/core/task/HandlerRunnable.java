@@ -13,8 +13,8 @@ import org.tio.core.ChannelAction;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.intf.Packet;
-import org.tio.core.maintain.ChannelContextMapWithLock;
 import org.tio.core.stat.IpStat;
+import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.thread.pool.AbstractQueueRunnable;
 
 /**
@@ -50,7 +50,7 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 
 			Integer synSeq = packet.getSynSeq();
 			if (synSeq != null && synSeq > 0) {
-				ChannelContextMapWithLock syns = channelContext.getGroupContext().getWaitingResps();
+				MapWithLock<Integer, Packet> syns = channelContext.getGroupContext().getWaitingResps();
 				Packet initPacket = syns.remove(synSeq);
 				if (initPacket != null) {
 					synchronized (initPacket) {

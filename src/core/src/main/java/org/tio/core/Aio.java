@@ -1,7 +1,5 @@
 package org.tio.core;
 
-import java.nio.ByteBuffer;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -15,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.intf.Packet;
 import org.tio.core.intf.Packet.Meta;
-import org.tio.core.maintain.ChannelContextMapWithLock;
 import org.tio.core.task.SendRunnable;
 import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.lock.ObjWithLock;
@@ -54,7 +51,8 @@ public class Aio {
 	 * @author: tanyaowu
 	 */
 	public static boolean isInGroup(ChannelContext channelContext, String group) {
-		MapWithLock<ChannelContext, SetWithLock<String>> mapWithLock = channelContext.getGroupContext().groups.getChannelmap();
+		MapWithLock<ChannelContext, SetWithLock<String>> mapWithLock = 
+				channelContext.getGroupContext().groups.getChannelmap();
 		
 		ReadLock lock = mapWithLock.getLock().readLock();
 		try {
@@ -285,7 +283,7 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	public static SetWithLock<ChannelContext> getAllChannelContexts(GroupContext groupContext) {
-		return groupContext.connections.getSetWithLock();
+		return groupContext.connections;
 	}
 
 	/**
@@ -295,7 +293,7 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	public static SetWithLock<ChannelContext> getAllConnectedsChannelContexts(GroupContext groupContext) {
-		return groupContext.connecteds.getSetWithLock();
+		return groupContext.connecteds;
 	}
 
 	/**
@@ -602,7 +600,7 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	private static Boolean sendToAll(GroupContext groupContext, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
-		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.connections.getSetWithLock();
+		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.connections;
 		if (setWithLock == null) {
 			log.debug("{}, 没有任何连接", groupContext.getName());
 			return false;
@@ -769,18 +767,10 @@ public class Aio {
 	 * @param isBlock
 	 * @author tanyaowu
 	 */
-	private static Boolean sendToSet(GroupContext groupContext, ObjWithLock<Set<ChannelContext>> setWithLock, Packet packet, ChannelContextFilter channelContextFilter,
+	private static Boolean sendToSet(GroupContext groupContext, 
+			ObjWithLock<Set<ChannelContext>> setWithLock, 
+			Packet packet, ChannelContextFilter channelContextFilter,
 			boolean isBlock) {
-		//		if (isBlock)
-		//		{
-		//			try
-		//			{
-		//				org.tio.core.GroupContext.SYN_SEND_SEMAPHORE.acquire();
-		//			} catch (InterruptedException e)
-		//			{
-		//				log.error(e.toString(), e);
-		//			}
-		//		}
 
 		Lock lock = setWithLock.getLock().readLock();
 		boolean releasedLock = false;
@@ -791,11 +781,6 @@ public class Aio {
 				log.debug("{}, 集合为空", groupContext.getName());
 				return false;
 			}
-//			if (!groupContext.isEncodeCareWithChannelContext()) {
-//				ByteBuffer byteBuffer = groupContext.getAioHandler().encode(packet, groupContext, null);
-//				packet.setPreEncodedByteBuffer(byteBuffer);
-//			}
-
 			CountDownLatch countDownLatch = null;
 			if (isBlock) {
 				countDownLatch = new CountDownLatch(set.size());
@@ -992,7 +977,7 @@ public class Aio {
 			throw new RuntimeException("synSeq必须大于0");
 		}
 
-		ChannelContextMapWithLock waitingResps = channelContext.getGroupContext().getWaitingResps();
+		MapWithLock<Integer, Packet> waitingResps = channelContext.getGroupContext().getWaitingResps();
 		try {
 			waitingResps.put(synSeq, packet);
 

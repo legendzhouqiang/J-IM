@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
@@ -112,8 +113,8 @@ public class AioClient {
 	public AioClient(final ClientGroupContext clientGroupContext) throws IOException {
 		super();
 		this.clientGroupContext = clientGroupContext;
-		//		ExecutorService groupExecutor = clientGroupContext.getGroupExecutor();
-		this.channelGroup = AsynchronousChannelGroup.withThreadPool(clientGroupContext.getGroupExecutor());
+		ThreadPoolExecutor groupExecutor = clientGroupContext.getGroupExecutor();
+		this.channelGroup = AsynchronousChannelGroup.withThreadPool(groupExecutor);
 
 		startHeartbeatTask();
 		startReconnTask();
@@ -341,7 +342,7 @@ public class AioClient {
 					}
 					ReadLock readLock = null;
 					try {
-						SetWithLock<ChannelContext> setWithLock = clientGroupContext.connecteds.getSetWithLock();
+						SetWithLock<ChannelContext> setWithLock = clientGroupContext.connecteds;
 						readLock = setWithLock.getLock().readLock();
 						readLock.lock();
 						Set<ChannelContext> set = setWithLock.getObj();

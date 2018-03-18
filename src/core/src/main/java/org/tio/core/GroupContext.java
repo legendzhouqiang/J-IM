@@ -1,6 +1,8 @@
 package org.tio.core;
 
 import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -13,9 +15,8 @@ import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.AioListener;
 import org.tio.core.intf.ChannelTraceHandler;
 import org.tio.core.intf.GroupListener;
+import org.tio.core.intf.Packet;
 import org.tio.core.intf.TioUuid;
-import org.tio.core.maintain.ChannelContextMapWithLock;
-import org.tio.core.maintain.ChannelContextSetWithLock;
 import org.tio.core.maintain.ClientNodeMap;
 import org.tio.core.maintain.Groups;
 import org.tio.core.maintain.Ids;
@@ -26,6 +27,8 @@ import org.tio.core.maintain.Tokens;
 import org.tio.core.maintain.Users;
 import org.tio.core.ssl.SslConfig;
 import org.tio.core.stat.GroupStat;
+import org.tio.utils.lock.MapWithLock;
+import org.tio.utils.lock.SetWithLock;
 import org.tio.utils.prop.MapWithLockPropSupport;
 import org.tio.utils.thread.pool.DefaultThreadFactory;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
@@ -91,10 +94,10 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 
 	protected ThreadPoolExecutor groupExecutor = null;
 	public final ClientNodeMap clientNodeMap = new ClientNodeMap();
-	public final ChannelContextSetWithLock connections = new ChannelContextSetWithLock();
-	public final ChannelContextSetWithLock connecteds = new ChannelContextSetWithLock();
+	public final SetWithLock<ChannelContext> connections = new SetWithLock<ChannelContext>(new HashSet<ChannelContext>());
+	public final SetWithLock<ChannelContext> connecteds = new SetWithLock<ChannelContext>(new HashSet<ChannelContext>());
 
-	public final ChannelContextSetWithLock closeds = new ChannelContextSetWithLock();
+	public final SetWithLock<ChannelContext> closeds = new SetWithLock<ChannelContext>(new HashSet<ChannelContext>());
 	public final Groups groups = new Groups();
 	public final Users users = new Users();
 	public final Tokens tokens = new Tokens();
@@ -107,7 +110,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	 */
 	public IpBlacklist ipBlacklist = null;//new IpBlacklist();
 
-	public final ChannelContextMapWithLock waitingResps = new ChannelContextMapWithLock();
+	public final MapWithLock<Integer, Packet> waitingResps = new MapWithLock<Integer, Packet>(new HashMap<Integer, Packet>());
 
 	/**
 	 * packet编码成bytebuffer时，是否与ChannelContext相关，false: packet编码与ChannelContext无关
@@ -264,7 +267,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	/**
 	 * @return the syns
 	 */
-	public ChannelContextMapWithLock getWaitingResps() {
+	public MapWithLock<Integer, Packet> getWaitingResps() {
 		return waitingResps;
 	}
 
