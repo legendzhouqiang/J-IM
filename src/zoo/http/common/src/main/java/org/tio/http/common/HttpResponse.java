@@ -1,5 +1,6 @@
 package org.tio.http.common;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -324,5 +325,18 @@ public class HttpResponse extends HttpPacket {
 			this.lastModified = lastModified;
 			this.headers.put(HttpConst.ResponseHeaderKey.Last_Modified, lastModified);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		String ret =  this.getHeaderString();
+		if (this.getBody() != null) {
+			try {
+				ret += new String(this.getBody(), this.request.getCharset());
+			} catch (UnsupportedEncodingException e) {
+				log.error(e.toString(), e);
+			}
+		}
+		return ret;//requestLine.getPathAndQuery() + System.lineSeparator() + Json.toFormatedJson(params);
 	}
 }
