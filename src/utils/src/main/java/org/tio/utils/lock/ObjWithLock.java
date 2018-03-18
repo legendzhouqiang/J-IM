@@ -9,38 +9,30 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author tanyaowu
  */
 public class ObjWithLock<T> implements Serializable {
-
-	private static final long serialVersionUID = -3048283373239453901L;
-
-	/** The obj. */
+	/**
+	 * 
+	 */
 	private T obj = null;
 
 	/**
-	 * The lock.
-	 *
-	 * @含义:
-	 * @类型: ReentrantReadWriteLock
+	 * 
 	 */
 	private ReentrantReadWriteLock lock = null;
 
 	/**
-	 * Instantiates a new obj with read write lock.
-	 *
-	 * @param obj the obj
+	 * 
+	 * @param obj
 	 * @author tanyaowu
-	 * 2016年11月5日 下午1:50:34
 	 */
 	public ObjWithLock(T obj) {
 		this(obj, new ReentrantReadWriteLock());
 	}
 
 	/**
-	 * Instantiates a new obj with read write lock.
-	 *
-	 * @param obj the obj
-	 * @param lock the lock
+	 * 
+	 * @param obj
+	 * @param lock
 	 * @author tanyaowu
-	 * 2016年11月7日 上午10:16:08
 	 */
 	public ObjWithLock(T obj, ReentrantReadWriteLock lock) {
 		super();
@@ -49,47 +41,31 @@ public class ObjWithLock<T> implements Serializable {
 	}
 
 	/**
-	 * Gets the lock.
-	 *
-	 * @return the lock
+	 * 
+	 * @return
 	 * @author tanyaowu
-	 * 2016年11月7日 上午10:17:27
 	 */
 	public ReentrantReadWriteLock getLock() {
 		return lock;
 	}
 
-	//	/**
-	//	 * Sets the lock.
-	//	 *
-	//	 * @param lock the new lock
-	//	 * @author tanyaowu
-	//	 * 2016年11月7日 上午10:17:31
-	//	 */
-	//	public void setLock(ReentrantReadWriteLock lock)
-	//	{
-	//		this.lock = lock;
-	//	}
-
 	/**
-	 * Gets the obj.
-	 *
-	 * @return the obj
+	 * 
+	 * @return
 	 * @author tanyaowu
-	 * 2016年11月7日 上午10:17:34
 	 */
 	public T getObj() {
 		return obj;
 	}
 
 	/**
-	 * Sets the obj.
-	 *
-	 * @param obj the new obj
+	 * 
+	 * @param obj
 	 * @author tanyaowu
-	 * 2016年11月7日 上午10:17:37
 	 */
 	public void setObj(T obj) {
 		this.obj = obj;
 	}
+	
+	private static final long serialVersionUID = -3048283373239453901L;
 }
