@@ -21,7 +21,7 @@ public class HelloServerStarter {
 	public static ServerAioListener aioListener = null;
 
 	//一组连接共用的上下文对象
-	public static ServerGroupContext serverGroupContext = new ServerGroupContext(aioHandler, aioListener);
+	public static ServerGroupContext serverGroupContext = new ServerGroupContext("hello-tio-server", aioHandler, aioListener);
 
 	//aioServer对象
 	public static AioServer aioServer = new AioServer(serverGroupContext);
