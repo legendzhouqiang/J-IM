@@ -63,7 +63,7 @@
 		<commons-lang3.version>3.7</commons-lang3.version>
 		<commons-codec.version>1.11</commons-codec.version>
 		<commons-compress.version>1.16.1</commons-compress.version>
-		<fastjson.version>1.2.46</fastjson.version>
+		<fastjson.version>1.2.47</fastjson.version>
 		<testng.version>6.14.2</testng.version>
 		<hutool.version>4.0.7</hutool.version>
 
@@ -72,8 +72,8 @@
 		<protobuf-java-format.version>1.4</protobuf-java-format.version>
 
 		<protostuff.version>1.6.0</protostuff.version>
-		<redisson.version>3.6.2</redisson.version>
-		<jodd.version>4.2.0</jodd.version>
+		<redisson.version>3.6.3</redisson.version>
+		<jodd.version>4.3.0</jodd.version>
 		<quartz.version>2.3.0</quartz.version>
 		<caffeine.version>2.6.2</caffeine.version>
 
@@ -372,6 +372,12 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.json</groupId>
+				<artifactId>json</artifactId>
+				<version>20180130</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.testng</groupId>
 				<artifactId>testng</artifactId>
 				<version>${testng.version}</version>
@@ -403,7 +409,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>24.0-jre</version>
+				<version>24.1-jre</version>
 			</dependency>
 
 			<dependency>
@@ -519,7 +525,7 @@
 			<dependency>
 				<groupId>com.aliyun</groupId>
 				<artifactId>aliyun-java-sdk-core</artifactId>
-				<version>3.5.1</version>
+				<version>3.6.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.aliyun</groupId>
@@ -529,7 +535,7 @@
 			<dependency>
 				<groupId>com.aliyun.oss</groupId>
 				<artifactId>aliyun-sdk-oss</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.0</version>
 			</dependency>
 
 			<dependency>

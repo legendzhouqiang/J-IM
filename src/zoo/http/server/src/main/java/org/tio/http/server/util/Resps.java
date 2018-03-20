@@ -346,6 +346,19 @@ public class Resps {
 		ret.addHeader(HttpConst.ResponseHeaderKey.Location, path);
 		return ret;
 	}
+	
+	/**
+	 * 永久重定向
+	 * @param request
+	 * @param path
+	 * @return
+	 */
+	public static HttpResponse redirectForever(HttpRequest request, String path) {
+		HttpResponse ret = new HttpResponse(request);
+		ret.setStatus(HttpResponseStatus.C301);
+		ret.addHeader(HttpConst.ResponseHeaderKey.Location, path);
+		return ret;
+	}
 
 	/**
 	 * 创建字符串输出

@@ -15,7 +15,6 @@ import org.tio.core.intf.Packet;
 import org.tio.core.intf.Packet.Meta;
 import org.tio.core.task.SendRunnable;
 import org.tio.utils.lock.MapWithLock;
-import org.tio.utils.lock.ObjWithLock;
 import org.tio.utils.lock.SetWithLock;
 import org.tio.utils.page.Page;
 import org.tio.utils.page.PageUtils;
@@ -45,12 +44,12 @@ public class Aio {
 	
 	/**
 	 * 某通道是否在某群组中
-	 * @param channelContext
 	 * @param group
+	 * @param channelContext
 	 * @return true：在该群组
 	 * @author: tanyaowu
 	 */
-	public static boolean isInGroup(ChannelContext channelContext, String group) {
+	public static boolean isInGroup(String group, ChannelContext channelContext) {
 		MapWithLock<ChannelContext, SetWithLock<String>> mapWithLock = 
 				channelContext.getGroupContext().groups.getChannelmap();
 		
@@ -188,7 +187,7 @@ public class Aio {
 	 * @param channelContextFilter
 	 * @author tanyaowu
 	 */
-	public static Boolean bSendToSet(GroupContext groupContext, ObjWithLock<Set<ChannelContext>> setWithLock, Packet packet, ChannelContextFilter channelContextFilter) {
+	public static Boolean bSendToSet(GroupContext groupContext, SetWithLock<ChannelContext> setWithLock, Packet packet, ChannelContextFilter channelContextFilter) {
 		return sendToSet(groupContext, setWithLock, packet, channelContextFilter, true);
 	}
 
@@ -373,8 +372,8 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	public static Page<ChannelContext> getPageOfConnecteds(GroupContext groupContext, Integer pageIndex, Integer pageSize) {
-		ObjWithLock<Set<ChannelContext>> objWithLock = Aio.getAllConnectedsChannelContexts(groupContext);
-		return PageUtils.fromSetWithLock(objWithLock, pageIndex, pageSize);
+		SetWithLock<ChannelContext> setWithLock = Aio.getAllConnectedsChannelContexts(groupContext);
+		return PageUtils.fromSetWithLock(setWithLock, pageIndex, pageSize);
 	}
 
 	/**
@@ -387,8 +386,8 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	public static Page<ChannelContext> getPageOfGroup(GroupContext groupContext, String group, Integer pageIndex, Integer pageSize) {
-		ObjWithLock<Set<ChannelContext>> objWithLock = Aio.getChannelContextsByGroup(groupContext, group);
-		return PageUtils.fromSetWithLock(objWithLock, pageIndex, pageSize);
+		SetWithLock<ChannelContext> setWithLock = Aio.getChannelContextsByGroup(groupContext, group);
+		return PageUtils.fromSetWithLock(setWithLock, pageIndex, pageSize);
 	}
 
 	/**
@@ -600,7 +599,7 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	private static Boolean sendToAll(GroupContext groupContext, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
-		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.connections;
+		SetWithLock<ChannelContext> setWithLock = groupContext.connections;
 		if (setWithLock == null) {
 			log.debug("{}, 没有任何连接", groupContext.getName());
 			return false;
@@ -641,7 +640,7 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	private static Boolean sendToGroup(GroupContext groupContext, String group, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
-		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.groups.clients(groupContext, group);
+		SetWithLock<ChannelContext> setWithLock = groupContext.groups.clients(groupContext, group);
 		if (setWithLock == null) {
 			log.debug("{}, 组[{}]不存在", groupContext.getName(), group);
 			return false;
@@ -707,7 +706,7 @@ public class Aio {
 	 * @author: tanyaowu
 	 */
 	private static Boolean sendToIp(GroupContext groupContext, String ip, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
-		ObjWithLock<Set<ChannelContext>> setWithLock = groupContext.ips.clients(groupContext, ip);
+		SetWithLock<ChannelContext> setWithLock = groupContext.ips.clients(groupContext, ip);
 		if (setWithLock == null) {
 			log.info("{}, 没有ip为[{}]的对端", groupContext.getName(), ip);
 			return false;
@@ -754,7 +753,7 @@ public class Aio {
 	 * @param channelContextFilter
 	 * @author tanyaowu
 	 */
-	public static void sendToSet(GroupContext groupContext, ObjWithLock<Set<ChannelContext>> setWithLock, Packet packet, ChannelContextFilter channelContextFilter) {
+	public static void sendToSet(GroupContext groupContext, SetWithLock<ChannelContext> setWithLock, Packet packet, ChannelContextFilter channelContextFilter) {
 		sendToSet(groupContext, setWithLock, packet, channelContextFilter, false);
 	}
 
@@ -768,7 +767,7 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	private static Boolean sendToSet(GroupContext groupContext, 
-			ObjWithLock<Set<ChannelContext>> setWithLock, 
+			SetWithLock<ChannelContext> setWithLock, 
 			Packet packet, ChannelContextFilter channelContextFilter,
 			boolean isBlock) {
 

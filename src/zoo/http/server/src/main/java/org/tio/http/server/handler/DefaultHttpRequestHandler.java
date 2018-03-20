@@ -670,7 +670,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		String domain = request.getDomain();
 
 		String name = httpConfig.getSessionCookieName();
-		long maxAge = httpConfig.getSessionTimeout() * 30;
+		long maxAge = 3600 * 24 * 365 * 10;//Math.max(httpConfig.getSessionTimeout() * 30, 3600 * 24 * 365 * 10);
 		//				maxAge = Long.MAX_VALUE; //把过期时间掌握在服务器端
 
 		Cookie sessionCookie = new Cookie(domain, name, sessionId, maxAge);
