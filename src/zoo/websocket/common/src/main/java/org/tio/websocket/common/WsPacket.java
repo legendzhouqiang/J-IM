@@ -95,6 +95,7 @@ public class WsPacket extends Packet {
 	}
 
 	/**
+	 * 是否是握手包
 	 * @return the isHandShake
 	 */
 	public boolean isHandShake() {
