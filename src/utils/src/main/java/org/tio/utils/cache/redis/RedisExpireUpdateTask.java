@@ -1,10 +1,12 @@
 package org.tio.utils.cache.redis;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
+import org.redisson.api.RBucket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.utils.lock.SetWithLock;
@@ -57,10 +59,11 @@ public class RedisExpireUpdateTask {
 					try {
 						Set<ExpireVo> set = setWithLock.getObj();
 						for (ExpireVo expireVo : set) {
-							log.debug("更新缓存过期时间, cacheName:{}, key:{}, expire:{}", expireVo.getCacheName(), expireVo.getKey(), expireVo.getExpire());
+							log.debug("更新缓存过期时间, cacheName:{}, key:{}, expire:{}", expireVo.getCacheName(), expireVo.getKey(), expireVo.getTimeToIdleSeconds());
 
-							RedisCache.getCache(expireVo.getCacheName()).getBucket(expireVo.getKey()).expire(expireVo.getExpire(), TimeUnit.SECONDS);
-							//							expireVo.getExpirable().expire(expireVo.getExpire(), TimeUnit.SECONDS);
+							RedisCache redisCache = RedisCache.getCache(expireVo.getCacheName());
+							RBucket<Serializable> bucket = redisCache.getBucket(expireVo.getKey());
+							bucket.expireAsync(expireVo.getTimeToIdleSeconds(), TimeUnit.SECONDS);
 						}
 						set.clear();
 					} catch (Throwable e) {

@@ -89,12 +89,12 @@ public class RedisCache implements ICache {
 	@Override
 	public void clear() {
 		long start = SystemTimer.currentTimeMillis();
-		
+
 		RKeys keys = redisson.getKeys();
-		
-//		keys.deleteByPattern(keyPrefix(cacheName) + "*");
+
+		//		keys.deleteByPattern(keyPrefix(cacheName) + "*");
 		keys.deleteByPatternAsync(keyPrefix(cacheName) + "*");
-		
+
 		long end = SystemTimer.currentTimeMillis();
 		long iv = end - start;
 		log.info("clear cache {}, cost {}ms", cacheName, iv);
@@ -112,7 +112,7 @@ public class RedisCache implements ICache {
 		Serializable ret = bucket.get();
 		if (timeToIdleSeconds != null) {
 			if (ret != null) {
-//				bucket.expire(timeout, TimeUnit.SECONDS);
+				//				bucket.expire(timeout, TimeUnit.SECONDS);
 				RedisExpireUpdateTask.add(cacheName, key, timeout);
 			}
 		}
@@ -158,9 +158,18 @@ public class RedisCache implements ICache {
 			return;
 		}
 		RBucket<Serializable> bucket = getBucket(key);
-		bucket.set(value, timeout, TimeUnit.SECONDS);
+		
+		long _timeout = timeout;
+		if (timeToLiveSeconds != null && timeToLiveSeconds > 0) {  //是按timeToLiveSeconds来的
+			long ttl = ttl(key);
+			if (ttl > 0) {
+				_timeout = ttl / 1000;
+			}
+		}
+		
+		bucket.set(value, _timeout, TimeUnit.SECONDS);
 	}
-	
+
 	@Override
 	public void putTemporary(String key, Serializable value) {
 		if (StringUtils.isBlank(key)) {
@@ -178,12 +187,25 @@ public class RedisCache implements ICache {
 		RBucket<Serializable> bucket = getBucket(key);
 		bucket.delete();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T get(String key, Class<T> clazz) {
-		return (T)get(key);
+		return (T) get(key);
 	}
 
-	
+	@Override
+	public long ttl(String key) {
+		RBucket<Serializable> bucket = getBucket(key);
+		if (bucket == null) {
+			return -2L;
+		}
+		long remainTimeToLive = bucket.remainTimeToLive();
+		return remainTimeToLive;
+	}
+
+//	@Override
+//	public void update(String key, Serializable value) {
+//		
+//	}
 }

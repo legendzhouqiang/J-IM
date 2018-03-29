@@ -52,7 +52,6 @@ public class Aio {
 	public static boolean isInGroup(String group, ChannelContext channelContext) {
 		MapWithLock<ChannelContext, SetWithLock<String>> mapWithLock = 
 				channelContext.getGroupContext().groups.getChannelmap();
-		
 		ReadLock lock = mapWithLock.getLock().readLock();
 		lock.lock();
 		try {

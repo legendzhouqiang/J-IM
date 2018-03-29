@@ -238,6 +238,9 @@ public class GuavaRedisCache implements ICache {
 	public <T> T get(String key, Class<T> clazz) {
 		return (T)get(key);
 	}
-
+	@Override
+	public long ttl(String key) {
+		return redisCache.ttl(key);
+	}
 	
 }

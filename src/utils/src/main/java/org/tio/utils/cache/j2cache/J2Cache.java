@@ -84,8 +84,12 @@ public class J2Cache implements ICache {
 
 	@Override
 	public void putTemporary(String key, Serializable value) {
-		throw new RuntimeException("不支持缓存穿透");
+		throw new RuntimeException("不支持防缓存穿透");
+	}
 
+	@Override
+	public long ttl(String key) {
+		throw new RuntimeException("不支持ttl");
 	}
 
 }

@@ -241,5 +241,10 @@ public class CaffeineRedisCache implements ICache {
 		return (T)get(key);
 	}
 
+	@Override
+	public long ttl(String key) {
+		return redisCache.ttl(key);
+	}
+
 	
 }

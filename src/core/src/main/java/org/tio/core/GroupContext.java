@@ -3,9 +3,7 @@ package org.tio.core;
 import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -27,10 +25,10 @@ import org.tio.core.maintain.Tokens;
 import org.tio.core.maintain.Users;
 import org.tio.core.ssl.SslConfig;
 import org.tio.core.stat.GroupStat;
+import org.tio.utils.Threads;
 import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.lock.SetWithLock;
 import org.tio.utils.prop.MapWithLockPropSupport;
-import org.tio.utils.thread.pool.DefaultThreadFactory;
 import org.tio.utils.thread.pool.SynThreadPoolExecutor;
 
 /**
@@ -40,26 +38,10 @@ import org.tio.utils.thread.pool.SynThreadPoolExecutor;
  */
 public abstract class GroupContext extends MapWithLockPropSupport {
 	static Logger log = LoggerFactory.getLogger(GroupContext.class);
-
-	private static int CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
-
-	//	public static final int CORE_POOL_SIZE = _CORE_POOL_SIZE;// < 160 ? 160 : _CORE_POOL_SIZE;
-
-	private static final int MAX_POOL_SIZE = CORE_POOL_SIZE * 4 < 256 ? 256 : CORE_POOL_SIZE * 4;
-
-	//	public static final Semaphore SYN_SEND_SEMAPHORE = new Semaphore(CORE_POOL_SIZE);
-
-	//	/**
-	//	 * 默认的心跳超时时间(单位: 毫秒)
-	//	 */
-	//	private static final long DEFAULT_HEARTBEAT_TIMEOUT = 1000 * 120;
-
 	/**
 	 * 默认的接收数据的buffer size
 	 */
 	public static final int READ_BUFFER_SIZE = Integer.getInteger("tio.default.read.buffer.size", 2048);
-
-	public static final long KEEP_ALIVE_TIME = 90L;
 
 	private final static AtomicInteger ID_ATOMIC = new AtomicInteger();
 
@@ -141,20 +123,12 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 		this.ipStats = new IpStats(this, null, null);
 		this.tioExecutor = tioExecutor;
 		if (this.tioExecutor == null) {
-			LinkedBlockingQueue<Runnable> tioQueue = new LinkedBlockingQueue<>();
-			String tioThreadName = "tio";
-			this.tioExecutor = new SynThreadPoolExecutor(CORE_POOL_SIZE, CORE_POOL_SIZE, KEEP_ALIVE_TIME, tioQueue,
-					DefaultThreadFactory.getInstance(tioThreadName, Thread.NORM_PRIORITY), tioThreadName);
-			this.tioExecutor.prestartAllCoreThreads();
+			this.tioExecutor = Threads.tioExecutor;
 		}
 
 		this.groupExecutor = groupExecutor;
 		if (this.groupExecutor == null) {
-			LinkedBlockingQueue<Runnable> groupQueue = new LinkedBlockingQueue<>();
-			String groupThreadName = "tio-group";
-			this.groupExecutor = new ThreadPoolExecutor(MAX_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, groupQueue,
-					DefaultThreadFactory.getInstance(groupThreadName, Thread.NORM_PRIORITY));
-			this.groupExecutor.prestartAllCoreThreads();
+			this.groupExecutor = Threads.groupExecutor;
 		}
 	}
 

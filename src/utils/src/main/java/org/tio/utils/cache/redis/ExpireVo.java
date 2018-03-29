@@ -32,13 +32,13 @@ public class ExpireVo {
 
 	private String key;
 
-	private long expire;
+	private long timeToIdleSeconds;
 
-	public ExpireVo(String cacheName, String key, long expire) {
+	public ExpireVo(String cacheName, String key, long timeToIdleSeconds) {
 		super();
 		this.cacheName = cacheName;
 		this.key = key;
-		this.expire = expire;
+		this.timeToIdleSeconds = timeToIdleSeconds;
 		//		this.expirable = expirable;
 	}
 
@@ -62,8 +62,8 @@ public class ExpireVo {
 		return cacheName;
 	}
 
-	public long getExpire() {
-		return expire;
+	public long getTimeToIdleSeconds() {
+		return timeToIdleSeconds;
 	}
 
 	public String getKey() {
@@ -83,8 +83,8 @@ public class ExpireVo {
 		this.cacheName = cacheName;
 	}
 
-	public void setExpire(long expire) {
-		this.expire = expire;
+	public void setTimeToIdleSeconds(long expire) {
+		this.timeToIdleSeconds = expire;
 	}
 
 	public void setKey(String key) {

@@ -8,16 +8,7 @@ import org.tio.core.ChannelContext;
  * 2017年4月1日 上午9:34:08
  */
 public interface AioListener {
-	/**
-	 * 连接关闭前后触发本方法
-	 * @param channelContext the channelcontext
-	 * @param throwable the throwable 有可能为空
-	 * @param remark the remark 有可能为空
-	 * @param isRemove 是否是删除
-	 * @throws Exception
-	 * @author: tanyaowu
-	 */
-	void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception;
+	
 
 	/**
 	 * 建链后触发本方法，注：建链不一定成功，需要关注参数isConnected
@@ -58,4 +49,16 @@ public interface AioListener {
 	 * @author tanyaowu
 	 */
 	void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove);
+	
+	/**
+	 * 连接关闭前后触发本方法
+	 * 警告：走到这个里面时，很多绑定的业务都已经解绑了，所以这个方法一般是空着不实现的
+	 * @param channelContext the channelcontext
+	 * @param throwable the throwable 有可能为空
+	 * @param remark the remark 有可能为空
+	 * @param isRemove 是否是删除
+	 * @throws Exception
+	 * @author: tanyaowu
+	 */
+	void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception;
 }

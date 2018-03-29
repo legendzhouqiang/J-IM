@@ -160,4 +160,9 @@ public class CaffeineCache  implements ICache {
 	public <T> T get(String key, Class<T> clazz) {
 		return (T)get(key);
 	}
+
+	@Override
+	public long ttl(String key) {
+		throw new RuntimeException("不支持ttl");
+	}
 }

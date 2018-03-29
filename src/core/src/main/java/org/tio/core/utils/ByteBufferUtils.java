@@ -136,7 +136,7 @@ public class ByteBufferUtils {
 	 * @author: tanyaowu
 	 */
 	public static int lineEnd(ByteBuffer buffer, int maxlength) throws LengthOverflowException {
-		boolean canEnd = false;
+		boolean lastIsR = false;
 		//		int startPosition = buffer.position();
 		int count = 0;
 		while (buffer.hasRemaining()) {
@@ -146,14 +146,18 @@ public class ByteBufferUtils {
 				throw new LengthOverflowException("maxlength is " + maxlength);
 			}
 			if (b == '\r') {
-				canEnd = true;
-			} else if (b == '\n') {
-				if (canEnd) {
-					int endPosition = buffer.position();
-					return endPosition - 2;
-				}
+				lastIsR = true;
 			} else {
-				canEnd = false;
+				if (b == '\n') {
+					int endPosition = buffer.position();
+					if (lastIsR) {
+						return endPosition - 2;
+					} else {
+						return endPosition - 1;
+					}
+				} else {
+					lastIsR = false;
+				}
 			}
 		}
 		return -1;
