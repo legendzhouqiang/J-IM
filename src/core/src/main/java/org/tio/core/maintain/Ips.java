@@ -53,11 +53,11 @@ public class Ips {
 		if (StringUtils.isBlank(ip)) {
 			return;
 		}
-
-		Lock lock1 = ipmap.getLock().writeLock();
+		
 		SetWithLock<ChannelContext> channelContexts = null;//ipmap.getObj().get(ip);
+		Lock lock1 = ipmap.getLock().writeLock();
+		lock1.lock();
 		try {
-			lock1.lock();
 			Map<String, SetWithLock<ChannelContext>> map = ipmap.getObj();
 			channelContexts = map.get(ip);
 			if (channelContexts == null) {
@@ -72,8 +72,8 @@ public class Ips {
 
 		//		if (channelContexts != null) {
 		Lock lock11 = channelContexts.getLock().writeLock();
+		lock11.lock();
 		try {
-			lock11.lock();
 			channelContexts.getObj().add(channelContext);
 		} catch (Throwable e) {
 			log.error(e.toString(), e);
@@ -140,14 +140,13 @@ public class Ips {
 		SetWithLock<ChannelContext> channelContexts = ipmap.getObj().get(ip);
 		if (channelContexts != null) {
 			Lock lock1 = channelContexts.getLock().writeLock();
+			lock1.lock();
 			try {
-				lock1.lock();
 				channelContexts.getObj().remove(channelContext);
-				
 				if (channelContexts.getObj().size() == 0) {
 					Lock lock2 = ipmap.getLock().writeLock();
+					lock2.lock();
 					try {
-						lock2.lock();
 						ipmap.getObj().remove(ip);
 					} catch (Throwable e) {
 						log.error(e.toString(), e);
@@ -155,7 +154,6 @@ public class Ips {
 						lock2.unlock();
 					}
 				}
-				
 			} catch (Throwable e) {
 				log.error(e.toString(), e);
 			} finally {

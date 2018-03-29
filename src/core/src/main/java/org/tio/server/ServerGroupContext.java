@@ -107,11 +107,11 @@ public class ServerGroupContext extends GroupContext {
 					long start = SystemTimer.currentTimeMillis();
 					SetWithLock<ChannelContext> objWithLock = ServerGroupContext.this.connections;
 					Set<ChannelContext> set = null;
-					ReadLock readLock = objWithLock.getLock().readLock();
 					long start1 = 0;
 					int count = 0;
+					ReadLock readLock = objWithLock.getLock().readLock();
+					readLock.lock();
 					try {
-						readLock.lock();
 						start1 = SystemTimer.currentTimeMillis();
 						set = objWithLock.getObj();
 

@@ -48,20 +48,15 @@ public class Users {
 		}
 		String key = userid;
 		Lock lock = mapWithLock.getLock().writeLock();
-		Map<String, SetWithLock<ChannelContext>> map = mapWithLock.getObj();
-
+		lock.lock();
 		try {
-			lock.lock();
-
+			Map<String, SetWithLock<ChannelContext>> map = mapWithLock.getObj();
 			SetWithLock<ChannelContext> setWithLock = map.get(key);
 			if (setWithLock == null) {
 				setWithLock = new SetWithLock<>(new HashSet<>());
 				map.put(key, setWithLock);
 			}
 			setWithLock.add(channelContext);
-
-			//			cacheMap.put(key, channelContext);
-
 			channelContext.setUserid(userid);
 		} catch (Throwable e) {
 			throw e;
@@ -86,10 +81,9 @@ public class Users {
 		}
 		String key = userid;
 		Lock lock = mapWithLock.getLock().readLock();
-		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
-
+		lock.lock();
 		try {
-			lock.lock();
+			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 			return m.get(key);
 		} catch (Throwable e) {
 			throw e;
@@ -123,10 +117,9 @@ public class Users {
 		}
 
 		Lock lock = mapWithLock.getLock().writeLock();
-		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
+		lock.lock();
 		try {
-			lock.lock();
-
+			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 			SetWithLock<ChannelContext> setWithLock = m.get(userid);
 			if (setWithLock == null) {
 				log.info("{}, {}, userid:{}, 没有找到对应的SetWithLock", groupContext.getName(), channelContext.toString(), userid);
@@ -163,10 +156,9 @@ public class Users {
 		}
 
 		Lock lock = mapWithLock.getLock().writeLock();
-		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
+		lock.lock();
 		try {
-			lock.lock();
-
+			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 			SetWithLock<ChannelContext> setWithLock = m.get(userid);
 			if (setWithLock == null) {
 				return;

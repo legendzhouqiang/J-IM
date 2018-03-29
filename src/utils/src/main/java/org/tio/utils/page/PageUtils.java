@@ -77,8 +77,8 @@ public class PageUtils {
 			return null;
 		}
 		Lock lock = setWithLock.getLock().readLock();
+		lock.lock();
 		try {
-			lock.lock();
 			Set<T> set = setWithLock.getObj();
 			return fromSet(set, pageNumber, pageSize);
 		} finally {

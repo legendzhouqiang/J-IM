@@ -54,8 +54,8 @@ public class Aio {
 				channelContext.getGroupContext().groups.getChannelmap();
 		
 		ReadLock lock = mapWithLock.getLock().readLock();
+		lock.lock();
 		try {
-			lock.lock();
 			Map<ChannelContext, SetWithLock<String>> m = mapWithLock.getObj();
 			if (m == null || m.size() == 0) {
 				return false;
@@ -72,7 +72,7 @@ public class Aio {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
 	 * 群组有多少个连接
 	 * @param groupContext
@@ -410,8 +410,8 @@ public class Aio {
 	public static void remove(GroupContext groupContext, String ip, String remark) {
 		SetWithLock<ChannelContext> setWithLock = Aio.getAllChannelContexts(groupContext);
 		Lock lock2 = setWithLock.getLock().readLock();
+		lock2.lock();
 		try {
-			lock2.lock();
 			Set<ChannelContext> set = setWithLock.getObj();
 			for (ChannelContext channelContext : set) {
 				String clientIp = channelContext.getClientNode().getIp();
@@ -766,20 +766,33 @@ public class Aio {
 	 * @param isBlock
 	 * @author tanyaowu
 	 */
-	private static Boolean sendToSet(GroupContext groupContext, 
-			SetWithLock<ChannelContext> setWithLock, 
-			Packet packet, ChannelContextFilter channelContextFilter,
+	private static Boolean sendToSet(GroupContext groupContext, SetWithLock<ChannelContext> setWithLock, Packet packet, ChannelContextFilter channelContextFilter,
 			boolean isBlock) {
+		//		if (isBlock)
+		//		{
+		//			try
+		//			{
+		//				org.tio.core.GroupContext.SYN_SEND_SEMAPHORE.acquire();
+		//			} catch (InterruptedException e)
+		//			{
+		//				log.error(e.toString(), e);
+		//			}
+		//		}
 
-		Lock lock = setWithLock.getLock().readLock();
 		boolean releasedLock = false;
+		Lock lock = setWithLock.getLock().readLock();
+		lock.lock();
 		try {
-			lock.lock();
 			Set<ChannelContext> set = setWithLock.getObj();
 			if (set.size() == 0) {
 				log.debug("{}, 集合为空", groupContext.getName());
 				return false;
 			}
+//			if (!groupContext.isEncodeCareWithChannelContext()) {
+//				ByteBuffer byteBuffer = groupContext.getAioHandler().encode(packet, groupContext, null);
+//				packet.setPreEncodedByteBuffer(byteBuffer);
+//			}
+
 			CountDownLatch countDownLatch = null;
 			if (isBlock) {
 				countDownLatch = new CountDownLatch(set.size());

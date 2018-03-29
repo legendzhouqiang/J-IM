@@ -48,11 +48,9 @@ public class Tokens {
 		}
 		String key = token;
 		Lock lock = mapWithLock.getLock().writeLock();
-		Map<String, SetWithLock<ChannelContext>> map = mapWithLock.getObj();
-
+		lock.lock();
 		try {
-			lock.lock();
-
+			Map<String, SetWithLock<ChannelContext>> map = mapWithLock.getObj();
 			SetWithLock<ChannelContext> setWithLock = map.get(key);
 			if (setWithLock == null) {
 				setWithLock = new SetWithLock<>(new HashSet<>());
@@ -86,10 +84,9 @@ public class Tokens {
 		}
 		String key = token;
 		Lock lock = mapWithLock.getLock().readLock();
-		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
-
+		lock.lock();
 		try {
-			lock.lock();
+			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 			return m.get(key);
 		} catch (Throwable e) {
 			throw e;
@@ -123,10 +120,9 @@ public class Tokens {
 		}
 
 		Lock lock = mapWithLock.getLock().writeLock();
-		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
+		lock.lock();
 		try {
-			lock.lock();
-
+			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 			SetWithLock<ChannelContext> setWithLock = m.get(token);
 			if (setWithLock == null) {
 				log.info("{}, {}, token:{}, 没有找到对应的SetWithLock", groupContext.getName(), channelContext.toString(), token);
@@ -135,12 +131,9 @@ public class Tokens {
 			channelContext.setToken(null);
 			setWithLock.remove(channelContext);
 			
-			
 			if(setWithLock.getObj().size() == 0) {
 				m.remove(token);
 			}
-			
-			
 		} catch (Throwable e) {
 			throw e;
 		} finally {
@@ -164,10 +157,9 @@ public class Tokens {
 		}
 
 		Lock lock = mapWithLock.getLock().writeLock();
-		Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
+		lock.lock();
 		try {
-			lock.lock();
-
+			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
 			SetWithLock<ChannelContext> setWithLock = m.get(token);
 			if (setWithLock == null) {
 				return;

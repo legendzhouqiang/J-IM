@@ -62,9 +62,8 @@ public class AioClient {
 		public void run() {
 			ReentrantReadWriteLock closeLock = channelContext.getCloseLock();
 			WriteLock writeLock = closeLock.writeLock();
-
+			writeLock.lock();
 			try {
-				writeLock.lock();
 				if (!channelContext.isClosed()) //已经连上了，不需要再重连了
 				{
 					return;
@@ -340,11 +339,10 @@ public class AioClient {
 						log.warn("用户取消了框架层面的心跳定时发送功能，请用户自己去完成心跳机制");
 						break;
 					}
-					ReadLock readLock = null;
+					SetWithLock<ChannelContext> setWithLock = clientGroupContext.connecteds;
+					ReadLock readLock = setWithLock.getLock().readLock();
+					readLock.lock();
 					try {
-						SetWithLock<ChannelContext> setWithLock = clientGroupContext.connecteds;
-						readLock = setWithLock.getLock().readLock();
-						readLock.lock();
 						Set<ChannelContext> set = setWithLock.getObj();
 						long currtime = SystemTimer.currentTimeMillis();
 						for (ChannelContext entry : set) {
@@ -376,9 +374,7 @@ public class AioClient {
 						log.error("", e);
 					} finally {
 						try {
-							if (readLock != null) {
-								readLock.unlock();
-							}
+							readLock.unlock();
 							Thread.sleep(heartbeatTimeout / 4);
 						} catch (Throwable e) {
 							log.error(e.toString(), e);

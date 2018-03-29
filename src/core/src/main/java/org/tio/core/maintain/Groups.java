@@ -54,11 +54,10 @@ public class Groups {
 		if (StringUtils.isBlank(groupid)) {
 			return;
 		}
-
-		Lock lock1 = groupmap.getLock().writeLock();
 		SetWithLock<ChannelContext> channelContexts = null;
+		Lock lock1 = groupmap.getLock().writeLock();
+		lock1.lock();
 		try {
-			lock1.lock();
 			Map<String, SetWithLock<ChannelContext>> map = groupmap.getObj();
 			channelContexts = map.get(groupid);
 			if (channelContexts == null) {
@@ -73,8 +72,8 @@ public class Groups {
 
 		if (channelContexts != null) {
 			Lock lock11 = channelContexts.getLock().writeLock();
+			lock11.lock();
 			try {
-				lock11.lock();
 				channelContexts.getObj().add(channelContext);
 			} catch (Throwable e) {
 				log.error(e.toString(), e);
@@ -82,11 +81,11 @@ public class Groups {
 				lock11.unlock();
 			}
 		}
-
-		Lock lock2 = channelmap.getLock().writeLock();
+		
 		SetWithLock<String> groups = null;// = channelmap.getObj().get(channelContext);
+		Lock lock2 = channelmap.getLock().writeLock();
+		lock2.lock();
 		try {
-			lock2.lock();
 			groups = channelmap.getObj().get(channelContext);
 			if (groups == null) {
 				groups = new SetWithLock<>(new HashSet<String>());
@@ -100,8 +99,8 @@ public class Groups {
 
 		if (groups != null) {
 			Lock lock22 = groups.getLock().writeLock();
+			lock22.lock();
 			try {
-				lock22.lock();
 				groups.getObj().add(groupid);
 			} catch (Throwable e) {
 				log.error(e.toString(), e);
@@ -173,11 +172,11 @@ public class Groups {
 			return;
 		}
 
-		Lock lock = channelmap.getLock().writeLock();
 		try {
 			SetWithLock<String> set = null;
+			Lock lock = channelmap.getLock().writeLock();
+			lock.lock();
 			try {
-				lock.lock();
 				Map<ChannelContext, SetWithLock<String>> m = channelmap.getObj();
 				set = m.get(channelContext);
 				m.remove(channelContext);
@@ -229,8 +228,8 @@ public class Groups {
 		SetWithLock<ChannelContext> set = groupmap.getObj().get(groupid);
 		if (set != null) {
 			Lock lock1 = set.getLock().writeLock();
+			lock1.lock();
 			try {
-				lock1.lock();
 				set.getObj().remove(channelContext);
 			} catch (Throwable e) {
 				log.error(e.toString(), e);
@@ -240,8 +239,8 @@ public class Groups {
 
 			if (set.getObj().size() == 0) {
 				Lock lock2 = groupmap.getLock().writeLock();
+				lock2.lock();
 				try {
-					lock2.lock();
 					groupmap.getObj().remove(groupid);
 				} catch (Throwable e) {
 					log.error(e.toString(), e);
