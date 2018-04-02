@@ -16,9 +16,9 @@ public class WsServerAioListener implements ServerAioListener {
 	public WsServerAioListener() {
 	}
 
-	@Override
-	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
-	}
+//	@Override
+//	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
+//	}
 
 	@Override
 	public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) {
@@ -28,7 +28,7 @@ public class WsServerAioListener implements ServerAioListener {
 	}
 
 	@Override
-	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) {
+	public void onAfterDecoded(ChannelContext channelContext, Packet packet, int packetSize) {
 
 	}
 
@@ -38,6 +38,16 @@ public class WsServerAioListener implements ServerAioListener {
 
 	@Override
 	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
+	}
+
+	@Override
+	public void onAfterHandled(ChannelContext channelContext, Packet packet, long cost) throws Exception {
+		
+	}
+
+	@Override
+	public void onAfterReceivedBytes(ChannelContext channelContext, int receivedBytes) throws Exception {
+
 	}
 
 }

@@ -3,14 +3,17 @@ package org.tio.client;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioListener;
+import org.tio.core.GroupContext;
 import org.tio.core.Node;
 import org.tio.core.ReadCompletionHandler;
 import org.tio.core.ssl.SslFacadeContext;
 import org.tio.core.ssl.SslUtils;
+import org.tio.core.stat.IpStat;
 import org.tio.utils.SystemTimer;
 
 /**
@@ -76,7 +79,7 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 				} else {
 					channelContext = new ClientChannelContext(clientGroupContext, asynchronousSocketChannel);
 					channelContext.setServerNode(serverNode);
-					channelContext.getStat().setTimeClosed(SystemTimer.currentTimeMillis());
+					channelContext.stat.setTimeClosed(SystemTimer.currentTimeMillis());
 				}
 
 				channelContext.setBindIp(bindIp);
@@ -99,14 +102,14 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 
 				log.info("connected to {}", serverNode);
 				if (isConnected && !isReconnect) {
-					channelContext.getStat().setTimeFirstConnected(SystemTimer.currentTimeMillis());
+					channelContext.stat.setTimeFirstConnected(SystemTimer.currentTimeMillis());
 				}
 			} else {
 				log.error(throwable.toString(), throwable);
 				if (channelContext == null) {
 					channelContext = new ClientChannelContext(clientGroupContext, asynchronousSocketChannel);
 					channelContext.setServerNode(serverNode);
-					channelContext.getStat().setTimeClosed(SystemTimer.currentTimeMillis());
+					channelContext.stat.setTimeClosed(SystemTimer.currentTimeMillis());
 				}
 
 				if (!isReconnect) //不是重连，则是第一次连接，需要把channelContext加到closeds行列
@@ -138,6 +141,18 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 					}
 				} else {
 					clientAioListener.onAfterConnected(channelContext, isConnected, isReconnect);
+				}
+				
+				try {
+					GroupContext groupContext = channelContext.getGroupContext();
+					List<Long> list = groupContext.ipStats.durationList;
+					for (Long v : list) {
+						IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+						ipStat.getRequestCount().incrementAndGet();
+						groupContext.getIpStatListener().onAfterConnected(channelContext, isConnected, isReconnect, ipStat);
+					}
+				} catch (Exception e) {
+					log.error(e.toString(), e);
 				}
 				
 				

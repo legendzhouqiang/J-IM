@@ -3,8 +3,8 @@ package org.tio.core.cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.GroupContext;
-import org.tio.core.intf.IpStatListener;
 import org.tio.core.stat.IpStat;
+import org.tio.core.stat.IpStatListener;
 
 import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.RemovalListener;
@@ -17,6 +17,7 @@ import com.github.benmanes.caffeine.cache.RemovalListener;
  */
 @SuppressWarnings("rawtypes")
 public class IpStatRemovalListener implements RemovalListener {
+	@SuppressWarnings("unused")
 	private static Logger log = LoggerFactory.getLogger(IpStatRemovalListener.class);
 
 	private IpStatListener ipStatListener;
@@ -54,7 +55,7 @@ public class IpStatRemovalListener implements RemovalListener {
 
 	@Override
 	public void onRemoval(Object key, Object value, RemovalCause cause) {
-		String ip = (String) key;
+//		String ip = (String) key;
 		IpStat ipStat = (IpStat) value;
 
 		if (ipStatListener != null) {

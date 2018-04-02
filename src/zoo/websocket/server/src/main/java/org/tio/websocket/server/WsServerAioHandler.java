@@ -230,9 +230,10 @@ public class WsServerAioHandler implements ServerAioHandler {
 	 */
 	@Override
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
-		WsRequest wsRequestPacket = (WsRequest) packet;
+		
+		WsRequest wsRequest = (WsRequest) packet;
 
-		if (wsRequestPacket.isHandShake()) {
+		if (wsRequest.isHandShake()) {
 			WsSessionContext wsSessionContext = (WsSessionContext) channelContext.getAttribute();
 			HttpRequest request = wsSessionContext.getHandshakeRequestPacket();
 			HttpResponse httpResponse = wsSessionContext.getHandshakeResponsePacket();
@@ -250,7 +251,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 			return;
 		}
 
-		WsResponse wsResponse = h(wsRequestPacket, wsRequestPacket.getBody(), wsRequestPacket.getWsOpcode(), channelContext);
+		WsResponse wsResponse = h(wsRequest, wsRequest.getBody(), wsRequest.getWsOpcode(), channelContext);
 
 		if (wsResponse != null) {
 			Aio.send(channelContext, wsResponse);

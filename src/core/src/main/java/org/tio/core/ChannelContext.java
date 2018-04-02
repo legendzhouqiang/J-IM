@@ -3,6 +3,7 @@ package org.tio.core;
 import java.io.IOException;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -18,6 +19,8 @@ import org.tio.core.intf.Packet.Meta;
 import org.tio.core.ssl.SslFacadeContext;
 import org.tio.core.ssl.SslUtils;
 import org.tio.core.stat.ChannelStat;
+import org.tio.core.stat.GroupStat;
+import org.tio.core.stat.IpStat;
 import org.tio.core.task.DecodeRunnable;
 import org.tio.core.task.HandlerRunnable;
 import org.tio.core.task.SendRunnable;
@@ -82,7 +85,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	private boolean isRemoved = false;
 
-	private ChannelStat stat = new ChannelStat();
+	public final ChannelStat stat = new ChannelStat();
 
 	/** The asynchronous socket channel. */
 	private AsynchronousSocketChannel asynchronousSocketChannel;
@@ -246,12 +249,12 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		return serverNode;
 	}
 
-	/**
-	 * @return the stat
-	 */
-	public ChannelStat getStat() {
-		return stat;
-	}
+//	/**
+//	 * @return the stat
+//	 */
+//	public ChannelStat getStat() {
+//		return stat;
+//	}
 
 	/**
 	 * @return the userid
@@ -334,6 +337,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	 */
 	public void processAfterSent(Packet packet, Boolean isSentSuccess) {
 
+		isSentSuccess = isSentSuccess == null ? false : isSentSuccess;
 //		if (isPacket) {
 //			packet = (Packet) obj;
 //		} else {
@@ -356,8 +360,30 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 				log.debug("{} 已经发送 {}", this, packet.logstr());
 			}
 
+			//非SSL or SSL已经握手
 			if (this.getSslFacadeContext() == null || this.getSslFacadeContext().isHandshakeCompleted()) {
-				groupContext.getAioListener().onAfterSent(this, packet, isSentSuccess == null ? false : isSentSuccess);
+				try {
+					groupContext.getAioListener().onAfterSent(this, packet, isSentSuccess);
+				} catch (Exception e) {
+					log.error(e.toString(), e);
+				}
+				
+				GroupStat groupStat = groupContext.getGroupStat();
+				groupStat.getSentPackets().incrementAndGet();
+				stat.getSentPackets().incrementAndGet();
+				
+				List<Long> list = groupContext.ipStats.durationList;
+				try {
+					for (Long v : list) {
+						IpStat ipStat = (IpStat) groupContext.ipStats.get(v, getClientNode().getIp());
+						ipStat.getSentPackets().incrementAndGet();
+						groupContext.getIpStatListener().onAfterSent(this, packet, isSentSuccess, ipStat);
+					}
+				} catch (Exception e) {
+					log.error(e.toString(), e);
+				}
+
+				
 			}
 		} catch (Throwable e) {
 			log.error(e.toString(), e);

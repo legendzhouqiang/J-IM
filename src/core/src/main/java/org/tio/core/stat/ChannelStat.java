@@ -75,6 +75,12 @@ public class ChannelStat implements java.io.Serializable {
 	 * 本连接已处理的packet数
 	 */
 	private AtomicLong handledPackets = new AtomicLong();
+	
+	/**
+	 * 处理消息包耗时，单位：毫秒
+	 * 拿这个值除以handledPackets，就是处理每个消息包的平均耗时
+	 */
+	private AtomicLong handledPacketCosts = new AtomicLong();
 
 	/**
 	 * 本连接已接收的字节数
@@ -219,13 +225,6 @@ public class ChannelStat implements java.io.Serializable {
 	}
 
 	/**
-	 * @param countHandledPacket the countHandledPacket to set
-	 */
-	public void setHandledPackets(AtomicLong handledPackets) {
-		this.handledPackets = handledPackets;
-	}
-
-	/**
 	 * @param timeLatestReceivedMsg the timeLatestReceivedMsg to set
 	 */
 	public void setLatestTimeOfReceivedPacket(long latestTimeOfReceivedPacket) {
@@ -330,4 +329,7 @@ public class ChannelStat implements java.io.Serializable {
 		this.receivedTcps = receivedTcps;
 	}
 
+	public AtomicLong getHandledPacketCosts() {
+		return handledPacketCosts;
+	}
 }

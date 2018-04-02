@@ -10,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ssl.SslFacadeContext;
+import org.tio.core.stat.GroupStat;
 import org.tio.core.stat.IpStat;
 import org.tio.core.task.DecodeRunnable;
 import org.tio.core.utils.AioUtils;
@@ -40,30 +41,33 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 
 	@Override
 	public void completed(Integer result, ByteBuffer byteBuffer) {
-		//		GroupContext groupContext = channelContext.getGroupContext();
 		if (result > 0) {
-			channelContext.getStat().setLatestTimeOfReceivedByte(SystemTimer.currentTimeMillis());
 			GroupContext groupContext = channelContext.getGroupContext();
+			GroupStat groupStat = groupContext.getGroupStat();
+			
+			groupStat.getReceivedBytes().addAndGet(result);
+			groupStat.getReceivedTcps().incrementAndGet();
+			
+			channelContext.stat.getReceivedBytes().addAndGet(result);
+			channelContext.stat.getReceivedTcps().incrementAndGet();
+			channelContext.stat.setLatestTimeOfReceivedByte(SystemTimer.currentTimeMillis());
 
-			groupContext.getGroupStat().getReceivedBytes().addAndGet(result);
-			channelContext.getStat().getReceivedBytes().addAndGet(result);
-			//			channelContext.getIpStat().getReceivedBytes().addAndGet(result);
-
-			groupContext.getGroupStat().getReceivedTcps().incrementAndGet();
-			channelContext.getStat().getReceivedTcps().incrementAndGet();
-			//			channelContext.getIpStat().getReceivedTcps().incrementAndGet();
-
-			//			CaffeineCache[] caches = groupContext.ips.getCaches();
-			//			for (CaffeineCache guavaCache : caches) {
-			//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
-			//				ipStat.getReceivedBytes().addAndGet(result);
-			//				ipStat.getReceivedTcps().incrementAndGet();
-			//			}
 			List<Long> list = groupContext.ipStats.durationList;
-			for (Long v : list) {
-				IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-				ipStat.getReceivedBytes().addAndGet(result);
-				ipStat.getReceivedTcps().incrementAndGet();
+			try {
+				for (Long v : list) {
+					IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+					ipStat.getReceivedBytes().addAndGet(result);
+					ipStat.getReceivedTcps().incrementAndGet();
+					groupContext.getIpStatListener().onAfterReceivedBytes(channelContext, result, ipStat);
+				}
+			} catch (Exception e1) {
+				log.error(channelContext.toString(), e1);
+			}
+			
+			try {
+				groupContext.getAioListener().onAfterReceivedBytes(channelContext, result);
+			} catch(Exception e) {
+				log.error("", e);
 			}
 
 			if (channelContext.isTraceClient()) {
@@ -71,8 +75,6 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 				map.put("p_r_buf_len", result);
 				channelContext.traceClient(ChannelAction.RECEIVED_BUF, null, map);
 			}
-
-			//			ByteBuffer newByteBuffer = ByteBufferUtils.copy(readByteBuffer, 0, readByteBuffer.position());
 
 			SslFacadeContext sslFacadeContext = channelContext.getSslFacadeContext();
 			if (sslFacadeContext == null) {

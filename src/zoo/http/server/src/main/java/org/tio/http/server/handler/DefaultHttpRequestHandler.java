@@ -49,6 +49,7 @@ import org.tio.utils.freemarker.FreemarkerUtils;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import freemarker.cache.FileTemplateLoader;
@@ -644,8 +645,8 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		String sessionId = null;
 
 		if (cookie == null) {
-			cookie = createSessionCookie(request, httpSession, httpResponse);
-			log.info("{} 创建会话Cookie, {}", request.getChannelContext(), cookie);
+			createSessionCookie(request, httpSession, httpResponse);
+//			log.info("{} 创建会话Cookie, {}", request.getChannelContext(), cookie);
 		} else {
 			sessionId = cookie.getValue();
 			HttpSession httpSession1 = (HttpSession) httpConfig.getSessionStore().get(sessionId);
@@ -664,10 +665,26 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	 * @return
 	 * @author tanyaowu
 	 */
-	private Cookie createSessionCookie(HttpRequest request, HttpSession httpSession, HttpResponse httpResponse) {
+	private void createSessionCookie(HttpRequest request, HttpSession httpSession, HttpResponse httpResponse) {
+		String session_cookie_key = "tio_http_session_cookie";
+		ChannelContext channelContext = request.getChannelContext();
+		Object test = channelContext.getAttribute(session_cookie_key);
+		if (test != null) {
+			return;
+		}
+		
 		String sessionId = httpSession.getId();
 		//		String host = request.getHost();
 		String domain = request.getDomain();
+		
+		boolean isip = Validator.isIpv4(domain);
+		if (!isip) {
+			String[] dms = StringUtils.split(domain, ".");
+			if (dms.length > 2) {
+				domain = "." + dms[dms.length - 2] + "." + dms[dms.length - 1];
+			}
+		}
+		
 
 		String name = httpConfig.getSessionCookieName();
 		long maxAge = 3600 * 24 * 365 * 10;//Math.max(httpConfig.getSessionTimeout() * 30, 3600 * 24 * 365 * 10);
@@ -676,13 +693,14 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		Cookie sessionCookie = new Cookie(domain, name, sessionId, maxAge);
 
 		if (sessionCookieDecorator != null) {
-			sessionCookieDecorator.decorate(sessionCookie);
+			sessionCookieDecorator.decorate(sessionCookie, request, request.getDomain());
 		}
 		httpResponse.addCookie(sessionCookie);
 
 		httpConfig.getSessionStore().put(sessionId, httpSession);
 
-		return sessionCookie;
+		channelContext.setAttribute(session_cookie_key, sessionCookie);
+		return;
 	}
 
 	private void processCookieBeforeHandler(HttpRequest request, RequestLine requestLine) throws ExecutionException {

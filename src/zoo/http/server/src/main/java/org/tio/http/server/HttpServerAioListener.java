@@ -19,9 +19,9 @@ public class HttpServerAioListener implements ServerAioListener {
 	public HttpServerAioListener() {
 	}
 
-	@Override
-	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
-	}
+//	@Override
+//	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
+//	}
 
 	@Override
 	public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) {
@@ -45,7 +45,7 @@ public class HttpServerAioListener implements ServerAioListener {
 	}
 
 	@Override
-	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) {
+	public void onAfterDecoded(ChannelContext channelContext, Packet packet, int packetSize) {
 		//		CommandStat.getCount(packet.getCommand()).received.incrementAndGet();
 	}
 
@@ -75,5 +75,15 @@ public class HttpServerAioListener implements ServerAioListener {
 		if (request != null) {
 			request.setClosed(true);
 		}
+	}
+
+	@Override
+	public void onAfterHandled(ChannelContext channelContext, Packet packet, long cost) throws Exception {
+		
+	}
+
+	@Override
+	public void onAfterReceivedBytes(ChannelContext channelContext, int receivedBytes) throws Exception {
+		
 	}
 }

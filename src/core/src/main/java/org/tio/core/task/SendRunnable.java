@@ -99,17 +99,22 @@ public class SendRunnable extends AbstractQueueRunnable<Packet> {
 	}
 
 	private ByteBuffer getByteBuffer(Packet packet, GroupContext groupContext, AioHandler aioHandler) {
-		ByteBuffer byteBuffer = packet.getPreEncodedByteBuffer();
-		if (byteBuffer != null) {
-			//			byteBuffer = byteBuffer.duplicate();
-		} else {
-			byteBuffer = aioHandler.encode(packet, groupContext, channelContext);
-		}
+		try {
+			ByteBuffer byteBuffer = packet.getPreEncodedByteBuffer();
+			if (byteBuffer != null) {
+				//			byteBuffer = byteBuffer.duplicate();
+			} else {
+				byteBuffer = aioHandler.encode(packet, groupContext, channelContext);
+			}
 
-		if (byteBuffer.position() != 0) {
-			byteBuffer.flip();
+			if (byteBuffer.position() != 0) {
+				byteBuffer.flip();
+			}
+			return byteBuffer;
+		} catch (Exception e) {
+			log.error(packet.logstr(), e);
+			throw new RuntimeException(e);
 		}
-		return byteBuffer;
 	}
 
 	/**

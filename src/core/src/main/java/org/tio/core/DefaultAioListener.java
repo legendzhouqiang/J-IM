@@ -17,9 +17,9 @@ public class DefaultAioListener implements ClientAioListener, ServerAioListener 
 	 * @param isRemove
 	 * @author tanyaowu
 	 */
-	@Override
-	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
-	}
+//	@Override
+//	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
+//	}
 
 	/**
 	 *
@@ -40,7 +40,7 @@ public class DefaultAioListener implements ClientAioListener, ServerAioListener 
 	 * @author tanyaowu
 	 */
 	@Override
-	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) {
+	public void onAfterDecoded(ChannelContext channelContext, Packet packet, int packetSize) {
 	}
 
 	/**
@@ -57,5 +57,15 @@ public class DefaultAioListener implements ClientAioListener, ServerAioListener 
 
 	@Override
 	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
+	}
+
+	@Override
+	public void onAfterHandled(ChannelContext channelContext, Packet packet, long cost) throws Exception {
+	}
+
+	@Override
+	public void onAfterReceivedBytes(ChannelContext channelContext, int receivedBytes) throws Exception {
+		
+		
 	}
 }

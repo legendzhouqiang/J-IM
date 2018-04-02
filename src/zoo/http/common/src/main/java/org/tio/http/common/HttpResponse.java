@@ -184,6 +184,7 @@ public class HttpResponse extends HttpPacket {
 				}
 			}
 		}
+//		log.error("cookie domain:{}, value:{}", cookie.getDomain(), cookie.getValue());
 		return cookies.add(cookie);
 	}
 

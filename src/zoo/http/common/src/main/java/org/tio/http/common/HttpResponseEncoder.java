@@ -72,7 +72,7 @@ public class HttpResponseEncoder {
 					sb.append(cookie.toString());
 					sb.append("\r\n");
 					if (log.isInfoEnabled()) {
-						log.info("{}, set-cookie:{}", channelContext, cookie.toString());
+						log.info("{}, path:{}, set-cookie:{}", channelContext, httpResponse.getHttpRequest().getRequestLine().getPathAndQuery(), cookie.toString());
 					}
 				}
 			}
@@ -83,6 +83,7 @@ public class HttpResponseEncoder {
 		byte[] headerBytes = null;
 		try {
 			String headerString = sb.toString();
+			log.info("{}, response header:{}", channelContext, headerString);
 			httpResponse.setHeaderString(headerString);
 			headerBytes = headerString.getBytes(httpResponse.getCharset());
 		} catch (Throwable e) {

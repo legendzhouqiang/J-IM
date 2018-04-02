@@ -13,6 +13,7 @@ import org.tio.core.ChannelAction;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
 import org.tio.core.intf.Packet;
+import org.tio.core.stat.GroupStat;
 import org.tio.core.stat.IpStat;
 import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.thread.pool.AbstractQueueRunnable;
@@ -46,6 +47,7 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 		//		int ret = 0;
 
 		GroupContext groupContext = channelContext.getGroupContext();
+		long start = System.currentTimeMillis();
 		try {
 
 			Integer synSeq = packet.getSynSeq();
@@ -67,31 +69,37 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 			}
 			//			ret++;
 		} catch (Throwable e) {
-			log.error(e.toString(), e);
+			log.error(packet.logstr(), e);
 			//			return ret;
 		} finally {
-			channelContext.getStat().getHandledPackets().incrementAndGet();
-			channelContext.getStat().getHandledBytes().addAndGet(packet.getByteCount());
+			long end = System.currentTimeMillis();
+			long iv = end - start;
+			channelContext.stat.getHandledPackets().incrementAndGet();
+			channelContext.stat.getHandledBytes().addAndGet(packet.getByteCount());
+			channelContext.stat.getHandledPacketCosts().addAndGet(iv);
 
-			groupContext.getGroupStat().getHandledPacket().incrementAndGet();
-			groupContext.getGroupStat().getHandledBytes().addAndGet(packet.getByteCount());
-			
-//			channelContext.getIpStat().getHandledPackets().incrementAndGet();
-//			channelContext.getIpStat().getHandledBytes().addAndGet(packet.getByteCount());
-			
-//			CaffeineCache[] caches = channelContext.getGroupContext().ips.getCaches();
-//			for (CaffeineCache guavaCache : caches) {
-//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
-//				ipStat.getHandledPackets().incrementAndGet();
-//				ipStat.getHandledBytes().addAndGet(packet.getByteCount());
-//			}
-			
+			GroupStat groupStat = groupContext.getGroupStat();
+			groupStat.getHandledPackets().incrementAndGet();
+			groupStat.getHandledBytes().addAndGet(packet.getByteCount());
+			groupStat.getHandledPacketCosts().addAndGet(iv);
+
 			List<Long> list = groupContext.ipStats.durationList;
-			for (Long v : list) {
-				IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-				ipStat.getHandledPackets().incrementAndGet();
-				ipStat.getHandledBytes().addAndGet(packet.getByteCount());
-
+			try {
+				for (Long v : list) {
+					IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+					ipStat.getHandledPackets().incrementAndGet();
+					ipStat.getHandledBytes().addAndGet(packet.getByteCount());
+					ipStat.getHandledPacketCosts().addAndGet(iv);
+					groupContext.getIpStatListener().onAfterHandled(channelContext, packet, ipStat, iv);
+				}
+			} catch (Exception e1) {
+				log.error(e1.toString(), e1);
+			}
+			
+			try {
+				groupContext.getAioListener().onAfterHandled(channelContext, packet, iv);
+			} catch (Exception e) {
+				log.error(e.toString(), e);
 			}
 		}
 

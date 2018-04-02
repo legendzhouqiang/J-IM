@@ -94,7 +94,7 @@ public class CloseRunnable implements Runnable {
 			}
 
 			try {
-				channelContext.getStat().setTimeClosed(SystemTimer.currentTimeMillis());
+				channelContext.stat.setTimeClosed(SystemTimer.currentTimeMillis());
 				aioListener.onBeforeClose(channelContext, throwable, remark, isRemove);
 			} catch (Throwable e) {
 				log.error(e.toString(), e);
@@ -182,17 +182,19 @@ public class CloseRunnable implements Runnable {
 						
 						channelContext.setRemoved(isRemove);
 						channelContext.getGroupContext().getGroupStat().getClosed().incrementAndGet();
-						channelContext.getStat().setTimeClosed(SystemTimer.currentTimeMillis());
+						channelContext.stat.setTimeClosed(SystemTimer.currentTimeMillis());
 					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
 
-					try {
-						aioListener.onAfterClose(channelContext, throwable, remark, isRemove);
-						channelContext.setClosed(true);
-					} catch (Throwable e) {
-						log.error(e.toString(), e);
-					}					
+					
+//					try {
+//						aioListener.onAfterClose(channelContext, throwable, remark, isRemove);
+						
+//					} catch (Throwable e) {
+//						log.error(e.toString(), e);
+//					}	
+					channelContext.setClosed(true);
 				} catch (Throwable e) {
 					log.error(e.toString(), e);
 				} finally {

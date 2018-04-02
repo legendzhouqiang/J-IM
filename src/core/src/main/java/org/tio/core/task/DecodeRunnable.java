@@ -94,9 +94,10 @@ public class DecodeRunnable implements Runnable {
 		}
 
 		label_2: while (true) {
+			GroupContext groupContext = channelContext.getGroupContext();
 			try {
 				int initPosition = byteBuffer.position();
-				GroupContext groupContext = channelContext.getGroupContext();
+				
 				Packet packet = null;
 				Integer packetNeededLength = channelContext.getPacketNeededLength();
 				if (packetNeededLength != null) {
@@ -112,7 +113,7 @@ public class DecodeRunnable implements Runnable {
 				if (packet == null)// 数据不够，解不了码
 				{
 					lastByteBuffer = ByteBufferUtils.copy(byteBuffer, initPosition, byteBuffer.limit());
-					ChannelStat channelStat = channelContext.getStat();
+					ChannelStat channelStat = channelContext.stat;
 					int decodeFailCount = channelStat.getDecodeFailCount() + 1;
 					channelStat.setDecodeFailCount(decodeFailCount);
 					int len = byteBuffer.limit() - initPosition;
@@ -126,33 +127,37 @@ public class DecodeRunnable implements Runnable {
 				} else //解码成功
 				{
 					channelContext.setPacketNeededLength(null);
-					channelContext.getStat().setLatestTimeOfReceivedPacket(SystemTimer.currentTimeMillis());
+					channelContext.stat.setLatestTimeOfReceivedPacket(SystemTimer.currentTimeMillis());
 
-					ChannelStat channelStat = channelContext.getStat();
+					ChannelStat channelStat = channelContext.stat;
 					channelStat.setDecodeFailCount(0);
 
 					int afterDecodePosition = byteBuffer.position();
 					int len = afterDecodePosition - initPosition;
-
-					channelContext.getGroupContext().getGroupStat().getReceivedPackets().incrementAndGet();
-					channelContext.getStat().getReceivedPackets().incrementAndGet();
+					packet.setByteCount(len);
+					
+					groupContext.getGroupStat().getReceivedPackets().incrementAndGet();
+					channelContext.stat.getReceivedPackets().incrementAndGet();
 
 					List<Long> list = groupContext.ipStats.durationList;
-					for (Long v : list) {
-						IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-						ipStat.getReceivedPackets().incrementAndGet();
+					try {
+						for (Long v : list) {
+							IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+							ipStat.getReceivedPackets().incrementAndGet();
+							groupContext.getIpStatListener().onAfterDecoded(channelContext, packet, len, ipStat);
+						}
+					} catch (Exception e1) {
+						log.error(packet.logstr(), e1);
 					}
 
 					channelContext.traceClient(ChannelAction.RECEIVED, packet, null);
-
-					packet.setByteCount(len);
 
 					AioListener aioListener = channelContext.getGroupContext().getAioListener();
 					try {
 						if (log.isDebugEnabled()) {
 							log.debug("{} 收到消息 {}", channelContext, packet.logstr());
 						}
-						aioListener.onAfterReceived(channelContext, packet, len);
+						aioListener.onAfterDecoded(channelContext, packet, len);
 					} catch (Throwable e) {
 						log.error(e.toString(), e);
 					}
@@ -179,16 +184,21 @@ public class DecodeRunnable implements Runnable {
 			} catch (Throwable e) {
 				channelContext.setPacketNeededLength(null);
 				log.error(channelContext + ", " + byteBuffer + ", 解码异常:" + e.toString(), e);
-				Aio.close(channelContext, e, "解码异常:" + e.getMessage());
 
 				if (e instanceof AioDecodeException) {
-					GroupContext groupContext = channelContext.getGroupContext();
-					List<Long> list = groupContext.ipStats.durationList;
-					for (Long v : list) {
-						IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-						ipStat.getDecodeErrorCount().incrementAndGet();
+					try {
+						List<Long> list = groupContext.ipStats.durationList;
+						for (Long v : list) {
+							IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+							ipStat.getDecodeErrorCount().incrementAndGet();
+							channelContext.getGroupContext().getIpStatListener().onDecodeError(channelContext, ipStat);
+						}
+					} catch (Exception e1) {
+						log.error(e1.toString(), e1);
 					}
 				}
+
+				Aio.close(channelContext, e, "解码异常:" + e.getMessage());
 				return;
 			}
 		}

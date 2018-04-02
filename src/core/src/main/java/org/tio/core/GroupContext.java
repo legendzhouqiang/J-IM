@@ -24,7 +24,9 @@ import org.tio.core.maintain.Ips;
 import org.tio.core.maintain.Tokens;
 import org.tio.core.maintain.Users;
 import org.tio.core.ssl.SslConfig;
+import org.tio.core.stat.DefaultIpStatListener;
 import org.tio.core.stat.GroupStat;
+import org.tio.core.stat.IpStatListener;
 import org.tio.utils.Threads;
 import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.lock.SetWithLock;
@@ -107,6 +109,8 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	protected int maxDecodeErrorCountForIp = 10;
 
 	protected String name = "未命名GroupContext";
+	
+	private IpStatListener ipStatListener = DefaultIpStatListener.me;
 
 	private boolean isStopped = false;
 
@@ -348,5 +352,14 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 
 	public void setSslConfig(SslConfig sslConfig) {
 		this.sslConfig = sslConfig;
+	}
+
+	public IpStatListener getIpStatListener() {
+		return ipStatListener;
+	}
+
+	public void setIpStatListener(IpStatListener ipStatListener) {
+		this.ipStatListener = ipStatListener;
+//		this.ipStats.setIpStatListener(ipStatListener);
 	}
 }

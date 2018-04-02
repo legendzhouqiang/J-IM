@@ -69,6 +69,11 @@ public class IpStat implements java.io.Serializable {
 	 * 本IP已处理的packet数
 	 */
 	private AtomicLong handledPackets = new AtomicLong();
+	
+	/**
+	 * 处理消息包耗时，单位：毫秒
+	 */
+	private AtomicLong handledPacketCosts = new AtomicLong();
 
 	/**
 	 * 本IP已接收的字节数
@@ -264,5 +269,9 @@ public class IpStat implements java.io.Serializable {
 	 */
 	public void setStart(Date start) {
 		this.start = start;
+	}
+
+	public AtomicLong getHandledPacketCosts() {
+		return handledPacketCosts;
 	}
 }

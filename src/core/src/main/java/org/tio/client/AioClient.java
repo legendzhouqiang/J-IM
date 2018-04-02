@@ -351,7 +351,7 @@ public class AioClient {
 								continue;
 							}
 
-							ChannelStat stat = channelContext.getStat();
+							ChannelStat stat = channelContext.stat;
 							long latestTimeOfReceivedByte = stat.getLatestTimeOfReceivedByte();
 							long latestTimeOfSentPacket = stat.getLatestTimeOfSentPacket();
 							long compareTime = Math.max(latestTimeOfReceivedByte, latestTimeOfSentPacket);
@@ -366,7 +366,7 @@ public class AioClient {
 						}
 						if (log.isInfoEnabled()) {
 							log.info("[{}]: curr:{}, closed:{}, received:({}p)({}b), handled:{}, sent:({}p)({}b)", id, set.size(), clientGroupStat.getClosed().get(),
-									clientGroupStat.getReceivedPackets().get(), clientGroupStat.getReceivedBytes().get(), clientGroupStat.getHandledPacket().get(),
+									clientGroupStat.getReceivedPackets().get(), clientGroupStat.getReceivedBytes().get(), clientGroupStat.getHandledPackets().get(),
 									clientGroupStat.getSentPackets().get(), clientGroupStat.getSentBytes().get());
 						}
 
@@ -429,7 +429,7 @@ public class AioClient {
 					}
 
 					long currtime = SystemTimer.currentTimeMillis();
-					long timeInReconnQueue = channelContext.getStat().getTimeInReconnQueue();
+					long timeInReconnQueue = channelContext.stat.getTimeInReconnQueue();
 					long sleeptime = reconnConf.getInterval() - (currtime - timeInReconnQueue);
 					//log.info("sleeptime:{}, closetime:{}", sleeptime, timeInReconnQueue);
 					if (sleeptime > 0) {

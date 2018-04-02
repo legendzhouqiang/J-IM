@@ -118,7 +118,7 @@ public class ServerGroupContext extends GroupContext {
 						for (ChannelContext entry : set) {
 							count++;
 							ChannelContext channelContext = entry;
-							ChannelStat stat = channelContext.getStat();
+							ChannelStat stat = channelContext.stat;
 							long timeLatestReceivedMsg = stat.getLatestTimeOfReceivedByte();
 							long timeLatestSentMsg = stat.getLatestTimeOfSentPacket();
 							long compareTime = Math.max(timeLatestReceivedMsg, timeLatestSentMsg);
@@ -191,7 +191,7 @@ public class ServerGroupContext extends GroupContext {
 								builder.append("\r\n │ \t └ 关闭过的连接数  :").append(serverGroupStat.getClosed().get());
 
 								builder.append("\r\n ├ 消息统计");
-								builder.append("\r\n │ \t ├ 已处理消息  :").append(serverGroupStat.getHandledPacket().get());
+								builder.append("\r\n │ \t ├ 已处理消息  :").append(serverGroupStat.getHandledPackets().get());
 								builder.append("\r\n │ \t ├ 已接收消息(packet/byte):").append(serverGroupStat.getReceivedPackets().get()).append("/").append(serverGroupStat.getReceivedBytes().get());
 								builder.append("\r\n │ \t ├ 已发送消息(packet/byte):").append(serverGroupStat.getSentPackets().get()).append("/").append(serverGroupStat.getSentBytes().get()).append("b");
 								builder.append("\r\n │ \t ├ 平均每次TCP包接收的字节数  :").append(serverGroupStat.getBytesPerTcpReceive());

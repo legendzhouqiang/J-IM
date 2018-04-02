@@ -24,7 +24,7 @@ public class ReconnConf {
 		if (reconnConf != null && reconnConf.getInterval() > 0) {
 			if (reconnConf.getRetryCount() <= 0 || reconnConf.getRetryCount() >= clientChannelContext.getReconnCount()) {
 				if (putIfTrue) {
-					clientChannelContext.getStat().setTimeInReconnQueue(SystemTimer.currentTimeMillis());
+					clientChannelContext.stat.setTimeInReconnQueue(SystemTimer.currentTimeMillis());
 					reconnConf.getQueue().add(clientChannelContext);
 				}
 				return true;

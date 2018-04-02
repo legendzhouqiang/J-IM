@@ -108,7 +108,7 @@ public class FlashPolicyServerStarter {
 					long now = SystemTimer.currentTimeMillis();
 					set = objWithLock.getObj();
 					for (ChannelContext channelContext : set) {
-						ChannelStat channelStat = channelContext.getStat();
+						ChannelStat channelStat = channelContext.stat;
 						Long timeFirstConnected = channelStat.getTimeFirstConnected();
 						long interval = (now - timeFirstConnected);
 						if (interval > 5000) {

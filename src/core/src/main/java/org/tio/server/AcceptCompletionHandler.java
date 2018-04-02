@@ -49,11 +49,9 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 //				ipStat.getRequestCount().incrementAndGet();
 //			}
 			
-			List<Long> list = serverGroupContext.ipStats.durationList;
-			for (Long v : list) {
-				IpStat ipStat = (IpStat) serverGroupContext.ipStats.get(v, clientIp);
-				ipStat.getRequestCount().incrementAndGet();
-			}
+			
+			
+
 
 			ServerGroupStat serverGroupStat = serverGroupContext.getServerGroupStat();
 			serverGroupStat.getAccepted().incrementAndGet();
@@ -77,7 +75,7 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 
 			ServerChannelContext channelContext = new ServerChannelContext(serverGroupContext, asynchronousSocketChannel);
 			channelContext.setClosed(false);
-			channelContext.getStat().setTimeFirstConnected(SystemTimer.currentTimeMillis());
+			channelContext.stat.setTimeFirstConnected(SystemTimer.currentTimeMillis());
 			channelContext.setServerNode(aioServer.getServerNode());
 			
 			channelContext.traceClient(ChannelAction.CONNECT, null, null);
@@ -85,13 +83,26 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			serverGroupContext.connecteds.add(channelContext);
 			serverGroupContext.ips.bind(channelContext);
 			
+			boolean isConnected = true;
+			boolean isReconnect = false;
 			ServerAioListener serverAioListener = serverGroupContext.getServerAioListener();
 			if (!SslUtils.isSsl(channelContext)) {
 				try {
-					serverAioListener.onAfterConnected(channelContext, true, false);
+					serverAioListener.onAfterConnected(channelContext, isConnected, isReconnect);
 				} catch (Throwable e) {
 					log.error(e.toString(), e);
 				}
+			}
+			
+			try {
+				List<Long> list = serverGroupContext.ipStats.durationList;
+				for (Long v : list) {
+					IpStat ipStat = (IpStat) serverGroupContext.ipStats.get(v, clientIp);
+					ipStat.getRequestCount().incrementAndGet();
+					serverGroupContext.getIpStatListener().onAfterConnected(channelContext, isConnected, isReconnect, ipStat);
+				}
+			} catch (Exception e) {
+				log.error(e.toString(), e);
 			}
 			
 

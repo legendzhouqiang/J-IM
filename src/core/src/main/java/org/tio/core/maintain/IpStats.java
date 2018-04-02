@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.GroupContext;
 import org.tio.core.cache.IpStatRemovalListener;
-import org.tio.core.intf.IpStatListener;
 import org.tio.core.stat.IpStat;
 import org.tio.utils.cache.caffeine.CaffeineCache;
 
@@ -40,41 +39,42 @@ public class IpStats {
 	public final Map<Long, CaffeineCache> cacheMap = new HashMap<>();
 
 	public final List<Long> durationList = new ArrayList<>();
+	
+//	private IpStatListener ipStatListener = DefaultIpStatListener.me;
 
-	public IpStats(GroupContext groupContext, IpStatListener ipStatListener, Long[] durations) {
+	public IpStats(GroupContext groupContext, Long[] durations) {
 		this.groupContext = groupContext;
 		this.groupContextId = groupContext.getId();
+//		this.setIpStatListener(ipStatListener);
 		if (durations != null) {
 //			for (Long duration : durations) {
 //				addDuration(duration, ipStatListener);
 //			}
-			addDurations(durations, ipStatListener);
+			addDurations(durations);
 		}
 	}
 
 	/**
-	 * 添加监控时段
+	 * 添加监控时段，不要添加过多的时间段，因为每个时间段都要消耗一份内存，一般加一个时间段就可以了
 	 * @param duration 单位：秒
-	 * @param ipStatListener 可以为null
 	 * @author: tanyaowu
 	 */
-	public void addDuration(Long duration, IpStatListener ipStatListener) {
+	public void addDuration(Long duration) {
 		@SuppressWarnings("unchecked")
-		CaffeineCache caffeineCache = CaffeineCache.register(getCacheName(duration), duration, null, new IpStatRemovalListener(groupContext, ipStatListener));
+		CaffeineCache caffeineCache = CaffeineCache.register(getCacheName(duration), duration, null, new IpStatRemovalListener(groupContext, groupContext.getIpStatListener()));
 		cacheMap.put(duration, caffeineCache);
 		durationList.add(duration);
 	}
 
 	/**
-	 * 添加监控时段
+	 * 添加监控时段，不要添加过多的时间段，因为每个时间段都要消耗一份内存，一般加一个时间段就可以了
 	 * @param durations 单位：秒
-	 * @param ipStatListener 可以为null
 	 * @author: tanyaowu
 	 */
-	public void addDurations(Long[] durations, IpStatListener ipStatListener) {
+	public void addDurations(Long[] durations) {
 		if (durations != null) {
 			for (Long duration : durations) {
-				addDuration(duration, ipStatListener);
+				addDuration(duration);
 			}
 		}
 	}
@@ -195,4 +195,16 @@ public class IpStats {
 		return set;
 	}
 
+//	public IpStatListener getIpStatListener() {
+//		return ipStatListener;
+//	}
+//
+//	public void setIpStatListener(IpStatListener ipStatListener) {
+//		if (ipStatListener != null) {
+//			this.ipStatListener = ipStatListener;
+//		} else {
+//			this.ipStatListener = DefaultIpStatListener.me;
+//		}
+//		groupContext.setIpStatListener(this.ipStatListener);
+//	}
 }

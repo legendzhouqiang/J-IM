@@ -4,6 +4,8 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -85,4 +87,57 @@ public class IpUtils {
 			return request.getRemote().getIp();
 		}
 	}
+
+	/**
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static boolean isIp(String str) {
+		if (str.length() < 7 || str.length() > 15 || "".equals(str)) {
+			return false;
+		}
+		/** 
+		 * 判断IP格式和范围 
+		 */
+		String rexp = "([1-9]|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}";
+		Pattern pat = Pattern.compile(rexp);
+		Matcher mat = pat.matcher(str);
+		boolean ipAddress = mat.find();
+		return ipAddress;
+	}
+	
+	  public static void main(String[] args)   
+	    {  
+	        /** 
+	         * 符合IP地址的范围 
+	         */  
+	         String oneAddress = "10.43.30.45";  
+	         /** 
+	         * 符合IP地址的长度范围但是不符合格式 
+	         */  
+	         String twoAddress = "127.30.45";  
+	         /** 
+	         * 不符合IP地址的长度范围 
+	         */  
+	         String threeAddress = "7.0.4";  
+	         /** 
+	         * 不符合IP地址的长度范围但是不符合IP取值范围 
+	         */  
+	         String fourAddress = "255.155.255.3e";  
+
+	        
+
+	         //判断oneAddress是否是IP  
+	         System.out.println(isIp(oneAddress));  
+
+	         //判断twoAddress是否是IP  
+	         System.out.println(isIp(twoAddress));  
+
+	         //判断threeAddress是否是IP  
+	         System.out.println(isIp(threeAddress));  
+
+	         //判断fourAddress是否是IP  
+	         System.out.println(isIp(fourAddress));  
+	    }  
 }

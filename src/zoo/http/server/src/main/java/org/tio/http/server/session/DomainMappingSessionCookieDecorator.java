@@ -1,6 +1,5 @@
 package org.tio.http.server.session;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -9,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.http.common.Cookie;
+import org.tio.http.common.HttpRequest;
 
 import cn.hutool.core.util.ReUtil;
 
@@ -51,7 +51,7 @@ public class DomainMappingSessionCookieDecorator implements SessionCookieDecorat
 	 * @author: tanyaowu
 	 */
 	@Override
-	public void decorate(Cookie sessionCookie) {
+	public void decorate(Cookie sessionCookie, HttpRequest request, String domain) {
 		Set<Entry<String, String>> set = domainMap.entrySet();
 		String initDomain = sessionCookie.getDomain();
 		for (Entry<String, String> entry : set) {
@@ -68,18 +68,7 @@ public class DomainMappingSessionCookieDecorator implements SessionCookieDecorat
 	 * @author: tanyaowu
 	 */
 	public static void main(String[] args) {
-		boolean bb = ReUtil.isMatch("(\\w)*(.baidu.com){1}", "www.baidu.com");
-		System.out.println(bb);
-
-		Cookie sessionCookie = new Cookie();
-		sessionCookie.setDomain("www.baidu.com");
 		
-		Map<String, String> domainMap = new HashMap<>();
-		domainMap.put("(\\w)*(.baidu.com){1}", ".baidu.com");
-		
-		DomainMappingSessionCookieDecorator domainMappingSessionCookieDecorator = new DomainMappingSessionCookieDecorator(domainMap);
-		domainMappingSessionCookieDecorator.decorate(sessionCookie);
-		
-		System.out.println(sessionCookie.getDomain());
 	}
+
 }

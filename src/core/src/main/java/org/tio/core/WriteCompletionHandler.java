@@ -87,9 +87,9 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 			log.info("{} {}/{} has sent", channelContext, byteBuffer.position(), byteBuffer.capacity());
 			AsynchronousSocketChannel asynchronousSocketChannel = channelContext.getAsynchronousSocketChannel();
 			asynchronousSocketChannel.write(byteBuffer, writeCompletionVo, this);
-			channelContext.getStat().setLatestTimeOfSentByte(SystemTimer.currentTimeMillis());
+			channelContext.stat.setLatestTimeOfSentByte(SystemTimer.currentTimeMillis());
 		} else {
-			channelContext.getStat().setLatestTimeOfSentPacket(SystemTimer.currentTimeMillis());
+			channelContext.stat.setLatestTimeOfSentPacket(SystemTimer.currentTimeMillis());
 			handle(result, null, writeCompletionVo);
 		}
 
@@ -121,7 +121,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 
 		GroupContext groupContext = channelContext.getGroupContext();
 		GroupStat groupStat = groupContext.getGroupStat();
-		ChannelStat channelStat = channelContext.getStat();
+		ChannelStat channelStat = channelContext.stat;
 		//		AioListener aioListener = groupContext.getAioListener();
 		boolean isSentSuccess = result > 0;
 
@@ -204,18 +204,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 			channelContext.traceClient(ChannelAction.AFTER_SEND, packet, null);
 			channelContext.processAfterSent(packet, isSentSuccess);
 
-			GroupContext groupContext = channelContext.getGroupContext();
-			GroupStat groupStat = groupContext.getGroupStat();
-			ChannelStat channelStat = channelContext.getStat();
-
-			List<Long> list = groupContext.ipStats.durationList;
-			for (Long v : list) {
-				IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
-				ipStat.getSentPackets().incrementAndGet();
-			}
-
-			groupStat.getSentPackets().incrementAndGet();
-			channelStat.getSentPackets().incrementAndGet();
+			
 
 		} catch (Throwable e) {
 			log.error(e.toString(), e);

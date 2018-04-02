@@ -54,8 +54,16 @@ public class GroupStat implements java.io.Serializable  {
 	/**
 	 * 处理了的消息包数
 	 */
-	private AtomicLong handledPacket = new AtomicLong();
+	private AtomicLong handledPackets = new AtomicLong();
+	
+	/**
+	 * 处理消息包耗时，单位：毫秒
+	 */
+	private AtomicLong handledPacketCosts = new AtomicLong();
 
+	/**
+	 * 处理了多少字节
+	 */
 	private AtomicLong handledBytes = new AtomicLong();
 
 	/**
@@ -83,10 +91,10 @@ public class GroupStat implements java.io.Serializable  {
 	}
 
 	/**
-	 * @return the handledPacket
+	 * @return the handledPackets
 	 */
-	public AtomicLong getHandledPacket() {
-		return handledPacket;
+	public AtomicLong getHandledPackets() {
+		return handledPackets;
 	}
 
 	/**
@@ -152,4 +160,11 @@ public class GroupStat implements java.io.Serializable  {
 		this.receivedTcps = receivedTcps;
 	}
 
+	/**
+	 * 处理消息包耗时，单位：毫秒
+	 * @return
+	 */
+	public AtomicLong getHandledPacketCosts() {
+		return handledPacketCosts;
+	}
 }
