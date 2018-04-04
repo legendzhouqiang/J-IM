@@ -28,7 +28,8 @@ public interface HttpServerInterceptor {
 	 * @param request
 	 * @param requestLine
 	 * @param response
+	 * @param cost 本次请求耗时，单位：毫秒
 	 * @throws Exception
 	 */
-	public void doAfterHandler(HttpRequest request, RequestLine requestLine, HttpResponse response) throws Exception;
+	public void doAfterHandler(HttpRequest request, RequestLine requestLine, HttpResponse response, long cost) throws Exception;
 }

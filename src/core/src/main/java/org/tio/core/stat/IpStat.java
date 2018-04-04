@@ -274,4 +274,15 @@ public class IpStat implements java.io.Serializable {
 	public AtomicLong getHandledPacketCosts() {
 		return handledPacketCosts;
 	}
+	
+	/**
+	 * 处理packet平均耗时，单位：毫秒
+	 * @return
+	 */
+	public double getHandledCostsPerPacket() {
+		if (handledPackets.get() > 0) {
+			return handledPacketCosts.get() / handledPackets.get();
+		}
+		return 0;
+	}
 }

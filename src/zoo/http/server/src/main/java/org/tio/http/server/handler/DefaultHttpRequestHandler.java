@@ -213,6 +213,9 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 			Aio.remove(request.getChannelContext(), "过来的域名[" + request.getDomain() + "]不对");
 			return null;
 		}
+		
+		long start = SystemTimer.currentTimeMillis();
+		
 		HttpResponse response = null;
 		RequestLine requestLine = request.getRequestLine();
 		String path = requestLine.getPath();
@@ -484,18 +487,19 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 			return response;
 		} finally {
 			if (response != null) {
+				long time = SystemTimer.currentTimeMillis();
+				long iv = time - start; //本次请求消耗的时间，单位：毫秒
 				try {
 					processCookieAfterHandler(request, requestLine, response);
 					if (httpServerInterceptor != null) {
-						httpServerInterceptor.doAfterHandler(request, requestLine, response);
+						httpServerInterceptor.doAfterHandler(request, requestLine, response, iv);
 					}
 				} catch (Throwable e) {
 					logError(request, requestLine, e);
 				} finally {
 					HttpServerUtils.gzip(request, response);
 
-					long time = SystemTimer.currentTimeMillis();
-					long iv = time - request.getCreateTime(); //本次请求消耗的时间，单位：毫秒
+					
 
 					/////////
 					boolean f = statIpPath(request, response, path, iv);
