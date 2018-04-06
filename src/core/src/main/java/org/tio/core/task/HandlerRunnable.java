@@ -84,18 +84,20 @@ public class HandlerRunnable extends AbstractQueueRunnable<Packet> {
 			groupStat.getHandledPacketCosts().addAndGet(iv);
 
 			List<Long> list = groupContext.ipStats.durationList;
-			try {
-				for (Long v : list) {
-					IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-					ipStat.getHandledPackets().incrementAndGet();
-					ipStat.getHandledBytes().addAndGet(packet.getByteCount());
-					ipStat.getHandledPacketCosts().addAndGet(iv);
-					groupContext.getIpStatListener().onAfterHandled(channelContext, packet, ipStat, iv);
+			if (list != null && list.size() > 0) {
+				try {
+					for (Long v : list) {
+						IpStat ipStat = (IpStat) groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+						ipStat.getHandledPackets().incrementAndGet();
+						ipStat.getHandledBytes().addAndGet(packet.getByteCount());
+						ipStat.getHandledPacketCosts().addAndGet(iv);
+						groupContext.getIpStatListener().onAfterHandled(channelContext, packet, ipStat, iv);
+					}
+				} catch (Exception e1) {
+					log.error(e1.toString(), e1);
 				}
-			} catch (Exception e1) {
-				log.error(e1.toString(), e1);
 			}
-			
+
 			try {
 				groupContext.getAioListener().onAfterHandled(channelContext, packet, iv);
 			} catch (Exception e) {

@@ -138,14 +138,17 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 			//				IpStat ipStat = (IpStat) guavaCache.get(channelContext.getClientNode().getIp());
 			//				ipStat.getSentBytes().addAndGet(result);
 			//			}
-			for (Long v : list) {
-				IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
-				ipStat.getSentBytes().addAndGet(result);
+
+			if (list != null && list.size() > 0) {
+				for (Long v : list) {
+					IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
+					ipStat.getSentBytes().addAndGet(result);
+				}
 			}
 
 		}
 
-//		int packetCount = 0;
+		//		int packetCount = 0;
 		try {
 			boolean isPacket = attachment instanceof Packet;
 			if (isPacket) {
@@ -158,20 +161,22 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 					//						ipStat.getSentPackets().incrementAndGet();
 					//					}
 
-					for (Long v : list) {
-						IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
-						ipStat.getSentPackets().incrementAndGet();
+					if (list != null && list.size() > 0) {
+						for (Long v : list) {
+							IpStat ipStat = (IpStat) channelContext.getGroupContext().ipStats.get(v, channelContext.getClientNode().getIp());
+							ipStat.getSentPackets().incrementAndGet();
+						}
 					}
 				}
-				handleOne(result, throwable, (Packet)attachment, isSentSuccess);
+				handleOne(result, throwable, (Packet) attachment, isSentSuccess);
 			} else {
 				List<?> ps = (List<?>) attachment;
-//				if (isSentSuccess) {
-//					packetCount = ps.size();
-//				}
+				//				if (isSentSuccess) {
+				//					packetCount = ps.size();
+				//				}
 
 				for (Object obj : ps) {
-					handleOne(result, throwable, (Packet)obj, isSentSuccess);
+					handleOne(result, throwable, (Packet) obj, isSentSuccess);
 				}
 			}
 
@@ -195,7 +200,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 	 */
 	public void handleOne(Integer result, Throwable throwable, Packet packet, Boolean isSentSuccess) {
 		Meta meta = packet.getMeta();
-		
+
 		if (meta != null) {
 			meta.setIsSentSuccess(isSentSuccess);
 		}
@@ -203,8 +208,6 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, WriteC
 		try {
 			channelContext.traceClient(ChannelAction.AFTER_SEND, packet, null);
 			channelContext.processAfterSent(packet, isSentSuccess);
-
-			
 
 		} catch (Throwable e) {
 			log.error(e.toString(), e);

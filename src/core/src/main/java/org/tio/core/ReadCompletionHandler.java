@@ -44,29 +44,31 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
 		if (result > 0) {
 			GroupContext groupContext = channelContext.getGroupContext();
 			GroupStat groupStat = groupContext.getGroupStat();
-			
+
 			groupStat.getReceivedBytes().addAndGet(result);
 			groupStat.getReceivedTcps().incrementAndGet();
-			
+
 			channelContext.stat.getReceivedBytes().addAndGet(result);
 			channelContext.stat.getReceivedTcps().incrementAndGet();
 			channelContext.stat.setLatestTimeOfReceivedByte(SystemTimer.currentTimeMillis());
 
 			List<Long> list = groupContext.ipStats.durationList;
-			try {
-				for (Long v : list) {
-					IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-					ipStat.getReceivedBytes().addAndGet(result);
-					ipStat.getReceivedTcps().incrementAndGet();
-					groupContext.getIpStatListener().onAfterReceivedBytes(channelContext, result, ipStat);
+			if (list != null && list.size() > 0) {
+				try {
+					for (Long v : list) {
+						IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+						ipStat.getReceivedBytes().addAndGet(result);
+						ipStat.getReceivedTcps().incrementAndGet();
+						groupContext.getIpStatListener().onAfterReceivedBytes(channelContext, result, ipStat);
+					}
+				} catch (Exception e1) {
+					log.error(channelContext.toString(), e1);
 				}
-			} catch (Exception e1) {
-				log.error(channelContext.toString(), e1);
 			}
-			
+
 			try {
 				groupContext.getAioListener().onAfterReceivedBytes(channelContext, result);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				log.error("", e);
 			}
 

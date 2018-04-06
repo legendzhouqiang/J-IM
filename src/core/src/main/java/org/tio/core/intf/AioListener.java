@@ -65,8 +65,9 @@ public interface AioListener {
 	 * @param remark the remark 有可能为空
 	 * @param isRemove
 	 * @author tanyaowu
+	 * @throws Exception 
 	 */
-	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove);
+	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception;
 	
 	/**
 	 * 连接关闭前后触发本方法

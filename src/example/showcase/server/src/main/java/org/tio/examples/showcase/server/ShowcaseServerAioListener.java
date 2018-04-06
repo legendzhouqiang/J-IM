@@ -30,18 +30,7 @@ public class ShowcaseServerAioListener implements ServerAioListener {
 	public ShowcaseServerAioListener() {
 	}
 
-	/**
-	 * @param channelContext
-	 * @param throwable
-	 * @param remark
-	 * @param isRemove
-	 * @throws Exception
-	 * @author tanyaowu
-	 */
-	@Override
-	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception {
-		log.info("onAfterClose channelContext:{}, throwable:{}, remark:{}, isRemove:{}", channelContext, throwable, remark, isRemove);
-	}
+
 
 	/**
 	 * @param channelContext
@@ -58,17 +47,7 @@ public class ShowcaseServerAioListener implements ServerAioListener {
 		channelContext.setAttribute(new ShowcaseSessionContext());
 	}
 
-	/**
-	 * @param channelContext
-	 * @param packet
-	 * @param packetSize
-	 * @throws Exception
-	 * @author tanyaowu
-	 */
-	@Override
-	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) throws Exception {
-		log.info("onAfterReceived channelContext:{}, packet:{}, packetSize:{}", channelContext, Json.toJson(packet), packetSize);
-	}
+
 
 	/**
 	 * @param channelContext
@@ -84,5 +63,37 @@ public class ShowcaseServerAioListener implements ServerAioListener {
 
 	@Override
 	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
+	}
+
+	/** 
+	 * @param channelContext
+	 * @param packet
+	 * @param packetSize
+	 * @throws Exception
+	 * @author tanyaowu
+	 */
+	@Override
+	public void onAfterDecoded(ChannelContext channelContext, Packet packet, int packetSize) throws Exception {
+	}
+
+	/** 
+	 * @param channelContext
+	 * @param receivedBytes
+	 * @throws Exception
+	 * @author tanyaowu
+	 */
+	@Override
+	public void onAfterReceivedBytes(ChannelContext channelContext, int receivedBytes) throws Exception {
+	}
+
+	/** 
+	 * @param channelContext
+	 * @param packet
+	 * @param cost
+	 * @throws Exception
+	 * @author tanyaowu
+	 */
+	@Override
+	public void onAfterHandled(ChannelContext channelContext, Packet packet, long cost) throws Exception {
 	}
 }

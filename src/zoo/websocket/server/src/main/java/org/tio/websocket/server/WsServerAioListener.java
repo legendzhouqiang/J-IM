@@ -21,23 +21,23 @@ public class WsServerAioListener implements ServerAioListener {
 //	}
 
 	@Override
-	public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) {
+	public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) throws Exception {
 		WsSessionContext wsSessionContext = new WsSessionContext();
 		channelContext.setAttribute(wsSessionContext);
 		return;
 	}
 
 	@Override
-	public void onAfterDecoded(ChannelContext channelContext, Packet packet, int packetSize) {
+	public void onAfterDecoded(ChannelContext channelContext, Packet packet, int packetSize) throws Exception{
 
 	}
 
 	@Override
-	public void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) {
+	public void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) throws Exception{
 	}
 
 	@Override
-	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
+	public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) throws Exception {
 	}
 
 	@Override

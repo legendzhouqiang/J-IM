@@ -94,16 +94,19 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 				}
 			}
 			
-			try {
-				List<Long> list = serverGroupContext.ipStats.durationList;
-				for (Long v : list) {
-					IpStat ipStat = (IpStat) serverGroupContext.ipStats.get(v, clientIp);
-					ipStat.getRequestCount().incrementAndGet();
-					serverGroupContext.getIpStatListener().onAfterConnected(channelContext, isConnected, isReconnect, ipStat);
+			List<Long> list = serverGroupContext.ipStats.durationList;
+			if (list != null && list.size() > 0) {
+				try {				
+					for (Long v : list) {
+						IpStat ipStat = (IpStat) serverGroupContext.ipStats.get(v, clientIp);
+						ipStat.getRequestCount().incrementAndGet();
+						serverGroupContext.getIpStatListener().onAfterConnected(channelContext, isConnected, isReconnect, ipStat);
+					}
+				} catch (Exception e) {
+					log.error(e.toString(), e);
 				}
-			} catch (Exception e) {
-				log.error(e.toString(), e);
 			}
+			
 			
 
 			if (!aioServer.isWaitingStop()) {

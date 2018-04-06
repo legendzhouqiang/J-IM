@@ -31,8 +31,6 @@ import org.tio.utils.prop.MapWithLockPropSupport;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 
-
-
 /**
  * 
  * @author tanyaowu 
@@ -50,9 +48,9 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	private boolean isTraceClient = false;
 
 	private boolean isTraceSynPacket = false;
-	
+
 	private boolean isReconnect = false;
-	
+
 	/**
 	 * 一个packet所需要的字节数（用于应用告诉框架，下一次解码所需要的字节长度，省去冗余解码带来的性能损耗）
 	 */
@@ -249,12 +247,12 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		return serverNode;
 	}
 
-//	/**
-//	 * @return the stat
-//	 */
-//	public ChannelStat getStat() {
-//		return stat;
-//	}
+	//	/**
+	//	 * @return the stat
+	//	 */
+	//	public ChannelStat getStat() {
+	//		return stat;
+	//	}
 
 	/**
 	 * @return the userid
@@ -338,23 +336,22 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	public void processAfterSent(Packet packet, Boolean isSentSuccess) {
 
 		isSentSuccess = isSentSuccess == null ? false : isSentSuccess;
-//		if (isPacket) {
-//			packet = (Packet) obj;
-//		} else {
-//			packetWithMeta = (PacketWithMeta) obj;
-//			packet = packetWithMeta.getPacket();
-//			CountDownLatch countDownLatch = packetWithMeta.getCountDownLatch();
-//			traceBlockPacket(SynPacketAction.BEFORE_DOWN, packet, countDownLatch, null);
-//			countDownLatch.countDown();
-//		}
+		//		if (isPacket) {
+		//			packet = (Packet) obj;
+		//		} else {
+		//			packetWithMeta = (PacketWithMeta) obj;
+		//			packet = packetWithMeta.getPacket();
+		//			CountDownLatch countDownLatch = packetWithMeta.getCountDownLatch();
+		//			traceBlockPacket(SynPacketAction.BEFORE_DOWN, packet, countDownLatch, null);
+		//			countDownLatch.countDown();
+		//		}
 		Meta meta = packet.getMeta();
 		if (meta != null) {
 			CountDownLatch countDownLatch = meta.getCountDownLatch();
 			traceBlockPacket(SynPacketAction.BEFORE_DOWN, packet, countDownLatch, null);
 			countDownLatch.countDown();
 		}
-		
-		
+
 		try {
 			if (log.isDebugEnabled()) {
 				log.debug("{} 已经发送 {}", this, packet.logstr());
@@ -367,23 +364,23 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 				} catch (Exception e) {
 					log.error(e.toString(), e);
 				}
-				
+
 				GroupStat groupStat = groupContext.getGroupStat();
 				groupStat.getSentPackets().incrementAndGet();
 				stat.getSentPackets().incrementAndGet();
-				
-				List<Long> list = groupContext.ipStats.durationList;
-				try {
-					for (Long v : list) {
-						IpStat ipStat = (IpStat) groupContext.ipStats.get(v, getClientNode().getIp());
-						ipStat.getSentPackets().incrementAndGet();
-						groupContext.getIpStatListener().onAfterSent(this, packet, isSentSuccess, ipStat);
-					}
-				} catch (Exception e) {
-					log.error(e.toString(), e);
-				}
 
-				
+				List<Long> list = groupContext.ipStats.durationList;
+				if (list != null && list.size() > 0) {
+					try {
+						for (Long v : list) {
+							IpStat ipStat = (IpStat) groupContext.ipStats.get(v, getClientNode().getIp());
+							ipStat.getSentPackets().incrementAndGet();
+							groupContext.getIpStatListener().onAfterSent(this, packet, isSentSuccess, ipStat);
+						}
+					} catch (Exception e) {
+						log.error(e.toString(), e);
+					}
+				}
 			}
 		} catch (Throwable e) {
 			log.error(e.toString(), e);
@@ -550,7 +547,7 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 		} else {
 			return this.getClientNode().toString();
 		}
-		
+
 	}
 
 	/**

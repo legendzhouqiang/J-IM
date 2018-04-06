@@ -97,7 +97,7 @@ public class DecodeRunnable implements Runnable {
 			GroupContext groupContext = channelContext.getGroupContext();
 			try {
 				int initPosition = byteBuffer.position();
-				
+
 				Packet packet = null;
 				Integer packetNeededLength = channelContext.getPacketNeededLength();
 				if (packetNeededLength != null) {
@@ -135,21 +135,22 @@ public class DecodeRunnable implements Runnable {
 					int afterDecodePosition = byteBuffer.position();
 					int len = afterDecodePosition - initPosition;
 					packet.setByteCount(len);
-					
+
 					groupContext.getGroupStat().getReceivedPackets().incrementAndGet();
 					channelContext.stat.getReceivedPackets().incrementAndGet();
 
 					List<Long> list = groupContext.ipStats.durationList;
-					try {
-						for (Long v : list) {
-							IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-							ipStat.getReceivedPackets().incrementAndGet();
-							groupContext.getIpStatListener().onAfterDecoded(channelContext, packet, len, ipStat);
+					if (list != null && list.size() > 0) {
+						try {
+							for (Long v : list) {
+								IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+								ipStat.getReceivedPackets().incrementAndGet();
+								groupContext.getIpStatListener().onAfterDecoded(channelContext, packet, len, ipStat);
+							}
+						} catch (Exception e1) {
+							log.error(packet.logstr(), e1);
 						}
-					} catch (Exception e1) {
-						log.error(packet.logstr(), e1);
 					}
-
 					channelContext.traceClient(ChannelAction.RECEIVED, packet, null);
 
 					AioListener aioListener = channelContext.getGroupContext().getAioListener();
@@ -186,15 +187,17 @@ public class DecodeRunnable implements Runnable {
 				log.error(channelContext + ", " + byteBuffer + ", 解码异常:" + e.toString(), e);
 
 				if (e instanceof AioDecodeException) {
-					try {
-						List<Long> list = groupContext.ipStats.durationList;
-						for (Long v : list) {
-							IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-							ipStat.getDecodeErrorCount().incrementAndGet();
-							channelContext.getGroupContext().getIpStatListener().onDecodeError(channelContext, ipStat);
+					List<Long> list = groupContext.ipStats.durationList;
+					if (list != null && list.size() > 0) {
+						try {
+							for (Long v : list) {
+								IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+								ipStat.getDecodeErrorCount().incrementAndGet();
+								channelContext.getGroupContext().getIpStatListener().onDecodeError(channelContext, ipStat);
+							}
+						} catch (Exception e1) {
+							log.error(e1.toString(), e1);
 						}
-					} catch (Exception e1) {
-						log.error(e1.toString(), e1);
 					}
 				}
 

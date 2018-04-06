@@ -130,10 +130,10 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 
 			try {
 				channelContext.setReconnect(isReconnect);
-				
+
 				if (SslUtils.isSsl(channelContext)) {
 					if (isConnected) {
-//						channelContext.getSslFacadeContext().beginHandshake();
+						//						channelContext.getSslFacadeContext().beginHandshake();
 						SslFacadeContext sslFacadeContext = new SslFacadeContext(channelContext);
 						sslFacadeContext.beginHandshake();
 					} else {
@@ -142,20 +142,20 @@ public class ConnectionCompletionHandler implements CompletionHandler<Void, Conn
 				} else {
 					clientAioListener.onAfterConnected(channelContext, isConnected, isReconnect);
 				}
-				
-				try {
-					GroupContext groupContext = channelContext.getGroupContext();
-					List<Long> list = groupContext.ipStats.durationList;
-					for (Long v : list) {
-						IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
-						ipStat.getRequestCount().incrementAndGet();
-						groupContext.getIpStatListener().onAfterConnected(channelContext, isConnected, isReconnect, ipStat);
+
+				GroupContext groupContext = channelContext.getGroupContext();
+				List<Long> list = groupContext.ipStats.durationList;
+				if (list != null && list.size() > 0) {
+					try {
+						for (Long v : list) {
+							IpStat ipStat = groupContext.ipStats.get(v, channelContext.getClientNode().getIp());
+							ipStat.getRequestCount().incrementAndGet();
+							groupContext.getIpStatListener().onAfterConnected(channelContext, isConnected, isReconnect, ipStat);
+						}
+					} catch (Exception e) {
+						log.error(e.toString(), e);
 					}
-				} catch (Exception e) {
-					log.error(e.toString(), e);
 				}
-				
-				
 			} catch (Throwable e1) {
 				log.error(e1.toString(), e1);
 			}
