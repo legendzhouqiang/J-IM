@@ -12,9 +12,9 @@
 ## **t-io诞生的意义**
 - 旧时王谢堂前燕，飞入寻常百姓家----当年那些王谢贵族们才拥有的"百万级即时通讯"应用，将因为t-io的诞生，纷纷飞入普通人家的屋檐下。
 
-### **[t-io文档](http://t-io.org/doc/index.html "t-io文档")**
+### **[t-io文档](https://t-io.org/doc/index.html "t-io文档")**
 
-
+### **[t-io官网访问数据统计](https://t-io.org/stat/index.html "t-io官网访问数据统计")**
 
 
 
