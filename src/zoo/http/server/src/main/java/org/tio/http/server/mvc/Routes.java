@@ -85,7 +85,7 @@ public class Routes {
 	 * key: class
 	 * value: /user
 	 */
-	public Map<Class<?>, String> classPathMap = new HashMap<>();
+	public static Map<Class<?>, String> classPathMap = new HashMap<>();
 
 	/**
 	 * Method路径映射
@@ -353,6 +353,10 @@ public class Routes {
 	@SuppressWarnings("unchecked")
 	public static <T> T getController(Class<T> clazz) {
 		return (T)classBeanMap.get(clazz);
+	}
+	
+	public static String getRequestPath(Class<?> clazz) {
+		return classPathMap.get(clazz);
 	}
 
 	/**

@@ -69,7 +69,7 @@ public class QuartzUtils {
 		}
 		initJobClasses();
 		if (JOB_CLASSES.size() <= 0) {
-			log.error("文件[{}]中没有配置定时任务类", file1);
+			log.error("文件[{}]中没有配置定时任务类", file);
 			return;
 		}
 		try {

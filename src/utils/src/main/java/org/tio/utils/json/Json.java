@@ -69,6 +69,20 @@ public class Json {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/**
+	 * 可以返回null的key值
+	 * @param bean
+	 * @return
+	 * @author xufei
+	 */
+	public static String toJsonAboutNull(Object bean) {
+		try {
+			return JSON.toJSONString(bean, mapping, SerializerFeature.DisableCircularReferenceDetect,SerializerFeature.WriteNullStringAsEmpty);
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public static String toJson(Object bean, SerializeFilter serializeFilter) {
 		try {

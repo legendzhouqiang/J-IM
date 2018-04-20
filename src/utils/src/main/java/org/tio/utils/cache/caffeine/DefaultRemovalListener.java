@@ -33,7 +33,8 @@ public class DefaultRemovalListener<K, V> implements RemovalListener<K, V> {
 
 	@Override
 	public void onRemoval(K key, V value, RemovalCause cause) {
-		log.info("cacheName:{}, key:{}, value:{} was removed", cacheName, key, value);
+		if (log.isInfoEnabled()) {
+			log.info("cacheName:{}, key:{}, value:{} was removed", cacheName, key, value);
+		}
 	}
-
 }
