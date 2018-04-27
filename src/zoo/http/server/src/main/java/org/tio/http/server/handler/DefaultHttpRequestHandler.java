@@ -24,6 +24,7 @@ import org.tio.http.common.HttpResponseStatus;
 import org.tio.http.common.RequestLine;
 import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.common.session.HttpSession;
+import org.tio.http.common.view.freemarker.FreemarkerConfig;
 import org.tio.http.server.intf.CurrUseridGetter;
 import org.tio.http.server.intf.HttpServerInterceptor;
 import org.tio.http.server.intf.ThrowableHandler;
@@ -42,7 +43,6 @@ import org.tio.http.server.stat.token.TokenPathAccessStats;
 import org.tio.http.server.util.ClassUtils;
 import org.tio.http.server.util.HttpServerUtils;
 import org.tio.http.server.util.Resps;
-import org.tio.http.server.view.freemarker.FreemarkerConfig;
 import org.tio.utils.SystemTimer;
 import org.tio.utils.cache.caffeine.CaffeineCache;
 import org.tio.utils.freemarker.FreemarkerUtils;
@@ -114,10 +114,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	private String suffix;
 	private int suffixLength = 0;
 
-	/**
-	 * 临时支持freemarker，主要用于开发环境中的前端开发，暂时不重点作为tio-http-server功能
-	 */
-	private FreemarkerConfig freemarkerConfig;
+	
 
 	//	private static String randomCookieValue() {
 	//		return RandomUtil.randomUUID();
@@ -393,7 +390,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 					//					response.addHeaders(headers);
 					return response;
 				} else {
-					File pageRoot = httpConfig.getPageRoot();
+					File pageRoot = httpConfig.getPageRoot(request);
 					if (pageRoot != null) {
 						//						String root = FileUtil.getAbsolutePath(pageRoot);
 						file = new File(pageRoot + path);
@@ -408,12 +405,13 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 						if (file.exists()) {
 							//项目中需要，时间支持一下freemarker模板，后面要做模板支持抽象设计
+							FreemarkerConfig freemarkerConfig = httpConfig.getFreemarkerConfig();
 							if (freemarkerConfig != null) {
 								String extension = FileNameUtil.getExtension(file.getName());
 								if (ArrayUtil.contains(freemarkerConfig.getSuffixes(), extension)) {
-									Configuration configuration = freemarkerConfig.getConfiguration();
+									Configuration configuration = freemarkerConfig.getConfiguration(request);
 									if (configuration != null) {
-										Object model = freemarkerConfig.getModelMaker().generate(request);
+										Object model = freemarkerConfig.getModelGenerator().generate(request);
 										if (request.isClosed()) {
 											return null;
 										} else {
@@ -421,7 +419,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 											if (templateLoader instanceof FileTemplateLoader) {
 												try {
 													String filePath = file.getCanonicalPath();
-													String pageRootPath = httpConfig.getPageRoot().getCanonicalPath();
+													String pageRootPath = httpConfig.getPageRoot(request).getCanonicalPath();
 													String template = StringUtils.substring(filePath, pageRootPath.length());
 													String retStr = FreemarkerUtils.generateStringByFile(template, configuration, model);
 													response = Resps.bytes(request, retStr.getBytes(configuration.getDefaultEncoding()), extension);
@@ -790,13 +788,7 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 		this.ipPathAccessStats = ipPathAccessStats;
 	}
 
-	public FreemarkerConfig getFreemarkerConfig() {
-		return freemarkerConfig;
-	}
 
-	public void setFreemarkerConfig(FreemarkerConfig freemarkerConfig) {
-		this.freemarkerConfig = freemarkerConfig;
-	}
 
 	public ThrowableHandler getThrowableHandler() {
 		return throwableHandler;

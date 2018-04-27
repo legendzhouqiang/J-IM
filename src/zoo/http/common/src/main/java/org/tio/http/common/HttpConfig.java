@@ -2,11 +2,16 @@ package org.tio.http.common;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.common.session.HttpSession;
 import org.tio.http.common.session.id.ISessionIdGenerator;
+import org.tio.http.common.view.freemarker.FreemarkerConfig;
 import org.tio.utils.cache.ICache;
 
 import cn.hutool.core.io.FileUtil;
@@ -64,7 +69,14 @@ public class HttpConfig {
 	 * @author tanyaowu
 	 */
 	public static void main(String[] args) {
-
+		String d = ".t-io.org";
+		String domain = "www.t-io.org";
+		
+		boolean s1 = StringUtils.startsWith(d, ".");
+		boolean s2 = StringUtils.endsWith(domain, d);
+		
+		System.out.println(s1);
+		System.out.println(s2);
 	}
 
 	private String bindIp = null;//"127.0.0.1";
@@ -89,7 +101,7 @@ public class HttpConfig {
 	 * 加后缀，譬如".php"
 	 */
 	private String suffix = "";
-	
+
 	/**
 	 * 如果访问路径是以"/"结束，则实际访问路径会自动加上welcomeFile，从而变成形如"/index.html"的路径
 	 */
@@ -138,6 +150,19 @@ public class HttpConfig {
 	 * 2、绝对路径：/page
 	 */
 	private File pageRoot = null;//FileUtil.getAbsolutePath("page");//"/page";
+	
+	/**
+	 * 临时支持freemarker，主要用于开发环境中的前端开发，暂时不重点作为tio-http-server功能
+	 * 请大家暂时不要使用该功能，因为api随时会变
+	 */
+	private FreemarkerConfig freemarkerConfig = null;
+
+	/**
+	 * 域名和页面根目录映射。当客户端通过不同域名访问时，其页面根目录是不一样的
+	 * key: www.t-io.org
+	 * value: 域名对应的页面根目录
+	 */
+	private Map<String, File> domainPageMap = null;//new HashMap<>();
 
 	//	/**
 	//	 * @return the httpSessionManager
@@ -152,6 +177,10 @@ public class HttpConfig {
 	//	public void setHttpSessionManager(HttpSessionManager httpSessionManager) {
 	//		this.httpSessionManager = httpSessionManager;
 	//	}
+
+	public Map<String, File> getDomainPageMap() {
+		return domainPageMap;
+	}
 
 	/**
 	 *
@@ -216,6 +245,31 @@ public class HttpConfig {
 	 * @return the pageRoot
 	 */
 	public File getPageRoot() {
+		return pageRoot;
+	}
+
+	public File getPageRoot(HttpRequest request) {
+		if (this.domainPageMap == null || domainPageMap.size() == 0) {
+			return pageRoot;
+		}
+
+		String domain = request.getDomain();
+		File root = domainPageMap.get(domain);
+		if (root != null) {
+			return root;
+		}
+
+		Set<Entry<String, File>> set = domainPageMap.entrySet();
+
+		for (Entry<String, File> entry : set) {
+			String d = entry.getKey();
+			if (StringUtils.startsWith(d, ".") && StringUtils.endsWith(domain, d)) {
+				File file = entry.getValue();
+				domainPageMap.put(domain, file);
+				return file;
+			}
+		}
+		domainPageMap.put(domain, pageRoot);
 		return pageRoot;
 	}
 
@@ -289,14 +343,45 @@ public class HttpConfig {
 	 * @throws IOException 
 	 */
 	public void setPageRoot(String pageRoot) throws IOException {
-		if (pageRoot == null) {
-			return;
+		this.pageRoot = fromPath(pageRoot);
+	}
+
+	/**
+	 * 
+	 * @param path 如果是以"classpath:"开头，则从classpath中查找，否则视为普通的文件路径
+	 * @return
+	 */
+	public static File fromPath(String path) {
+		if (path == null) {
+			return null;
 		}
 
-		if (StringUtils.startsWithIgnoreCase(pageRoot, "classpath:")) {
-			this.pageRoot = new File(FileUtil.getAbsolutePath(pageRoot));
+		if (StringUtils.startsWithIgnoreCase(path, "classpath:")) {
+			return new File(FileUtil.getAbsolutePath(path));
 		} else {
-			this.pageRoot = new File(pageRoot);
+			return new File(path);
+		}
+	}
+
+	/**
+	 * 
+	 * @param domain 形如www.t-io.org的域名，也可以是形如.t-io.org这样的通配域名
+	 * @param pageRoot 如果是以"classpath:"开头，则从classpath中查找，否则视为普通的文件路径
+	 * @throws IOException 
+	 */
+	public void addDomainPage(String domain, String pageRoot) throws IOException {
+		if (domainPageMap == null) {
+			synchronized (this) {
+				if (domainPageMap == null) {
+					domainPageMap = new HashMap<>();
+				}
+			}
+		}
+		File pageRootFile = fromPath(pageRoot);
+		domainPageMap.put(domain, pageRootFile);
+		
+		if (this.freemarkerConfig != null) {
+			freemarkerConfig.addDomainConfiguration(domain, pageRootFile);
 		}
 	}
 
@@ -399,4 +484,20 @@ public class HttpConfig {
 	public void setWelcomeFile(String welcomeFile) {
 		this.welcomeFile = welcomeFile;
 	}
+
+	public FreemarkerConfig getFreemarkerConfig() {
+		return freemarkerConfig;
+	}
+
+	public void setFreemarkerConfig(FreemarkerConfig freemarkerConfig) {
+		this.freemarkerConfig = freemarkerConfig;
+	}
+
+	//	public Map<String, File> getDomainPageMap() {
+	//		return domainPageMap;
+	//	}
+	//
+	//	public void setDomainPageMap(Map<String, File> domainPageMap) {
+	//		this.domainPageMap = domainPageMap;
+	//	}
 }

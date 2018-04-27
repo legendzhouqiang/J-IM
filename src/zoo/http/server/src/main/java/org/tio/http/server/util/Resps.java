@@ -111,7 +111,7 @@ public class Resps {
 	 * @author: tanyaowu
 	 */
 	public static HttpResponse file(HttpRequest request, String path, HttpConfig httpConfig) throws IOException {
-		File pageRoot = httpConfig.getPageRoot();
+		File pageRoot = httpConfig.getPageRoot(request);
 		if (pageRoot != null) {
 //			String root = FileUtil.getAbsolutePath(pageRoot);
 			File file = new File(pageRoot + path);
@@ -133,7 +133,7 @@ public class Resps {
 	 * @author: tanyaowu
 	 */
 	public static HttpResponse resp404(HttpRequest request, RequestLine requestLine, HttpConfig httpConfig) {
-		File pageRoot = httpConfig.getPageRoot();
+		File pageRoot = httpConfig.getPageRoot(request);
 		
 		if (pageRoot != null) {
 			String file404 = httpConfig.getPage404();
@@ -182,7 +182,7 @@ public class Resps {
 	 * @author: tanyaowu
 	 */
 	public static HttpResponse resp500(HttpRequest request, RequestLine requestLine, HttpConfig httpConfig, Throwable throwable) {
-		File pageRoot = httpConfig.getPageRoot();
+		File pageRoot = httpConfig.getPageRoot(request);
 		
 		if (pageRoot != null) {
 			String file500 = httpConfig.getPage500();
@@ -341,10 +341,7 @@ public class Resps {
 	 * @author tanyaowu
 	 */
 	public static HttpResponse redirect(HttpRequest request, String path) {
-		HttpResponse ret = new HttpResponse(request);
-		ret.setStatus(HttpResponseStatus.C302);
-		ret.addHeader(HttpConst.ResponseHeaderKey.Location, path);
-		return ret;
+		return redirect(request, path, HttpResponseStatus.C302);
 	}
 	
 	/**
@@ -354,8 +351,19 @@ public class Resps {
 	 * @return
 	 */
 	public static HttpResponse redirectForever(HttpRequest request, String path) {
+		return redirect(request, path, HttpResponseStatus.C301);
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param path
+	 * @param status
+	 * @return
+	 */
+	public static HttpResponse redirect(HttpRequest request, String path, HttpResponseStatus status) {
 		HttpResponse ret = new HttpResponse(request);
-		ret.setStatus(HttpResponseStatus.C301);
+		ret.setStatus(status);
 		ret.addHeader(HttpConst.ResponseHeaderKey.Location, path);
 		return ret;
 	}
