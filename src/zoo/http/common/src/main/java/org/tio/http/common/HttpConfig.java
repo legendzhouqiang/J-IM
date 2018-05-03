@@ -370,6 +370,15 @@ public class HttpConfig {
 	 * @throws IOException 
 	 */
 	public void addDomainPage(String domain, String pageRoot) throws IOException {
+		File pageRootFile = fromPath(pageRoot);
+		if (!pageRootFile.exists()) {
+			throw new IOException("文件【" + pageRoot + "】不存在");
+		}
+		
+		if (!pageRootFile.isDirectory()) {
+			throw new IOException("文件【" + pageRoot + "】不是目录");
+		}
+		
 		if (domainPageMap == null) {
 			synchronized (this) {
 				if (domainPageMap == null) {
@@ -377,7 +386,7 @@ public class HttpConfig {
 				}
 			}
 		}
-		File pageRootFile = fromPath(pageRoot);
+		
 		domainPageMap.put(domain, pageRootFile);
 		
 		if (this.freemarkerConfig != null) {
