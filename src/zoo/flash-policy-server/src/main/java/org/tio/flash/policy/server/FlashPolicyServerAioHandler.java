@@ -41,8 +41,7 @@ public class FlashPolicyServerAioHandler implements ServerAioHandler {
 	 * @author tanyaowu
 	 */
 	@Override
-	public FlashPolicyPacket decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
-		int readableLength = buffer.limit() - buffer.position();
+	public FlashPolicyPacket decode(ByteBuffer buffer, int limit, int position, int readableLength, ChannelContext channelContext) throws AioDecodeException {
 		//收到的数据组不了业务包，则返回null以告诉框架数据不够
 		if (readableLength < FlashPolicyPacket.MIN_LENGHT) {
 			return null;

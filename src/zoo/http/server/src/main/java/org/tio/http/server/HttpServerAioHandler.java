@@ -64,32 +64,13 @@ public class HttpServerAioHandler implements ServerAioHandler {
 		this.requestHandler = requestHandler;
 	}
 
-	/**
-	 * @see org.tio.core.intf.AioHandler#decode(java.nio.ByteBuffer)
-	 *
-	 * @param buffer
-	 * @return
-	 * @throws AioDecodeException
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 *
-	 */
 	@Override
-	public HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
+	public HttpRequest decode(ByteBuffer buffer, int limit, int position, int readableLength, ChannelContext channelContext) throws AioDecodeException {
 		HttpRequest request = HttpRequestDecoder.decode(buffer, channelContext);
 		channelContext.setAttribute(REQUEST_KEY, request);
 		return request;
 	}
 
-	/**
-	 * @see org.tio.core.intf.AioHandler#encode(org.tio.core.intf.Packet)
-	 *
-	 * @param packet
-	 * @return
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 *
-	 */
 	@Override
 	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
 		HttpResponse httpResponse = (HttpResponse) packet;
@@ -104,16 +85,6 @@ public class HttpServerAioHandler implements ServerAioHandler {
 		return httpConfig;
 	}
 
-	/**
-	 * @see org.tio.core.intf.AioHandler#handler(org.tio.core.intf.Packet)
-	 *
-	 * @param packet
-	 * @return
-	 * @throws Exception
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 *
-	 */
 	@Override
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
 		HttpRequest request = (HttpRequest) packet;

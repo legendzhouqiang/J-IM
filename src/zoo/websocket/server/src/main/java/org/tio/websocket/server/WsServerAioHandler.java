@@ -37,26 +37,9 @@ import org.tio.websocket.server.handler.IWsMsgHandler;
 public class WsServerAioHandler implements ServerAioHandler {
 	private static Logger log = LoggerFactory.getLogger(WsServerAioHandler.class);
 
-	//	private static Map<Command, ImBsHandlerIntf> handlerMap = new HashMap<>();
-	//	static {
-	//		handlerMap.put(Command.COMMAND_HANDSHAKE_REQ, new HandshakeReqHandler());
-	//		handlerMap.put(Command.COMMAND_AUTH_REQ, new AuthReqHandler());
-	//		handlerMap.put(Command.COMMAND_CHAT_REQ, new ChatReqHandler());
-	//		handlerMap.put(Command.COMMAND_JOIN_GROUP_REQ, new JoinReqHandler());
-	//		handlerMap.put(Command.COMMAND_HEARTBEAT_REQ, new HeartbeatReqHandler());
-	//		handlerMap.put(Command.COMMAND_CLOSE_REQ, new CloseReqHandler());
-	//
-	//		handlerMap.put(Command.COMMAND_LOGIN_REQ, new LoginReqHandler());
-	//		handlerMap.put(Command.COMMAND_CLIENT_PAGE_REQ, new ClientPageReqHandler());
-	//
-	//	}
-
 	/**
+	 * 
 	 * @param args
-	 *
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:13:15
-	 *
 	 */
 	public static void main(String[] args) {
 	}
@@ -66,29 +49,17 @@ public class WsServerAioHandler implements ServerAioHandler {
 	private IWsMsgHandler wsMsgHandler;
 
 	/**
-	 *
-	 *
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:13:15
-	 *
+	 * 
+	 * @param wsServerConfig
+	 * @param wsMsgHandler
 	 */
 	public WsServerAioHandler(WsServerConfig wsServerConfig, IWsMsgHandler wsMsgHandler) {
 		this.wsServerConfig = wsServerConfig;
 		this.wsMsgHandler = wsMsgHandler;
 	}
 
-	/**
-	 * @see org.tio.core.intf.AioHandler#decode(java.nio.ByteBuffer)
-	 *
-	 * @param buffer
-	 * @return
-	 * @throws AioDecodeException
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 *
-	 */
 	@Override
-	public WsRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
+	public WsRequest decode(ByteBuffer buffer, int limit, int position, int readableLength, ChannelContext channelContext) throws AioDecodeException {
 		WsSessionContext wsSessionContext = (WsSessionContext) channelContext.getAttribute();
 		//		int initPosition = buffer.position();
 
@@ -116,51 +87,8 @@ public class WsServerAioHandler implements ServerAioHandler {
 
 		WsRequest websocketPacket = WsServerDecoder.decode(buffer, channelContext);
 		return websocketPacket;
-		//		if (websocketPacket == null) {
-		//			return null;
-		//		}
-		//
-		//		if (!websocketPacket.isWsEof()) {
-		//			log.error("{} websocket包还没有传完", channelContext);
-		//			return null;
-		//		}
-		//
-		//		Opcode opcode = websocketPacket.getWsOpcode();
-		//		if (opcode == Opcode.BINARY) {
-		//			byte[] wsBody = websocketPacket.getWsBody();
-		//			if (wsBody == null || wsBody.length == 0) {
-		//				throw new AioDecodeException("错误的websocket包，body为空");
-		//			}
-		//
-		//			WsRequest imPacket = new WsRequest();
-		//
-		//			if (wsBody.length > 1) {
-		//				byte[] dst = new byte[wsBody.length - 1];
-		//				System.arraycopy(wsBody, 1, dst, 0, dst.length);
-		//				imPacket.setBody(dst);
-		//			}
-		//			return imPacket;
-		//		} else if (opcode == Opcode.PING || opcode == Opcode.PONG) {
-		//			return heartbeatPacket;
-		//		} else if (opcode == Opcode.CLOSE) {
-		//			WsRequest imPacket = new WsRequest();
-		//			return imPacket;
-		//		} else if (opcode == Opcode.TEXT) {
-		//			throw new AioDecodeException("错误的websocket包，不支持TEXT类型的数据");
-		//		} else {
-		//			throw new AioDecodeException("错误的websocket包，错误的Opcode");
-		//		}
 	}
 
-	/**
-	 * @see org.tio.core.intf.AioHandler#encode(org.tio.core.intf.Packet)
-	 *
-	 * @param packet
-	 * @return
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 *
-	 */
 	@Override
 	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
 		WsResponse wsResponse = (WsResponse) packet;
@@ -218,19 +146,9 @@ public class WsServerAioHandler implements ServerAioHandler {
 		}
 	}
 
-	/**
-	 * @see org.tio.core.intf.AioHandler#handler(org.tio.core.intf.Packet)
-	 *
-	 * @param packet
-	 * @return
-	 * @throws Exception
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 *
-	 */
 	@Override
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
-		
+
 		WsRequest wsRequest = (WsRequest) packet;
 
 		if (wsRequest.isHandShake()) {
@@ -270,7 +188,7 @@ public class WsServerAioHandler implements ServerAioHandler {
 				wsResponse = WsResponse.fromText(str, wsServerConfig.getCharset());
 				return wsResponse;
 			} else if (obj instanceof byte[]) {
-				wsResponse = WsResponse.fromBytes((byte[])obj);
+				wsResponse = WsResponse.fromBytes((byte[]) obj);
 				return wsResponse;
 			} else if (obj instanceof WsResponse) {
 				return (WsResponse) obj;

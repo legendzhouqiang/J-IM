@@ -46,11 +46,8 @@ public abstract class AbstractHttpServerAioHandler implements ServerAioHandler, 
 	}
 
 	/**
-	 *
-	 *
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:13:15
-	 *
+	 * 
+	 * @param httpConfig
 	 */
 	public AbstractHttpServerAioHandler(HttpConfig httpConfig) {
 		this.httpConfig = httpConfig;
@@ -61,31 +58,12 @@ public abstract class AbstractHttpServerAioHandler implements ServerAioHandler, 
 		this.routes = routes;
 	}
 
-	/**
-	 * @see org.tio.core.intf.AioHandler#decode(java.nio.ByteBuffer)
-	 *
-	 * @param buffer
-	 * @return
-	 * @throws AioDecodeException
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 *
-	 */
 	@Override
-	public HttpRequest decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
+	public HttpRequest decode(ByteBuffer buffer, int limit, int position, int readableLength, ChannelContext channelContext) throws AioDecodeException {
 		HttpRequest request = HttpRequestDecoder.decode(buffer, channelContext);
 		return request;
 	}
 
-	/**
-	 * @see org.tio.core.intf.AioHandler#encode(org.tio.core.intf.Packet)
-	 *
-	 * @param packet
-	 * @return
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 *
-	 */
 	@Override
 	public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
 		HttpResponse httpResponse = (HttpResponse) packet;
@@ -100,16 +78,6 @@ public abstract class AbstractHttpServerAioHandler implements ServerAioHandler, 
 		return httpConfig;
 	}
 
-	/**
-	 * @see org.tio.core.intf.AioHandler#handler(org.tio.core.intf.Packet)
-	 *
-	 * @param packet
-	 * @return
-	 * @throws Exception
-	 * @author tanyaowu
-	 * 2016年11月18日 上午9:37:44
-	 *
-	 */
 	@Override
 	public void handler(Packet packet, ChannelContext channelContext) throws Exception {
 		HttpRequest request = (HttpRequest) packet;

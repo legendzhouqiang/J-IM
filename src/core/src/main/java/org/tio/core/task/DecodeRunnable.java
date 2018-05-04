@@ -97,30 +97,30 @@ public class DecodeRunnable implements Runnable {
 			GroupContext groupContext = channelContext.getGroupContext();
 			try {
 				int initPosition = byteBuffer.position();
-
+				int limit = byteBuffer.limit();
+				int readableLength = limit - initPosition;
 				Packet packet = null;
 				Integer packetNeededLength = channelContext.getPacketNeededLength();
 				if (packetNeededLength != null) {
 					log.info("{}, 解码所需长度:{}", channelContext, packetNeededLength);
-					int readableLength = byteBuffer.limit() - initPosition;
 					if (readableLength >= packetNeededLength) {
-						packet = groupContext.getAioHandler().decode(byteBuffer, channelContext);
+						packet = groupContext.getAioHandler().decode(byteBuffer, limit, initPosition, readableLength, channelContext);
 					}
 				} else {
-					packet = groupContext.getAioHandler().decode(byteBuffer, channelContext);
+					packet = groupContext.getAioHandler().decode(byteBuffer, limit, initPosition, readableLength, channelContext);
 				}
 
 				if (packet == null)// 数据不够，解不了码
 				{
-					lastByteBuffer = ByteBufferUtils.copy(byteBuffer, initPosition, byteBuffer.limit());
+					lastByteBuffer = ByteBufferUtils.copy(byteBuffer, initPosition, limit);
 					ChannelStat channelStat = channelContext.stat;
 					int decodeFailCount = channelStat.getDecodeFailCount() + 1;
 					channelStat.setDecodeFailCount(decodeFailCount);
-					int len = byteBuffer.limit() - initPosition;
-					log.debug("{} 本次解码失败, 已经连续{}次解码失败，参与解码的数据长度共{}字节", channelContext, decodeFailCount, len);
+//					int len = byteBuffer.limit() - initPosition;
+					log.debug("{} 本次解码失败, 已经连续{}次解码失败，参与解码的数据长度共{}字节", channelContext, decodeFailCount, readableLength);
 					if (decodeFailCount > 5) {
 						if (packetNeededLength == null) {
-							log.info("{} 本次解码失败, 已经连续{}次解码失败，参与解码的数据长度共{}字节", channelContext, decodeFailCount, len);
+							log.info("{} 本次解码失败, 已经连续{}次解码失败，参与解码的数据长度共{}字节", channelContext, decodeFailCount, readableLength);
 						}
 					}
 					return;
