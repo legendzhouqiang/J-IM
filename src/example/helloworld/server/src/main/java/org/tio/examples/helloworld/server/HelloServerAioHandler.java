@@ -22,9 +22,8 @@ public class HelloServerAioHandler implements ServerAioHandler {
 	 * 消息体结构：   对象的json串的byte[]
 	 */
 	@Override
-	public HelloPacket decode(ByteBuffer buffer, ChannelContext channelContext) throws AioDecodeException {
+	public HelloPacket decode(ByteBuffer buffer, int limit, int position, int readableLength, ChannelContext channelContext) throws AioDecodeException {
 		//提醒：buffer的开始位置并不一定是0，应用需要从buffer.position()开始读取数据
-		int readableLength = buffer.limit() - buffer.position();
 		//收到的数据组不了业务包，则返回null以告诉框架数据不够
 		if (readableLength < HelloPacket.HEADER_LENGHT) {
 			return null;
