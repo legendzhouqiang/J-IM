@@ -166,6 +166,8 @@ public class WsServerAioHandler implements ServerAioHandler {
 			wsResponse.setHandShake(true);
 			Aio.send(channelContext, wsResponse);
 			wsSessionContext.setHandshaked(true);
+			
+			wsMsgHandler.onAfterHandshaked(request, httpResponse, channelContext);
 			return;
 		}
 
