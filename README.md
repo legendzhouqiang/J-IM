@@ -4,6 +4,7 @@
 
 ## **t-io: 让天下没有难开发的网络编程**
  旧时王谢堂前燕，飞入寻常百姓家----当年那些王谢贵族们才拥有的"百万级即时通讯"应用，将因为t-io的诞生，纷纷飞入普通人家的屋檐下。
+
  [![image](https://gitee.com/tywo45/t-io/raw/master/docs/logo/preview.png)](http://t-io.org/doc/index.html)
 
 ## **引入t-io**
