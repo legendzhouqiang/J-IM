@@ -3,14 +3,19 @@
 [![maven最新版本](https://maven-badges.herokuapp.com/maven-central/org.t-io/tio-core/badge.svg "maven最新版本")](https://maven-badges.herokuapp.com/maven-central/org.t-io/tio-core)
 
 ## **t-io: 让天下没有难开发的网络编程**
+ 旧时王谢堂前燕，飞入寻常百姓家----当年那些王谢贵族们才拥有的"百万级即时通讯"应用，将因为t-io的诞生，纷纷飞入普通人家的屋檐下。
+ [![image](https://gitee.com/tywo45/t-io/raw/master/docs/logo/preview.png)](http://t-io.org/doc/index.html)
 
-[![image](https://gitee.com/tywo45/t-io/raw/master/docs/logo/preview.png)](http://t-io.org/doc/index.html)
-
-
-
-
-## **t-io诞生的意义**
-- 旧时王谢堂前燕，飞入寻常百姓家----当年那些王谢贵族们才拥有的"百万级即时通讯"应用，将因为t-io的诞生，纷纷飞入普通人家的屋檐下。
+## **引入t-io**
+- 在你的pom.xml中加入如下代码片段
+```
+<dependency>
+    <groupid>org.t-io</groupid>
+    <artifactid>tio-core</artifactid>
+    <version>2.3.0.v20180506-RELEASE</version>
+</dependency>
+```
+- [t-io版本列表](https://oss.sonatype.org/content/groups/public/org/t-io/tio-core/ "t-io版本列表")
 
 ## **t-io赞助商**
 
