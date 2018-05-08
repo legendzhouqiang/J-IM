@@ -23,6 +23,8 @@ public class AioServer {
 	private ServerGroupContext serverGroupContext;
 
 	private AsynchronousServerSocketChannel serverSocketChannel;
+	
+	private AsynchronousChannelGroup channelGroup = null;
 
 	private Node serverNode;
 
@@ -87,7 +89,7 @@ public class AioServer {
 		this.serverNode = new Node(serverIp, serverPort);
 		//		ExecutorService groupExecutor = serverGroupContext.getGroupExecutor();
 
-		AsynchronousChannelGroup channelGroup = AsynchronousChannelGroup.withThreadPool(serverGroupContext.getGroupExecutor());
+		channelGroup = AsynchronousChannelGroup.withThreadPool(serverGroupContext.getGroupExecutor());
 		serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup);
 
 		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
@@ -122,9 +124,15 @@ public class AioServer {
 		boolean ret = true;
 
 		try {
+			channelGroup.shutdownNow();
+		} catch (Exception e) {
+			log.error("关闭服务时报错", e);
+		}
+		
+		try {
 			serverSocketChannel.close();
-		} catch (IOException e1) {
-			log.error(e1.toString(), e1);
+		} catch (Exception e1) {
+			log.error("关闭服务时报错", e1);
 		}
 
 		ExecutorService groupExecutor = serverGroupContext.getGroupExecutor();
