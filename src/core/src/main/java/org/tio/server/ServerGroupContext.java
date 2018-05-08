@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.core.GroupContext;
+import org.tio.core.cluster.TioClusterConfig;
 import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.AioListener;
 import org.tio.core.stat.ChannelStat;
@@ -59,7 +60,18 @@ public class ServerGroupContext extends GroupContext {
 	 * @author: tanyaowu
 	 */
 	public ServerGroupContext(String name, ServerAioHandler serverAioHandler, ServerAioListener serverAioListener) {
-		this(name, serverAioHandler, serverAioListener, null, null);
+		this(name, null, serverAioHandler, serverAioListener, null, null);
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * @param serverAioHandler
+	 * @param serverAioListener
+	 * @author: tanyaowu
+	 */
+	public ServerGroupContext(String name, TioClusterConfig tioClusterConfig, ServerAioHandler serverAioHandler, ServerAioListener serverAioListener) {
+		this(name, tioClusterConfig, serverAioHandler, serverAioListener, null, null);
 	}
 
 	/**
@@ -71,7 +83,7 @@ public class ServerGroupContext extends GroupContext {
 	 * @author: tanyaowu
 	 */
 	public ServerGroupContext(ServerAioHandler serverAioHandler, ServerAioListener serverAioListener, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
-		this(null, serverAioHandler, serverAioListener, tioExecutor, groupExecutor);
+		this(null, null, serverAioHandler, serverAioListener, tioExecutor, groupExecutor);
 	}
 
 	/**
@@ -85,7 +97,22 @@ public class ServerGroupContext extends GroupContext {
 	 */
 	public ServerGroupContext(String name, ServerAioHandler serverAioHandler, ServerAioListener serverAioListener, SynThreadPoolExecutor tioExecutor,
 			ThreadPoolExecutor groupExecutor) {
-		super(tioExecutor, groupExecutor);
+		this(name, null, serverAioHandler, serverAioListener, tioExecutor, groupExecutor);
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * @param tioClusterConfig
+	 * @param serverAioHandler
+	 * @param serverAioListener
+	 * @param tioExecutor
+	 * @param groupExecutor
+	 * @author: tanyaowu
+	 */
+	public ServerGroupContext(String name, TioClusterConfig tioClusterConfig, ServerAioHandler serverAioHandler, ServerAioListener serverAioListener,
+			SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		super(tioClusterConfig, tioExecutor, groupExecutor);
 		this.name = name;
 		this.acceptCompletionHandler = new AcceptCompletionHandler();
 		this.serverAioHandler = serverAioHandler;

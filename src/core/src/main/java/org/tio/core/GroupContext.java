@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.client.ReconnConf;
+import org.tio.core.cluster.TioClusterConfig;
 import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.AioListener;
 import org.tio.core.intf.ChannelTraceHandler;
@@ -114,17 +115,38 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 
 	private boolean isStopped = false;
 
-	
+	/**
+	 * 如果此值不为null，就表示要集群
+	 */
+	private TioClusterConfig tioClusterConfig = null;
 
 	public GroupContext() {
 		this(null, null);
 	}
 
+	/**
+	 * 
+	 * @param tioExecutor
+	 * @param groupExecutor
+	 * @author: tanyaowu
+	 */
 	public GroupContext(SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
+		this(null, tioExecutor, groupExecutor);
+	}
+
+	/**
+	 * 
+	 * @param tioClusterConfig
+	 * @param tioExecutor
+	 * @param groupExecutor
+	 * @author: tanyaowu
+	 */
+	public GroupContext(TioClusterConfig tioClusterConfig, SynThreadPoolExecutor tioExecutor, ThreadPoolExecutor groupExecutor) {
 		super();
 		this.id = ID_ATOMIC.incrementAndGet() + "";
 		this.ipBlacklist = new IpBlacklist(id, this);
 		this.ipStats = new IpStats(this, null);
+		this.tioClusterConfig = tioClusterConfig;
 		this.tioExecutor = tioExecutor;
 		if (this.tioExecutor == null) {
 			this.tioExecutor = Threads.tioExecutor;
@@ -149,6 +171,15 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	 * @author: tanyaowu
 	 */
 	public abstract AioListener getAioListener();
+	
+	/**
+	 * 是否是集群
+	 * @return true: 是集群
+	 * @author: tanyaowu
+	 */
+	public boolean isCluster() {
+		return tioClusterConfig != null;
+	}
 
 	/**
 	 *
@@ -344,6 +375,14 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 	 */
 	public void setTioUuid(TioUuid tioUuid) {
 		this.tioUuid = tioUuid;
+	}
+
+	public TioClusterConfig getTioClusterConfig() {
+		return tioClusterConfig;
+	}
+
+	public void setTioClusterConfig(TioClusterConfig tioClusterConfig) {
+		this.tioClusterConfig = tioClusterConfig;
 	}
 
 	public SslConfig getSslConfig() {

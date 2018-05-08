@@ -51,7 +51,11 @@ public class AcceptCompletionHandler implements CompletionHandler<AsynchronousSo
 			
 			
 			
-
+			if (org.tio.core.Aio.IpBlacklist.isInBlacklist(serverGroupContext, clientIp)) {
+				log.warn("[{}]在黑名单中", clientIp);
+				asynchronousSocketChannel.close();
+				return;
+			}
 
 			ServerGroupStat serverGroupStat = serverGroupContext.getServerGroupStat();
 			serverGroupStat.getAccepted().incrementAndGet();

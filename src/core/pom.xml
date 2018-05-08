@@ -49,6 +49,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- redisson, 集群会用到 -->
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

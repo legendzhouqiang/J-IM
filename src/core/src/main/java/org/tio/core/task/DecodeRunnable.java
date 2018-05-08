@@ -122,6 +122,15 @@ public class DecodeRunnable implements Runnable {
 						if (packetNeededLength == null) {
 							log.info("{} 本次解码失败, 已经连续{}次解码失败，参与解码的数据长度共{}字节", channelContext, decodeFailCount, readableLength);
 						}
+						
+						//检查慢包攻击（只有自用版才有）
+						if (decodeFailCount > 10) {
+							int capacity = lastByteBuffer.capacity();
+							int per = capacity / decodeFailCount;
+							if (per < Math.min(groupContext.getReadBufferSize() / 2, 256)) {
+								throw new AioDecodeException("连续解码" + decodeFailCount + "次都不成功，并且平均每次接收到的数据为" + per + "字节，有慢攻击的嫌疑");
+							}
+						}
 					}
 					return;
 				} else //解码成功

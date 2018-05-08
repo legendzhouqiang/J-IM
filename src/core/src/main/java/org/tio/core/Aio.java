@@ -1,5 +1,6 @@
 package org.tio.core;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -11,6 +12,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.core.cluster.TioClusterConfig;
+import org.tio.core.cluster.TioClusterVo;
 import org.tio.core.intf.Packet;
 import org.tio.core.intf.Packet.Meta;
 import org.tio.core.task.SendRunnable;
@@ -28,6 +31,57 @@ import org.tio.utils.thread.ThreadUtils;
 public class Aio {
 	private Aio() {}
 
+	public static class IpBlacklist {
+		/**
+		 * 把ip添加到黑名单
+		 * @param groupContext
+		 * @param ip
+		 * @author tanyaowu
+		 */
+		public static boolean add(GroupContext groupContext, String ip) {
+			return groupContext.ipBlacklist.add(ip);
+		}
+
+		/**
+		 * 清空黑名单
+		 * @param groupContext
+		 * @author tanyaowu
+		 */
+		public static void clear(GroupContext groupContext) {
+			groupContext.ipBlacklist.clear();
+		}
+
+		/**
+		 * 获取ip黑名单列表
+		 * @param groupContext
+		 * @return
+		 * @author tanyaowu
+		 */
+		public static Collection<String> getAll(GroupContext groupContext) {
+			return groupContext.ipBlacklist.getAll();
+		}
+
+		/**
+		 * 是否在黑名单中
+		 * @param groupContext
+		 * @param ip
+		 * @return
+		 * @author tanyaowu
+		 */
+		public static boolean isInBlacklist(GroupContext groupContext, String ip) {
+			return groupContext.ipBlacklist.isInBlacklist(ip);
+		}
+
+		/**
+		 * 把ip从黑名单中删除
+		 * @param groupContext
+		 * @param ip
+		 * @author tanyaowu
+		 */
+		public static void remove(GroupContext groupContext, String ip) {
+			groupContext.ipBlacklist.remove(ip);
+		}
+	}
 
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(Aio.class);
@@ -598,13 +652,25 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	private static Boolean sendToAll(GroupContext groupContext, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
-		SetWithLock<ChannelContext> setWithLock = groupContext.connections;
-		if (setWithLock == null) {
-			log.debug("{}, 没有任何连接", groupContext.getName());
-			return false;
-		}
+		try {
+			SetWithLock<ChannelContext> setWithLock = groupContext.connections;
+			if (setWithLock == null) {
+				log.debug("{}, 没有任何连接", groupContext.getName());
+				return false;
+			}
+			Boolean ret = sendToSet(groupContext, setWithLock, packet, channelContextFilter, isBlock);
+			return ret;
+		} finally {
+			if (groupContext.isCluster() && !packet.isFromCluster()) {
+				TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
 
-		return sendToSet(groupContext, setWithLock, packet, channelContextFilter, isBlock);
+				if (tioClusterConfig.isCluster4all()) {
+					TioClusterVo tioClusterVo = new TioClusterVo(packet);
+					tioClusterVo.setToAll(true);
+					tioClusterConfig.publishAsyn(tioClusterVo);
+				}
+			}
+		}
 	}
 
 	/**
@@ -639,14 +705,41 @@ public class Aio {
 	 * @author tanyaowu
 	 */
 	private static Boolean sendToGroup(GroupContext groupContext, String group, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
-		SetWithLock<ChannelContext> setWithLock = groupContext.groups.clients(groupContext, group);
-		if (setWithLock == null) {
-			log.debug("{}, 组[{}]不存在", groupContext.getName(), group);
-			return false;
+		try {
+			SetWithLock<ChannelContext> setWithLock = groupContext.groups.clients(groupContext, group);
+			if (setWithLock == null) {
+				log.debug("{}, 组[{}]不存在", groupContext.getName(), group);
+				return false;
+			}
+			Boolean ret = sendToSet(groupContext, setWithLock, packet, channelContextFilter, isBlock);
+			return ret;
+		} finally {
+			if (groupContext.isCluster() && !packet.isFromCluster()) {
+				TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
+
+				if (tioClusterConfig.isCluster4group()) {
+//					TioClusterVo tioClusterVo = new TioClusterVo(packet);
+//					tioClusterVo.setGroup(group);
+//					tioClusterConfig.publishAsyn(tioClusterVo);
+					notifyClusterForGroup(groupContext, group, packet);
+				}
+			}
 		}
-		return sendToSet(groupContext, setWithLock, packet, channelContextFilter, isBlock);
 	}
 	
+	/**
+	 * 在集群环境下，把群组消息通知到集群中的其它机器
+	 * @param groupContext
+	 * @param group
+	 * @param packet
+	 */
+	public static void notifyClusterForGroup(GroupContext groupContext, String group, Packet packet) {
+		TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
+		TioClusterVo tioClusterVo = new TioClusterVo(packet);
+		tioClusterVo.setGroup(group);
+		tioClusterConfig.publishAsyn(tioClusterVo);
+	}
+
 	/**
 	 * 阻塞发送到指定ip对应的集合
 	 * @param groupContext
@@ -705,13 +798,40 @@ public class Aio {
 	 * @author: tanyaowu
 	 */
 	private static Boolean sendToIp(GroupContext groupContext, String ip, Packet packet, ChannelContextFilter channelContextFilter, boolean isBlock) {
-		SetWithLock<ChannelContext> setWithLock = groupContext.ips.clients(groupContext, ip);
-		if (setWithLock == null) {
-			log.info("{}, 没有ip为[{}]的对端", groupContext.getName(), ip);
-			return false;
-		}
+		try {
+			SetWithLock<ChannelContext> setWithLock = groupContext.ips.clients(groupContext, ip);
+			if (setWithLock == null) {
+				log.info("{}, 没有ip为[{}]的对端", groupContext.getName(), ip);
+				return false;
+			}
+			Boolean ret = sendToSet(groupContext, setWithLock, packet, channelContextFilter, isBlock);
+			return ret;
+		} finally {
+			if (groupContext.isCluster() && !packet.isFromCluster()) {
+				TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
 
-		return sendToSet(groupContext, setWithLock, packet, channelContextFilter, isBlock);
+				if (tioClusterConfig.isCluster4ip()) {
+//					TioClusterVo tioClusterVo = new TioClusterVo(packet);
+//					tioClusterVo.setIp(ip);
+//					tioClusterConfig.publishAsyn(tioClusterVo);
+					
+					notifyClusterForIp(groupContext, ip, packet);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 在集群环境下，把IP消息通知到集群中的其它机器
+	 * @param groupContext
+	 * @param ip
+	 * @param packet
+	 */
+	public static void notifyClusterForIp(GroupContext groupContext, String ip, Packet packet) {
+		TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
+		TioClusterVo tioClusterVo = new TioClusterVo(packet);
+		tioClusterVo.setIp(ip);
+		tioClusterConfig.publishAsyn(tioClusterVo);
 	}
 
 	/**
@@ -735,6 +855,18 @@ public class Aio {
 	private static Boolean sendToId(GroupContext groupContext, String channelId, Packet packet, boolean isBlock) {
 		ChannelContext channelContext = Aio.getChannelContextById(groupContext, channelId);
 		if (channelContext == null) {
+			if (groupContext.isCluster() && !packet.isFromCluster()) {
+				TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
+
+				if (tioClusterConfig.isCluster4channelId()) {
+//					TioClusterVo tioClusterVo = new TioClusterVo(packet);
+//					tioClusterVo.setChannelId(channelId);
+//					tioClusterConfig.publishAsyn(tioClusterVo);
+					
+					notifyClusterForId(groupContext, channelId, packet);
+				}
+			}
+
 			return false;
 		}
 		if (isBlock) {
@@ -742,6 +874,19 @@ public class Aio {
 		} else {
 			return send(channelContext, packet);
 		}
+	}
+	
+	/**
+	 * 在集群环境下，把channelId消息通知到集群中的其它机器
+	 * @param groupContext
+	 * @param channelId
+	 * @param packet
+	 */
+	public static void notifyClusterForId(GroupContext groupContext, String channelId, Packet packet) {
+		TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
+		TioClusterVo tioClusterVo = new TioClusterVo(packet);
+		tioClusterVo.setChannelId(channelId);
+		tioClusterConfig.publishAsyn(tioClusterVo);
 	}
 
 	/**
@@ -920,8 +1065,31 @@ public class Aio {
 			}
 			return false;
 		} finally {
-			
+			if (groupContext.isCluster() && !packet.isFromCluster()) {
+				TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
+
+				if (tioClusterConfig.isCluster4user()) {
+//					TioClusterVo tioClusterVo = new TioClusterVo(packet);
+//					tioClusterVo.setUserid(userid);
+//					tioClusterConfig.publishAsyn(tioClusterVo);
+					
+					notifyClusterForUser(groupContext, userid, packet);
+				}
+			}
 		}
+	}
+	
+	/**
+	 * 在集群环境下，把userid消息通知到集群中的其它机器
+	 * @param groupContext
+	 * @param userid
+	 * @param packet
+	 */
+	public static void notifyClusterForUser(GroupContext groupContext, String userid, Packet packet) {
+		TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
+		TioClusterVo tioClusterVo = new TioClusterVo(packet);
+		tioClusterVo.setUserid(userid);
+		tioClusterConfig.publishAsyn(tioClusterVo);
 	}
 	
 	/**
@@ -964,8 +1132,31 @@ public class Aio {
 			}
 			return false;
 		} finally {
-			
+			if (groupContext.isCluster() && !packet.isFromCluster()) {
+				TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
+
+				if (tioClusterConfig.isCluster4user()) {
+//					TioClusterVo tioClusterVo = new TioClusterVo(packet);
+//					tioClusterVo.setToken(token);
+//					tioClusterConfig.publishAsyn(tioClusterVo);
+					
+					notifyClusterForToken(groupContext, token, packet);
+				}
+			}
 		}
+	}
+	
+	/**
+	 * 在集群环境下，把token消息通知到集群中的其它机器
+	 * @param groupContext
+	 * @param token
+	 * @param packet
+	 */
+	public static void notifyClusterForToken(GroupContext groupContext, String token, Packet packet) {
+		TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
+		TioClusterVo tioClusterVo = new TioClusterVo(packet);
+		tioClusterVo.setToken(token);
+		tioClusterConfig.publishAsyn(tioClusterVo);
 	}
 
 	/**
