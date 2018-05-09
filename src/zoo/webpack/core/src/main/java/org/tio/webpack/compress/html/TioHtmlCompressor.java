@@ -70,9 +70,9 @@ public class TioHtmlCompressor implements ResCompressor {
 		}
 	}
 
-	public void setOptions(HtmlOptions options) {
-		this.options = options;
-	}
+//	public static void setOptions(HtmlOptions options) {
+//		TioHtmlCompressor.options = options;
+//	}
 
 	/**
 	 * @param args

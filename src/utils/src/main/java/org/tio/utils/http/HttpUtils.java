@@ -89,7 +89,7 @@ public class HttpUtils {
 			if (mediaType == null) {
 				mediaType = MEDIATYPE_JSON_UTF8;
 			}
-			RequestBody body = RequestBody.create(MEDIATYPE_JSON_UTF8, bodyString);
+			RequestBody body = RequestBody.create(mediaType, bodyString);
 			builder.post(body);
 		} else { //提交form表单
 			FormBody.Builder formBodyBuilder = new FormBody.Builder();

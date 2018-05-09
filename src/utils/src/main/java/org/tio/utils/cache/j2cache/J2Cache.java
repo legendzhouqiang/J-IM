@@ -37,7 +37,7 @@ public class J2Cache implements ICache {
 	}
 
 	private static CacheChannel getChannel() {
-		CacheChannel cache = J2Cache.getChannel();
+		CacheChannel cache = net.oschina.j2cache.J2Cache.getChannel();
 		return cache;
 	}
 

@@ -261,8 +261,13 @@ public class AioClient {
 			CountDownLatch countDownLatch = new CountDownLatch(1);
 			attachment.setCountDownLatch(countDownLatch);
 			asynchronousSocketChannel.connect(inetSocketAddress, attachment, clientGroupContext.getConnectionCompletionHandler());
-			countDownLatch.await(realTimeout, TimeUnit.SECONDS);
-			return attachment.getChannelContext();
+			boolean f = countDownLatch.await(realTimeout, TimeUnit.SECONDS);
+			if (f) {
+				return attachment.getChannelContext();
+			} else {
+				log.error("countDownLatch.await(realTimeout, TimeUnit.SECONDS) 返回false ");
+				return attachment.getChannelContext();
+			}
 		} else {
 			asynchronousSocketChannel.connect(inetSocketAddress, attachment, clientGroupContext.getConnectionCompletionHandler());
 			return null;

@@ -2,7 +2,6 @@ package org.tio.utils.prop;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,16 +39,17 @@ public class MapWithLockPropSupport implements IPropSupport {
 	@Override
 	public void clearAttribute() {
 		initProps();
-		Lock lock = props.getLock().writeLock();
-		lock.lock();
-		try {
-			Map<String, Object> m = props.getObj();
-			m.clear();
-		} catch (Throwable e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
+		props.clear();
+//		Lock lock = props.getLock().writeLock();
+//		lock.lock();
+//		try {
+//			Map<String, Object> m = props.getObj();
+//			m.clear();
+//		} catch (Throwable e) {
+//			throw e;
+//		} finally {
+//			lock.unlock();
+//		}
 	}
 
 	/**
@@ -95,16 +95,17 @@ public class MapWithLockPropSupport implements IPropSupport {
 	@Override
 	public void removeAttribute(String key) {
 		initProps();
-		Lock lock = props.getLock().writeLock();
-		lock.lock();
-		try {
-			Map<String, Object> m = props.getObj();
-			m.remove(key);
-		} catch (Throwable e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
+		props.remove(key);
+//		Lock lock = props.getLock().writeLock();
+//		lock.lock();
+//		try {
+//			Map<String, Object> m = props.getObj();
+//			m.remove(key);
+//		} catch (Throwable e) {
+//			throw e;
+//		} finally {
+//			lock.unlock();
+//		}
 	}
 
 	/**
@@ -116,15 +117,17 @@ public class MapWithLockPropSupport implements IPropSupport {
 	@Override
 	public void setAttribute(String key, Object value) {
 		initProps();
-		Lock lock = props.getLock().writeLock();
-		lock.lock();
-		try {
-			Map<String, Object> m = props.getObj();
-			m.put(key, value);
-		} catch (Throwable e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
+		props.put(key, value);//.setObj(obj);
+		
+//		Lock lock = props.getLock().writeLock();
+//		lock.lock();
+//		try {
+//			Map<String, Object> m = props.getObj();
+//			m.put(key, value);
+//		} catch (Throwable e) {
+//			throw e;
+//		} finally {
+//			lock.unlock();
+//		}
 	}
 }

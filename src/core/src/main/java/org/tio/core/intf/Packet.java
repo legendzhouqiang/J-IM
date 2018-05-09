@@ -28,13 +28,13 @@ public class Packet implements java.io.Serializable, Cloneable {
 	private PacketListener packetListener;
 
 	private boolean isBlockSend = false;
-	
+
 	private Meta meta = null;
 
 	/**
 	 * 有些包是由很多个bytebuffer组成的，用于分包发送等操作
 	 */
-//	private boolean isFinished = true;
+	//	private boolean isFinished = true;
 
 	/**
 	 * 消息是否是另外一台机器通过topic转过来的，如果是就不要死循环地再一次转发啦
@@ -193,13 +193,13 @@ public class Packet implements java.io.Serializable, Cloneable {
 		this.isSslEncrypted = isSslEncrypted;
 	}
 
-//	public boolean isFinished() {
-//		return isFinished;
-//	}
-//
-//	public void setFinished(boolean isFinished) {
-//		this.isFinished = isFinished;
-//	}
+	//	public boolean isFinished() {
+	//		return isFinished;
+	//	}
+	//
+	//	public void setFinished(boolean isFinished) {
+	//		this.isFinished = isFinished;
+	//	}
 
 	//	public Packet getInitPacket() {
 	//		return initPacket;
@@ -208,7 +208,7 @@ public class Packet implements java.io.Serializable, Cloneable {
 	//	public void setInitPacket(Packet initPacket) {
 	//		this.initPacket = initPacket;
 	//	}
-	
+
 	public Meta getMeta() {
 		return meta;
 	}
@@ -220,20 +220,23 @@ public class Packet implements java.io.Serializable, Cloneable {
 	public static class Meta {
 		private Boolean isSentSuccess = new Boolean(false);
 		private CountDownLatch countDownLatch = null;
+
 		public Boolean getIsSentSuccess() {
 			return isSentSuccess;
 		}
+
 		public void setIsSentSuccess(Boolean isSentSuccess) {
 			this.isSentSuccess = isSentSuccess;
 		}
+
 		public CountDownLatch getCountDownLatch() {
 			return countDownLatch;
 		}
+
 		public void setCountDownLatch(CountDownLatch countDownLatch) {
 			this.countDownLatch = countDownLatch;
 		}
-		
-		
+
 	}
 
 }

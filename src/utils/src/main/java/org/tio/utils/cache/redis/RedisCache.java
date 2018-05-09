@@ -108,6 +108,7 @@ public class RedisCache implements ICache {
 		RBucket<Serializable> bucket = getBucket(key);
 		if (bucket == null) {
 			log.error("bucket is null, key:{}", key);
+			return null;
 		}
 		Serializable ret = bucket.get();
 		if (timeToIdleSeconds != null) {
