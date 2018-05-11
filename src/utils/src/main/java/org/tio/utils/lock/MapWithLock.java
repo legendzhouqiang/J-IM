@@ -53,9 +53,10 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * 
+	 * 如果key值已经存在，则不会把新value put进去
+	 * 如果key值不存在，此方法同put(key, value)
 	 * @param key
 	 * @param value
 	 * @return
@@ -72,7 +73,6 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 			} else {
 				return oldValue;
 			}
-			
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		} finally {
@@ -90,7 +90,7 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 		if (otherMap == null || otherMap.isEmpty()) {
 			return;
 		}
-		
+
 		WriteLock writeLock = this.getLock().writeLock();
 		writeLock.lock();
 		try {
@@ -159,7 +159,7 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @return

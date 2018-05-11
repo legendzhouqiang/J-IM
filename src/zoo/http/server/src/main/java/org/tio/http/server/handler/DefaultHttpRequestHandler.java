@@ -484,38 +484,40 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 			response = resp500(request, requestLine, e);//Resps.html(request, "500--服务器出了点故障", httpConfig.getCharset());
 			return response;
 		} finally {
-			if (response != null) {
-				long time = SystemTimer.currentTimeMillis();
-				long iv = time - start; //本次请求消耗的时间，单位：毫秒
-				try {
-					processCookieAfterHandler(request, requestLine, response);
-					if (httpServerInterceptor != null) {
+			long time = SystemTimer.currentTimeMillis();
+			long iv = time - start; //本次请求消耗的时间，单位：毫秒
+			try {
+				processCookieAfterHandler(request, requestLine, response);
+			} catch (Throwable e) {
+				logError(request, requestLine, e);
+			} finally {
+				if (httpServerInterceptor != null) {
+					try {
 						httpServerInterceptor.doAfterHandler(request, requestLine, response, iv);
+					} catch (Exception e) {
+						log.error(e.toString(), e);
 					}
-				} catch (Throwable e) {
-					logError(request, requestLine, e);
-				} finally {
+				}
+				try {
 					HttpServerUtils.gzip(request, response);
+				} catch (Exception e) {
+					log.error(e.toString(), e);
+				}
+				boolean f = statIpPath(request, response, path, iv);
+				if (!f) {
+					return null;
+				}
 
-					
-
-					/////////
-					boolean f = statIpPath(request, response, path, iv);
-					if (!f) {
-						return null;
-					}
-
-					f = statTokenPath(request, response, path, iv);
-					if (!f) {
-						return null;
-					}
+				f = statTokenPath(request, response, path, iv);
+				if (!f) {
+					return null;
 				}
 			}
 		}
 	}
 
 	/**
-	 * 
+	 * ipPathAccessStat and ipAccessStat
 	 * @param request
 	 * @param response
 	 * @param path
@@ -523,6 +525,10 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	 * @return
 	 */
 	private boolean statIpPath(HttpRequest request, HttpResponse response, String path, long iv) {
+		if (response == null) {
+			return false;
+		}
+		
 		if (response.isSkipIpStat() || request.isClosed()) {
 			return true;
 		}
@@ -557,9 +563,10 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 
 					if (cookie == null) {
 						ipPathAccessStat.noSessionCount.incrementAndGet();
-					} else {
-						ipAccessStat.sessionIds.add(cookie.getValue());
 					}
+//					else {
+//						ipAccessStat.sessionIds.add(cookie.getValue());
+//					}
 
 					IpPathAccessStatListener ipPathAccessStatListener = ipPathAccessStats.getListener(duration);
 					if (ipPathAccessStatListener != null) {
@@ -583,6 +590,10 @@ public class DefaultHttpRequestHandler implements HttpRequestHandler {
 	 * @return
 	 */
 	private boolean statTokenPath(HttpRequest request, HttpResponse response, String path, long iv) {
+		if (response == null) {
+			return false;
+		}
+		
 		if (response.isSkipTokenStat() || request.isClosed()) {
 			return true;
 		}

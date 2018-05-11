@@ -29,6 +29,9 @@ public class IpAccessStat implements Serializable {
 	
 	private Long durationType;
 	
+	/**
+	 * 这个ip下的所有sessionid
+	 */
 	public final SetWithLock<String> sessionIds = new SetWithLock<>(new HashSet<>());
 	
 	/**
