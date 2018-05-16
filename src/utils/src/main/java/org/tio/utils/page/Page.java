@@ -1,7 +1,10 @@
 package org.tio.utils.page;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.tio.utils.convert.Converter;
 
 /**
  *
@@ -23,14 +26,28 @@ public class Page<T> implements Serializable {
 
 	/**
 	 *
-	 * @param pageData
+	 * @param list
 	 * @param pageIndex
 	 * @param pageSize
 	 * @param recordCount
 	 * @author tanyaowu
 	 */
-	public Page(List<T> pageData, Integer pageNumber, Integer pageSize, Integer totalRow) {
-		this.list = pageData;
+	public Page(List<T> list, Integer pageNumber, Integer pageSize, Integer totalRow) {
+		this.list = list;
+		this.pageNumber = pageNumber;
+		this.pageSize = pageSize;
+		this.totalRow = totalRow;
+	}
+
+	public Page(List<?> list, Integer pageNumber, Integer pageSize, Integer totalRow, Converter<T> converter) {
+		if (list != null && list.size() > 0 && converter != null) {
+			this.list = new ArrayList<>(list.size());
+			for (Object object : list) {
+				T t = converter.convert(object);
+				this.list.add(t);
+			}
+		}
+
 		this.pageNumber = pageNumber;
 		this.pageSize = pageSize;
 		this.totalRow = totalRow;
@@ -69,7 +86,7 @@ public class Page<T> implements Serializable {
 	}
 
 	public Integer getTotalPage() {
-		Double result = Math.ceil(((double)(totalRow) /pageSize));
+		Double result = Math.ceil(((double) (totalRow) / pageSize));
 		totalPage = result.intValue();
 		return totalPage;
 	}
@@ -81,8 +98,13 @@ public class Page<T> implements Serializable {
 	public boolean isFirstPage() {
 		return pageNumber <= 1;
 	}
-	
+
 	public boolean isLastPage() {
 		return pageNumber >= getTotalPage();
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Page [list=%s, pageNumber=%s, pageSize=%s, totalRow=%s, totalPage=%s]", getList(), getPageNumber(), getPageSize(), getTotalRow(), getTotalPage());
 	}
 }

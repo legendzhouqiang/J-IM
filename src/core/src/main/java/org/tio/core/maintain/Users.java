@@ -53,7 +53,7 @@ public class Users {
 			Map<String, SetWithLock<ChannelContext>> map = mapWithLock.getObj();
 			SetWithLock<ChannelContext> setWithLock = map.get(key);
 			if (setWithLock == null) {
-				setWithLock = new SetWithLock<>(new HashSet<>());
+				setWithLock = new SetWithLock<>(new HashSet<ChannelContext>());
 				map.put(key, setWithLock);
 			}
 			setWithLock.add(channelContext);

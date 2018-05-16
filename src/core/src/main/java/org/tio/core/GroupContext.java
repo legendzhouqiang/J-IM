@@ -61,6 +61,8 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 
 	private PacketHandlerMode packetHandlerMode = PacketHandlerMode.SINGLE_THREAD;//.queue;
 
+	
+	
 	/**
 	 * 接收数据的buffer size
 	 */

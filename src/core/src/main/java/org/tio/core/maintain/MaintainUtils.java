@@ -1,5 +1,10 @@
 package org.tio.core.maintain;
 
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +76,20 @@ public class MaintainUtils {
 		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		}
+	}
+
+	/**
+	 * 
+	 * @param groupContext
+	 * @return
+	 */
+	public static Set<ChannelContext> createSet(Comparator<ChannelContext> comparator) {
+		if (comparator == null) {
+			return new HashSet<ChannelContext>();
+		} else {
+			return new TreeSet<ChannelContext>(comparator);
+		}
+		
 	}
 
 }

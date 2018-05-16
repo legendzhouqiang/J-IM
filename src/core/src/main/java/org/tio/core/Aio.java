@@ -17,6 +17,7 @@ import org.tio.core.cluster.TioClusterVo;
 import org.tio.core.intf.Packet;
 import org.tio.core.intf.Packet.Meta;
 import org.tio.core.task.SendRunnable;
+import org.tio.utils.convert.Converter;
 import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.lock.SetWithLock;
 import org.tio.utils.page.Page;
@@ -415,6 +416,19 @@ public class Aio {
 		SetWithLock<ChannelContext> setWithLock = Aio.getAllChannelContexts(groupContext);
 		return PageUtils.fromSetWithLock(setWithLock, pageIndex, pageSize);
 	}
+	
+	/**
+	 * 
+	 * @param groupContext
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param converter
+	 * @return
+	 */
+	public static <T> Page<T> getPageOfAll(GroupContext groupContext, Integer pageIndex, Integer pageSize, Converter<T> converter) {
+		SetWithLock<ChannelContext> setWithLock = Aio.getAllChannelContexts(groupContext);
+		return PageUtils.fromSetWithLock(setWithLock, pageIndex, pageSize, converter);
+	}
 
 	/**
 	 * 这个方法是给服务器端用的
@@ -427,6 +441,19 @@ public class Aio {
 	public static Page<ChannelContext> getPageOfConnecteds(GroupContext groupContext, Integer pageIndex, Integer pageSize) {
 		SetWithLock<ChannelContext> setWithLock = Aio.getAllConnectedsChannelContexts(groupContext);
 		return PageUtils.fromSetWithLock(setWithLock, pageIndex, pageSize);
+	}
+	
+	/**
+	 * 
+	 * @param groupContext
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param converter
+	 * @return
+	 */
+	public static <T> Page<T> getPageOfConnecteds(GroupContext groupContext, Integer pageIndex, Integer pageSize, Converter<T> converter) {
+		SetWithLock<ChannelContext> setWithLock = Aio.getAllConnectedsChannelContexts(groupContext);
+		return PageUtils.fromSetWithLock(setWithLock, pageIndex, pageSize, converter);
 	}
 
 	/**
@@ -441,6 +468,20 @@ public class Aio {
 	public static Page<ChannelContext> getPageOfGroup(GroupContext groupContext, String group, Integer pageIndex, Integer pageSize) {
 		SetWithLock<ChannelContext> setWithLock = Aio.getChannelContextsByGroup(groupContext, group);
 		return PageUtils.fromSetWithLock(setWithLock, pageIndex, pageSize);
+	}
+	
+	/**
+	 * 
+	 * @param groupContext
+	 * @param group
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param converter
+	 * @return
+	 */
+	public static <T> Page<T> getPageOfGroup(GroupContext groupContext, String group, Integer pageIndex, Integer pageSize, Converter<T> converter) {
+		SetWithLock<ChannelContext> setWithLock = Aio.getChannelContextsByGroup(groupContext, group);
+		return PageUtils.fromSetWithLock(setWithLock, pageIndex, pageSize, converter);
 	}
 
 	/**

@@ -39,29 +39,32 @@ public class FreemarkerConfig {
 
 	private String[] suffixes = null;
 
-	public FreemarkerConfig(HttpConfig httpConfig, ModelGenerator modelGenerator, String[] suffixes) throws IOException {
+	private ConfigurationCreater configurationCreater;
+
+	public FreemarkerConfig(HttpConfig httpConfig, ModelGenerator modelGenerator, String[] suffixes, ConfigurationCreater configurationCreater) throws IOException {
 		super();
-		
+		this.configurationCreater = configurationCreater;
+
 		File pageRoot = httpConfig.getPageRoot();
 		if (pageRoot == null || !pageRoot.exists()) {
 			throw new IOException("没有配置pageRoot");
 		}
-		
+
 		httpConfig.setFreemarkerConfig(this);
-		
+
 		this.httpConfig = httpConfig;
 		this.modelGenerator = modelGenerator;
 		this.setSuffixes(suffixes);
-		
+
 		this.configuration = createConfiguration(httpConfig, pageRoot);
-		
+
 		Map<String, File> domainPageMap = httpConfig.getDomainPageMap();
 		if (domainPageMap != null && domainPageMap.size() > 0) {
 			Set<Entry<String, File>> set = domainPageMap.entrySet();
 			for (Entry<String, File> entry : set) {
 				String domain = entry.getKey();
 				File file = entry.getValue();
-//				Configuration cfg = createConfiguration(httpConfig, file);
+				//				Configuration cfg = createConfiguration(httpConfig, file);
 				addDomainConfiguration(domain, file);
 			}
 		}
@@ -78,11 +81,16 @@ public class FreemarkerConfig {
 		if (httpConfig.getPageRoot() == null) {
 			return null;
 		}
+		
+		if (configurationCreater != null) {
+			return configurationCreater.createConfiguration(httpConfig, root);
+		}
+		
 		Configuration cfg = new Configuration(Configuration.getVersion());
 		cfg.setDirectoryForTemplateLoading(root);
 		cfg.setDefaultEncoding(httpConfig.getCharset());
 		cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-		cfg.setLogTemplateExceptions(true);
+		cfg.setLogTemplateExceptions(false);
 		cfg.setWrapUncheckedExceptions(true);
 		cfg.setTemplateExceptionHandler(ShortMessageTemplateExceptionHandler.me);
 		return cfg;
@@ -113,7 +121,7 @@ public class FreemarkerConfig {
 				return cfg;
 			}
 		}
-		
+
 		domainConfMap.put(domain, configuration);
 		return configuration;
 	}
@@ -127,7 +135,7 @@ public class FreemarkerConfig {
 	public void addDomainConfiguration(String domain, String pageRoot) throws IOException {
 		addDomainConfiguration(domain, HttpConfig.fromPath(pageRoot));
 	}
-	
+
 	/**
 	 * 
 	 * @param domain
@@ -147,9 +155,9 @@ public class FreemarkerConfig {
 		domainConfMap.put(domain, configuration);
 	}
 
-//	public Configuration getConfiguration() {
-//		return configuration;
-//	}
+	//	public Configuration getConfiguration() {
+	//		return configuration;
+	//	}
 
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
@@ -167,7 +175,7 @@ public class FreemarkerConfig {
 	 * 
 	 * @author tanyaowu
 	 */
-	public FreemarkerConfig() {
+	private FreemarkerConfig() {
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package org.tio.core.maintain;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,12 @@ import org.tio.utils.lock.SetWithLock;
  * 2017年10月19日 上午9:40:21
  */
 public class Groups {
+	
+	/**
+	 * 对ChannelContext进行排序的比较器
+	 * 该对象必须在服务启动前进行设置，并且不要再去修改，否则会导致有的排序了，有的没有排序
+	 */
+	private Comparator<ChannelContext> channelContextComparator = null;
 
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(Groups.class);
@@ -61,7 +68,7 @@ public class Groups {
 			Map<String, SetWithLock<ChannelContext>> map = groupmap.getObj();
 			channelContexts = map.get(groupid);
 			if (channelContexts == null) {
-				channelContexts = new SetWithLock<>(new HashSet<ChannelContext>());
+				channelContexts = new SetWithLock<>(MaintainUtils.createSet(channelContextComparator));
 				map.put(groupid, channelContexts);
 			}
 		} catch (Throwable e) {
@@ -249,5 +256,13 @@ public class Groups {
 				}
 			}
 		}
+	}
+
+	public Comparator<ChannelContext> getChannelContextComparator() {
+		return channelContextComparator;
+	}
+
+	public void setChannelContextComparator(Comparator<ChannelContext> channelContextComparator) {
+		this.channelContextComparator = channelContextComparator;
 	}
 }
