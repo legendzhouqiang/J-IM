@@ -29,6 +29,4 @@
 - [t-io成功案例](https://t-io.org/case/index.html "t-io成功案例")
 - [t-io官网访问统计](https://t-io.org/stat/index.html "t-io官网访问统计")
 - [tio-websocket文档](https://t-io.org/blog/index.html?p=%2Fblog%2Ftio%2Fws%2Fshowcase.html "tio-websocket文档")
-- [t-io受捐列表](https://t-io.org/donation/index.html "t-io受捐列表")
-
 
