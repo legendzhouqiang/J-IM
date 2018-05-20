@@ -21,10 +21,12 @@ public abstract class ShowcaseAbsAioHandler implements AioHandler {
 	 */
 	@Override
 	public ShowcasePacket decode(ByteBuffer buffer, int limit, int position, int readableLength, ChannelContext channelContext) throws AioDecodeException {
+		//可读数据，小于头部的固定长度，直接返回null，这样tio框架会自动把本次收到的数据暂存起来，并和下次收到的数据组合起来
 		if (readableLength < ShowcasePacket.HEADER_LENGHT) {
 			return null;
 		}
 
+		//position的值不一定是0，但是
 		//消息类型
 		byte type = buffer.get();
 
