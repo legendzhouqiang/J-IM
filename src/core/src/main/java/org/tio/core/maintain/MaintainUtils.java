@@ -42,10 +42,14 @@ public class MaintainUtils {
 		try {
 			//id解绑
 			groupContext.ids.unbind(channelContext);
-
-			close(channelContext);
 		} catch (Throwable e1) {
 			log.error(e1.toString(), e1);
+		}
+		
+		try {
+			close(channelContext);
+		} catch (Throwable e) {
+			log.error(e.toString(), e);
 		}
 	}
 

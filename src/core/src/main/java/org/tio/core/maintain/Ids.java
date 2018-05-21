@@ -1,8 +1,6 @@
 package org.tio.core.maintain;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
 
 import org.apache.commons.lang3.StringUtils;
 import org.tio.core.ChannelContext;
@@ -17,7 +15,7 @@ import org.tio.utils.lock.MapWithLock;
 public class Ids {
 
 	/**
-	 * key: id
+	 * key: ChannelContext对象的id字段
 	 * value: ChannelContext
 	 */
 	private MapWithLock<String, ChannelContext> map = new MapWithLock<>(new HashMap<String, ChannelContext>());
@@ -37,17 +35,18 @@ public class Ids {
 		if (StringUtils.isBlank(key)) {
 			return;
 		}
-		Lock lock = map.getLock().writeLock();
-		lock.lock();
-		try {
-			Map<String, ChannelContext> m = map.getObj();
-			m.put(key, channelContext);
-			//			channelContext.setId(id);
-		} catch (Throwable e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
+		map.put(key, channelContext);
+//		Lock lock = map.getLock().writeLock();
+//		lock.lock();
+//		try {
+//			Map<String, ChannelContext> m = map.getObj();
+//			m.put(key, channelContext);
+//			//			channelContext.setId(id);
+//		} catch (Throwable e) {
+//			throw e;
+//		} finally {
+//			lock.unlock();
+//		}
 	}
 
 	/**
@@ -64,17 +63,19 @@ public class Ids {
 		if (StringUtils.isBlank(id)) {
 			return null;
 		}
-		String key = id;
-		Lock lock = map.getLock().readLock();
-		lock.lock();
-		try {
-			Map<String, ChannelContext> m = map.getObj();
-			return m.get(key);
-		} catch (Throwable e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
+		
+		return map.get(id);
+//		String key = id;
+//		Lock lock = map.getLock().readLock();
+//		lock.lock();
+//		try {
+//			Map<String, ChannelContext> m = map.getObj();
+//			return m.get(key);
+//		} catch (Throwable e) {
+//			throw e;
+//		} finally {
+//			lock.unlock();
+//		}
 	}
 
 	/**
@@ -99,15 +100,17 @@ public class Ids {
 		if (StringUtils.isBlank(key)) {
 			return;
 		}
-		Lock lock = map.getLock().writeLock();
-		lock.lock();
-		try {
-			Map<String, ChannelContext> m = map.getObj();
-			m.remove(key);
-		} catch (Throwable e) {
-			throw e;
-		} finally {
-			lock.unlock();
-		}
+		map.remove(key);
+		
+//		Lock lock = map.getLock().writeLock();
+//		lock.lock();
+//		try {
+//			Map<String, ChannelContext> m = map.getObj();
+//			m.remove(key);
+//		} catch (Throwable e) {
+//			throw e;
+//		} finally {
+//			lock.unlock();
+//		}
 	}
 }

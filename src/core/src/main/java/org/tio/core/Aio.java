@@ -1,7 +1,6 @@
 package org.tio.core;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -105,26 +104,32 @@ public class Aio {
 	 * @author: tanyaowu
 	 */
 	public static boolean isInGroup(String group, ChannelContext channelContext) {
-		MapWithLock<ChannelContext, SetWithLock<String>> mapWithLock = 
-				channelContext.getGroupContext().groups.getChannelmap();
-		ReadLock lock = mapWithLock.getLock().readLock();
-		lock.lock();
-		try {
-			Map<ChannelContext, SetWithLock<String>> m = mapWithLock.getObj();
-			if (m == null || m.size() == 0) {
-				return false;
-			}
-			SetWithLock<String> set = m.get(channelContext);
-			if (set == null) {
-				return false;
-			}
-			return set.getObj().contains(group);
-		} catch (Throwable e) {
-			log.error(e.toString(), e);
+		SetWithLock<String> set = channelContext.getGroups();
+		if (set == null) {
 			return false;
-		} finally {
-			lock.unlock();
-		}
+		} 
+		return set.getObj().contains(group);
+//		
+//		MapWithLock<ChannelContext, SetWithLock<String>> mapWithLock = 
+//				channelContext.getGroupContext().groups.getChannelmap();
+//		ReadLock lock = mapWithLock.getLock().readLock();
+//		lock.lock();
+//		try {
+//			Map<ChannelContext, SetWithLock<String>> m = mapWithLock.getObj();
+//			if (m == null || m.size() == 0) {
+//				return false;
+//			}
+//			SetWithLock<String> set = m.get(channelContext);
+//			if (set == null) {
+//				return false;
+//			}
+//			return set.getObj().contains(group);
+//		} catch (Throwable e) {
+//			log.error(e.toString(), e);
+//			return false;
+//		} finally {
+//			lock.unlock();
+//		}
 	}
 
 	/**

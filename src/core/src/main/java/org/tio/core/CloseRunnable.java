@@ -11,6 +11,7 @@ import org.tio.client.ReconnConf;
 import org.tio.core.intf.AioListener;
 import org.tio.core.maintain.MaintainUtils;
 import org.tio.core.ssl.SslUtils;
+import org.tio.server.ServerChannelContext;
 import org.tio.utils.SystemTimer;
 
 /**
@@ -78,18 +79,19 @@ public class CloseRunnable implements Runnable {
 				log.error(e.toString(), e);
 			}
 
+			boolean isServerChannelContext = channelContext instanceof ServerChannelContext;
 			boolean isClientChannelContext = channelContext instanceof ClientChannelContext;
 			//			ReconnConf reconnConf = channelContext.getGroupContext().getReconnConf();
 			boolean isRemove = this.isNeedRemove;
 			if (!isRemove) {
-				if (isClientChannelContext) {
+				if (isServerChannelContext) {
+					isRemove = true;
+				} else {
 					ClientChannelContext clientChannelContext = (ClientChannelContext) channelContext;
 
 					if (!ReconnConf.isNeedReconn(clientChannelContext, false)) {
 						isRemove = true;
 					}
-				} else {
-					isRemove = true;
 				}
 			}
 

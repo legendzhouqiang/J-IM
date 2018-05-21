@@ -26,6 +26,7 @@ import org.tio.core.task.HandlerRunnable;
 import org.tio.core.task.SendRunnable;
 import org.tio.server.ServerGroupContext;
 import org.tio.utils.json.Json;
+import org.tio.utils.lock.SetWithLock;
 import org.tio.utils.prop.MapWithLockPropSupport;
 
 import cn.hutool.core.date.DatePattern;
@@ -97,6 +98,11 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 	private Node serverNode;
 
 	private Logger traceSynPacketLog = LoggerFactory.getLogger("tio-client-trace-syn-log");
+	
+	/**
+	 * 该连接在哪些组中
+	 */
+	private SetWithLock<String> groups = null;
 
 	/**
 	 *
@@ -631,6 +637,14 @@ public abstract class ChannelContext extends MapWithLockPropSupport {
 
 	public void setPacketNeededLength(Integer packetNeededLength) {
 		this.packetNeededLength = packetNeededLength;
+	}
+
+	public SetWithLock<String> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(SetWithLock<String> groups) {
+		this.groups = groups;
 	}
 
 }

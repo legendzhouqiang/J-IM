@@ -26,7 +26,7 @@ public class Tokens {
 
 	/**
 	 * key: token
-	 * value: ChannelContext
+	 * value: SetWithLock<ChannelContext>
 	 */
 	private MapWithLock<String, SetWithLock<ChannelContext>> mapWithLock = new MapWithLock<>(new HashMap<String, SetWithLock<ChannelContext>>());
 

@@ -1,8 +1,8 @@
 package org.tio.core.maintain;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +14,7 @@ import org.tio.utils.lock.MapWithLock;
 import org.tio.utils.lock.SetWithLock;
 
 /**
- * 
+ * 该维护只在Server侧有
  * @author tanyaowu 
  * 2017年10月19日 上午9:40:27
  */
@@ -25,9 +25,9 @@ public class Ips {
 
 	/** 一个IP有哪些客户端
 	 * key: ip
-	 * value: Set<ChannelContext>
+	 * value: SetWithLock<ChannelContext>
 	 */
-	private MapWithLock<String, SetWithLock<ChannelContext>> ipmap = new MapWithLock<>(new ConcurrentHashMap<String, SetWithLock<ChannelContext>>());
+	private MapWithLock<String, SetWithLock<ChannelContext>> ipmap = new MapWithLock<>(new HashMap<String, SetWithLock<ChannelContext>>());
 
 	/**
 	 * 和ip绑定
@@ -64,6 +64,7 @@ public class Ips {
 				channelContexts = new SetWithLock<>(new HashSet<ChannelContext>());
 				map.put(ip, channelContexts);
 			}
+			channelContexts.add(channelContext);
 		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
@@ -71,15 +72,15 @@ public class Ips {
 		}
 
 		//		if (channelContexts != null) {
-		Lock lock11 = channelContexts.getLock().writeLock();
-		lock11.lock();
-		try {
-			channelContexts.getObj().add(channelContext);
-		} catch (Throwable e) {
-			log.error(e.toString(), e);
-		} finally {
-			lock11.unlock();
-		}
+//		Lock lock11 = channelContexts.getLock().writeLock();
+//		lock11.lock();
+//		try {
+//			channelContexts.getObj().add(channelContext);
+//		} catch (Throwable e) {
+//			log.error(e.toString(), e);
+//		} finally {
+//			lock11.unlock();
+//		}
 		//		}
 
 	}
