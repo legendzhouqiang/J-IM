@@ -4,7 +4,7 @@
 	<groupId>org.t-io</groupId>
 	<artifactId>tio-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>2.4.0.v20180508-RELEASE</version>
+	<version>3.0.0.v20180520-RELEASE</version>
 	<name>${project.artifactId}</name>
 	<url>http://maven.apache.org</url>
 
@@ -34,7 +34,7 @@
 	</modules>
 
 	<properties>
-		<tio-utils.version>2.4.0.v20180508-RELEASE</tio-utils.version>
+		<tio-utils.version>3.0.0.v20180520-RELEASE</tio-utils.version>
 		<tio-core.version>${tio-utils.version}</tio-core.version>
 		<tio-flash-policy-server.version>${tio-utils.version}</tio-flash-policy-server.version>
 

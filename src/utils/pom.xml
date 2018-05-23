@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.t-io</groupId>
 		<artifactId>tio-parent</artifactId>
-		<version>2.4.0.v20180508-RELEASE</version>
+		<version>3.0.0.v20180520-RELEASE</version>
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 
