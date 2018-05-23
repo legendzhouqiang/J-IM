@@ -143,7 +143,7 @@ public class ServerGroupContext extends GroupContext {
 					Set<ChannelContext> set = null;
 					long start1 = 0;
 					int count = 0;
-					ReadLock readLock = objWithLock.getLock().readLock();
+					ReadLock readLock = objWithLock.readLock();
 					readLock.lock();
 					try {
 						start1 = SystemTimer.currentTimeMillis();

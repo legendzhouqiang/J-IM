@@ -112,7 +112,7 @@ public class Aio {
 //		
 //		MapWithLock<ChannelContext, SetWithLock<String>> mapWithLock = 
 //				channelContext.getGroupContext().groups.getChannelmap();
-//		ReadLock lock = mapWithLock.getLock().readLock();
+//		ReadLock lock = mapWithLock.readLock();
 //		lock.lock();
 //		try {
 //			Map<ChannelContext, SetWithLock<String>> m = mapWithLock.getObj();
@@ -508,7 +508,7 @@ public class Aio {
 	 */
 	public static void remove(GroupContext groupContext, String ip, String remark) {
 		SetWithLock<ChannelContext> setWithLock = Aio.getAllChannelContexts(groupContext);
-		Lock lock2 = setWithLock.getLock().readLock();
+		Lock lock2 = setWithLock.readLock();
 		lock2.lock();
 		try {
 			Set<ChannelContext> set = setWithLock.getObj();
@@ -970,7 +970,7 @@ public class Aio {
 		//		}
 
 		boolean releasedLock = false;
-		Lock lock = setWithLock.getLock().readLock();
+		Lock lock = setWithLock.readLock();
 		lock.lock();
 		try {
 			Set<ChannelContext> set = setWithLock.getObj();
@@ -1086,7 +1086,7 @@ public class Aio {
 				return false;
 			}
 			
-			ReadLock readLock = setWithLock.getLock().readLock();
+			ReadLock readLock = setWithLock.readLock();
 			readLock.lock();
 			try {
 				Set<ChannelContext> set = setWithLock.getObj();
@@ -1153,7 +1153,7 @@ public class Aio {
 				return false;
 			}
 			
-			ReadLock readLock = setWithLock.getLock().readLock();
+			ReadLock readLock = setWithLock.readLock();
 			readLock.lock();
 			try {
 				Set<ChannelContext> set = setWithLock.getObj();

@@ -55,7 +55,7 @@ public class Ips {
 		}
 		
 		SetWithLock<ChannelContext> channelContexts = null;//ipmap.getObj().get(ip);
-		Lock lock1 = ipmap.getLock().writeLock();
+		Lock lock1 = ipmap.writeLock();
 		lock1.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> map = ipmap.getObj();
@@ -72,7 +72,7 @@ public class Ips {
 		}
 
 		//		if (channelContexts != null) {
-//		Lock lock11 = channelContexts.getLock().writeLock();
+//		Lock lock11 = channelContexts.writeLock();
 //		lock11.lock();
 //		try {
 //			channelContexts.getObj().add(channelContext);
@@ -140,12 +140,12 @@ public class Ips {
 
 		SetWithLock<ChannelContext> channelContexts = ipmap.getObj().get(ip);
 		if (channelContexts != null) {
-			Lock lock1 = channelContexts.getLock().writeLock();
+			Lock lock1 = channelContexts.writeLock();
 			lock1.lock();
 			try {
 				channelContexts.getObj().remove(channelContext);
 				if (channelContexts.getObj().size() == 0) {
-					Lock lock2 = ipmap.getLock().writeLock();
+					Lock lock2 = ipmap.writeLock();
 					lock2.lock();
 					try {
 						ipmap.getObj().remove(ip);

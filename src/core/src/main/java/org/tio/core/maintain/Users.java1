@@ -38,7 +38,7 @@ public class Users {
 			return;
 		}
 		String key = userid;
-		Lock lock = map.getLock().writeLock();
+		Lock lock = map.writeLock();
 		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 
 		try {
@@ -67,7 +67,7 @@ public class Users {
 			return null;
 		}
 		String key = userid;
-		Lock lock = map.getLock().readLock();
+		Lock lock = map.readLock();
 		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 
 		try {
@@ -98,7 +98,7 @@ public class Users {
 			return;
 		}
 
-		Lock lock = map.getLock().writeLock();
+		Lock lock = map.writeLock();
 		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 		try {
 			lock.lock();
@@ -125,7 +125,7 @@ public class Users {
 			return null;
 		}
 
-		Lock lock = map.getLock().writeLock();
+		Lock lock = map.writeLock();
 		DualHashBidiMap<String, ChannelContext> m = map.getObj();
 		try {
 			lock.lock();

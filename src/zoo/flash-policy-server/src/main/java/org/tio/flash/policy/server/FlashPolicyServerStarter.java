@@ -102,7 +102,7 @@ public class FlashPolicyServerStarter {
 
 				ObjWithLock<Set<ChannelContext>> objWithLock = serverGroupContext.connecteds;
 				Set<ChannelContext> set = null;
-				ReadLock readLock = objWithLock.getLock().readLock();
+				ReadLock readLock = objWithLock.readLock();
 				readLock.lock();
 				try {
 					long now = SystemTimer.currentTimeMillis();

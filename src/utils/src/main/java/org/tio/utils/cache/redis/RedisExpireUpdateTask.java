@@ -54,7 +54,7 @@ public class RedisExpireUpdateTask {
 			@Override
 			public void run() {
 				while (true) {
-					WriteLock writeLock = setWithLock.getLock().writeLock();
+					WriteLock writeLock = setWithLock.writeLock();
 					writeLock.lock();
 					try {
 						Set<ExpireVo> set = setWithLock.getObj();

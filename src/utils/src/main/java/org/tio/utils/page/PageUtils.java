@@ -153,7 +153,7 @@ public class PageUtils {
 //		if (setWithLock == null) {
 //			return null;
 //		}
-//		Lock lock = setWithLock.getLock().readLock();
+//		Lock lock = setWithLock.readLock();
 //		lock.lock();
 //		try {
 //			Set<T> set = setWithLock.getObj();
@@ -170,7 +170,7 @@ public class PageUtils {
 		if (setWithLock == null) {
 			return null;
 		}
-		Lock lock = setWithLock.getLock().readLock();
+		Lock lock = setWithLock.readLock();
 		lock.lock();
 		try {
 			@SuppressWarnings("unchecked")

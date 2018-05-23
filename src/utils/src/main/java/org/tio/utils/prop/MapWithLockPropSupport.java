@@ -40,7 +40,7 @@ public class MapWithLockPropSupport implements IPropSupport {
 	public void clearAttribute() {
 		initProps();
 		props.clear();
-//		Lock lock = props.getLock().writeLock();
+//		Lock lock = props.writeLock();
 //		lock.lock();
 //		try {
 //			Map<String, Object> m = props.getObj();
@@ -65,7 +65,7 @@ public class MapWithLockPropSupport implements IPropSupport {
 		Object ret = m.get(key);
 		return ret;
 
-		//		Lock lock = props.getLock().readLock();
+		//		Lock lock = props.readLock();
 		//		Map<String, Object> m = props.getObj();
 		//		try {
 		//			lock.lock();
@@ -96,7 +96,7 @@ public class MapWithLockPropSupport implements IPropSupport {
 	public void removeAttribute(String key) {
 		initProps();
 		props.remove(key);
-//		Lock lock = props.getLock().writeLock();
+//		Lock lock = props.writeLock();
 //		lock.lock();
 //		try {
 //			Map<String, Object> m = props.getObj();
@@ -119,7 +119,7 @@ public class MapWithLockPropSupport implements IPropSupport {
 		initProps();
 		props.put(key, value);//.setObj(obj);
 		
-//		Lock lock = props.getLock().writeLock();
+//		Lock lock = props.writeLock();
 //		lock.lock();
 //		try {
 //			Map<String, Object> m = props.getObj();

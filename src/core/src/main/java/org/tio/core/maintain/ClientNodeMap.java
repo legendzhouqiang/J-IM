@@ -51,7 +51,7 @@ public class ClientNodeMap {
 	 * @author tanyaowu
 	 */
 	public ChannelContext find(String key) {
-		Lock lock = map.getLock().readLock();
+		Lock lock = map.readLock();
 		lock.lock();
 		try {
 			DualHashBidiMap<String, ChannelContext> m = map.getObj();
@@ -90,7 +90,7 @@ public class ClientNodeMap {
 	 * @author tanyaowu
 	 */
 	public void put(ChannelContext channelContext) {
-		Lock lock = map.getLock().writeLock();
+		Lock lock = map.writeLock();
 		lock.lock();
 		try {
 			String key = getKey(channelContext);
@@ -109,7 +109,7 @@ public class ClientNodeMap {
 	 * @author tanyaowu
 	 */
 	public void remove(ChannelContext channelContext) {
-		Lock lock = map.getLock().writeLock();
+		Lock lock = map.writeLock();
 		lock.lock();
 		try {
 			DualHashBidiMap<String, ChannelContext> m = map.getObj();

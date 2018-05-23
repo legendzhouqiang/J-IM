@@ -36,7 +36,7 @@ public class Ids {
 			return;
 		}
 		map.put(key, channelContext);
-//		Lock lock = map.getLock().writeLock();
+//		Lock lock = map.writeLock();
 //		lock.lock();
 //		try {
 //			Map<String, ChannelContext> m = map.getObj();
@@ -66,7 +66,7 @@ public class Ids {
 		
 		return map.get(id);
 //		String key = id;
-//		Lock lock = map.getLock().readLock();
+//		Lock lock = map.readLock();
 //		lock.lock();
 //		try {
 //			Map<String, ChannelContext> m = map.getObj();
@@ -102,7 +102,7 @@ public class Ids {
 		}
 		map.remove(key);
 		
-//		Lock lock = map.getLock().writeLock();
+//		Lock lock = map.writeLock();
 //		lock.lock();
 //		try {
 //			Map<String, ChannelContext> m = map.getObj();

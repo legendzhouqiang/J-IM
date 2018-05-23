@@ -40,7 +40,7 @@ public class IpBlacklist {
 	
 	public boolean add(String ip) {
 		//先添加到黑名单列表
-//		Lock lock = setWithLock.getLock().writeLock();
+//		Lock lock = setWithLock.writeLock();
 //		try {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
@@ -62,7 +62,7 @@ public class IpBlacklist {
 	}
 
 	public void clear() {
-//		Lock lock = setWithLock.getLock().writeLock();
+//		Lock lock = setWithLock.writeLock();
 //		try {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
@@ -77,7 +77,7 @@ public class IpBlacklist {
 	}
 
 	public Collection<String> getAll() {
-//		Lock lock = setWithLock.getLock().readLock();
+//		Lock lock = setWithLock.readLock();
 //		try {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
@@ -109,7 +109,7 @@ public class IpBlacklist {
 	 * @author tanyaowu
 	 */
 	public boolean isInBlacklist(String ip) {
-//		Lock lock = setWithLock.getLock().readLock();
+//		Lock lock = setWithLock.readLock();
 //		try {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
@@ -130,7 +130,7 @@ public class IpBlacklist {
 	 * @author: tanyaowu
 	 */
 	public void remove(String ip) {
-//		Lock lock = setWithLock.getLock().writeLock();
+//		Lock lock = setWithLock.writeLock();
 //		try {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();
@@ -145,7 +145,7 @@ public class IpBlacklist {
 	}
 
 //	public int size() {
-//		Lock lock = setWithLock.getLock().readLock();
+//		Lock lock = setWithLock.readLock();
 //		try {
 //			lock.lock();
 //			Set<String> m = setWithLock.getObj();

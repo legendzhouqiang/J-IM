@@ -2,6 +2,8 @@ package org.tio.utils.lock;
 
 import java.io.Serializable;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 /**
  * 自带读写锁的对象.
@@ -47,6 +49,22 @@ public class ObjWithLock<T> implements Serializable {
 	 */
 	public ReentrantReadWriteLock getLock() {
 		return lock;
+	}
+	
+	/**
+	 * 获取写锁
+	 * @return
+	 */
+	public WriteLock writeLock() {
+		return lock.writeLock();
+	}
+	
+	/**
+	 * 获取读锁
+	 * @return
+	 */
+	public ReadLock readLock() {
+		return lock.readLock();
 	}
 
 	/**

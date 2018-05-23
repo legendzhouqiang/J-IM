@@ -41,7 +41,7 @@ public class ListWithLock<T> extends ObjWithLock<List<T>> {
 	 * @author tanyaowu
 	 */
 	public boolean add(T t) {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			List<T> list = this.getObj();
@@ -60,7 +60,7 @@ public class ListWithLock<T> extends ObjWithLock<List<T>> {
 	 * @author tanyaowu
 	 */
 	public void clear() {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			List<T> list = this.getObj();
@@ -79,7 +79,7 @@ public class ListWithLock<T> extends ObjWithLock<List<T>> {
 	 * @author tanyaowu
 	 */
 	public boolean remove(T t) {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			List<T> list = this.getObj();
@@ -98,7 +98,7 @@ public class ListWithLock<T> extends ObjWithLock<List<T>> {
 	 * @author tanyaowu
 	 */
 	public int size() {
-		ReadLock readLock = this.getLock().readLock();
+		ReadLock readLock = this.readLock();
 		readLock.lock();
 		try {
 			List<T> list = this.getObj();

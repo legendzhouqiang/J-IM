@@ -101,7 +101,7 @@ public class IpStat implements java.io.Serializable {
 //	public static AtomicInteger getActivatedCount(String ip, boolean forceCreate) {
 //		AtomicInteger atomicInteger = activatedCount.getObj().get(ip);
 //		if (atomicInteger == null && forceCreate) {
-//			Lock lock = activatedCount.getLock().writeLock();
+//			Lock lock = activatedCount.writeLock();
 //			try {
 //				lock.lock();
 //				atomicInteger = activatedCount.getObj().get(ip);
@@ -119,7 +119,7 @@ public class IpStat implements java.io.Serializable {
 //	}
 //	
 //	public static void removeActivatedCount(String ip) {
-//		Lock lock = activatedCount.getLock().writeLock();
+//		Lock lock = activatedCount.writeLock();
 //		try {
 //			lock.lock();
 //			activatedCount.getObj().remove(ip);

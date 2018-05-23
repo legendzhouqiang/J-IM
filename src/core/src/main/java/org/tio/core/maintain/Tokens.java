@@ -47,7 +47,7 @@ public class Tokens {
 			return;
 		}
 		String key = token;
-		Lock lock = mapWithLock.getLock().writeLock();
+		Lock lock = mapWithLock.writeLock();
 		lock.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> map = mapWithLock.getObj();
@@ -83,7 +83,7 @@ public class Tokens {
 			return null;
 		}
 		String key = token;
-		Lock lock = mapWithLock.getLock().readLock();
+		Lock lock = mapWithLock.readLock();
 		lock.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
@@ -119,7 +119,7 @@ public class Tokens {
 			return;
 		}
 
-		Lock lock = mapWithLock.getLock().writeLock();
+		Lock lock = mapWithLock.writeLock();
 		lock.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
@@ -156,7 +156,7 @@ public class Tokens {
 			return;
 		}
 
-		Lock lock = mapWithLock.getLock().writeLock();
+		Lock lock = mapWithLock.writeLock();
 		lock.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
@@ -165,7 +165,7 @@ public class Tokens {
 				return;
 			}
 
-			WriteLock writeLock = setWithLock.getLock().writeLock();
+			WriteLock writeLock = setWithLock.writeLock();
 			writeLock.lock();
 			try {
 				Set<ChannelContext> set = setWithLock.getObj();

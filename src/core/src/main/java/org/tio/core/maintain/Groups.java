@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -43,9 +43,18 @@ public class Groups {
 	 * 和组绑定
 	 * @param groupid
 	 * @param channelContext
-	 * @author tanyaowu
 	 */
 	public void bind(String groupid, ChannelContext channelContext) {
+		bind(groupid, channelContext, true);
+	}
+	
+	/**
+	 * 和组绑定
+	 * @param groupid
+	 * @param channelContext
+	 * @param callbackListener 是否回调GroupListener
+	 */
+	public void bind(String groupid, ChannelContext channelContext, boolean callbackListener) {
 		if (StringUtils.isBlank(groupid)) {
 			return;
 		}
@@ -60,7 +69,7 @@ public class Groups {
 		}
 
 		SetWithLock<ChannelContext> channelContexts = null;
-		Lock lock1 = groupmap.getLock().writeLock();
+		Lock lock1 = groupmap.writeLock();
 		lock1.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> map = groupmap.getObj();
@@ -77,6 +86,17 @@ public class Groups {
 			}
 			set.add(groupid);
 			channelContexts.add(channelContext);
+			
+			if (callbackListener) {
+				GroupListener groupListener = groupContext.getGroupListener();
+				if (groupListener != null) {
+					try {
+						groupListener.onAfterBind(channelContext, groupid);
+					} catch (Throwable e) {
+						log.error(e.toString(), e);
+					}
+				}
+			}
 		} catch (Throwable e) {
 			log.error(e.toString(), e);
 		} finally {
@@ -129,6 +149,15 @@ public class Groups {
 	 * @author tanyaowu
 	 */
 	public void unbind(ChannelContext channelContext) {
+		unbind(channelContext, true);
+	}
+	
+	/**
+	 * 
+	 * @param channelContext
+	 * @param callbackListener 是否回调GroupListener
+	 */
+	public void unbind(ChannelContext channelContext, boolean callbackListener) {
 		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
@@ -137,14 +166,14 @@ public class Groups {
 		try {
 			SetWithLock<String> setWithLock = channelContext.getGroups();
 			if (setWithLock != null) {
-				ReadLock readLock = setWithLock.getLock().readLock();
-				readLock.lock();
+				WriteLock writeLock = setWithLock.writeLock();
+				writeLock.lock();
 				try {
 					Set<String> groups = setWithLock.getObj();
 					if (groups != null && groups.size() > 0) {
 						for (String groupid : groups) {
 							try {
-								unbind(groupid, channelContext, false);
+								unbind(groupid, channelContext, false, callbackListener);
 							} catch (Exception e) {
 								log.error(e.toString(), e);
 							}
@@ -155,7 +184,7 @@ public class Groups {
 				} catch (Exception e) {
 					log.error(e.toString(), e);
 				} finally {
-					readLock.unlock();
+					writeLock.unlock();
 				}
 			}
 		} catch (Throwable e) {
@@ -178,7 +207,18 @@ public class Groups {
 	 * @param channelContext
 	 * @param deleteFromChannelContext
 	 */
-	private void unbind(String groupid, ChannelContext channelContext, boolean deleteFromChannelContext) {
+	public void unbind(String groupid, ChannelContext channelContext, boolean deleteFromChannelContext) {
+		unbind(groupid, channelContext, deleteFromChannelContext, true);
+	}
+	
+	/**
+	 * 
+	 * @param groupid
+	 * @param channelContext
+	 * @param deleteFromChannelContext
+	 * @param callbackListener 是否回调GroupListener
+	 */
+	public void unbind(String groupid, ChannelContext channelContext, boolean deleteFromChannelContext, boolean callbackListener) {
 		GroupContext groupContext = channelContext.getGroupContext();
 		if (groupContext.isShortConnection()) {
 			return;
@@ -202,18 +242,20 @@ public class Groups {
 				}
 			}
 
-			GroupListener groupListener = groupContext.getGroupListener();
-			if (groupListener != null) {
-				try {
-					groupListener.onAfterUnbind(channelContext, groupid);
-				} catch (Throwable e) {
-					log.error(e.toString(), e);
+			if (callbackListener) {
+				GroupListener groupListener = groupContext.getGroupListener();
+				if (groupListener != null) {
+					try {
+						groupListener.onAfterUnbind(channelContext, groupid);
+					} catch (Throwable e) {
+						log.error(e.toString(), e);
+					}
 				}
 			}
 
 			//如果该群组没有任何连接，就把这个群组从map中删除，以释放空间
 			if (setWithLock.getObj().size() == 0) {
-				Lock lock2 = groupmap.getLock().writeLock();
+				Lock lock2 = groupmap.writeLock();
 				lock2.lock();
 				try {
 					if (setWithLock.getObj().size() == 0) {

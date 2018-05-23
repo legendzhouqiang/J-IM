@@ -47,7 +47,7 @@ public class Users {
 			return;
 		}
 		String key = userid;
-		Lock lock = mapWithLock.getLock().writeLock();
+		Lock lock = mapWithLock.writeLock();
 		lock.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> map = mapWithLock.getObj();
@@ -80,7 +80,7 @@ public class Users {
 			return null;
 		}
 		String key = userid;
-		Lock lock = mapWithLock.getLock().readLock();
+		Lock lock = mapWithLock.readLock();
 		lock.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
@@ -116,7 +116,7 @@ public class Users {
 			return;
 		}
 
-		Lock lock = mapWithLock.getLock().writeLock();
+		Lock lock = mapWithLock.writeLock();
 		lock.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
@@ -155,7 +155,7 @@ public class Users {
 			return;
 		}
 
-		Lock lock = mapWithLock.getLock().writeLock();
+		Lock lock = mapWithLock.writeLock();
 		lock.lock();
 		try {
 			Map<String, SetWithLock<ChannelContext>> m = mapWithLock.getObj();
@@ -164,7 +164,7 @@ public class Users {
 				return;
 			}
 
-			WriteLock writeLock = setWithLock.getLock().writeLock();
+			WriteLock writeLock = setWithLock.writeLock();
 			writeLock.lock();
 			try {
 				Set<ChannelContext> set = setWithLock.getObj();

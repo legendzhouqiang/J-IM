@@ -41,7 +41,7 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 	 * @author tanyaowu
 	 */
 	public V put(K key, V value) {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			Map<K, V> map = this.getObj();
@@ -63,7 +63,7 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 	 * @author tanyaowu
 	 */
 	public V putIfAbsent(K key, V value) {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			Map<K, V> map = this.getObj();
@@ -91,7 +91,7 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 			return;
 		}
 
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			Map<K, V> map = this.getObj();
@@ -110,7 +110,7 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 	 * @author tanyaowu
 	 */
 	public V remove(K key) {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			Map<K, V> map = this.getObj();
@@ -128,7 +128,7 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 	 * @author tanyaowu
 	 */
 	public void clear() {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			Map<K, V> map = this.getObj();
@@ -147,7 +147,7 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 	 * @author tanyaowu
 	 */
 	public V get(K key) {
-		ReadLock readLock = this.getLock().readLock();
+		ReadLock readLock = this.readLock();
 		readLock.lock();
 		try {
 			Map<K, V> map = this.getObj();
@@ -166,7 +166,7 @@ public class MapWithLock<K, V> extends ObjWithLock<Map<K, V>> {
 	 * @author tanyaowu
 	 */
 	public int size() {
-		ReadLock readLock = this.getLock().readLock();
+		ReadLock readLock = this.readLock();
 		readLock.lock();
 		try {
 			Map<K, V> map = this.getObj();

@@ -345,7 +345,7 @@ public class AioClient {
 						break;
 					}
 					SetWithLock<ChannelContext> setWithLock = clientGroupContext.connecteds;
-					ReadLock readLock = setWithLock.getLock().readLock();
+					ReadLock readLock = setWithLock.readLock();
 					readLock.lock();
 					try {
 						Set<ChannelContext> set = setWithLock.getObj();

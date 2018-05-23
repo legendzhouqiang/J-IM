@@ -40,7 +40,7 @@ public class SetWithLock<T> extends ObjWithLock<Set<T>> {
 	 * @author tanyaowu
 	 */
 	public boolean add(T t) {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			Set<T> set = this.getObj();
@@ -59,7 +59,7 @@ public class SetWithLock<T> extends ObjWithLock<Set<T>> {
 	 * @author tanyaowu
 	 */
 	public void clear() {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			Set<T> set = this.getObj();
@@ -78,7 +78,7 @@ public class SetWithLock<T> extends ObjWithLock<Set<T>> {
 	 * @author tanyaowu
 	 */
 	public boolean remove(T t) {
-		WriteLock writeLock = this.getLock().writeLock();
+		WriteLock writeLock = this.writeLock();
 		writeLock.lock();
 		try {
 			Set<T> set = this.getObj();
@@ -97,7 +97,7 @@ public class SetWithLock<T> extends ObjWithLock<Set<T>> {
 	 * @author tanyaowu
 	 */
 	public int size() {
-		ReadLock readLock = this.getLock().readLock();
+		ReadLock readLock = this.readLock();
 		readLock.lock();
 		try {
 			Set<T> set = this.getObj();
