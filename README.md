@@ -13,7 +13,7 @@
 <dependency>
     <groupid>org.t-io</groupid>
     <artifactid>tio-core</artifactid>
-    <version>2.4.0.v20180508-RELEASE</version>
+    <version>3.0.0.v20180520-RELEASE</version>
 </dependency>
 ```
 - [t-io版本列表](https://oss.sonatype.org/content/groups/public/org/t-io/tio-core/ "t-io版本列表")
