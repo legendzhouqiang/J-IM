@@ -905,14 +905,9 @@ public class Aio {
 				TioClusterConfig tioClusterConfig = groupContext.getTioClusterConfig();
 
 				if (tioClusterConfig.isCluster4channelId()) {
-//					TioClusterVo tioClusterVo = new TioClusterVo(packet);
-//					tioClusterVo.setChannelId(channelId);
-//					tioClusterConfig.publishAsyn(tioClusterVo);
-					
 					notifyClusterForId(groupContext, channelId, packet);
 				}
 			}
-
 			return false;
 		}
 		if (isBlock) {

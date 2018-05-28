@@ -102,44 +102,37 @@ public class TioClusterConfig {
 				//发送给所有
 				boolean isToAll = tioClusterVo.isToAll();
 				if (isToAll) {
-					//								for (GroupContext groupContext : me.groupContext) {
 					Aio.sendToAll(groupContext, packet);
-					//								}
-					//return;
 				}
 
 				//发送给指定组
 				String group = tioClusterVo.getGroup();
 				if (StringUtils.isNotBlank(group)) {
 					Aio.sendToGroup(me.groupContext, group, packet);
-					//return;
 				}
 
 				//发送给指定用户
 				String userid = tioClusterVo.getUserid();
 				if (StringUtils.isNotBlank(userid)) {
-					//								for (GroupContext groupContext : me.groupContext) {
 					Aio.sendToUser(me.groupContext, userid, packet);
-					//								}
-					//return;
 				}
 				
 				//发送给指定token
 				String token = tioClusterVo.getToken();
 				if (StringUtils.isNotBlank(token)) {
-					//								for (GroupContext groupContext : me.groupContext) {
 					Aio.sendToToken(me.groupContext, token, packet);
-					//								}
-					//return;
 				}
 
 				//发送给指定ip
 				String ip = tioClusterVo.getIp();
 				if (StringUtils.isNotBlank(ip)) {
-					//								for (GroupContext groupContext : me.groupContext) {
 					Aio.sendToIp(me.groupContext, ip, packet);
-					//								}
-					//return;
+				}
+				
+				//发送给指定channelId
+				String channelId = tioClusterVo.getChannelId();
+				if (StringUtils.isNotBlank(channelId)) {
+					Aio.sendToId(groupContext, channelId, packet);
 				}
 			}
 		});
