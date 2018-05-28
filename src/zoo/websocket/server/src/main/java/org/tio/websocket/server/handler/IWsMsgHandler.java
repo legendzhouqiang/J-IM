@@ -12,7 +12,8 @@ import org.tio.websocket.common.WsRequest;
  */
 public interface IWsMsgHandler {
 	/**
-	 * 对httpResponse参数进行补充并返回，如果返回null表示不想和对方建立连接，框架会断开连接，如果返回非null，框架会把这个对象发送给对方
+	 * 对httpResponse参数进行补充并返回，如果返回null表示不想和对方建立连接，框架会断开连接，如果返回非null，框架会把这个对象发送给对方<br>
+	 * 注：请不要在这个方法中向对方发送任何消息，因为这个时候握手还没完成，发消息会导致协议交互失败。<br>
 	 * @param httpRequest
 	 * @param httpResponse
 	 * @param channelContext
