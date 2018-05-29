@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.client.ReconnConf;
+import org.tio.core.cluster.DefaultMessageListener;
 import org.tio.core.cluster.TioClusterConfig;
 import org.tio.core.intf.AioHandler;
 import org.tio.core.intf.AioListener;
@@ -148,6 +149,11 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 		this.id = ID_ATOMIC.incrementAndGet() + "";
 		this.ipBlacklist = new IpBlacklist(id, this);
 		this.ipStats = new IpStats(this, null);
+
+		// 调整rtopicMessageListener设定位置
+		// 原来在TioClusterConfig内，这样不太友好，
+		// 因为TioClusterConfig做为GroupContext的构造形参同时GroupContext又是TioClusterConfig的初始化参数，无解…
+		tioClusterConfig.addMessageListener(new DefaultMessageListener(this));
 		this.tioClusterConfig = tioClusterConfig;
 		this.tioExecutor = tioExecutor;
 		if (this.tioExecutor == null) {
