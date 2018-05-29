@@ -10,6 +10,7 @@ import org.tio.core.intf.Packet;
 import org.tio.utils.json.Json;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 默认的集群消息监听类
@@ -20,6 +21,11 @@ public class DefaultMessageListener implements MessageListener<TioClusterVo> {
 
     private static Logger log = LoggerFactory.getLogger(DefaultMessageListener.class);
 
+    /**
+     * 收到了多少次topic
+     */
+    private static final AtomicLong RECEIVED_TOPIC_COUNT = new AtomicLong();
+
     private GroupContext groupContext;
 
     public DefaultMessageListener(GroupContext groupContext) {
@@ -28,7 +34,7 @@ public class DefaultMessageListener implements MessageListener<TioClusterVo> {
 
     @Override
     public void onMessage(String channel, TioClusterVo tioClusterVo) {
-		log.info("收到topic:{}, count:{}, tioClusterVo:{}", channel, TioClusterConfig.RECEIVED_TOPIC_COUNT.incrementAndGet(), Json.toJson(tioClusterVo));
+		log.info("收到topic:{}, count:{}, tioClusterVo:{}", channel, RECEIVED_TOPIC_COUNT.incrementAndGet(), Json.toJson(tioClusterVo));
 		String clientid = tioClusterVo.getClientId();
 		if (StringUtils.isBlank(clientid)) {
 			log.error("clientid is null");

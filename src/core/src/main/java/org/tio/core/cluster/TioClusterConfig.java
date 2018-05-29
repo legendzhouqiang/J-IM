@@ -1,7 +1,5 @@
 package org.tio.core.cluster;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.listener.MessageListener;
@@ -46,11 +44,6 @@ public class TioClusterConfig {
      */
     private boolean cluster4all = true;
 
-
-    /**
-     * 收到了多少次topic
-     */
-    public static final AtomicLong RECEIVED_TOPIC_COUNT = new AtomicLong();
 
     private TioClusterConfig(String topicSuffix, RedissonClient redisson) {
         this.setTopicSuffix(topicSuffix);

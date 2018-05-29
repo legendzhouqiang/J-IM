@@ -153,8 +153,7 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 		// 调整rtopicMessageListener设定位置
 		// 原来在TioClusterConfig内，这样不太友好，
 		// 因为TioClusterConfig做为GroupContext的构造形参同时GroupContext又是TioClusterConfig的初始化参数，无解…
-		tioClusterConfig.addMessageListener(new DefaultMessageListener(this));
-		this.tioClusterConfig = tioClusterConfig;
+		this.setTioClusterConfig(tioClusterConfig);
 		this.tioExecutor = tioExecutor;
 		if (this.tioExecutor == null) {
 			this.tioExecutor = Threads.tioExecutor;
@@ -391,6 +390,9 @@ public abstract class GroupContext extends MapWithLockPropSupport {
 
 	public void setTioClusterConfig(TioClusterConfig tioClusterConfig) {
 		this.tioClusterConfig = tioClusterConfig;
+		if (this.tioClusterConfig != null) {
+			this.tioClusterConfig.addMessageListener(new DefaultMessageListener(this));
+		}
 	}
 
 	public SslConfig getSslConfig() {
