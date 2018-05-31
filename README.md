@@ -26,7 +26,7 @@
 ## **t-io的一些传送门**
 
 
-- [DOCAPI](https://apidoc.gitee.com/tywo45/t-io/ "DOCAPI")
+- [JavaDoc API](https://apidoc.gitee.com/tywo45/t-io/ "JavaDoc API")
 - [t-io文档](https://t-io.org/blog/index.html "t-io文档")
 - [t-io成功案例](https://t-io.org/case/index.html "t-io成功案例")
 - [t-io官网访问统计](https://t-io.org/stat/index.html "t-io官网访问统计")
